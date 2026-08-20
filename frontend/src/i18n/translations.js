@@ -197,8 +197,8 @@ const translations = {
       },
       contact: {
         title: 'Contacto',
-        email: 'info@sbruzzi.it',
-        phone: '+351 912 345 678',
+        email: 'nexugal.geral@gmail.com',
+        phone: '+351 912 423 912',
         address: 'Braga, Portugal',
       },
       links: {
@@ -436,8 +436,8 @@ const translations = {
       },
       contact: {
         title: 'Contact',
-        email: 'info@sbruzzi.it',
-        phone: '+351 912 345 678',
+        email: 'nexugal.geral@gmail.com',
+        phone: '+351 912 423 912',
         address: 'Braga, Portugal',
       },
       links: {

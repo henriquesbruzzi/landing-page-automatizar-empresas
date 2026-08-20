@@ -84,7 +84,7 @@ const organizationSchema = {
   contactPoint: {
     '@type': 'ContactPoint',
     telephone: '+351912423912',
-    email: 'info@sbruzzi.it',
+    email: 'nexugal.geral@gmail.com',
     contactType: 'customer service',
     availableLanguage: ['Portuguese', 'English'],
   },
@@ -117,8 +117,8 @@ const localBusinessSchema = {
   name: 'NEXUGAL',
   image: `${BASE_URL}/icons/favicon.png`,
   url: BASE_URL,
-  telephone: '+351912345678',
-  email: 'info@sbruzzi.it',
+  telephone: '+351912423912',
+  email: 'nexugal.geral@gmail.com',
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Braga',

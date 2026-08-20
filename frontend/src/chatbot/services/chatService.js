@@ -79,8 +79,8 @@ class ChatService {
 
     if (lowerMessage.includes('contacto') || lowerMessage.includes('contato') || lowerMessage.includes('contact')) {
       return lang === 'pt'
-        ? 'Pode entrar em contacto connosco através do email info@sbruzzi.it ou pelo telefone +351 912 345 678. Também pode preencher o formulário de contacto na nossa página. Como prefere?'
-        : 'You can contact us via email at info@sbruzzi.it or by phone at +351 912 345 678. You can also fill out the contact form on our page. How would you prefer?';
+        ? 'Pode entrar em contacto connosco através do email nexugal.geral@gmail.com ou pelo telefone +351 912 423 912. Também pode preencher o formulário de contacto na nossa página. Como prefere?'
+        : 'You can contact us via email at nexugal.geral@gmail.com or by phone at +351 912 423 912. You can also fill out the contact form on our page. How would you prefer?';
     }
 
     if (lowerMessage.includes('tempo') || lowerMessage.includes('prazo') || lowerMessage.includes('time') || lowerMessage.includes('deadline')) {
