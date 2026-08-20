@@ -1,17 +1,22 @@
 import React from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
+import { classesEntrada, atrasoEntrada } from '../utils/entrada';
 
 function Process() {
   const { t } = useLanguage();
+  const { ref, visivel, semAnimacao } = useRevealOnScroll();
+  const entrada = classesEntrada(visivel, semAnimacao);
+  const atraso = (ms) => atrasoEntrada(ms, visivel, semAnimacao);
 
   return (
-    <section id="processo" className="relative py-24 md:py-32 bg-black overflow-hidden" aria-labelledby="process-title">
+    <section ref={ref} id="processo" className="relative py-24 md:py-32 bg-black overflow-hidden" aria-labelledby="process-title">
       {/* Linha divisória sutil no topo */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-cyan-neon/30 to-transparent"></div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
         {/* Header da secção */}
-        <div className="text-center mb-20">
+        <div className={`text-center mb-20 ${entrada}`} style={atraso(0)}>
           <span className="font-orbitron text-cyan-neon text-xs tracking-[0.3em] uppercase mb-4 block">
             {t.process.subtitle}
           </span>
@@ -29,7 +34,11 @@ function Process() {
           {/* Grid de passos */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-4">
             {t.process.steps.map((step, index) => (
-              <div key={index} className="group relative flex flex-col items-center text-center">
+              <div
+                key={index}
+                className={`group relative flex flex-col items-center text-center ${entrada}`}
+                style={atraso(120 + index * 80)}
+              >
                 {/* Número circular */}
                 <div className="relative mb-6">
                   <div className="w-[72px] h-[72px] rounded-full border border-white/10 bg-black flex items-center justify-center group-hover:border-cyan-neon/50 group-hover:shadow-[0_0_25px_rgba(0,209,255,0.15)] transition-all duration-500">

@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
+import { classesEntrada, atrasoEntrada } from '../utils/entrada';
 
 function FAQPage() {
   const { lang, t } = useLanguage();
   const navigate = useNavigate();
   const [openIndex, setOpenIndex] = useState(null);
+  const { ref, visivel, semAnimacao } = useRevealOnScroll();
+  const entrada = classesEntrada(visivel, semAnimacao);
+  const atraso = (ms) => atrasoEntrada(ms, visivel, semAnimacao);
 
   const goHome = () => {
     navigate(lang === 'pt' ? '/' : '/us');
@@ -55,9 +60,9 @@ function FAQPage() {
 
         {/* FAQ Content */}
         <div className="flex-1 flex items-start justify-center px-6 py-16">
-          <div className="w-full max-w-3xl">
+          <div ref={ref} className="w-full max-w-3xl">
             {/* Header */}
-            <div className="text-center mb-16">
+            <div className={`text-center mb-16 ${entrada}`} style={atraso(0)}>
               <span className="font-orbitron text-cyan-neon text-xs tracking-[0.3em] uppercase mb-4 block">
                 {t.faq.subtitle}
               </span>
@@ -78,6 +83,10 @@ function FAQPage() {
                   <div
                     key={index}
                     role="listitem"
+                    className={entrada}
+                    style={atraso(120 + index * 60)}
+                  >
+                  <div
                     className={`rounded-2xl border transition-all duration-500 ${
                       isOpen
                         ? 'border-cyan-neon/30 bg-white/[0.04] shadow-[0_0_30px_rgba(0,209,255,0.05)]'
@@ -133,12 +142,16 @@ function FAQPage() {
                       </div>
                     </div>
                   </div>
+                  </div>
                 );
               })}
             </div>
 
             {/* CTA após FAQ */}
-            <div className="mt-16 text-center">
+            <div
+              className={`mt-16 text-center ${entrada}`}
+              style={atraso(120 + t.faq.items.length * 60)}
+            >
               <p className="text-white/30 text-sm mb-6">
                 {lang === 'pt'
                   ? 'Não encontrou a resposta que procura?'
