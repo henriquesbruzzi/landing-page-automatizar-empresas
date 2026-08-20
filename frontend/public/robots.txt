@@ -1,0 +1,13 @@
+# robots.txt — Acrobatic IT
+# https://sbruzzi.it
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+
+# Sitemap
+Sitemap: https://sbruzzi.it/sitemap.xml
+
+# Crawl-delay (opcional, respeitar bots)
+Crawl-delay: 1

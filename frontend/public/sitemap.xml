@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+
+  <!-- Página principal PT -->
+  <url>
+    <loc>https://sbruzzi.it/</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://sbruzzi.it/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://sbruzzi.it/us" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sbruzzi.it/" />
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Página principal EN -->
+  <url>
+    <loc>https://sbruzzi.it/us</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://sbruzzi.it/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://sbruzzi.it/us" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sbruzzi.it/" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Contacto PT -->
+  <url>
+    <loc>https://sbruzzi.it/contacto</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://sbruzzi.it/contacto" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://sbruzzi.it/us/contact" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Contact EN -->
+  <url>
+    <loc>https://sbruzzi.it/us/contact</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://sbruzzi.it/contacto" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://sbruzzi.it/us/contact" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- FAQ PT -->
+  <url>
+    <loc>https://sbruzzi.it/faq</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://sbruzzi.it/faq" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://sbruzzi.it/us/faq" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- FAQ EN -->
+  <url>
+    <loc>https://sbruzzi.it/us/faq</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://sbruzzi.it/faq" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://sbruzzi.it/us/faq" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>
