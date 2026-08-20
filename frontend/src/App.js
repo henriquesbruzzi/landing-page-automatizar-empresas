@@ -11,7 +11,6 @@ import CallToAction from './components/CallToAction';
 import Footer from './components/Footer';
 import ContactPage from './components/ContactPage';
 import FAQPage from './components/FAQPage';
-import ChatWidget from './chatbot/components/ChatWidget';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminLeadsPage from './pages/AdminLeadsPage';
 
@@ -88,10 +87,7 @@ function App() {
         <Route
           path="/"
           element={
-            <>
-              <Layout lang="pt" />
-              <ChatWidget />
-            </>
+            <Layout lang="pt" />
           }
         />
         {/* PT — Formulário de contacto */}
@@ -101,7 +97,6 @@ function App() {
             <>
               <SEO lang="pt" page="contact" />
               <ContactPage />
-              <ChatWidget />
             </>
           }
         />
@@ -113,7 +108,6 @@ function App() {
             <>
               <SEO lang="pt" page="faq" />
               <FAQPage />
-              <ChatWidget />
             </>
           }
         />
@@ -122,10 +116,7 @@ function App() {
         <Route
           path="/us"
           element={
-            <>
-              <Layout lang="en" />
-              <ChatWidget />
-            </>
+            <Layout lang="en" />
           }
         />
         {/* EN — Contact form */}
@@ -135,7 +126,6 @@ function App() {
             <>
               <SEO lang="en" page="contact" />
               <ContactPage />
-              <ChatWidget />
             </>
           }
         />
@@ -146,7 +136,6 @@ function App() {
             <>
               <SEO lang="en" page="faq" />
               <FAQPage />
-              <ChatWidget />
             </>
           }
         />
