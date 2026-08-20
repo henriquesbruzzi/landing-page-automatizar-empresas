@@ -16,9 +16,7 @@ function Hero() {
   const { displayedText, showCursor, isTypingDone } = useTypewriter(fullText, lang);
 
   // Calcula o que mostrar em cada parte com base no texto digitado até agora
-  const line1Full = t.hero.title_line1;
   const line2StartFull = t.hero.title_line2_start;
-  const highlightFull = t.hero.title_line2_highlight;
 
   // Separa o texto exibido nas partes correspondentes
   const parts = displayedText.split('\n');
