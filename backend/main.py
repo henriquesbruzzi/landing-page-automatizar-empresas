@@ -13,7 +13,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, EmailStr, Field
 
 
-APP_NAME = "Nexugal API"
+APP_NAME = "NEXUGAL API"
 DB_PATH = os.getenv("SQLITE_DB_PATH", "./leads.db")
 JWT_SECRET = os.getenv("JWT_SECRET", "change-this-in-production")
 JWT_ALGORITHM = "HS256"

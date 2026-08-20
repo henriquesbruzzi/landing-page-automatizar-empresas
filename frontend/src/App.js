@@ -37,7 +37,7 @@ function Layout({ lang }) {
           {/* Imagem estática — aparece até o vídeo carregar */}
           <img
             src="/images/foto principal.png"
-            alt="Nexugal — Consultoria tecnológica, escritório moderno com equipa de desenvolvimento"
+            alt="NEXUGAL — Consultoria tecnológica, escritório moderno com equipa de desenvolvimento"
             className={`absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-1000 ${
               videoLoaded ? 'opacity-0' : 'opacity-100'
             }`}

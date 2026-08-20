@@ -1,4 +1,4 @@
-# robots.txt — Nexugal
+# robots.txt — NEXUGAL
 # https://sbruzzi.it
 
 User-agent: *

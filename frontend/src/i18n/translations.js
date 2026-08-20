@@ -123,7 +123,7 @@ const translations = {
     about: {
       subtitle: 'Quem somos',
       title: 'Sobre a ',
-      titleHighlight: 'Nexugal',
+      titleHighlight: 'NEXUGAL',
       description: 'Somos uma consultoria de tecnologia focada em transformação digital. Combinamos expertise técnica com visão estratégica para entregar soluções que realmente fazem a diferença.',
       stats: [
         { value: '10+', label: 'Anos de Experiência' },
@@ -149,7 +149,7 @@ const translations = {
       back: '← Voltar ao início',
       items: [
         {
-          question: 'Que tipo de serviços a Nexugal oferece?',
+          question: 'Que tipo de serviços a NEXUGAL oferece?',
           answer: 'Oferecemos uma gama completa de serviços tecnológicos: desenvolvimento web (sites, aplicações e plataformas), cibersegurança (auditorias, monitoramento e proteção de dados), soluções cloud (migração e gestão), consultoria em inteligência artificial, análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7.',
         },
         {
@@ -157,11 +157,11 @@ const translations = {
           answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 2 a 4 semanas, enquanto uma aplicação web mais complexa pode levar entre 2 a 6 meses. Na fase de diagnóstico, definimos um roadmap claro com prazos detalhados para cada etapa.',
         },
         {
-          question: 'Como funciona o processo de trabalho da Nexugal?',
+          question: 'Como funciona o processo de trabalho da NEXUGAL?',
           answer: 'O nosso processo segue 5 etapas: (1) Diagnóstico — mapeamos as necessidades do seu negócio; (2) Estratégia — desenhamos a arquitetura e o plano técnico; (3) Execução — desenvolvimento ágil com entregas contínuas; (4) Deploy — lançamento com zero downtime; (5) Evolução — suporte contínuo e otimização constante.',
         },
         {
-          question: 'A Nexugal trabalha com empresas de que dimensão?',
+          question: 'A NEXUGAL trabalha com empresas de que dimensão?',
           answer: 'Trabalhamos com empresas de todas as dimensões, desde startups e PMEs até grandes corporações. As nossas soluções são personalizadas para se adaptarem às necessidades e ao orçamento de cada cliente.',
         },
         {
@@ -177,7 +177,7 @@ const translations = {
           answer: 'Sim, a primeira consulta é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. Pode agendar através do nosso formulário de contacto.',
         },
         {
-          question: 'Em que regiões a Nexugal opera?',
+          question: 'Em que regiões a NEXUGAL opera?',
           answer: 'Estamos sediados em Braga, Portugal, mas trabalhamos com clientes em todo o território português e também no Brasil. Como muitos dos nossos serviços são prestados remotamente, podemos atender clientes em qualquer parte do mundo.',
         },
       ],
@@ -192,7 +192,7 @@ const translations = {
     },
     footer: {
       brand: {
-        name: 'Nexugal',
+        name: 'NEXUGAL',
         tagline: 'Codificando o amanhã da sua empresa. Consultoria tecnológica de excelência.',
       },
       contact: {
@@ -224,18 +224,18 @@ const translations = {
       social: {
         title: 'Redes Sociais',
       },
-      copyright: '© {year} Nexugal. Todos os direitos reservados.',
+      copyright: '© {year} NEXUGAL. Todos os direitos reservados.',
       madeWith: 'Feito com tecnologia de ponta em',
       location: 'Portugal',
     },
     chatbot: {
-      welcome: 'Olá! 👋 Sou o assistente virtual da Nexugal. Como posso ajudar hoje?',
+      welcome: 'Olá! 👋 Sou o assistente virtual da NEXUGAL. Como posso ajudar hoje?',
       placeholder: 'Digite sua mensagem...',
       send: 'Enviar mensagem',
       close: 'Fechar chat',
       open: 'Abrir chat',
       title: 'Assistente Virtual',
-      subtitle: 'Nexugal',
+      subtitle: 'NEXUGAL',
     },
   },
   en: {
@@ -362,7 +362,7 @@ const translations = {
     about: {
       subtitle: 'Who we are',
       title: 'About ',
-      titleHighlight: 'Nexugal',
+      titleHighlight: 'NEXUGAL',
       description: 'We are a technology consultancy focused on digital transformation. We combine technical expertise with strategic vision to deliver solutions that truly make a difference.',
       stats: [
         { value: '10+', label: 'Years of Experience' },
@@ -388,7 +388,7 @@ const translations = {
       back: '← Back to home',
       items: [
         {
-          question: 'What type of services does Nexugal offer?',
+          question: 'What type of services does NEXUGAL offer?',
           answer: 'We offer a complete range of technology services: web development (websites, applications and platforms), cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management), artificial intelligence consulting, data analytics with customized dashboards, and continuous 24/7 technical support.',
         },
         {
@@ -396,11 +396,11 @@ const translations = {
           answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 2 to 4 weeks, while a more complex web application can take between 2 to 6 months. During the discovery phase, we define a clear roadmap with detailed deadlines for each stage.',
         },
         {
-          question: 'How does Nexugal\'s work process function?',
+          question: 'How does NEXUGAL\'s work process function?',
           answer: 'Our process follows 5 stages: (1) Discovery — we map your business needs; (2) Strategy — we design the architecture and technical plan; (3) Execution — agile development with continuous deliveries; (4) Deploy — launch with zero downtime; (5) Evolution — continuous support and constant optimization.',
         },
         {
-          question: 'What size companies does Nexugal work with?',
+          question: 'What size companies does NEXUGAL work with?',
           answer: 'We work with companies of all sizes, from startups and SMEs to large corporations. Our solutions are customized to adapt to each client\'s needs and budget.',
         },
         {
@@ -416,7 +416,7 @@ const translations = {
           answer: 'Yes, the first consultation is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. You can schedule it through our contact form.',
         },
         {
-          question: 'In which regions does Nexugal operate?',
+          question: 'In which regions does NEXUGAL operate?',
           answer: 'We are based in Braga, Portugal, but we work with clients across the entire Portuguese territory and also in Brazil. Since many of our services are provided remotely, we can serve clients anywhere in the world.',
         },
       ],
@@ -431,7 +431,7 @@ const translations = {
     },
     footer: {
       brand: {
-        name: 'Nexugal',
+        name: 'NEXUGAL',
         tagline: 'Coding the future of your business. Technology consultancy of excellence.',
       },
       contact: {
@@ -463,18 +463,18 @@ const translations = {
       social: {
         title: 'Social Media',
       },
-      copyright: '© {year} Nexugal. All rights reserved.',
+      copyright: '© {year} NEXUGAL. All rights reserved.',
       madeWith: 'Made with cutting-edge technology in',
       location: 'Portugal',
     },
     chatbot: {
-      welcome: 'Hello! 👋 I\'m Nexugal\'s virtual assistant. How can I help you today?',
+      welcome: 'Hello! 👋 I\'m NEXUGAL\'s virtual assistant. How can I help you today?',
       placeholder: 'Type your message...',
       send: 'Send message',
       close: 'Close chat',
       open: 'Open chat',
       title: 'Virtual Assistant',
-      subtitle: 'Nexugal',
+      subtitle: 'NEXUGAL',
     },
   },
 };

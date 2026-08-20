@@ -93,7 +93,7 @@ function ContactPage() {
               {t.contact.back}
             </button>
             <span className="font-orbitron text-white/70 text-lg font-bold tracking-[0.2em]">
-              Nexugal
+              NEXUGAL
             </span>
           </div>
         </div>
@@ -284,7 +284,7 @@ function ContactPage() {
         {/* Footer */}
         <footer className="pb-8">
           <p className="text-center text-white/15 text-xs tracking-[0.15em] font-orbitron">
-            © {new Date().getFullYear()} Nexugal
+            © {new Date().getFullYear()} NEXUGAL
           </p>
         </footer>
       </main>
