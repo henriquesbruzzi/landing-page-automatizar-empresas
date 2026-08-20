@@ -15,7 +15,7 @@ import ChatWidget from './chatbot/components/ChatWidget';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminLeadsPage from './pages/AdminLeadsPage';
 
-const ADMIN_TOKEN_KEY = 'acrobatic_admin_token';
+const ADMIN_TOKEN_KEY = 'nexugal_admin_token';
 
 function RequireAdminAuth({ children }) {
   const token = localStorage.getItem(ADMIN_TOKEN_KEY);
@@ -37,7 +37,7 @@ function Layout({ lang }) {
           {/* Imagem estática — aparece até o vídeo carregar */}
           <img
             src="/images/foto principal.png"
-            alt="Acrobatic IT — Consultoria tecnológica, escritório moderno com equipa de desenvolvimento"
+            alt="Nexugal — Consultoria tecnológica, escritório moderno com equipa de desenvolvimento"
             className={`absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-1000 ${
               videoLoaded ? 'opacity-0' : 'opacity-100'
             }`}

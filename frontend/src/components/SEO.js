@@ -15,25 +15,25 @@ const BASE_URL = 'https://sbruzzi.it';
 const seoData = {
   pt: {
     home: {
-      title: 'Acrobatic IT — Consultoria Tecnológica | Desenvolvimento Web, Cibersegurança & Cloud',
+      title: 'Nexugal — Consultoria Tecnológica | Desenvolvimento Web, Cibersegurança & Cloud',
       description:
-        'Acrobatic IT — Consultoria tecnológica em Braga, Portugal. Especialistas em desenvolvimento web, cibersegurança, soluções cloud, inteligência artificial e análise de dados. Transformação digital para a sua empresa.',
+        'Nexugal — Consultoria tecnológica em Braga, Portugal. Especialistas em desenvolvimento web, cibersegurança, soluções cloud, inteligência artificial e análise de dados. Transformação digital para a sua empresa.',
       canonical: `${BASE_URL}/`,
       alternate: `${BASE_URL}/us`,
       ogLocale: 'pt_PT',
     },
     contact: {
-      title: 'Contacto — Acrobatic IT | Fale Connosco',
+      title: 'Contacto — Nexugal | Fale Connosco',
       description:
-        'Entre em contacto com a Acrobatic IT. Preencha o formulário e a nossa equipa responde em 24 horas. Consultoria tecnológica em Braga, Portugal.',
+        'Entre em contacto com a Nexugal. Preencha o formulário e a nossa equipa responde em 24 horas. Consultoria tecnológica em Braga, Portugal.',
       canonical: `${BASE_URL}/contacto`,
       alternate: `${BASE_URL}/us/contact`,
       ogLocale: 'pt_PT',
     },
     faq: {
-      title: 'FAQ — Acrobatic IT | Perguntas Frequentes sobre Consultoria Tecnológica',
+      title: 'FAQ — Nexugal | Perguntas Frequentes sobre Consultoria Tecnológica',
       description:
-        'Respostas às perguntas mais frequentes sobre os serviços da Acrobatic IT: desenvolvimento web, cibersegurança, cloud, IA, prazos, custos e suporte.',
+        'Respostas às perguntas mais frequentes sobre os serviços da Nexugal: desenvolvimento web, cibersegurança, cloud, IA, prazos, custos e suporte.',
       canonical: `${BASE_URL}/faq`,
       alternate: `${BASE_URL}/us/faq`,
       ogLocale: 'pt_PT',
@@ -41,25 +41,25 @@ const seoData = {
   },
   en: {
     home: {
-      title: 'Acrobatic IT — Technology Consulting | Web Development, Cybersecurity & Cloud',
+      title: 'Nexugal — Technology Consulting | Web Development, Cybersecurity & Cloud',
       description:
-        'Acrobatic IT — Technology consultancy in Braga, Portugal. Experts in web development, cybersecurity, cloud solutions, artificial intelligence and data analytics. Digital transformation for your business.',
+        'Nexugal — Technology consultancy in Braga, Portugal. Experts in web development, cybersecurity, cloud solutions, artificial intelligence and data analytics. Digital transformation for your business.',
       canonical: `${BASE_URL}/us`,
       alternate: `${BASE_URL}/`,
       ogLocale: 'en_US',
     },
     contact: {
-      title: 'Contact — Acrobatic IT | Get in Touch',
+      title: 'Contact — Nexugal | Get in Touch',
       description:
-        'Get in touch with Acrobatic IT. Fill out the form and our team will respond within 24 hours. Technology consultancy in Braga, Portugal.',
+        'Get in touch with Nexugal. Fill out the form and our team will respond within 24 hours. Technology consultancy in Braga, Portugal.',
       canonical: `${BASE_URL}/us/contact`,
       alternate: `${BASE_URL}/contacto`,
       ogLocale: 'en_US',
     },
     faq: {
-      title: 'FAQ — Acrobatic IT | Frequently Asked Questions about Technology Consulting',
+      title: 'FAQ — Nexugal | Frequently Asked Questions about Technology Consulting',
       description:
-        'Answers to frequently asked questions about Acrobatic IT services: web development, cybersecurity, cloud, AI, timelines, costs and support.',
+        'Answers to frequently asked questions about Nexugal services: web development, cybersecurity, cloud, AI, timelines, costs and support.',
       canonical: `${BASE_URL}/us/faq`,
       alternate: `${BASE_URL}/faq`,
       ogLocale: 'en_US',
@@ -71,7 +71,7 @@ const seoData = {
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: 'Acrobatic IT',
+  name: 'Nexugal',
   url: BASE_URL,
   logo: `${BASE_URL}/icons/favicon.png`,
   description:
@@ -100,7 +100,7 @@ const organizationSchema = {
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: 'Acrobatic IT',
+  name: 'Nexugal',
   url: BASE_URL,
   inLanguage: ['pt-PT', 'en-US'],
   potentialAction: {
@@ -114,7 +114,7 @@ const websiteSchema = {
 const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
-  name: 'Acrobatic IT',
+  name: 'Nexugal',
   image: `${BASE_URL}/icons/favicon.png`,
   url: BASE_URL,
   telephone: '+351912345678',
@@ -191,7 +191,7 @@ function getBreadcrumbs(lang, page) {
 const serviceSchema = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'Serviços Acrobatic IT',
+  name: 'Serviços Nexugal',
   itemListElement: [
     {
       '@type': 'ListItem',
@@ -201,7 +201,7 @@ const serviceSchema = {
         name: 'Desenvolvimento Web',
         description:
           'Aplicações web modernas, responsivas e de alta performance com as tecnologias mais recentes do mercado.',
-        provider: { '@type': 'Organization', name: 'Acrobatic IT' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -212,7 +212,7 @@ const serviceSchema = {
         name: 'Cibersegurança',
         description:
           'Proteção completa dos seus dados e infraestrutura com auditorias, monitoramento e estratégias avançadas de segurança.',
-        provider: { '@type': 'Organization', name: 'Acrobatic IT' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -223,7 +223,7 @@ const serviceSchema = {
         name: 'Soluções Cloud',
         description:
           'Migração, gestão e otimização de infraestrutura em nuvem para máxima escalabilidade e disponibilidade.',
-        provider: { '@type': 'Organization', name: 'Acrobatic IT' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -234,7 +234,7 @@ const serviceSchema = {
         name: 'Consultoria em IA',
         description:
           'Integração de inteligência artificial e automação nos seus processos para aumentar a eficiência operacional.',
-        provider: { '@type': 'Organization', name: 'Acrobatic IT' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -245,7 +245,7 @@ const serviceSchema = {
         name: 'Análise de Dados',
         description:
           'Transforme dados em decisões estratégicas com dashboards inteligentes e relatórios personalizados.',
-        provider: { '@type': 'Organization', name: 'Acrobatic IT' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -256,7 +256,7 @@ const serviceSchema = {
         name: 'Suporte & Manutenção',
         description:
           'Suporte técnico contínuo 24/7 e manutenção proativa para manter os seus sistemas sempre operacionais.',
-        provider: { '@type': 'Organization', name: 'Acrobatic IT' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
   ],
@@ -267,7 +267,7 @@ function getFaqSchema(lang) {
   const faqItems = {
     pt: [
       {
-        question: 'Que tipo de serviços a Acrobatic IT oferece?',
+        question: 'Que tipo de serviços a Nexugal oferece?',
         answer: 'Oferecemos uma gama completa de serviços tecnológicos: desenvolvimento web (sites, aplicações e plataformas), cibersegurança (auditorias, monitoramento e proteção de dados), soluções cloud (migração e gestão), consultoria em inteligência artificial, análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7.',
       },
       {
@@ -275,11 +275,11 @@ function getFaqSchema(lang) {
         answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 2 a 4 semanas, enquanto uma aplicação web mais complexa pode levar entre 2 a 6 meses. Na fase de diagnóstico, definimos um roadmap claro com prazos detalhados para cada etapa.',
       },
       {
-        question: 'Como funciona o processo de trabalho da Acrobatic IT?',
+        question: 'Como funciona o processo de trabalho da Nexugal?',
         answer: 'O nosso processo segue 5 etapas: (1) Diagnóstico — mapeamos as necessidades do seu negócio; (2) Estratégia — desenhamos a arquitetura e o plano técnico; (3) Execução — desenvolvimento ágil com entregas contínuas; (4) Deploy — lançamento com zero downtime; (5) Evolução — suporte contínuo e otimização constante.',
       },
       {
-        question: 'A Acrobatic IT trabalha com empresas de que dimensão?',
+        question: 'A Nexugal trabalha com empresas de que dimensão?',
         answer: 'Trabalhamos com empresas de todas as dimensões, desde startups e PMEs até grandes corporações. As nossas soluções são personalizadas para se adaptarem às necessidades e ao orçamento de cada cliente.',
       },
       {
@@ -295,13 +295,13 @@ function getFaqSchema(lang) {
         answer: 'Sim, a primeira consulta é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. Pode agendar através do nosso formulário de contacto.',
       },
       {
-        question: 'Em que regiões a Acrobatic IT opera?',
+        question: 'Em que regiões a Nexugal opera?',
         answer: 'Estamos sediados em Braga, Portugal, mas trabalhamos com clientes em todo o território português e também no Brasil. Como muitos dos nossos serviços são prestados remotamente, podemos atender clientes em qualquer parte do mundo.',
       },
     ],
     en: [
       {
-        question: 'What type of services does Acrobatic IT offer?',
+        question: 'What type of services does Nexugal offer?',
         answer: 'We offer a complete range of technology services: web development (websites, applications and platforms), cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management), artificial intelligence consulting, data analytics with customized dashboards, and continuous 24/7 technical support.',
       },
       {
@@ -309,11 +309,11 @@ function getFaqSchema(lang) {
         answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 2 to 4 weeks, while a more complex web application can take between 2 to 6 months. During the discovery phase, we define a clear roadmap with detailed deadlines for each stage.',
       },
       {
-        question: "How does Acrobatic IT's work process function?",
+        question: "How does Nexugal's work process function?",
         answer: 'Our process follows 5 stages: (1) Discovery — we map your business needs; (2) Strategy — we design the architecture and technical plan; (3) Execution — agile development with continuous deliveries; (4) Deploy — launch with zero downtime; (5) Evolution — continuous support and constant optimization.',
       },
       {
-        question: 'What size companies does Acrobatic IT work with?',
+        question: 'What size companies does Nexugal work with?',
         answer: "We work with companies of all sizes, from startups and SMEs to large corporations. Our solutions are customized to adapt to each client's needs and budget.",
       },
       {
@@ -329,7 +329,7 @@ function getFaqSchema(lang) {
         answer: 'Yes, the first consultation is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. You can schedule it through our contact form.',
       },
       {
-        question: 'In which regions does Acrobatic IT operate?',
+        question: 'In which regions does Nexugal operate?',
         answer: 'We are based in Braga, Portugal, but we work with clients across the entire Portuguese territory and also in Brazil. Since many of our services are provided remotely, we can serve clients anywhere in the world.',
       },
     ],
@@ -382,14 +382,14 @@ function SEO({ lang = 'pt', page = 'home' }) {
 
       {/* Open Graph */}
       <meta property="og:type" content="website" />
-      <meta property="og:site_name" content="Acrobatic IT" />
+      <meta property="og:site_name" content="Nexugal" />
       <meta property="og:title" content={data.title} />
       <meta property="og:description" content={data.description} />
       <meta property="og:url" content={data.canonical} />
       <meta property="og:image" content={`${BASE_URL}/images/og-image.png`} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content="Acrobatic IT — Codificando o Amanhã da sua Empresa" />
+      <meta property="og:image:alt" content="Nexugal — Codificando o Amanhã da sua Empresa" />
       <meta property="og:locale" content={data.ogLocale} />
 
       {/* Twitter Card */}

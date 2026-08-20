@@ -38,7 +38,7 @@ const ChatHeader = ({ lang, onClose }) => {
             {lang === 'pt' ? 'Assistente Virtual' : 'Virtual Assistant'}
           </h3>
           <p className="chatbot-header__subtitle">
-            {lang === 'pt' ? 'Acrobatic IT' : 'Acrobatic IT'}
+            {lang === 'pt' ? 'Nexugal' : 'Nexugal'}
           </p>
         </div>
       </div>

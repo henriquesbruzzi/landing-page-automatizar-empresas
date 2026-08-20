@@ -91,14 +91,14 @@ class ChatService {
 
     if (lowerMessage.includes('sobre') || lowerMessage.includes('about')) {
       return lang === 'pt'
-        ? 'Somos a Acrobatic IT, uma consultoria tecnológica focada em transformação digital. Combinamos expertise técnica com visão estratégica para entregar soluções que fazem a diferença. Temos 10+ anos de experiência e 200+ projetos entregues.'
-        : 'We are Acrobatic IT, a technology consultancy focused on digital transformation. We combine technical expertise with strategic vision to deliver solutions that make a difference. We have 10+ years of experience and 200+ projects delivered.';
+        ? 'Somos a Nexugal, uma consultoria tecnológica focada em transformação digital. Combinamos expertise técnica com visão estratégica para entregar soluções que fazem a diferença. Temos 10+ anos de experiência e 200+ projetos entregues.'
+        : 'We are Nexugal, a technology consultancy focused on digital transformation. We combine technical expertise with strategic vision to deliver solutions that make a difference. We have 10+ years of experience and 200+ projects delivered.';
     }
 
     // Resposta padrão inteligente
     return lang === 'pt'
-      ? 'Obrigado pela sua mensagem! Sou o assistente virtual da Acrobatic IT. Posso ajudar com informações sobre os nossos serviços, processos, prazos e preços. Sobre o que gostaria de saber mais?'
-      : 'Thank you for your message! I\'m Acrobatic IT\'s virtual assistant. I can help with information about our services, processes, timelines and prices. What would you like to know more about?';
+      ? 'Obrigado pela sua mensagem! Sou o assistente virtual da Nexugal. Posso ajudar com informações sobre os nossos serviços, processos, prazos e preços. Sobre o que gostaria de saber mais?'
+      : 'Thank you for your message! I\'m Nexugal\'s virtual assistant. I can help with information about our services, processes, timelines and prices. What would you like to know more about?';
   }
 
   /**

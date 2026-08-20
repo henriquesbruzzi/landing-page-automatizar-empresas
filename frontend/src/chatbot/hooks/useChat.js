@@ -28,8 +28,8 @@ export const useChat = (lang = 'pt') => {
         id: Date.now(),
         role: 'assistant',
         content: lang === 'pt'
-          ? 'Olá! 👋 Sou o assistente virtual da Acrobatic IT. Como posso ajudar hoje?'
-          : 'Hello! 👋 I\'m Acrobatic IT\'s virtual assistant. How can I help you today?',
+          ? 'Olá! 👋 Sou o assistente virtual da Nexugal. Como posso ajudar hoje?'
+          : 'Hello! 👋 I\'m Nexugal\'s virtual assistant. How can I help you today?',
         timestamp: new Date().toISOString()
       };
       setMessages([welcomeMessage]);

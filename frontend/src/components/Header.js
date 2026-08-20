@@ -39,9 +39,9 @@ function Header() {
           <a
             href={lang === 'pt' ? '/' : '/us'}
             className="font-orbitron text-white/70 text-lg md:text-xl font-bold tracking-[0.2em] hover:text-cyan-neon transition-colors duration-300"
-            aria-label="Acrobatic IT — Ir para a página principal"
+            aria-label="Nexugal — Ir para a página principal"
           >
-            Acrobatic IT
+            Nexugal
           </a>
 
           {/* Desktop Navigation */}

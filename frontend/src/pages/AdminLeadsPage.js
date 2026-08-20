@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
-const ADMIN_TOKEN_KEY = 'acrobatic_admin_token';
+const ADMIN_TOKEN_KEY = 'nexugal_admin_token';
 
 function formatDate(value) {
   try {

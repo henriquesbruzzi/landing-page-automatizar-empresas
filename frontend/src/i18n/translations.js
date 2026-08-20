@@ -123,7 +123,7 @@ const translations = {
     about: {
       subtitle: 'Quem somos',
       title: 'Sobre a ',
-      titleHighlight: 'Acrobatic IT',
+      titleHighlight: 'Nexugal',
       description: 'Somos uma consultoria de tecnologia focada em transformação digital. Combinamos expertise técnica com visão estratégica para entregar soluções que realmente fazem a diferença.',
       stats: [
         { value: '10+', label: 'Anos de Experiência' },
@@ -149,7 +149,7 @@ const translations = {
       back: '← Voltar ao início',
       items: [
         {
-          question: 'Que tipo de serviços a Acrobatic IT oferece?',
+          question: 'Que tipo de serviços a Nexugal oferece?',
           answer: 'Oferecemos uma gama completa de serviços tecnológicos: desenvolvimento web (sites, aplicações e plataformas), cibersegurança (auditorias, monitoramento e proteção de dados), soluções cloud (migração e gestão), consultoria em inteligência artificial, análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7.',
         },
         {
@@ -157,11 +157,11 @@ const translations = {
           answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 2 a 4 semanas, enquanto uma aplicação web mais complexa pode levar entre 2 a 6 meses. Na fase de diagnóstico, definimos um roadmap claro com prazos detalhados para cada etapa.',
         },
         {
-          question: 'Como funciona o processo de trabalho da Acrobatic IT?',
+          question: 'Como funciona o processo de trabalho da Nexugal?',
           answer: 'O nosso processo segue 5 etapas: (1) Diagnóstico — mapeamos as necessidades do seu negócio; (2) Estratégia — desenhamos a arquitetura e o plano técnico; (3) Execução — desenvolvimento ágil com entregas contínuas; (4) Deploy — lançamento com zero downtime; (5) Evolução — suporte contínuo e otimização constante.',
         },
         {
-          question: 'A Acrobatic IT trabalha com empresas de que dimensão?',
+          question: 'A Nexugal trabalha com empresas de que dimensão?',
           answer: 'Trabalhamos com empresas de todas as dimensões, desde startups e PMEs até grandes corporações. As nossas soluções são personalizadas para se adaptarem às necessidades e ao orçamento de cada cliente.',
         },
         {
@@ -177,7 +177,7 @@ const translations = {
           answer: 'Sim, a primeira consulta é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. Pode agendar através do nosso formulário de contacto.',
         },
         {
-          question: 'Em que regiões a Acrobatic IT opera?',
+          question: 'Em que regiões a Nexugal opera?',
           answer: 'Estamos sediados em Braga, Portugal, mas trabalhamos com clientes em todo o território português e também no Brasil. Como muitos dos nossos serviços são prestados remotamente, podemos atender clientes em qualquer parte do mundo.',
         },
       ],
@@ -192,7 +192,7 @@ const translations = {
     },
     footer: {
       brand: {
-        name: 'Acrobatic IT',
+        name: 'Nexugal',
         tagline: 'Codificando o amanhã da sua empresa. Consultoria tecnológica de excelência.',
       },
       contact: {
@@ -224,18 +224,18 @@ const translations = {
       social: {
         title: 'Redes Sociais',
       },
-      copyright: '© {year} Acrobatic IT. Todos os direitos reservados.',
+      copyright: '© {year} Nexugal. Todos os direitos reservados.',
       madeWith: 'Feito com tecnologia de ponta em',
       location: 'Portugal',
     },
     chatbot: {
-      welcome: 'Olá! 👋 Sou o assistente virtual da Acrobatic IT. Como posso ajudar hoje?',
+      welcome: 'Olá! 👋 Sou o assistente virtual da Nexugal. Como posso ajudar hoje?',
       placeholder: 'Digite sua mensagem...',
       send: 'Enviar mensagem',
       close: 'Fechar chat',
       open: 'Abrir chat',
       title: 'Assistente Virtual',
-      subtitle: 'Acrobatic IT',
+      subtitle: 'Nexugal',
     },
   },
   en: {
@@ -362,7 +362,7 @@ const translations = {
     about: {
       subtitle: 'Who we are',
       title: 'About ',
-      titleHighlight: 'Acrobatic IT',
+      titleHighlight: 'Nexugal',
       description: 'We are a technology consultancy focused on digital transformation. We combine technical expertise with strategic vision to deliver solutions that truly make a difference.',
       stats: [
         { value: '10+', label: 'Years of Experience' },
@@ -388,7 +388,7 @@ const translations = {
       back: '← Back to home',
       items: [
         {
-          question: 'What type of services does Acrobatic IT offer?',
+          question: 'What type of services does Nexugal offer?',
           answer: 'We offer a complete range of technology services: web development (websites, applications and platforms), cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management), artificial intelligence consulting, data analytics with customized dashboards, and continuous 24/7 technical support.',
         },
         {
@@ -396,11 +396,11 @@ const translations = {
           answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 2 to 4 weeks, while a more complex web application can take between 2 to 6 months. During the discovery phase, we define a clear roadmap with detailed deadlines for each stage.',
         },
         {
-          question: 'How does Acrobatic IT\'s work process function?',
+          question: 'How does Nexugal\'s work process function?',
           answer: 'Our process follows 5 stages: (1) Discovery — we map your business needs; (2) Strategy — we design the architecture and technical plan; (3) Execution — agile development with continuous deliveries; (4) Deploy — launch with zero downtime; (5) Evolution — continuous support and constant optimization.',
         },
         {
-          question: 'What size companies does Acrobatic IT work with?',
+          question: 'What size companies does Nexugal work with?',
           answer: 'We work with companies of all sizes, from startups and SMEs to large corporations. Our solutions are customized to adapt to each client\'s needs and budget.',
         },
         {
@@ -416,7 +416,7 @@ const translations = {
           answer: 'Yes, the first consultation is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. You can schedule it through our contact form.',
         },
         {
-          question: 'In which regions does Acrobatic IT operate?',
+          question: 'In which regions does Nexugal operate?',
           answer: 'We are based in Braga, Portugal, but we work with clients across the entire Portuguese territory and also in Brazil. Since many of our services are provided remotely, we can serve clients anywhere in the world.',
         },
       ],
@@ -431,7 +431,7 @@ const translations = {
     },
     footer: {
       brand: {
-        name: 'Acrobatic IT',
+        name: 'Nexugal',
         tagline: 'Coding the future of your business. Technology consultancy of excellence.',
       },
       contact: {
@@ -463,18 +463,18 @@ const translations = {
       social: {
         title: 'Social Media',
       },
-      copyright: '© {year} Acrobatic IT. All rights reserved.',
+      copyright: '© {year} Nexugal. All rights reserved.',
       madeWith: 'Made with cutting-edge technology in',
       location: 'Portugal',
     },
     chatbot: {
-      welcome: 'Hello! 👋 I\'m Acrobatic IT\'s virtual assistant. How can I help you today?',
+      welcome: 'Hello! 👋 I\'m Nexugal\'s virtual assistant. How can I help you today?',
       placeholder: 'Type your message...',
       send: 'Send message',
       close: 'Close chat',
       open: 'Open chat',
       title: 'Virtual Assistant',
-      subtitle: 'Acrobatic IT',
+      subtitle: 'Nexugal',
     },
   },
 };
