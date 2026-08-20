@@ -254,6 +254,11 @@ def get_current_user(
 	return username
 
 
+@app.get("/")
+def root() -> dict:
+	return {"status": "ok", "app": APP_NAME, "db": "postgres" if IS_POSTGRES else "sqlite"}
+
+
 @app.get("/api/health")
 def health() -> dict:
 	return {"status": "ok", "app": APP_NAME, "db": "postgres" if IS_POSTGRES else "sqlite"}
