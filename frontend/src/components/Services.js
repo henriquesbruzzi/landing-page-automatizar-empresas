@@ -1,5 +1,16 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
+import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
+import { classesEntrada, atrasoEntrada } from '../utils/entrada';
+import { EVENTO_DESTAQUE } from '../utils/destaqueServico';
+
+// Espera antes de acender o cartão, para o destaque começar quando o visitante
+// lá chega e não enquanto a página ainda desce.
+const ESPERA_ATE_CHEGAR = 500;
+
+// Cadeia de entrada dos cartões
+const ATRASO_CARTOES = 120;
+const ATRASO_ENTRE_CARTOES = 80;
 
 // Ícones SVG inline para cada serviço
 const icons = {
@@ -37,15 +48,63 @@ const icons = {
 
 function Services() {
   const { t } = useLanguage();
+  const { ref, visivel, semAnimacao } = useRevealOnScroll();
+  const cartoes = useRef({});
+  const temporizador = useRef(null);
+
+  // Acende o cartão. Tira e volta a pôr a classe para a animação recomeçar,
+  // mesmo quando se clica duas vezes seguidas no mesmo item.
+  const destacar = useCallback((id) => {
+    const cartao = id ? cartoes.current[id] : null;
+    if (!cartao) return;
+
+    cartao.classList.remove('destaque-servico');
+    void cartao.offsetWidth;
+    cartao.classList.add('destaque-servico');
+    cartao.addEventListener(
+      'animationend',
+      () => cartao.classList.remove('destaque-servico'),
+      { once: true }
+    );
+  }, []);
+
+  useEffect(() => {
+    // Com animações reduzidas, o visitante salta para o cartão sem destaque.
+    if (semAnimacao) return undefined;
+
+    const agendar = (id) => {
+      if (!id || !cartoes.current[id]) return;
+      clearTimeout(temporizador.current);
+      temporizador.current = setTimeout(() => destacar(id), ESPERA_ATE_CHEGAR);
+    };
+
+    const pelaAncora = () => agendar(window.location.hash.slice(1));
+    const peloAviso = (evento) => agendar(evento.detail);
+
+    window.addEventListener('hashchange', pelaAncora);
+    window.addEventListener(EVENTO_DESTAQUE, peloAviso);
+
+    // A página pode abrir já com um cartão no endereço.
+    pelaAncora();
+
+    return () => {
+      clearTimeout(temporizador.current);
+      window.removeEventListener('hashchange', pelaAncora);
+      window.removeEventListener(EVENTO_DESTAQUE, peloAviso);
+    };
+  }, [destacar, semAnimacao]);
 
   return (
-    <section id="servicos" className="relative py-24 md:py-32 bg-black" aria-labelledby="services-title">
+    <section ref={ref} id="servicos" className="relative py-24 md:py-32 bg-black" aria-labelledby="services-title">
       {/* Linha divisória sutil no topo */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-cyan-neon/30 to-transparent"></div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
         {/* Header da secção */}
-        <div className="text-center mb-20">
+        <div
+          className={`text-center mb-20 ${classesEntrada(visivel, semAnimacao)}`}
+          style={atrasoEntrada(0, visivel, semAnimacao)}
+        >
           <span className="font-orbitron text-cyan-neon text-xs tracking-[0.3em] uppercase mb-4 block">
             {t.services.subtitle}
           </span>
@@ -53,40 +112,48 @@ function Services() {
             {t.services.title}
             <span className="text-cyan-neon">{t.services.titleHighlight}</span>
           </h2>
-          <p className="text-white/50 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+          <p className="text-white/90 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
             {t.services.description}
           </p>
         </div>
 
-        {/* Grid de serviços */}
+        {/* Grelha de serviços */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {t.services.items.map((service, index) => (
             <div
-              key={index}
-              className="group relative p-8 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-sm hover:border-cyan-neon/30 hover:bg-white/[0.04] transition-all duration-500"
+              key={service.id}
+              className={classesEntrada(visivel, semAnimacao)}
+              style={atrasoEntrada(ATRASO_CARTOES + index * ATRASO_ENTRE_CARTOES, visivel, semAnimacao)}
             >
-              {/* Glow sutil no hover */}
-              <div className="absolute inset-0 rounded-2xl bg-cyan-neon/0 group-hover:bg-cyan-neon/[0.02] transition-all duration-500"></div>
+              {/* scroll-mt afasta o cartão do menu fixo quando é alvo de um link */}
+              <div
+                id={service.id}
+                ref={(elemento) => { cartoes.current[service.id] = elemento; }}
+                className="group relative h-full scroll-mt-32 p-8 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-sm hover:border-cyan-neon/30 hover:bg-white/[0.04] transition-colors duration-500"
+              >
+                {/* Glow sutil no hover */}
+                <div className="absolute inset-0 rounded-2xl bg-cyan-neon/0 group-hover:bg-cyan-neon/[0.02] transition-all duration-500"></div>
 
-              <div className="relative z-10">
-                {/* Ícone */}
-                <div className="text-cyan-neon mb-6 group-hover:scale-110 transition-transform duration-300">
-                  {icons[service.icon]}
+                <div className="relative z-10">
+                  {/* Ícone */}
+                  <div className="text-cyan-neon mb-6 group-hover:scale-110 transition-transform duration-300">
+                    {icons[service.icon]}
+                  </div>
+
+                  {/* Título do serviço */}
+                  <h3 className="font-orbitron text-white text-base md:text-lg font-semibold tracking-[0.05em] mb-4">
+                    {service.title}
+                  </h3>
+
+                  {/* Descrição */}
+                  <p className="text-white/90 text-sm leading-relaxed">
+                    {service.description}
+                  </p>
                 </div>
 
-                {/* Título do serviço */}
-                <h3 className="font-orbitron text-white text-base md:text-lg font-semibold tracking-[0.05em] mb-4">
-                  {service.title}
-                </h3>
-
-                {/* Descrição */}
-                <p className="text-white/40 text-sm leading-relaxed group-hover:text-white/60 transition-colors duration-300">
-                  {service.description}
-                </p>
+                {/* Linha inferior decorativa */}
+                <div className="absolute bottom-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-cyan-neon/0 group-hover:via-cyan-neon/20 to-transparent transition-all duration-500"></div>
               </div>
-
-              {/* Linha inferior decorativa */}
-              <div className="absolute bottom-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-cyan-neon/0 group-hover:via-cyan-neon/20 to-transparent transition-all duration-500"></div>
             </div>
           ))}
         </div>

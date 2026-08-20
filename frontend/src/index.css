@@ -37,3 +37,38 @@ body {
 .texto-sobre-video {
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95), 0 0 4px rgba(0, 0, 0, 0.85);
 }
+
+/* Destaque temporário do cartão apontado pela lista do hero */
+@keyframes destaque-servico {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 209, 255, 0), 0 0 0 rgba(0, 209, 255, 0);
+  }
+  15% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 1px rgba(0, 209, 255, 0.9), 0 0 30px rgba(0, 209, 255, 0.35);
+  }
+  70% {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 1px rgba(0, 209, 255, 0.9), 0 0 30px rgba(0, 209, 255, 0.35);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 209, 255, 0), 0 0 0 rgba(0, 209, 255, 0);
+  }
+}
+
+.destaque-servico {
+  animation: destaque-servico 2s ease-out;
+}
+
+/* Animações reduzidas: salto direto, sem scroll suave nem destaque */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .destaque-servico {
+    animation: none;
+  }
+}
