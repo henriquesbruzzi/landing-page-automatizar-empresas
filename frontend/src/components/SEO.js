@@ -9,7 +9,7 @@ import { Helmet } from 'react-helmet-async';
  *  - page: 'home' | 'contact' | 'faq'
  */
 
-const BASE_URL = 'https://sbruzzi.it';
+const BASE_URL = process.env.REACT_APP_SITE_URL || 'https://projeto-teste-weld.vercel.app';
 
 // Dados SEO por idioma e página
 const seoData = {
