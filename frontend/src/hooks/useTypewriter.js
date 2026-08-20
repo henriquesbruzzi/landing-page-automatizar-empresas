@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { usePrefersReducedMotion } from './usePrefersReducedMotion';
 
-const TYPING_SPEED = 60; // ms por letra
-const CURSOR_VISIBLE_AFTER = 2000; // cursor some 2s após terminar
+const TYPING_SPEED = 30; // ms por letra
+const CURSOR_VISIBLE_AFTER = 1000; // cursor some 1s após terminar
 
 /**
  * Hook de efeito typewriter sem persistência.
@@ -13,6 +14,7 @@ const CURSOR_VISIBLE_AFTER = 2000; // cursor some 2s após terminar
  * @returns {{ displayedText: string, showCursor: boolean, isTypingDone: boolean }}
  */
 export function useTypewriter(fullText, lang) {
+  const reduzido = usePrefersReducedMotion();
   const [displayedText, setDisplayedText] = useState('');
   const [showCursor, setShowCursor] = useState(false);
   const [isTypingDone, setIsTypingDone] = useState(false);
@@ -73,16 +75,24 @@ export function useTypewriter(fullText, lang) {
       timeoutRef.current = setTimeout(typeNextChar, TYPING_SPEED);
     };
 
-    timeoutRef.current = setTimeout(typeNextChar, 500);
+    timeoutRef.current = setTimeout(typeNextChar, 250);
   }, []);
 
   useEffect(() => {
     clearTimer();
 
+    // Animações reduzidas: título completo de imediato, sem escrita nem cursor.
+    if (reduzido) {
+      setDisplayedText(fullText);
+      setShowCursor(false);
+      setIsTypingDone(true);
+      return clearTimer;
+    }
+
     startTypewriter(fullText);
 
     return clearTimer;
-  }, [fullText, lang, clearTimer, startTypewriter]);
+  }, [fullText, lang, reduzido, clearTimer, startTypewriter]);
 
   return { displayedText, showCursor, isTypingDone };
 }
