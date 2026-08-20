@@ -83,7 +83,7 @@ const organizationSchema = {
   },
   contactPoint: {
     '@type': 'ContactPoint',
-    telephone: '+351912345678',
+    telephone: '+351912423912',
     email: 'info@sbruzzi.it',
     contactType: 'customer service',
     availableLanguage: ['Portuguese', 'English'],
