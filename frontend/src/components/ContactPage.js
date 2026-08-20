@@ -21,15 +21,31 @@ function ContactPage() {
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
   const [submitError, setSubmitError] = useState('');
+  const [erroMensagem, setErroMensagem] = useState('');
+
+  // A última opção da lista é sempre o "Outro"
+  const opcaoOutro = f.serviceOptions[f.serviceOptions.length - 1];
+  const mensagemObrigatoria = formData.service === opcaoOutro;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErroMensagem('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const mensagem = formData.message.trim();
+
+    // Validação também no envio, não apenas no que se vê no ecrã
+    if (mensagemObrigatoria && !mensagem) {
+      setErroMensagem(f.messageErrorOther);
+      return;
+    }
+
     setIsSending(true);
     setSubmitError('');
+    setErroMensagem('');
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/leads`, {
@@ -39,6 +55,10 @@ function ContactPage() {
         },
         body: JSON.stringify({
           ...formData,
+          // O backend exige mensagem. Quando o visitante escolhe um dos seis
+          // serviços e não escreve nada, segue uma linha automática com o
+          // serviço escolhido, para o pedido não ser recusado.
+          message: mensagem || `${f.messageAutoPrefix}${formData.service}.`,
           language: lang,
         }),
       });
@@ -110,7 +130,7 @@ function ContactPage() {
                 {t.contact.title}
                 <span className="text-cyan-neon">{t.contact.titleHighlight}</span>
               </h1>
-              <p className="text-white/40 text-sm md:text-base max-w-lg mx-auto leading-relaxed">
+              <p className="text-white/90 text-sm md:text-base max-w-lg mx-auto leading-relaxed">
                 {t.contact.description}
               </p>
             </div>
@@ -219,20 +239,27 @@ function ContactPage() {
                   </select>
                 </div>
 
-                {/* Mensagem */}
+                {/* Mensagem: obrigatória apenas quando o serviço é "Outro" */}
                 <div>
-                  <label className="font-orbitron text-white/50 text-xs tracking-[0.15em] mb-2 block">
-                    {f.message}
+                  <label htmlFor="message" className="font-orbitron text-white/50 text-xs tracking-[0.15em] mb-2 block">
+                    {mensagemObrigatoria ? f.messageRequired : f.messageOptional}
                   </label>
                   <textarea
+                    id="message"
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
                     placeholder={f.messagePlaceholder}
-                    required
                     rows={5}
-                    className={`${inputClasses} resize-none`}
+                    aria-invalid={erroMensagem ? 'true' : 'false'}
+                    aria-describedby={erroMensagem ? 'erro-mensagem' : undefined}
+                    className={`${inputClasses} resize-none ${erroMensagem ? 'ring-1 ring-red-400/70' : ''}`}
                   />
+                  {erroMensagem && (
+                    <p id="erro-mensagem" role="alert" className="text-red-400 text-xs mt-2 leading-relaxed">
+                      {erroMensagem}
+                    </p>
+                  )}
                 </div>
 
                 {/* Botão Submit */}
