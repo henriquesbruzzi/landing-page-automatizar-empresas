@@ -12,8 +12,21 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, EmailStr, Field
 
+try:
+	import psycopg2
+	from psycopg2.extras import RealDictCursor
+	HAS_PSYCOPG2 = True
+except ImportError:
+	HAS_PSYCOPG2 = False
+
 
 APP_NAME = "NEXUGAL API"
+
+DATABASE_URL = os.getenv("DATABASE_URL") or os.getenv("POSTGRES_URL")
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+	DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
+IS_POSTGRES = bool(DATABASE_URL and HAS_PSYCOPG2)
 DB_PATH = os.getenv("SQLITE_DB_PATH", "./leads.db")
 JWT_SECRET = os.getenv("JWT_SECRET", "change-this-in-production")
 JWT_ALGORITHM = "HS256"
@@ -22,10 +35,43 @@ ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
 
 
-def get_db_connection() -> sqlite3.Connection:
+def get_db_connection():
+	if IS_POSTGRES:
+		return psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
 	conn = sqlite3.connect(DB_PATH)
 	conn.row_factory = sqlite3.Row
 	return conn
+
+
+def execute_sql(conn, query: str, params: tuple = ()):
+	if IS_POSTGRES:
+		pg_query = query.replace("?", "%s")
+		with conn.cursor() as cur:
+			cur.execute(pg_query, params)
+			if cur.description:
+				rows = cur.fetchall()
+				return [dict(r) for r in rows]
+			return []
+	else:
+		cur = conn.execute(query, params)
+		if cur.description:
+			rows = cur.fetchall()
+			return [dict(r) for r in rows]
+		return []
+
+
+def execute_insert_sql(conn, query: str, params: tuple = ()) -> Optional[int]:
+	if IS_POSTGRES:
+		pg_query = query.replace("?", "%s") + " RETURNING id"
+		with conn.cursor() as cur:
+			cur.execute(pg_query, params)
+			row = cur.fetchone()
+			conn.commit()
+			return row["id"] if row else None
+	else:
+		cur = conn.execute(query, params)
+		conn.commit()
+		return cur.lastrowid
 
 
 def hash_password(password: str, salt: Optional[bytes] = None) -> str:
@@ -97,10 +143,7 @@ app = FastAPI(title=APP_NAME)
 
 app.add_middleware(
 	CORSMiddleware,
-	allow_origins=[
-		"http://localhost:3000",
-		"http://127.0.0.1:3000",
-	],
+	allow_origins=["*"],
 	allow_credentials=True,
 	allow_methods=["*"],
 	allow_headers=["*"],
@@ -112,39 +155,72 @@ bearer_scheme = HTTPBearer(auto_error=True)
 def ensure_tables_and_admin() -> None:
 	conn = get_db_connection()
 	try:
-		conn.execute(
-			"""
-			CREATE TABLE IF NOT EXISTS users (
-				id INTEGER PRIMARY KEY AUTOINCREMENT,
-				username TEXT NOT NULL UNIQUE,
-				password_hash TEXT NOT NULL,
-				created_at TEXT NOT NULL
+		if IS_POSTGRES:
+			execute_sql(
+				conn,
+				"""
+				CREATE TABLE IF NOT EXISTS users (
+					id SERIAL PRIMARY KEY,
+					username VARCHAR(255) NOT NULL UNIQUE,
+					password_hash TEXT NOT NULL,
+					created_at TEXT NOT NULL
+				);
+				""",
 			)
-			"""
-		)
-		conn.execute(
-			"""
-			CREATE TABLE IF NOT EXISTS leads (
-				id INTEGER PRIMARY KEY AUTOINCREMENT,
-				name TEXT NOT NULL,
-				email TEXT NOT NULL,
-				phone TEXT NOT NULL,
-				company TEXT NOT NULL,
-				service TEXT NOT NULL,
-				message TEXT NOT NULL,
-				language TEXT NOT NULL,
-				created_at TEXT NOT NULL
+			execute_sql(
+				conn,
+				"""
+				CREATE TABLE IF NOT EXISTS leads (
+					id SERIAL PRIMARY KEY,
+					name VARCHAR(255) NOT NULL,
+					email VARCHAR(255) NOT NULL,
+					phone VARCHAR(255) NOT NULL,
+					company VARCHAR(255) NOT NULL,
+					service VARCHAR(255) NOT NULL,
+					message TEXT NOT NULL,
+					language VARCHAR(10) NOT NULL,
+					created_at TEXT NOT NULL
+				);
+				""",
 			)
-			"""
-		)
+			conn.commit()
+		else:
+			conn.execute(
+				"""
+				CREATE TABLE IF NOT EXISTS users (
+					id INTEGER PRIMARY KEY AUTOINCREMENT,
+					username TEXT NOT NULL UNIQUE,
+					password_hash TEXT NOT NULL,
+					created_at TEXT NOT NULL
+				)
+				"""
+			)
+			conn.execute(
+				"""
+				CREATE TABLE IF NOT EXISTS leads (
+					id INTEGER PRIMARY KEY AUTOINCREMENT,
+					name TEXT NOT NULL,
+					email TEXT NOT NULL,
+					phone TEXT NOT NULL,
+					company TEXT NOT NULL,
+					service TEXT NOT NULL,
+					message TEXT NOT NULL,
+					language TEXT NOT NULL,
+					created_at TEXT NOT NULL
+				)
+				"""
+			)
+			conn.commit()
 
-		existing_user = conn.execute(
+		existing_user = execute_sql(
+			conn,
 			"SELECT id FROM users WHERE username = ?",
 			(ADMIN_USERNAME,),
-		).fetchone()
+		)
 
 		if not existing_user:
-			conn.execute(
+			execute_sql(
+				conn,
 				"INSERT INTO users (username, password_hash, created_at) VALUES (?, ?, ?)",
 				(
 					ADMIN_USERNAME,
@@ -152,8 +228,10 @@ def ensure_tables_and_admin() -> None:
 					datetime.now(timezone.utc).isoformat(),
 				),
 			)
-
-		conn.commit()
+			if IS_POSTGRES:
+				conn.commit()
+			else:
+				conn.commit()
 	finally:
 		conn.close()
 
@@ -178,20 +256,22 @@ def get_current_user(
 
 @app.get("/api/health")
 def health() -> dict:
-	return {"status": "ok", "app": APP_NAME}
+	return {"status": "ok", "app": APP_NAME, "db": "postgres" if IS_POSTGRES else "sqlite"}
 
 
 @app.post("/api/auth/login", response_model=TokenOut)
 def login(payload: LoginIn) -> TokenOut:
 	conn = get_db_connection()
 	try:
-		row = conn.execute(
+		rows = execute_sql(
+			conn,
 			"SELECT username, password_hash FROM users WHERE username = ?",
 			(payload.username,),
-		).fetchone()
+		)
 	finally:
 		conn.close()
 
+	row = rows[0] if rows else None
 	if not row or not verify_password(payload.password, row["password_hash"]):
 		raise HTTPException(
 			status_code=status.HTTP_401_UNAUTHORIZED,
@@ -205,7 +285,8 @@ def login(payload: LoginIn) -> TokenOut:
 def create_lead(payload: LeadIn) -> dict:
 	conn = get_db_connection()
 	try:
-		cursor = conn.execute(
+		lead_id = execute_insert_sql(
+			conn,
 			"""
 			INSERT INTO leads (name, email, phone, company, service, message, language, created_at)
 			VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -221,8 +302,6 @@ def create_lead(payload: LeadIn) -> dict:
 				datetime.now(timezone.utc).isoformat(),
 			),
 		)
-		conn.commit()
-		lead_id = cursor.lastrowid
 	finally:
 		conn.close()
 
@@ -233,14 +312,15 @@ def create_lead(payload: LeadIn) -> dict:
 def list_leads(_: str = Depends(get_current_user)) -> list[LeadOut]:
 	conn = get_db_connection()
 	try:
-		rows = conn.execute(
+		rows = execute_sql(
+			conn,
 			"""
 			SELECT id, name, email, phone, company, service, message, language, created_at
 			FROM leads
-			ORDER BY datetime(created_at) DESC
-			"""
-		).fetchall()
+			ORDER BY created_at DESC
+			""",
+		)
 	finally:
 		conn.close()
 
-	return [LeadOut(**dict(row)) for row in rows]
+	return [LeadOut(**row) for row in rows]
