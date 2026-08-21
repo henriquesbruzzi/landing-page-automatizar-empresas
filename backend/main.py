@@ -141,9 +141,20 @@ class TokenOut(BaseModel):
 
 app = FastAPI(title=APP_NAME)
 
+raw_origins = os.getenv("ALLOWED_ORIGINS") or os.getenv("FRONTEND_URL")
+if raw_origins:
+	allowed_origins = [o.strip() for o in raw_origins.split(",") if o.strip()]
+else:
+	allowed_origins = [
+		"https://nexusgal-laddingpage.vercel.app",
+		"https://projeto-teste-weld.vercel.app",
+		"http://localhost:3000",
+		"http://127.0.0.1:3000",
+	]
+
 app.add_middleware(
 	CORSMiddleware,
-	allow_origins=["*"],
+	allow_origins=allowed_origins,
 	allow_credentials=True,
 	allow_methods=["*"],
 	allow_headers=["*"],
@@ -228,10 +239,20 @@ def ensure_tables_and_admin() -> None:
 					datetime.now(timezone.utc).isoformat(),
 				),
 			)
-			if IS_POSTGRES:
-				conn.commit()
-			else:
-				conn.commit()
+		else:
+			execute_sql(
+				conn,
+				"UPDATE users SET password_hash = ? WHERE username = ?",
+				(
+					hash_password(ADMIN_PASSWORD),
+					ADMIN_USERNAME,
+				),
+			)
+
+		if IS_POSTGRES:
+			conn.commit()
+		else:
+			conn.commit()
 	finally:
 		conn.close()
 
