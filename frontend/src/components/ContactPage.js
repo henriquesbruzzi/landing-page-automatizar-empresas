@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
+import ServiceSelect from './ServiceSelect';
 
 const API_BASE_URL = (process.env.REACT_APP_API_URL || 'http://localhost:8000').replace(/\/$/, '');
 
@@ -22,6 +23,7 @@ function ContactPage() {
   const [isSent, setIsSent] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [erroMensagem, setErroMensagem] = useState('');
+  const [erroServico, setErroServico] = useState('');
 
   // A última opção da lista é sempre o "Outro"
   const opcaoOutro = f.serviceOptions[f.serviceOptions.length - 1];
@@ -32,12 +34,23 @@ function ContactPage() {
     setErroMensagem('');
   };
 
+  const escolherServico = (valor) => {
+    setFormData((dados) => ({ ...dados, service: valor }));
+    setErroServico('');
+    setErroMensagem('');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const mensagem = formData.message.trim();
 
     // Validação também no envio, não apenas no que se vê no ecrã
+    if (!formData.service) {
+      setErroServico(f.serviceError);
+      return;
+    }
+
     if (mensagemObrigatoria && !mensagem) {
       setErroMensagem(f.messageErrorOther);
       return;
@@ -46,6 +59,7 @@ function ContactPage() {
     setIsSending(true);
     setSubmitError('');
     setErroMensagem('');
+    setErroServico('');
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/leads`, {
@@ -112,9 +126,14 @@ function ContactPage() {
             >
               <span>←</span> {t.contact.back}
             </button>
-            <span className="font-orbitron text-cyan-neon text-xl font-bold tracking-[0.2em]">
+            <button
+              type="button"
+              onClick={goHome}
+              aria-label={t.contact.logo}
+              className="font-orbitron text-cyan-neon text-xl font-bold tracking-[0.2em] cursor-pointer hover:text-white transition-colors duration-300"
+            >
               NEXUGAL
-            </span>
+            </button>
           </div>
         </div>
 
@@ -186,12 +205,21 @@ function ContactPage() {
                     <label className="font-orbitron text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
                       {f.phone}
                     </label>
+                    {/* Telefone de qualquer país: aceita o sinal +, espaços,
+                        parênteses, pontos e traços, e não prende o número a
+                        um número certo de dígitos. O limite de 40 caracteres
+                        é o mesmo que o backend já aceita. */}
                     <input
                       type="tel"
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
                       placeholder={f.phonePlaceholder}
+                      inputMode="tel"
+                      autoComplete="tel"
+                      pattern="[+0-9 ().-]+"
+                      title={f.phoneHint}
+                      maxLength={40}
                       className={inputClasses}
                     />
                   </div>
@@ -212,31 +240,24 @@ function ContactPage() {
 
                 {/* Serviço */}
                 <div>
-                  <label className="font-orbitron text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
+                  <label id="etiqueta-servico" className="font-orbitron text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
                     {f.service}
                   </label>
-                  <select
-                    name="service"
+                  <ServiceSelect
+                    labelId="etiqueta-servico"
                     value={formData.service}
-                    onChange={handleChange}
-                    required
-                    className={`${inputClasses} appearance-none cursor-pointer`}
-                    style={{
-                      backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2300D1FF' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E")`,
-                      backgroundRepeat: 'no-repeat',
-                      backgroundPosition: 'right 1rem center',
-                      backgroundSize: '1.2rem',
-                    }}
-                  >
-                    <option value="" disabled className="bg-gray-900 text-gray-400">
-                      {f.servicePlaceholder}
-                    </option>
-                    {f.serviceOptions.map((option, i) => (
-                      <option key={i} value={option} className="bg-gray-900 text-white">
-                        {option}
-                      </option>
-                    ))}
-                  </select>
+                    options={f.serviceOptions}
+                    placeholder={f.servicePlaceholder}
+                    onChange={escolherServico}
+                    campoClasses={inputClasses}
+                    erro={erroServico}
+                    erroId="erro-servico"
+                  />
+                  {erroServico && (
+                    <p id="erro-servico" role="alert" className="text-red-400 text-xs mt-2 leading-relaxed">
+                      {erroServico}
+                    </p>
+                  )}
                 </div>
 
                 {/* Mensagem: obrigatória apenas quando o serviço é "Outro" */}

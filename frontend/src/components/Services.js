@@ -14,6 +14,18 @@ const ATRASO_ENTRE_CARTOES = 80;
 
 // Ícones SVG inline para cada serviço
 const icons = {
+  // Setas em ciclo: trabalho que se repete e passa a andar sozinho
+  ciclo: (
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992V4.356m0 4.992-3.181-3.183a8.25 8.25 0 0 0-13.803 3.7M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7" />
+    </svg>
+  ),
+  // Elo: sistemas ligados uns aos outros
+  elo: (
+    <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+    </svg>
+  ),
   code: (
     <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
       <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
@@ -122,7 +134,7 @@ function Services() {
           {t.services.items.map((service, index) => (
             <div
               key={service.id}
-              className={classesEntrada(visivel, semAnimacao)}
+              className={`h-full ${classesEntrada(visivel, semAnimacao)}`}
               style={atrasoEntrada(ATRASO_CARTOES + index * ATRASO_ENTRE_CARTOES, visivel, semAnimacao)}
             >
               {/* scroll-mt afasta o cartão do menu fixo quando é alvo de um link */}

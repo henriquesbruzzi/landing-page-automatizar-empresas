@@ -39,7 +39,7 @@ function CallToAction() {
 
         {/* Descrição */}
         <p
-          className={`text-white/40 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-12 ${entrada}`}
+          className={`text-white/90 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-12 ${entrada}`}
           style={atraso(100)}
         >
           {t.cta.description}
@@ -75,7 +75,7 @@ function CallToAction() {
           </button>
 
           {/* Nota */}
-          <span className="text-white/20 text-xs tracking-[0.1em]">
+          <span className="text-gray-300 text-xs tracking-[0.1em]">
             {t.cta.note}
           </span>
         </div>

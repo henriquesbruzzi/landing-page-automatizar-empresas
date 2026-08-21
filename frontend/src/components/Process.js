@@ -3,6 +3,15 @@ import { useLanguage } from '../i18n/LanguageContext';
 import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
 import { classesEntrada, atrasoEntrada } from '../utils/entrada';
 
+// O cartão é opaco de propósito: a linha que liga os passos corre por trás e
+// só aparece nos intervalos. #050505 é o tom que bg-white/[0.02] dá sobre
+// preto, e #0a0a0a o de bg-white/[0.04], para ficar igual aos serviços.
+const FUNDO = 'bg-[#050505] group-hover:bg-[#0a0a0a]';
+
+// Cadeia de entrada dos passos
+const ATRASO_PASSOS = 120;
+const ATRASO_ENTRE_PASSOS = 80;
+
 function Process() {
   const { t } = useLanguage();
   const { ref, visivel, semAnimacao } = useRevealOnScroll();
@@ -17,7 +26,7 @@ function Process() {
       <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
         {/* Header da secção */}
         <div className={`text-center mb-20 ${entrada}`} style={atraso(0)}>
-          <span className="font-orbitron text-cyan-neon text-xs tracking-[0.3em] uppercase mb-4 block">
+          <span className="font-orbitron text-cyan-neon text-sm font-semibold tracking-[0.3em] uppercase mb-4 block">
             {t.process.subtitle}
           </span>
           <h2 id="process-title" className="font-orbitron text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-[0.05em]">
@@ -26,56 +35,49 @@ function Process() {
           </h2>
         </div>
 
-        {/* Timeline dos passos */}
+        {/* Passos */}
         <div className="relative">
-          {/* Linha conectora horizontal — desktop */}
-          <div className="hidden lg:block absolute top-[60px] left-[10%] right-[10%] h-[1px] bg-gradient-to-r from-cyan-neon/0 via-cyan-neon/20 to-cyan-neon/0"></div>
+          {/* Ligação entre passos: atravessa a meia altura dos cartões e fica
+              escondida por trás deles, à vista só nos intervalos. */}
+          <div
+            className={`hidden lg:block absolute top-1/2 left-0 right-0 h-[1px] bg-gradient-to-r from-cyan-neon/0 via-cyan-neon/30 to-cyan-neon/0 ${entrada}`}
+            style={atraso(ATRASO_PASSOS)}
+            aria-hidden="true"
+          ></div>
 
-          {/* Grid de passos */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 lg:gap-4">
+          {/* Em ecrãs estreitos os passos empilham e a linha desce pelo lado */}
+          <div
+            className={`lg:hidden absolute top-4 bottom-4 left-[15px] w-[1px] bg-gradient-to-b from-cyan-neon/0 via-cyan-neon/30 to-cyan-neon/0 ${entrada}`}
+            style={atraso(ATRASO_PASSOS)}
+            aria-hidden="true"
+          ></div>
+
+          {/* pl-8 abre o corredor onde a linha desce; a partir de lg some */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 pl-8 lg:pl-0">
             {t.process.steps.map((step, index) => (
               <div
-                key={index}
-                className={`group relative flex flex-col items-center text-center ${entrada}`}
-                style={atraso(120 + index * 80)}
+                key={step.number}
+                className={`group h-full ${entrada}`}
+                style={atraso(ATRASO_PASSOS + index * ATRASO_ENTRE_PASSOS)}
               >
-                {/* Número circular */}
-                <div className="relative mb-6">
-                  <div className="w-[72px] h-[72px] rounded-full border border-white/10 bg-black flex items-center justify-center group-hover:border-cyan-neon/50 group-hover:shadow-[0_0_25px_rgba(0,209,255,0.15)] transition-all duration-500">
-                    <span className="font-orbitron text-cyan-neon text-lg font-bold tracking-wider">
+                <div className={`relative h-full p-6 md:p-7 rounded-2xl border border-white/10 ${FUNDO} group-hover:border-cyan-neon/30 transition-colors duration-500`}>
+                  {/* Número do passo, dentro do cartão */}
+                  <div className="w-12 h-12 rounded-full border border-cyan-neon/25 flex items-center justify-center mb-5 group-hover:border-cyan-neon/60 group-hover:shadow-[0_0_20px_rgba(0,209,255,0.15)] transition-all duration-500">
+                    <span className="font-orbitron text-cyan-neon text-sm font-bold tracking-wider">
                       {step.number}
                     </span>
                   </div>
-                  {/* Ponto de conexão na linha */}
-                  <div className="hidden lg:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-cyan-neon/30 group-hover:bg-cyan-neon group-hover:shadow-[0_0_10px_rgba(0,209,255,0.6)] transition-all duration-500"></div>
-                </div>
 
-                {/* Card do passo */}
-                <div className="w-full p-6 rounded-2xl border border-white/5 bg-white/[0.02] group-hover:border-cyan-neon/20 group-hover:bg-white/[0.04] transition-all duration-500">
-                  {/* Palavra-chave de impacto */}
-                  <span className="font-orbitron text-cyan-neon text-[10px] tracking-[0.3em] uppercase block mb-3 opacity-60 group-hover:opacity-100 transition-opacity duration-300">
+                  {/* Etapa */}
+                  <h3 className="font-orbitron text-cyan-neon text-xs font-semibold tracking-[0.25em] uppercase mb-3">
                     {step.keyword}
-                  </span>
-
-                  {/* Título */}
-                  <h3 className="font-orbitron text-white text-sm font-semibold tracking-[0.05em] mb-3 leading-snug">
-                    {step.title}
                   </h3>
 
                   {/* Descrição */}
-                  <p className="text-white/30 text-xs leading-relaxed group-hover:text-white/50 transition-colors duration-300">
+                  <p className="text-white/90 text-sm leading-relaxed">
                     {step.description}
                   </p>
                 </div>
-
-                {/* Seta mobile entre passos */}
-                {index < t.process.steps.length - 1 && (
-                  <div className="lg:hidden mt-4 mb-2">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-cyan-neon/30">
-                      <path d="M8 2L8 14M8 14L3 9M8 14L13 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                )}
               </div>
             ))}
           </div>
