@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import jwt
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, EmailStr, Field
@@ -72,6 +72,56 @@ def execute_insert_sql(conn, query: str, params: tuple = ()) -> Optional[int]:
 		cur = conn.execute(query, params)
 		conn.commit()
 		return cur.lastrowid
+
+
+MAX_FAILED_ATTEMPTS = int(os.getenv("MAX_FAILED_ATTEMPTS", "2"))
+LOCKOUT_MINUTES = int(os.getenv("LOCKOUT_MINUTES", "15"))
+
+failed_login_attempts: dict[str, dict] = {}
+
+
+def get_client_ip(request: Request) -> str:
+	forwarded = request.headers.get("x-forwarded-for")
+	if forwarded:
+		return forwarded.split(",")[0].strip()
+	if request.client:
+		return request.client.host
+	return "127.0.0.1"
+
+
+def check_ip_blocked(ip: str) -> None:
+	now = datetime.now(timezone.utc)
+	ip_data = failed_login_attempts.get(ip)
+	if ip_data and ip_data.get("blocked_until"):
+		if now < ip_data["blocked_until"]:
+			remaining_seconds = int((ip_data["blocked_until"] - now).total_seconds())
+			remaining_minutes = max(1, remaining_seconds // 60)
+			raise HTTPException(
+				status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+				detail=f"Endereço IP bloqueado por excesso de tentativas de login incorretas. Tente novamente em {remaining_minutes} minuto(s).",
+			)
+		else:
+			failed_login_attempts[ip] = {"count": 0, "blocked_until": None}
+
+
+def record_failed_login(ip: str) -> None:
+	now = datetime.now(timezone.utc)
+	ip_data = failed_login_attempts.get(ip, {"count": 0, "blocked_until": None})
+	count = ip_data.get("count", 0) + 1
+
+	if count >= MAX_FAILED_ATTEMPTS:
+		blocked_until = now + timedelta(minutes=LOCKOUT_MINUTES)
+		failed_login_attempts[ip] = {"count": count, "blocked_until": blocked_until}
+		raise HTTPException(
+			status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+			detail=f"Endereço IP bloqueado por atingir o limite de {MAX_FAILED_ATTEMPTS} tentativa(s) incorreta(s). Tente novamente em {LOCKOUT_MINUTES} minutos.",
+		)
+	else:
+		failed_login_attempts[ip] = {"count": count, "blocked_until": None}
+
+
+def record_successful_login(ip: str) -> None:
+	failed_login_attempts.pop(ip, None)
 
 
 def hash_password(password: str, salt: Optional[bytes] = None) -> str:
@@ -286,7 +336,10 @@ def health() -> dict:
 
 
 @app.post("/api/auth/login", response_model=TokenOut)
-def login(payload: LoginIn) -> TokenOut:
+def login(payload: LoginIn, request: Request) -> TokenOut:
+	client_ip = get_client_ip(request)
+	check_ip_blocked(client_ip)
+
 	conn = get_db_connection()
 	try:
 		rows = execute_sql(
@@ -299,11 +352,13 @@ def login(payload: LoginIn) -> TokenOut:
 
 	row = rows[0] if rows else None
 	if not row or not verify_password(payload.password, row["password_hash"]):
+		record_failed_login(client_ip)
 		raise HTTPException(
 			status_code=status.HTTP_401_UNAUTHORIZED,
 			detail="Credenciais inválidas.",
 		)
 
+	record_successful_login(client_ip)
 	return TokenOut(access_token=create_access_token(row["username"]))
 
 
