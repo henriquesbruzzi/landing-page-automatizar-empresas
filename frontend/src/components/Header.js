@@ -16,6 +16,18 @@ function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Trava o scroll do body enquanto o menu mobile está aberto
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMenuOpen]);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -27,18 +39,20 @@ function Header() {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        isScrolled
-          ? 'bg-black/60 backdrop-blur-md border-b border-white/5'
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        isMenuOpen
+          ? 'bg-black h-screen overflow-hidden'
+          : isScrolled
+          ? 'bg-black/80 backdrop-blur-md border-b border-white/5'
           : 'bg-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
+      <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16 relative z-50">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <a
             href={lang === 'pt' ? '/' : '/us'}
-            className="font-orbitron text-white/70 text-lg md:text-xl font-bold tracking-[0.2em] hover:text-cyan-neon transition-colors duration-300"
+            className="font-orbitron text-white/70 text-lg md:text-xl font-bold tracking-[0.2em] hover:text-cyan-neon transition-colors duration-300 relative z-50"
             aria-label="NEXUGAL — Ir para a página principal"
           >
             NEXUGAL
@@ -92,7 +106,7 @@ function Header() {
           {/* Mobile Hamburger Button */}
           <button
             onClick={toggleMenu}
-            className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-[6px] group z-50"
+            className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-[6px] group z-50 relative"
             aria-label="Menu"
           >
             <span
@@ -116,40 +130,40 @@ function Header() {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`md:hidden fixed inset-0 bg-black/95 backdrop-blur-lg transition-all duration-500 ${
+        className={`md:hidden fixed inset-0 w-screen h-screen bg-black z-40 transition-all duration-300 flex flex-col justify-center items-center ${
           isMenuOpen
             ? 'opacity-100 pointer-events-auto'
             : 'opacity-0 pointer-events-none'
         }`}
       >
-        <nav className="flex flex-col items-center justify-center h-full gap-10">
+        <nav className="flex flex-col items-center justify-center gap-10">
           <a
             href="#home"
             onClick={() => setIsMenuOpen(false)}
-            className="font-orbitron text-white/80 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300"
+            className="font-orbitron text-white/90 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300"
           >
             {t.nav.home}
           </a>
           <a
             href="#servicos"
             onClick={() => setIsMenuOpen(false)}
-            className="font-orbitron text-white/80 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300"
+            className="font-orbitron text-white/90 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300"
           >
             {t.nav.services}
           </a>
           <a
             href="#sobre"
             onClick={() => setIsMenuOpen(false)}
-            className="font-orbitron text-white/80 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300"
+            className="font-orbitron text-white/90 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300"
           >
             {t.nav.about}
           </a>
           <button
             onClick={() => {
-              navigate(lang === 'pt' ? '/faq' : '/us/faq');
               setIsMenuOpen(false);
+              navigate(lang === 'pt' ? '/faq' : '/us/faq');
             }}
-            className="font-orbitron text-white/80 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300 cursor-pointer"
+            className="font-orbitron text-white/90 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300 cursor-pointer"
           >
             {t.nav.faq}
           </button>
@@ -157,8 +171,8 @@ function Header() {
           {/* Bandeira para trocar idioma - Mobile */}
           <button
             onClick={() => {
-              toggleLanguage();
               setIsMenuOpen(false);
+              toggleLanguage();
             }}
             className="w-10 h-10 rounded-full overflow-hidden border border-white/20 hover:border-cyan-neon mt-4 transition-all duration-300"
             title={flagAlt}
