@@ -143,8 +143,7 @@ const translations = {
             id: 'henrique',
             name: 'Henrique Fernandes',
             role: 'Sócio fundador',
-            // POR PREENCHER: texto provisório, à espera do que o Henrique escrever sobre ele.
-            description: 'Texto provisório, à espera do Henrique. É aqui que fica o percurso dele e o que traz à empresa.',
+            description: 'Desenvolvedor Full Stack e especialista em arquiteturas de software robustas. Ao longo do seu percurso freelancer, entregou soluções digitais à medida e automações estratégicas para mais de 80 clientes de variados setores. Traz para a NEXUGAL o equilíbrio perfeito entre rigor técnico avançado e foco em transformar processos complexos em plataformas modernas, rápidas e eficientes.',
           },
         ],
       },
@@ -392,8 +391,7 @@ const translations = {
             id: 'henrique',
             name: 'Henrique Fernandes',
             role: 'Founding partner',
-            // POR PREENCHER: texto provisório, à espera do que o Henrique escrever sobre ele.
-            description: 'Placeholder text, waiting for Henrique. His background and what he brings to the company go here.',
+            description: 'Full Stack Developer and specialist in robust software architectures. Throughout his trajectory as a freelancer, he has delivered tailored digital solutions and strategic automations for over 80 clients across diverse industries. He brings to NEXUGAL the perfect balance between advanced technical rigor and a sharp focus on transforming complex processes into modern, fast, and high-performing platforms.',
           },
         ],
       },
