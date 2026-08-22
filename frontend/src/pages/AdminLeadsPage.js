@@ -67,7 +67,7 @@ function AdminLeadsPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="font-orbitron text-2xl md:text-3xl tracking-[0.08em]">Leads Recebidos</h1>
-            <p className="text-white/50 text-sm mt-1">Área restrita com autenticação segura por cookie</p>
+
           </div>
           <button
             onClick={logout}
