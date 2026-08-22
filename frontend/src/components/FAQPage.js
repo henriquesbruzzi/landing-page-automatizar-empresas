@@ -50,7 +50,7 @@ function FAQPage() {
             </button>
             <a
               href={lang === 'pt' ? '/' : '/us'}
-              className="font-orbitron text-white/70 text-lg font-bold tracking-[0.2em] hover:text-cyan-neon transition-colors duration-300"
+              className="font-orbitron text-cyan-neon text-lg font-bold tracking-[0.2em] hover:text-white transition-colors duration-300"
               aria-label="NEXUGAL — Ir para a página principal"
             >
               NEXUGAL
