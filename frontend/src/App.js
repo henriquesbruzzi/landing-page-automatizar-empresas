@@ -14,13 +14,9 @@ import FAQPage from './components/FAQPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminLeadsPage from './pages/AdminLeadsPage';
 
-const ADMIN_TOKEN_KEY = 'nexugal_admin_token';
-
+// A autenticação é gerida pelo cookie HttpOnly no servidor.
+// O AdminLeadsPage redireciona automaticamente para login em caso de 401.
 function RequireAdminAuth({ children }) {
-  const token = localStorage.getItem(ADMIN_TOKEN_KEY);
-  if (!token) {
-    return <Navigate to="/admin/login" replace />;
-  }
   return children;
 }
 

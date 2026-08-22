@@ -1,8 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = (process.env.REACT_APP_API_URL || 'http://localhost:8000').replace(/\/$/, '');
-const ADMIN_TOKEN_KEY = 'nexugal_admin_token';
 
 function formatDate(value) {
   try {
@@ -18,32 +17,22 @@ function AdminLeadsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const token = useMemo(() => localStorage.getItem(ADMIN_TOKEN_KEY), []);
-
   useEffect(() => {
-    if (!token) {
-      navigate('/admin/login');
-      return;
-    }
-
     const loadLeads = async () => {
       setIsLoading(true);
       setError('');
 
       try {
         const response = await fetch(`${API_BASE_URL}/api/leads`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          credentials: 'include', // envia o cookie HttpOnly automaticamente
         });
 
-        const data = await response.json();
-
         if (response.status === 401) {
-          localStorage.removeItem(ADMIN_TOKEN_KEY);
           navigate('/admin/login');
           return;
         }
+
+        const data = await response.json();
 
         if (!response.ok) {
           throw new Error(data.detail || 'Erro ao carregar leads.');
@@ -58,10 +47,17 @@ function AdminLeadsPage() {
     };
 
     loadLeads();
-  }, [navigate, token]);
+  }, [navigate]);
 
-  const logout = () => {
-    localStorage.removeItem(ADMIN_TOKEN_KEY);
+  const logout = async () => {
+    try {
+      await fetch(`${API_BASE_URL}/api/auth/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch {
+      // ignora erro de rede — redireciona de qualquer forma
+    }
     navigate('/admin/login');
   };
 
@@ -71,11 +67,11 @@ function AdminLeadsPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="font-orbitron text-2xl md:text-3xl tracking-[0.08em]">Leads Recebidos</h1>
-            <p className="text-white/50 text-sm mt-1">Área restrita com autenticação JWT</p>
+            <p className="text-white/50 text-sm mt-1">Área restrita com autenticação segura por cookie</p>
           </div>
           <button
             onClick={logout}
-            className="border border-white/20 hover:border-cyan-neon rounded-full px-5 py-2 text-xs tracking-[0.12em]"
+            className="border border-white/20 hover:border-cyan-neon rounded-full px-5 py-2 text-xs tracking-[0.12em] transition-colors duration-300"
           >
             Sair
           </button>

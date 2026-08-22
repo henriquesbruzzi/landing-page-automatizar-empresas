@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = (process.env.REACT_APP_API_URL || 'http://localhost:8000').replace(/\/$/, '');
-const ADMIN_TOKEN_KEY = 'nexugal_admin_token';
 
 function AdminLoginPage() {
   const navigate = useNavigate();
@@ -22,16 +21,16 @@ function AdminLoginPage() {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // envia e recebe cookies HttpOnly
         body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
 
-      if (!response.ok || !data.access_token) {
+      if (!response.ok || !data.success) {
         throw new Error(data.detail || 'Falha no login.');
       }
 
-      localStorage.setItem(ADMIN_TOKEN_KEY, data.access_token);
       navigate('/admin/leads');
     } catch (err) {
       setError(err.message || 'Erro inesperado ao autenticar.');
@@ -44,7 +43,7 @@ function AdminLoginPage() {
     <div className="min-h-screen bg-black text-white flex items-center justify-center px-6">
       <div className="w-full max-w-md border border-white/10 rounded-2xl bg-white/[0.03] p-8">
         <h1 className="font-orbitron text-2xl tracking-[0.08em] mb-2">Admin Leads</h1>
-        <p className="text-white/50 text-sm mb-8">Acesso restrito com autenticação JWT.</p>
+        <p className="text-white/50 text-sm mb-8">Acesso restrito com autenticação segura por cookie.</p>
 
         <form onSubmit={onSubmit} className="space-y-5">
           <div>

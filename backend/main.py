@@ -7,7 +7,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import jwt
-from fastapi import Depends, FastAPI, HTTPException, Request, status
+from fastapi import Cookie, Depends, FastAPI, HTTPException, Request, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, EmailStr, Field
@@ -33,6 +33,13 @@ JWT_ALGORITHM = "HS256"
 JWT_EXPIRES_MINUTES = int(os.getenv("JWT_EXPIRES_MINUTES", "120"))
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
+
+COOKIE_NAME = "nexugal_auth"
+IS_PRODUCTION = bool(
+	os.getenv("RAILWAY_ENVIRONMENT")
+	or os.getenv("RAILWAY_PROJECT_ID")
+	or os.getenv("IS_PRODUCTION")
+)
 
 
 def get_db_connection():
@@ -200,17 +207,30 @@ else:
 		"https://projeto-teste-weld.vercel.app",
 		"http://localhost:3000",
 		"http://127.0.0.1:3000",
+		"http://localhost:3001",
+		"http://127.0.0.1:3001",
 	]
 
 app.add_middleware(
 	CORSMiddleware,
 	allow_origins=allowed_origins,
 	allow_credentials=True,
-	allow_methods=["*"],
-	allow_headers=["*"],
+	allow_methods=["GET", "POST", "OPTIONS"],
+	allow_headers=["Content-Type", "Authorization"],
 )
 
-bearer_scheme = HTTPBearer(auto_error=True)
+
+@app.middleware("http")
+async def security_headers(request: Request, call_next):
+	response = await call_next(request)
+	response.headers["X-Content-Type-Options"] = "nosniff"
+	response.headers["X-Frame-Options"] = "DENY"
+	response.headers["X-XSS-Protection"] = "1; mode=block"
+	response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+	response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+	if IS_PRODUCTION:
+		response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload"
+	return response
 
 
 def ensure_tables_and_admin() -> None:
@@ -313,9 +333,14 @@ def startup() -> None:
 
 
 def get_current_user(
-	credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+	token: Optional[str] = Cookie(None, alias=COOKIE_NAME),
 ) -> str:
-	payload = decode_access_token(credentials.credentials)
+	if not token:
+		raise HTTPException(
+			status_code=status.HTTP_401_UNAUTHORIZED,
+			detail="Não autenticado.",
+		)
+	payload = decode_access_token(token)
 	username = payload.get("sub")
 	if not username:
 		raise HTTPException(
@@ -335,8 +360,8 @@ def health() -> dict:
 	return {"status": "ok", "app": APP_NAME, "db": "postgres" if IS_POSTGRES else "sqlite"}
 
 
-@app.post("/api/auth/login", response_model=TokenOut)
-def login(payload: LoginIn, request: Request) -> TokenOut:
+@app.post("/api/auth/login")
+def login(payload: LoginIn, request: Request, response: Response) -> dict:
 	client_ip = get_client_ip(request)
 	check_ip_blocked(client_ip)
 
@@ -359,7 +384,35 @@ def login(payload: LoginIn, request: Request) -> TokenOut:
 		)
 
 	record_successful_login(client_ip)
-	return TokenOut(access_token=create_access_token(row["username"]))
+	token = create_access_token(row["username"])
+	cookie_secure = IS_PRODUCTION
+	cookie_samesite = "none" if IS_PRODUCTION else "lax"
+	response.set_cookie(
+		key=COOKIE_NAME,
+		value=token,
+		httponly=True,
+		secure=cookie_secure,
+		samesite=cookie_samesite,
+		max_age=JWT_EXPIRES_MINUTES * 60,
+		path="/",
+	)
+	return {"success": True, "username": row["username"]}
+
+
+@app.post("/api/auth/logout")
+def logout(response: Response) -> dict:
+	response.delete_cookie(
+		key=COOKIE_NAME,
+		path="/",
+		samesite="none" if IS_PRODUCTION else "lax",
+		secure=IS_PRODUCTION,
+	)
+	return {"success": True}
+
+
+@app.get("/api/auth/me")
+def me(username: str = Depends(get_current_user)) -> dict:
+	return {"username": username}
 
 
 @app.post("/api/leads")
