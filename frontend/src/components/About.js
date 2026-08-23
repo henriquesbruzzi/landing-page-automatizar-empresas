@@ -1,7 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
-import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
-import { classesEntrada, atrasoEntrada } from '../utils/entrada';
+import Entrada from './Entrada';
 
 // ---------------------------------------------------------------------------
 // A PREENCHER quando houver
@@ -24,10 +23,9 @@ const FOTOS = {
 
 // ---------------------------------------------------------------------------
 
-// Cadeia de entrada
-const ATRASO_INTRO = 120;
-const ATRASO_CARTOES = 200;
-const ATRASO_ENTRE_CARTOES = 80;
+// Espera entre cartões da mesma fila, para entrarem em cadeia
+const ATRASO_ENTRE_CARTOES = 90;
+const CARTOES_POR_FILA = 2;
 
 // Silhueta neutra, no lugar da fotografia que ainda não existe
 const silhueta = (
@@ -51,37 +49,34 @@ const iconeLinkedin = (
 
 function About() {
   const { t } = useLanguage();
-  const { ref, visivel, semAnimacao } = useRevealOnScroll();
-  const entrada = classesEntrada(visivel, semAnimacao);
-  const atraso = (ms) => atrasoEntrada(ms, visivel, semAnimacao);
   const fundadores = t.about.founders;
 
   return (
-    <section ref={ref} id="sobre" className="relative py-24 md:py-32 bg-black" aria-labelledby="about-title">
+    <section id="sobre" className="relative py-24 md:py-32 bg-black" aria-labelledby="about-title">
       {/* Linha divisória sutil no topo */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-cyan-neon/30 to-transparent"></div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
         {/* Header da secção */}
-        <div className={`text-center mb-16 ${entrada}`} style={atraso(0)}>
-          <span className="font-orbitron text-cyan-neon text-xs font-semibold tracking-[0.3em] uppercase mb-4 block">
+        <Entrada className="text-center mb-16">
+          <span className="font-display text-cyan-neon text-xs font-semibold tracking-[0.3em] uppercase mb-4 block">
             {t.about.subtitle}
           </span>
-          <h2 id="about-title" className="font-orbitron text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-[0.05em] mb-6">
+          <h2 id="about-title" className="font-display text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-[0.05em] mb-6">
             {t.about.title}
             <span className="text-cyan-neon">{t.about.titleHighlight}</span>
           </h2>
           <p className="text-white/90 max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
             {t.about.description}
           </p>
-        </div>
+        </Entrada>
 
         {/* De onde vem a forma de trabalhar dos dois */}
-        <div className={`text-center mb-12 ${entrada}`} style={atraso(ATRASO_INTRO)}>
+        <Entrada className="text-center mb-12">
           <p className="text-white/90 max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
             {fundadores.intro}
           </p>
-        </div>
+        </Entrada>
 
         {/* Fundadores */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
@@ -90,10 +85,10 @@ function About() {
             const linkedin = LINKEDIN[pessoa.id];
 
             return (
-              <div
+              <Entrada
                 key={pessoa.id}
-                className={`h-full ${entrada}`}
-                style={atraso(ATRASO_CARTOES + index * ATRASO_ENTRE_CARTOES)}
+                className="h-full"
+                atraso={(index % CARTOES_POR_FILA) * ATRASO_ENTRE_CARTOES}
               >
                 <div className="group h-full flex flex-col p-8 rounded-2xl border border-white/5 bg-white/[0.02] hover:border-cyan-neon/20 hover:bg-white/[0.04] transition-colors duration-500">
                   <div className="flex items-center gap-5 mb-6">
@@ -111,16 +106,16 @@ function About() {
                     </div>
 
                     <div>
-                      <h3 className="font-orbitron text-white text-base md:text-lg font-semibold tracking-[0.05em]">
+                      <h3 className="font-display text-white text-base md:text-lg font-semibold tracking-[0.05em]">
                         {pessoa.name}
                       </h3>
-                      <p className="font-orbitron text-cyan-neon text-xs font-semibold tracking-[0.2em] uppercase mt-2">
+                      <p className="font-display text-cyan-neon text-xs font-semibold tracking-[0.2em] uppercase mt-2">
                         {pessoa.role}
                       </p>
                     </div>
                   </div>
 
-                  <p className="text-white/90 text-sm leading-relaxed flex-1">
+                  <p className="text-white/90 text-sm font-medium leading-relaxed flex-1">
                     {pessoa.description}
                   </p>
 
@@ -140,7 +135,7 @@ function About() {
                     )}
                   </div>
                 </div>
-              </div>
+              </Entrada>
             );
           })}
         </div>

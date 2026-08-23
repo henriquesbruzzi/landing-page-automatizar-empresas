@@ -60,7 +60,7 @@ function Hero() {
           {/* Coluna esquerda — título, subtítulo e CTA */}
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
             {/* Título principal com Typewriter */}
-            <h1 className="grid font-orbitron text-white text-3xl sm:text-4xl md:text-5xl lg:text-4xl xl:text-5xl font-bold leading-tight tracking-[0.06em]">
+            <h1 className="grid font-display text-white text-3xl sm:text-4xl md:text-5xl lg:text-4xl xl:text-5xl font-bold leading-tight tracking-[0.06em]">
               {/* Cópia invisível: reserva desde o início o espaço do título
                   completo, para que nada salte enquanto as letras aparecem */}
               <span className="col-start-1 row-start-1 invisible" aria-hidden="true">
@@ -96,7 +96,6 @@ function Hero() {
               onClick={() => navigate(lang === 'pt' ? '/contacto' : '/us/contact')}
               style={atraso(ATRASO_BOTAO)}
               className={`
-                font-orbitron
                 text-sm
                 sm:text-base
                 font-normal
@@ -139,7 +138,7 @@ function Hero() {
                   <span className="w-1.5 h-1.5 rounded-full bg-cyan-neon/40 group-hover:bg-cyan-neon group-hover:shadow-neon-glow transition-all duration-300 shrink-0" />
 
                   {/* Nome do serviço */}
-                  <span className="texto-sobre-video font-orbitron text-white/90 text-xs sm:text-sm tracking-[0.06em] leading-relaxed group-hover:text-white transition-colors duration-300">
+                  <span className="texto-sobre-video text-white/90 text-xs sm:text-sm tracking-[0.06em] leading-relaxed group-hover:text-white transition-colors duration-300">
                     {service.title}
                   </span>
 

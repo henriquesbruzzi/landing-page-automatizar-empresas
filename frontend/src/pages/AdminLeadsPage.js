@@ -66,7 +66,7 @@ function AdminLeadsPage() {
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="font-orbitron text-2xl md:text-3xl tracking-[0.08em]">Leads Recebidos</h1>
+            <h1 className="font-display text-2xl md:text-3xl tracking-[0.08em]">Leads Recebidos</h1>
 
           </div>
           <button

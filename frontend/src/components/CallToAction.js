@@ -1,19 +1,18 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
-import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
-import { classesEntrada, atrasoEntrada } from '../utils/entrada';
+import Entrada from './Entrada';
+
+// Espera entre o título, a descrição e o botão
+const ATRASO_ENTRE_BLOCOS = 90;
 
 function CallToAction() {
   const { lang, t } = useLanguage();
   const navigate = useNavigate();
-  const { ref, visivel, semAnimacao } = useRevealOnScroll();
-  const entrada = classesEntrada(visivel, semAnimacao);
-  const atraso = (ms) => atrasoEntrada(ms, visivel, semAnimacao);
 
 
   return (
-    <section ref={ref} className="relative py-28 md:py-36 bg-black overflow-hidden" aria-labelledby="cta-title">
+    <section className="relative py-28 md:py-36 bg-black overflow-hidden" aria-labelledby="cta-title">
       {/* Linha divisória no topo */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-cyan-neon/30 to-transparent"></div>
 
@@ -27,30 +26,29 @@ function CallToAction() {
 
       <div className="max-w-4xl mx-auto px-6 md:px-10 relative z-10 text-center">
         {/* Título de impacto */}
-        <h2
-          id="cta-title"
-          className={`font-orbitron text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-[0.04em] leading-tight mb-8 ${entrada}`}
-          style={atraso(0)}
-        >
-          {t.cta.title_start}
-          <span className="text-cyan-neon">{t.cta.title_highlight}</span>
-          {t.cta.title_end}
-        </h2>
+        <Entrada>
+          <h2
+            id="cta-title"
+            className="font-display text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-[0.04em] leading-tight mb-8"
+          >
+            {t.cta.title_start}
+            <span className="text-cyan-neon">{t.cta.title_highlight}</span>
+            {t.cta.title_end}
+          </h2>
+        </Entrada>
 
         {/* Descrição */}
-        <p
-          className={`text-white/90 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-12 ${entrada}`}
-          style={atraso(100)}
-        >
-          {t.cta.description}
-        </p>
+        <Entrada atraso={ATRASO_ENTRE_BLOCOS}>
+          <p className="text-white/90 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-12">
+            {t.cta.description}
+          </p>
+        </Entrada>
 
         {/* Botão CTA */}
-        <div className={`flex flex-col items-center gap-4 ${entrada}`} style={atraso(200)}>
+        <Entrada className="flex flex-col items-center gap-4" atraso={ATRASO_ENTRE_BLOCOS * 2}>
           <button
             onClick={() => navigate(lang === 'pt' ? '/contacto' : '/us/contact')}
             className="
-              font-orbitron
               text-sm
               md:text-base
               font-normal
@@ -75,10 +73,10 @@ function CallToAction() {
           </button>
 
           {/* Nota */}
-          <span className="text-gray-300 text-xs tracking-[0.1em]">
+          <span className="text-gray-300 text-xs font-medium tracking-[0.1em]">
             {t.cta.note}
           </span>
-        </div>
+        </Entrada>
       </div>
     </section>
   );

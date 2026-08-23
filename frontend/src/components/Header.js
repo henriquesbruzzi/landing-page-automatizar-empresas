@@ -62,28 +62,28 @@ function Header() {
           <nav className="hidden md:flex items-center gap-10" aria-label="Navegação principal">
             <a
               href="#home"
-              className="font-orbitron text-white/70 text-sm tracking-[0.15em] hover:text-white transition-all duration-300 relative group"
+              className="text-white/70 text-sm tracking-[0.15em] hover:text-white transition-all duration-300 relative group"
             >
               {t.nav.home}
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-cyan-neon group-hover:w-full transition-all duration-300"></span>
             </a>
             <a
               href="#servicos"
-              className="font-orbitron text-white/70 text-sm tracking-[0.15em] hover:text-white transition-all duration-300 relative group"
+              className="text-white/70 text-sm tracking-[0.15em] hover:text-white transition-all duration-300 relative group"
             >
               {t.nav.services}
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-cyan-neon group-hover:w-full transition-all duration-300"></span>
             </a>
             <a
               href="#sobre"
-              className="font-orbitron text-white/70 text-sm tracking-[0.15em] hover:text-white transition-all duration-300 relative group"
+              className="text-white/70 text-sm tracking-[0.15em] hover:text-white transition-all duration-300 relative group"
             >
               {t.nav.about}
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-cyan-neon group-hover:w-full transition-all duration-300"></span>
             </a>
             <button
               onClick={() => navigate(lang === 'pt' ? '/faq' : '/us/faq')}
-              className="font-orbitron text-white/70 text-sm tracking-[0.15em] hover:text-white transition-all duration-300 relative group cursor-pointer"
+              className="text-white/70 text-sm tracking-[0.15em] hover:text-white transition-all duration-300 relative group cursor-pointer"
             >
               {t.nav.faq}
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-cyan-neon group-hover:w-full transition-all duration-300"></span>
@@ -140,21 +140,21 @@ function Header() {
           <a
             href="#home"
             onClick={() => setIsMenuOpen(false)}
-            className="font-orbitron text-white/90 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300"
+            className="text-white/90 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300"
           >
             {t.nav.home}
           </a>
           <a
             href="#servicos"
             onClick={() => setIsMenuOpen(false)}
-            className="font-orbitron text-white/90 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300"
+            className="text-white/90 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300"
           >
             {t.nav.services}
           </a>
           <a
             href="#sobre"
             onClick={() => setIsMenuOpen(false)}
-            className="font-orbitron text-white/90 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300"
+            className="text-white/90 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300"
           >
             {t.nav.about}
           </a>
@@ -163,7 +163,7 @@ function Header() {
               setIsMenuOpen(false);
               navigate(lang === 'pt' ? '/faq' : '/us/faq');
             }}
-            className="font-orbitron text-white/90 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300 cursor-pointer"
+            className="text-white/90 text-2xl tracking-[0.2em] hover:text-cyan-neon transition-all duration-300 cursor-pointer"
           >
             {t.nav.faq}
           </button>

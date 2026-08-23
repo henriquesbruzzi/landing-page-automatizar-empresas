@@ -97,7 +97,7 @@ function ContactPage() {
   };
 
   const inputClasses =
-    'w-full bg-white/[0.06] border border-white/20 rounded-xl px-5 py-4 text-white text-sm font-orbitron tracking-wide placeholder:text-gray-400 focus:outline-none focus:border-cyan-neon focus:bg-white/[0.1] focus:shadow-[0_0_20px_rgba(0,209,255,0.25)] transition-all duration-300';
+    'w-full bg-white/[0.06] border border-white/20 rounded-xl px-5 py-4 text-white text-sm tracking-wide placeholder:text-gray-400 focus:outline-none focus:border-cyan-neon focus:bg-white/[0.1] focus:shadow-[0_0_20px_rgba(0,209,255,0.25)] transition-all duration-300';
 
   return (
     <div className="relative min-h-screen bg-black overflow-hidden">
@@ -122,7 +122,7 @@ function ContactPage() {
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <button
               onClick={goHome}
-              className="font-orbitron text-gray-200 font-medium text-xs sm:text-sm tracking-[0.15em] hover:text-cyan-neon transition-colors duration-300 flex items-center gap-2"
+              className="text-gray-200 font-medium text-xs sm:text-sm tracking-[0.15em] hover:text-cyan-neon transition-colors duration-300 flex items-center gap-2"
             >
               <span>←</span> {t.contact.back}
             </button>
@@ -142,10 +142,10 @@ function ContactPage() {
           <div className="w-full max-w-2xl">
             {/* Header */}
             <div className="text-center mb-12">
-              <span className="font-orbitron text-cyan-neon text-xs font-semibold tracking-[0.3em] uppercase mb-4 block">
+              <span className="font-display text-cyan-neon text-xs font-semibold tracking-[0.3em] uppercase mb-4 block">
                 {t.contact.subtitle}
               </span>
-              <h1 id="contact-title" className="font-orbitron text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-[0.05em] mb-4">
+              <h1 id="contact-title" className="font-display text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-[0.05em] mb-4">
                 {t.contact.title}
                 <span className="text-cyan-neon ml-3">{t.contact.titleHighlight}</span>
               </h1>
@@ -158,7 +158,7 @@ function ContactPage() {
             {isSent && (
               <div className="mb-10 p-6 rounded-2xl border border-cyan-neon/40 bg-cyan-neon/10 text-center animate-fade-in">
                 <div className="text-cyan-neon text-4xl mb-3 font-bold">✓</div>
-                <p className="font-orbitron text-cyan-neon text-base tracking-wide font-semibold">
+                <p className="text-cyan-neon text-base tracking-wide font-semibold">
                   {f.success}
                 </p>
               </div>
@@ -170,7 +170,7 @@ function ContactPage() {
                 {/* Nome e Email */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="font-orbitron text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
+                    <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
                       {f.name}
                     </label>
                     <input
@@ -184,7 +184,7 @@ function ContactPage() {
                     />
                   </div>
                   <div>
-                    <label className="font-orbitron text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
+                    <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
                       {f.email}
                     </label>
                     <input
@@ -202,7 +202,7 @@ function ContactPage() {
                 {/* Telefone e Empresa */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
-                    <label className="font-orbitron text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
+                    <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
                       {f.phone}
                     </label>
                     {/* Telefone de qualquer país: aceita o sinal +, espaços,
@@ -224,7 +224,7 @@ function ContactPage() {
                     />
                   </div>
                   <div>
-                    <label className="font-orbitron text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
+                    <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
                       {f.company}
                     </label>
                     <input
@@ -240,7 +240,7 @@ function ContactPage() {
 
                 {/* Serviço */}
                 <div>
-                  <label id="etiqueta-servico" className="font-orbitron text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
+                  <label id="etiqueta-servico" className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
                     {f.service}
                   </label>
                   <ServiceSelect
@@ -262,7 +262,7 @@ function ContactPage() {
 
                 {/* Mensagem: obrigatória apenas quando o serviço é "Outro" */}
                 <div>
-                  <label htmlFor="message" className="font-orbitron text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
+                  <label htmlFor="message" className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
                     {mensagemObrigatoria ? f.messageRequired : f.messageOptional}
                   </label>
                   <textarea
@@ -289,7 +289,6 @@ function ContactPage() {
                   disabled={isSending}
                   className={`
                     w-full
-                    font-orbitron
                     text-sm
                     font-semibold
                     tracking-[0.15em]
@@ -320,7 +319,7 @@ function ContactPage() {
               <div className="text-center mt-8">
                 <button
                   onClick={() => setIsSent(false)}
-                  className="font-orbitron text-cyan-neon text-sm tracking-[0.15em] hover:underline transition-colors duration-300"
+                  className="text-cyan-neon text-sm tracking-[0.15em] hover:underline transition-colors duration-300"
                 >
                   {lang === 'pt' ? 'Enviar outra mensagem' : 'Send another message'}
                 </button>
@@ -331,7 +330,7 @@ function ContactPage() {
 
         {/* Footer */}
         <footer className="pb-8">
-          <p className="text-center text-gray-400 text-xs tracking-[0.15em] font-orbitron">
+          <p className="text-center text-gray-400 text-xs tracking-[0.15em]">
             © {new Date().getFullYear()} NEXUGAL
           </p>
         </footer>

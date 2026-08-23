@@ -1,9 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { usePrefersReducedMotion } from './usePrefersReducedMotion';
 
-// Margem por omissão: alarga o ecrã 12% para baixo, para o conteúdo já estar
-// no sítio quando chega à vista, em vez de aparecer em cima do nariz.
-const MARGEM_POR_OMISSAO = '0px 0px 12% 0px';
+// NOTA: ninguém usa este hook neste momento. A entrada ao scroll foi
+// retirada a pedido. Fica aqui, já regulado, caso volte a ser precisa.
+
+// Encolhe o fundo do ecrã 8%, para o bloco começar a entrar já dentro da
+// vista e não ainda no rebordo de baixo.
+const MARGEM_POR_OMISSAO = '0px 0px -8% 0px';
+
+// Quanto do bloco tem de estar à vista para a entrada arrancar
+const FRACAO_VISIVEL = 0.15;
 
 /**
  * Marca um bloco como visível quando ele começa a entrar no ecrã.
@@ -39,7 +45,7 @@ export function useRevealOnScroll(margem = MARGEM_POR_OMISSAO) {
           observador.disconnect();
         }
       },
-      { root: null, rootMargin: margem, threshold: 0 }
+      { root: null, rootMargin: margem, threshold: FRACAO_VISIVEL }
     );
 
     observador.observe(elemento);

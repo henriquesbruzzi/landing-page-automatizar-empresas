@@ -7,7 +7,17 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
+        // Texto corrido, formulários, menu e rodapé
+        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        // Títulos e subtítulos de secção
+        display: ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
+        // Só o logótipo NEXUGAL
         orbitron: ['Orbitron', 'sans-serif'],
+      },
+      // Texto corrido um pouco maior e mais arejado, que o fundo preto pede
+      fontSize: {
+        sm: ['0.9375rem', { lineHeight: '1.65' }],
+        base: ['1.0625rem', { lineHeight: '1.7' }],
       },
       colors: {
         cyan: {
