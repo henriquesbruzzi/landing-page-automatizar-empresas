@@ -206,6 +206,17 @@ function Footer() {
           <p className="text-gray-400 text-xs tracking-[0.1em] font-orbitron">
             {f.copyright.replace('{year}', new Date().getFullYear())}
           </p>
+          <div className="flex items-center gap-6">
+            {(f.legalLinks || []).map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-gray-400 text-xs tracking-[0.08em] hover:text-cyan-neon transition-colors duration-300"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
           <p className="text-gray-400 text-xs tracking-[0.1em]">
             {f.madeWith}{' '}
             <span className="text-cyan-neon font-semibold">

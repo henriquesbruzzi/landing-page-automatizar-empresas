@@ -13,6 +13,8 @@ import ContactPage from './components/ContactPage';
 import FAQPage from './components/FAQPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminLeadsPage from './pages/AdminLeadsPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import CookieBanner from './components/CookieBanner';
 
 // A autenticação é gerida pelo cookie HttpOnly no servidor.
 // O AdminLeadsPage redireciona automaticamente para login em caso de 401.
@@ -70,6 +72,7 @@ function Layout({ lang }) {
         <About />
         <CallToAction />
         <Footer />
+        <CookieBanner />
       </div>
     </>
   );
@@ -146,6 +149,28 @@ function App() {
             <RequireAdminAuth>
               <AdminLeadsPage />
             </RequireAdminAuth>
+          }
+        />
+
+        {/* PT — Política de Privacidade */}
+        <Route
+          path="/privacidade"
+          element={
+            <>
+              <SEO lang="pt" page="home" />
+              <PrivacyPolicyPage />
+            </>
+          }
+        />
+
+        {/* EN — Privacy Policy */}
+        <Route
+          path="/us/privacy"
+          element={
+            <>
+              <SEO lang="en" page="home" />
+              <PrivacyPolicyPage />
+            </>
           }
         />
       </Routes>

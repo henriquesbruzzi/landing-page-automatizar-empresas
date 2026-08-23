@@ -197,6 +197,15 @@ const translations = {
       button: 'Iniciar Conversa',
       note: 'Sem compromisso. Resposta no prazo de um dia útil.',
     },
+    privacy: 'Política de Privacidade',
+    cookieBanner: {
+      title: 'Respeito pela sua privacidade',
+      description: 'Utilizamos cookies essenciais para garantir o funcionamento do site e, com o seu consentimento, podemos usar cookies para análise e melhoria da experiência. Pode gerir as suas preferências a qualquer momento.',
+      acceptAll: 'Aceitar Todos',
+      acceptEssential: 'Apenas Essenciais',
+      learnMore: 'Política de Privacidade',
+      essentialOnly: 'Apenas cookies essenciais ativados',
+    },
     footer: {
       brand: {
         name: 'NEXUGAL',
@@ -217,6 +226,10 @@ const translations = {
           { label: 'Sobre', href: '#sobre' },
         ],
       },
+      legalLinks: [
+        { label: 'Política de Privacidade', href: '/privacidade' },
+        { label: 'Política de Cookies', href: '/privacidade#cookies' },
+      ],
       services: {
         title: 'Serviços',
         // Nomes curtos dos cartões da secção de serviços, pela mesma ordem.
@@ -445,6 +458,15 @@ const translations = {
       button: 'Start a Conversation',
       note: 'No commitment. Reply within one business day.',
     },
+    privacy: 'Privacy Policy',
+    cookieBanner: {
+      title: 'We respect your privacy',
+      description: 'We use essential cookies to ensure the website works properly and, with your consent, we may use cookies for analytics and experience improvement. You can manage your preferences at any time.',
+      acceptAll: 'Accept All',
+      acceptEssential: 'Essential Only',
+      learnMore: 'Privacy Policy',
+      essentialOnly: 'Essential cookies only enabled',
+    },
     footer: {
       brand: {
         name: 'NEXUGAL',
@@ -465,6 +487,10 @@ const translations = {
           { label: 'About', href: '#sobre' },
         ],
       },
+      legalLinks: [
+        { label: 'Privacy Policy', href: '/us/privacy' },
+        { label: 'Cookie Policy', href: '/us/privacy#cookies' },
+      ],
       services: {
         title: 'Services',
         items: [
