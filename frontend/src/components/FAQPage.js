@@ -70,7 +70,7 @@ function FAQPage() {
                 {t.faq.title}
                 <span className="text-cyan-neon">{t.faq.titleHighlight}</span>
               </h1>
-              <p className="text-white/40 text-sm md:text-base max-w-lg mx-auto leading-relaxed">
+              <p className="text-white/40 text-sm md:text-base max-w-lg mx-auto leading-relaxed text-justify">
                 {t.faq.description}
               </p>
             </div>
@@ -136,7 +136,7 @@ function FAQPage() {
                     >
                       <div className="px-6 md:px-8 pb-6 md:pb-8">
                         <div className="h-[1px] bg-gradient-to-r from-cyan-neon/20 via-cyan-neon/10 to-transparent mb-5"></div>
-                        <p className="text-white/50 text-sm leading-relaxed">
+                        <p className="text-white/50 text-sm leading-relaxed text-justify">
                           {item.answer}
                         </p>
                       </div>

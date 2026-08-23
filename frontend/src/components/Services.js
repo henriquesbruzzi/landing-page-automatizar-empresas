@@ -124,7 +124,7 @@ function Services() {
             {t.services.title}
             <span className="text-cyan-neon">{t.services.titleHighlight}</span>
           </h2>
-          <p className="text-white/90 max-w-2xl mx-auto text-sm md:text-base leading-relaxed">
+          <p className="text-white/90 max-w-2xl mx-auto text-sm md:text-base leading-relaxed text-justify">
             {t.services.description}
           </p>
         </div>
@@ -158,7 +158,7 @@ function Services() {
                   </h3>
 
                   {/* Descrição */}
-                  <p className="text-white/90 text-sm leading-relaxed">
+                  <p className="text-white/90 text-sm leading-relaxed text-justify">
                     {service.description}
                   </p>
                 </div>

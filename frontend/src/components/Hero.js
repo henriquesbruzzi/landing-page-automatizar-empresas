@@ -85,7 +85,7 @@ function Hero() {
 
             {/* Fase 1 — subtítulo */}
             <p
-              className={`texto-sobre-video text-white/90 text-sm md:text-base leading-relaxed max-w-md mt-6 ${entrada}`}
+              className={`texto-sobre-video text-white/90 text-sm md:text-base leading-relaxed max-w-md mt-6 text-justify ${entrada}`}
               style={atraso(ATRASO_SUBTITULO)}
             >
               {t.hero.subtitle}

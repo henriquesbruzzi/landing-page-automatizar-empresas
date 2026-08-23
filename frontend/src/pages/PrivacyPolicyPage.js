@@ -39,7 +39,7 @@ function PrivacyPolicyPage() {
             {pt ? 'Política de Privacidade' : 'Privacy Policy'}
             <span className="text-cyan-neon"> & Cookies</span>
           </h1>
-          <p className="text-gray-300 text-sm leading-relaxed">
+          <p className="text-gray-300 text-sm leading-relaxed text-justify">
             {pt
               ? 'Última atualização: agosto de 2025 · Em conformidade com o RGPD (Regulamento Geral sobre a Proteção de Dados) e a Lei n.º 41/2004 (Lei do ePrivacy).'
               : 'Last updated: August 2025 · In compliance with the GDPR (General Data Protection Regulation) and Directive 2002/58/EC (ePrivacy Directive).'}
@@ -47,7 +47,7 @@ function PrivacyPolicyPage() {
         </div>
 
         {/* Secções */}
-        <div className="space-y-10 text-gray-200 text-sm leading-relaxed">
+        <div className="space-y-10 text-gray-200 text-sm leading-relaxed text-justify">
 
           {/* 1 — Responsável */}
           <section>

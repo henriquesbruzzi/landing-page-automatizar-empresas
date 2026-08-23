@@ -71,14 +71,14 @@ function About() {
             {t.about.title}
             <span className="text-cyan-neon">{t.about.titleHighlight}</span>
           </h2>
-          <p className="text-white/90 max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
+          <p className="text-white/90 max-w-3xl mx-auto text-sm md:text-base leading-relaxed text-justify">
             {t.about.description}
           </p>
         </div>
 
         {/* De onde vem a forma de trabalhar dos dois */}
         <div className={`text-center mb-12 ${entrada}`} style={atraso(ATRASO_INTRO)}>
-          <p className="text-white/90 max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
+          <p className="text-white/90 max-w-3xl mx-auto text-sm md:text-base leading-relaxed text-justify">
             {fundadores.intro}
           </p>
         </div>
@@ -120,7 +120,7 @@ function About() {
                     </div>
                   </div>
 
-                  <p className="text-white/90 text-sm leading-relaxed flex-1">
+                  <p className="text-white/90 text-sm leading-relaxed flex-1 text-justify">
                     {pessoa.description}
                   </p>
 

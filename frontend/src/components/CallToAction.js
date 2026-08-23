@@ -39,7 +39,7 @@ function CallToAction() {
 
         {/* Descrição */}
         <p
-          className={`text-white/90 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-12 ${entrada}`}
+          className={`text-white/90 text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-12 text-justify ${entrada}`}
           style={atraso(100)}
         >
           {t.cta.description}
