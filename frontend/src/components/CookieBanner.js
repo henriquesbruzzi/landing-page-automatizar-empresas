@@ -55,7 +55,7 @@ function CookieBanner() {
               </svg>
             </div>
             <div>
-              <h2 className="font-orbitron text-white text-sm font-semibold tracking-[0.1em] mb-2">
+              <h2 className="font-display text-white text-sm font-semibold tracking-[0.1em] mb-2">
                 {cb.title}
               </h2>
               <p className="text-gray-300 text-xs md:text-sm leading-relaxed">
@@ -75,13 +75,13 @@ function CookieBanner() {
           <div className="flex flex-col sm:flex-row gap-3 shrink-0">
             <button
               onClick={() => accept('essential')}
-              className="font-orbitron text-xs tracking-[0.1em] px-5 py-3 rounded-full border border-white/20 text-gray-200 hover:border-white/50 hover:text-white transition-all duration-300"
+              className="text-xs tracking-[0.1em] px-5 py-3 rounded-full border border-white/20 text-gray-200 hover:border-white/50 hover:text-white transition-all duration-300"
             >
               {cb.acceptEssential}
             </button>
             <button
               onClick={() => accept('all')}
-              className="font-orbitron text-xs tracking-[0.1em] px-5 py-3 rounded-full border border-cyan-neon text-white bg-cyan-neon/15 hover:bg-cyan-neon/25 hover:shadow-[0_0_20px_rgba(0,209,255,0.25)] transition-all duration-300"
+              className="text-xs tracking-[0.1em] px-5 py-3 rounded-full border border-cyan-neon text-white bg-cyan-neon/15 hover:bg-cyan-neon/25 hover:shadow-[0_0_20px_rgba(0,209,255,0.25)] transition-all duration-300"
             >
               {cb.acceptAll}
             </button>

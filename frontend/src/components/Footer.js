@@ -2,6 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { pedirDestaque } from '../utils/destaqueServico';
+import Entrada from './Entrada';
+
+// Espera entre as quatro colunas, para entrarem em cadeia
+const ATRASO_ENTRE_COLUNAS = 90;
 
 // ---------------------------------------------------------------------------
 // A PREENCHER quando as contas existirem
@@ -52,7 +56,7 @@ function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 mb-16">
 
           {/* Coluna 1 — Brand */}
-          <div className="lg:col-span-1">
+          <Entrada className="lg:col-span-1">
             <a href="#home" className="font-orbitron text-cyan-neon text-2xl font-bold tracking-[0.2em] hover:text-white transition-colors duration-300 block mb-4">
               {f.brand.name}
             </a>
@@ -64,7 +68,7 @@ function Footer() {
                 REDES lá em cima ter o endereço dessa rede. */}
             {redes.length > 0 && (
               <div>
-                <span className="font-orbitron text-white/80 text-[11px] font-semibold tracking-[0.2em] uppercase block mb-4">
+                <span className="font-display text-white/80 text-[11px] font-semibold tracking-[0.2em] uppercase block mb-4">
                   {f.social.title}
                 </span>
                 <div className="flex items-center gap-3">
@@ -85,11 +89,11 @@ function Footer() {
                 </div>
               </div>
             )}
-          </div>
+          </Entrada>
 
           {/* Coluna 2 — Links Rápidos */}
-          <nav aria-label="Links rápidos">
-            <h4 className="font-orbitron text-white text-xs font-semibold tracking-[0.2em] uppercase mb-6">
+          <Entrada role="navigation" aria-label="Links rápidos" atraso={ATRASO_ENTRE_COLUNAS}>
+            <h4 className="font-display text-white text-xs font-semibold tracking-[0.2em] uppercase mb-6">
               {f.links.title}
             </h4>
             <ul className="space-y-3">
@@ -123,11 +127,11 @@ function Footer() {
                 </button>
               </li>
             </ul>
-          </nav>
+          </Entrada>
 
           {/* Coluna 3 — Serviços */}
-          <div>
-            <h4 className="font-orbitron text-white text-xs font-semibold tracking-[0.2em] uppercase mb-6">
+          <Entrada atraso={ATRASO_ENTRE_COLUNAS * 2}>
+            <h4 className="font-display text-white text-xs font-semibold tracking-[0.2em] uppercase mb-6">
               {f.services.title}
             </h4>
             <ul className="space-y-3">
@@ -144,11 +148,11 @@ function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </Entrada>
 
           {/* Coluna 4 — Contacto */}
-          <div>
-            <h4 className="font-orbitron text-white text-xs font-semibold tracking-[0.2em] uppercase mb-6">
+          <Entrada atraso={ATRASO_ENTRE_COLUNAS * 3}>
+            <h4 className="font-display text-white text-xs font-semibold tracking-[0.2em] uppercase mb-6">
               {f.contact.title}
             </h4>
             <ul className="space-y-4">
@@ -195,7 +199,7 @@ function Footer() {
                 </div>
               </li>
             </ul>
-          </div>
+          </Entrada>
         </div>
 
         {/* Linha divisória */}
@@ -203,7 +207,7 @@ function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-gray-400 text-xs tracking-[0.1em] font-orbitron">
+          <p className="text-gray-400 text-xs tracking-[0.1em]">
             {f.copyright.replace('{year}', new Date().getFullYear())}
           </p>
           <div className="flex items-center gap-6">

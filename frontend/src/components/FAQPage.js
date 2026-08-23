@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
-import { useRevealOnScroll } from '../hooks/useRevealOnScroll';
-import { classesEntrada, atrasoEntrada } from '../utils/entrada';
+import Entrada from './Entrada';
 
 function FAQPage() {
   const { lang, t } = useLanguage();
   const navigate = useNavigate();
   const [openIndex, setOpenIndex] = useState(null);
-  const { ref, visivel, semAnimacao } = useRevealOnScroll();
-  const entrada = classesEntrada(visivel, semAnimacao);
-  const atraso = (ms) => atrasoEntrada(ms, visivel, semAnimacao);
+
 
   const goHome = () => {
     navigate(lang === 'pt' ? '/' : '/us');
@@ -44,7 +41,7 @@ function FAQPage() {
           <div className="max-w-7xl mx-auto flex items-center justify-between">
             <button
               onClick={goHome}
-              className="font-orbitron text-white/50 text-xs sm:text-sm tracking-[0.15em] hover:text-cyan-neon transition-colors duration-300"
+              className="text-white/50 text-xs sm:text-sm tracking-[0.15em] hover:text-cyan-neon transition-colors duration-300"
             >
               {t.faq.back}
             </button>
@@ -60,32 +57,27 @@ function FAQPage() {
 
         {/* FAQ Content */}
         <div className="flex-1 flex items-start justify-center px-6 py-16">
-          <div ref={ref} className="w-full max-w-3xl">
+          <div className="w-full max-w-3xl">
             {/* Header */}
-            <div className={`text-center mb-16 ${entrada}`} style={atraso(0)}>
-              <span className="font-orbitron text-cyan-neon text-xs tracking-[0.3em] uppercase mb-4 block">
+            <Entrada className="text-center mb-16">
+              <span className="font-display text-cyan-neon text-xs tracking-[0.3em] uppercase mb-4 block">
                 {t.faq.subtitle}
               </span>
-              <h1 id="faq-title" className="font-orbitron text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-[0.05em] mb-4">
+              <h1 id="faq-title" className="font-display text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-[0.05em] mb-4">
                 {t.faq.title}
                 <span className="text-cyan-neon">{t.faq.titleHighlight}</span>
               </h1>
               <p className="text-white/40 text-sm md:text-base max-w-lg mx-auto leading-relaxed text-justify">
                 {t.faq.description}
               </p>
-            </div>
+            </Entrada>
 
             {/* Accordion FAQ */}
             <div className="space-y-4" role="list" aria-labelledby="faq-title">
               {t.faq.items.map((item, index) => {
                 const isOpen = openIndex === index;
                 return (
-                  <div
-                    key={index}
-                    role="listitem"
-                    className={entrada}
-                    style={atraso(120 + index * 60)}
-                  >
+                  <Entrada key={index} role="listitem">
                   <div
                     className={`rounded-2xl border transition-all duration-500 ${
                       isOpen
@@ -99,7 +91,7 @@ function FAQPage() {
                       aria-expanded={isOpen}
                       aria-controls={`faq-answer-${index}`}
                     >
-                      <h2 className={`font-orbitron text-sm md:text-base font-semibold tracking-[0.03em] pr-6 leading-relaxed transition-colors duration-300 ${
+                      <h2 className={`font-display text-sm md:text-base font-semibold tracking-[0.03em] pr-6 leading-relaxed transition-colors duration-300 ${
                         isOpen ? 'text-cyan-neon' : 'text-white/80 group-hover:text-white'
                       }`}>
                         {item.question}
@@ -142,16 +134,13 @@ function FAQPage() {
                       </div>
                     </div>
                   </div>
-                  </div>
+                  </Entrada>
                 );
               })}
             </div>
 
             {/* CTA após FAQ */}
-            <div
-              className={`mt-16 text-center ${entrada}`}
-              style={atraso(120 + t.faq.items.length * 60)}
-            >
+            <Entrada className="mt-16 text-center">
               <p className="text-white/30 text-sm mb-6">
                 {lang === 'pt'
                   ? 'Não encontrou a resposta que procura?'
@@ -160,7 +149,6 @@ function FAQPage() {
               <button
                 onClick={() => navigate(lang === 'pt' ? '/contacto' : '/us/contact')}
                 className="
-                  font-orbitron
                   text-sm
                   font-normal
                   text-white
@@ -182,13 +170,13 @@ function FAQPage() {
               >
                 {lang === 'pt' ? 'Fale Connosco' : 'Contact Us'}
               </button>
-            </div>
+            </Entrada>
           </div>
         </div>
 
         {/* Footer */}
         <footer className="pb-8">
-          <p className="text-center text-white/15 text-xs tracking-[0.15em] font-orbitron">
+          <p className="text-center text-white/15 text-xs tracking-[0.15em]">
             © {new Date().getFullYear()} NEXUGAL
           </p>
         </footer>

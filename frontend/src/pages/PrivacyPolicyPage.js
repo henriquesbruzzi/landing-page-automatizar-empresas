@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 
 function PrivacyPolicyPage() {
-  const { lang, t } = useLanguage();
+  const { lang } = useLanguage();
   const navigate = useNavigate();
 
   const goHome = () => navigate(lang === 'pt' ? '/' : '/us');
@@ -20,7 +20,7 @@ function PrivacyPolicyPage() {
         <div className="max-w-4xl mx-auto flex items-center justify-between h-16">
           <button
             onClick={goHome}
-            className="font-orbitron text-gray-300 text-xs sm:text-sm tracking-[0.15em] hover:text-cyan-neon transition-colors duration-300 flex items-center gap-2"
+            className="text-gray-300 text-xs sm:text-sm tracking-[0.15em] hover:text-cyan-neon transition-colors duration-300 flex items-center gap-2"
           >
             <span>←</span> {pt ? 'Voltar ao início' : 'Back to home'}
           </button>
@@ -32,10 +32,10 @@ function PrivacyPolicyPage() {
       <main className="relative z-10 max-w-4xl mx-auto px-6 md:px-10 lg:px-16 py-16">
         {/* Título */}
         <div className="mb-12">
-          <span className="font-orbitron text-cyan-neon text-xs font-semibold tracking-[0.3em] uppercase block mb-4">
+          <span className="font-display text-cyan-neon text-xs font-semibold tracking-[0.3em] uppercase block mb-4">
             {pt ? 'Documentos Legais' : 'Legal Documents'}
           </span>
-          <h1 className="font-orbitron text-white text-3xl md:text-4xl font-bold tracking-[0.05em] mb-4">
+          <h1 className="font-display text-white text-3xl md:text-4xl font-bold tracking-[0.05em] mb-4">
             {pt ? 'Política de Privacidade' : 'Privacy Policy'}
             <span className="text-cyan-neon"> & Cookies</span>
           </h1>
@@ -51,7 +51,7 @@ function PrivacyPolicyPage() {
 
           {/* 1 — Responsável */}
           <section>
-            <h2 className="font-orbitron text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
+            <h2 className="font-display text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
               <span className="text-cyan-neon text-xs font-bold">01</span>
               {pt ? 'Responsável pelo Tratamento' : 'Data Controller'}
             </h2>
@@ -67,7 +67,7 @@ function PrivacyPolicyPage() {
 
           {/* 2 — Dados recolhidos */}
           <section>
-            <h2 className="font-orbitron text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
+            <h2 className="font-display text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
               <span className="text-cyan-neon text-xs font-bold">02</span>
               {pt ? 'Dados Pessoais Recolhidos' : 'Personal Data Collected'}
             </h2>
@@ -95,7 +95,7 @@ function PrivacyPolicyPage() {
 
           {/* 3 — Finalidade e Base Legal */}
           <section>
-            <h2 className="font-orbitron text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
+            <h2 className="font-display text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
               <span className="text-cyan-neon text-xs font-bold">03</span>
               {pt ? 'Finalidade e Base Legal' : 'Purpose and Legal Basis'}
             </h2>
@@ -113,7 +113,7 @@ function PrivacyPolicyPage() {
 
           {/* 4 — Prazo de Conservação */}
           <section>
-            <h2 className="font-orbitron text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
+            <h2 className="font-display text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
               <span className="text-cyan-neon text-xs font-bold">04</span>
               {pt ? 'Prazo de Conservação' : 'Retention Period'}
             </h2>
@@ -128,7 +128,7 @@ function PrivacyPolicyPage() {
 
           {/* 5 — Direitos */}
           <section>
-            <h2 className="font-orbitron text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
+            <h2 className="font-display text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
               <span className="text-cyan-neon text-xs font-bold">05</span>
               {pt ? 'Os Seus Direitos (RGPD)' : 'Your Rights (GDPR)'}
             </h2>
@@ -170,7 +170,7 @@ function PrivacyPolicyPage() {
 
           {/* 6 — Cookies */}
           <section id="cookies">
-            <h2 className="font-orbitron text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
+            <h2 className="font-display text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
               <span className="text-cyan-neon text-xs font-bold">06</span>
               {pt ? 'Política de Cookies' : 'Cookie Policy'}
             </h2>
@@ -219,7 +219,7 @@ function PrivacyPolicyPage() {
 
           {/* 7 — Segurança */}
           <section>
-            <h2 className="font-orbitron text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
+            <h2 className="font-display text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
               <span className="text-cyan-neon text-xs font-bold">07</span>
               {pt ? 'Segurança dos Dados' : 'Data Security'}
             </h2>
@@ -234,7 +234,7 @@ function PrivacyPolicyPage() {
 
           {/* 8 — Alterações */}
           <section>
-            <h2 className="font-orbitron text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
+            <h2 className="font-display text-white text-base font-semibold tracking-[0.08em] mb-3 flex items-center gap-3">
               <span className="text-cyan-neon text-xs font-bold">08</span>
               {pt ? 'Alterações a esta Política' : 'Changes to this Policy'}
             </h2>
@@ -251,7 +251,7 @@ function PrivacyPolicyPage() {
 
         {/* Rodapé da página */}
         <div className="mt-16 pt-8 border-t border-white/10 text-center">
-          <p className="text-gray-400 text-xs tracking-[0.1em] font-orbitron">
+          <p className="text-gray-400 text-xs tracking-[0.1em]">
             © {new Date().getFullYear()} NEXUGAL · nexugal.geral@gmail.com
           </p>
         </div>

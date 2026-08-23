@@ -163,7 +163,7 @@ function ServiceSelect({ value, options, placeholder, onChange, campoClasses, la
               // Não deixa o rato tirar o foco ao botão antes do clique contar
               onMouseDown={(evento) => evento.preventDefault()}
               onClick={() => escolher(i)}
-              className={`px-5 py-3 font-orbitron text-sm tracking-wide leading-snug cursor-pointer transition-colors duration-150 ${
+              className={`px-5 py-3 text-sm tracking-wide leading-snug cursor-pointer transition-colors duration-150 ${
                 i > 0 ? 'border-t border-white/10' : ''
               } ${
                 i === ativo

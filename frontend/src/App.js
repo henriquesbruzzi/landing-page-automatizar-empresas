@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './i18n/LanguageContext';
 import SEO from './components/SEO';
 import Header from './components/Header';
