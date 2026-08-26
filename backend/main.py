@@ -205,6 +205,8 @@ else:
 	allowed_origins = [
 		"https://nexusgal-laddingpage.vercel.app",
 		"https://projeto-teste-weld.vercel.app",
+		"https://nexugal.com",
+		"https://www.nexugal.com",
 		"http://localhost:3000",
 		"http://127.0.0.1:3000",
 		"http://localhost:3001",
