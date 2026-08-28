@@ -13,11 +13,116 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, EmailStr, Field
 
 try:
+	import resend
+	HAS_RESEND = True
+except ImportError:
+	HAS_RESEND = False
+
+try:
 	import psycopg2
 	from psycopg2.extras import RealDictCursor
 	HAS_PSYCOPG2 = True
 except ImportError:
 	HAS_PSYCOPG2 = False
+
+
+def send_lead_email_notification(payload: "LeadIn", lead_id: int):
+	api_key = os.getenv("RESEND_API_KEY")
+	if not api_key:
+		print("[RESEND] Aviso: RESEND_API_KEY não definida. Notificação por e-mail ignorada.")
+		return
+
+	if not HAS_RESEND:
+		print("[RESEND] Erro: biblioteca 'resend' não instalada.")
+		return
+
+	resend.api_key = api_key
+	to_email = os.getenv("NOTIFICATION_EMAIL", "nexugal.geral@gmail.com")
+	from_email = os.getenv("SENDER_EMAIL", "NEXUGAL Leads <onboarding@resend.dev>")
+	lead_email = str(payload.email).strip()
+	lead_name = payload.name.strip()
+	lead_phone = payload.phone.strip() or "Não informado"
+	lead_company = payload.company.strip() or "Não informada"
+	lead_service = payload.service.strip() or "Não especificado"
+	lead_message = payload.message.strip()
+	lead_lang = (payload.language.strip() or "pt").upper()
+
+	html_content = f"""<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #0d1117; margin: 0; padding: 25px; color: #c9d1d9; }}
+        .container {{ max-width: 600px; margin: 0 auto; background: #161b22; border-radius: 16px; overflow: hidden; border: 1px solid #30363d; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }}
+        .header {{ background: #000000; padding: 28px; text-align: center; border-bottom: 2px solid #00D1FF; }}
+        .brand {{ color: #00D1FF; font-size: 24px; font-weight: 800; letter-spacing: 3px; font-family: 'Orbitron', monospace, sans-serif; margin: 0; }}
+        .subtitle {{ color: #8b949e; font-size: 13px; margin-top: 6px; letter-spacing: 1px; uppercase; }}
+        .content {{ padding: 28px; }}
+        .field {{ margin-bottom: 20px; border-bottom: 1px solid #21262d; padding-bottom: 14px; }}
+        .field:last-child {{ border-bottom: none; }}
+        .label {{ font-size: 11px; font-weight: 700; text-transform: uppercase; color: #00D1FF; letter-spacing: 1.5px; margin-bottom: 6px; }}
+        .value {{ font-size: 15px; color: #f0f6fc; line-height: 1.6; font-weight: 500; }}
+        .message-box {{ background: #0d1117; border-left: 4px solid #00D1FF; padding: 16px; border-radius: 0 10px 10px 0; margin-top: 8px; font-style: normal; white-space: pre-wrap; color: #e6edf3; font-size: 14px; }}
+        .footer {{ background: #0d1117; padding: 20px; text-align: center; font-size: 12px; color: #8b949e; border-top: 1px solid #21262d; }}
+        .reply-btn {{ display: inline-block; margin-top: 12px; background: #00D1FF; color: #000000; padding: 10px 22px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="brand">NEXUGAL</div>
+            <div class="subtitle">Novo Lead Recebido (#{lead_id})</div>
+        </div>
+        <div class="content">
+            <div class="field">
+                <div class="label">Nome do Cliente</div>
+                <div class="value">{lead_name}</div>
+            </div>
+            <div class="field">
+                <div class="label">Endereço de E-mail</div>
+                <div class="value"><a href="mailto:{lead_email}" style="color: #00D1FF; text-decoration: underline;">{lead_email}</a></div>
+            </div>
+            <div class="field">
+                <div class="label">Telefone / Telemóvel</div>
+                <div class="value">{lead_phone}</div>
+            </div>
+            <div class="field">
+                <div class="label">Empresa</div>
+                <div class="value">{lead_company}</div>
+            </div>
+            <div class="field">
+                <div class="label">Serviço de Interesse</div>
+                <div class="value">{lead_service}</div>
+            </div>
+            <div class="field">
+                <div class="label">Mensagem / Descrição do Projeto</div>
+                <div class="value message-box">{lead_message}</div>
+            </div>
+            <div class="field">
+                <div class="label">Idioma do Formulário</div>
+                <div class="value">{lead_lang}</div>
+            </div>
+        </div>
+        <div class="footer">
+            Notificação automática da plataforma NEXUGAL.<br>
+            <a href="mailto:{lead_email}" class="reply-btn">Responder ao Cliente</a>
+        </div>
+    </div>
+</body>
+</html>"""
+
+	try:
+		params = {
+			"from": from_email,
+			"to": [to_email],
+			"reply_to": lead_email,
+			"subject": f"🚀 Novo Lead NEXUGAL: {lead_name} ({lead_service})",
+			"html": html_content,
+		}
+		res = resend.Emails.send(params)
+		print(f"[RESEND] E-mail enviado com sucesso para lead #{lead_id}: {res}")
+	except Exception as e:
+		print(f"[RESEND] Erro ao enviar e-mail para lead #{lead_id}: {e}")
 
 
 APP_NAME = "NEXUGAL API"
@@ -440,6 +545,9 @@ def create_lead(payload: LeadIn) -> dict:
 		)
 	finally:
 		conn.close()
+
+	# Enviar notificação por e-mail via Resend
+	send_lead_email_notification(payload, lead_id)
 
 	return {"success": True, "id": lead_id}
 
