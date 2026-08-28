@@ -302,11 +302,61 @@ class TokenOut(BaseModel):
 	token_type: str = "bearer"
 
 
+# Valores aceites para os campos do scraper (allowlist de segurança)
+ALLOWED_REGIONS = {
+	"braga", "porto", "lisboa", "viana do castelo", "aveiro",
+	"leiria", "coimbra", "faro", "setúbal", "viseu", "vila real",
+	"guimarães", "barcelos", "évora", "bragança", "portalegre",
+	"castelo branco", "santarém", "beja",
+}
+ALLOWED_CATEGORIES = {
+	"oficinas & automóvel", "restauração & hotelaria", "imobiliárias & construção",
+	"clínicas & saúde", "lojas & comércio local", "serviços profissionais",
+	"tecnologia & consultoria", "educação & formação", "logística & transportes",
+	"beleza & estética",
+}
+ALLOWED_CLIENT_TYPES = {"pmes", "micro-empresas", "corporativo"}
+ALLOWED_PRIORITIES = {"alta", "media", "baixa"}
+ALLOWED_STATUSES = {"novo", "contactado", "convertido", "ignorado"}
+
+# Domínios de e-mail descartáveis / blacklistados (anti-spam)
+BLACKLISTED_EMAIL_DOMAINS = {
+	"mailinator.com", "guerrillamail.com", "10minutemail.com", "throwam.com",
+	"yopmail.com", "sharklasers.com", "guerrillamailblock.com", "grr.la",
+	"guerrillamail.info", "spam4.me", "tempmail.com", "fakeinbox.com",
+	"example.com", "test.com", "localhost",
+}
+
+# Limite máximo de prospects a inserir por pesquisa
+MAX_PROSPECTS_PER_SEARCH = 30
+
+# Limite máximo de e-mails de outreach por operação
+MAX_OUTREACH_PER_BATCH = 20
+
+
 class ScraperSearchIn(BaseModel):
-	region: str = Field(min_length=2, max_length=100)
-	category: str = Field(min_length=2, max_length=100)
+	region: str = Field(min_length=2, max_length=80)
+	category: str = Field(min_length=2, max_length=80)
 	client_type: str = Field(default="PMEs", max_length=50)
 	priority: str = Field(default="media", max_length=20)
+
+	@classmethod
+	def __get_validators__(cls):
+		yield cls.validate
+
+	from pydantic import model_validator
+
+	@model_validator(mode="after")
+	def validate_allowlists(self):
+		if self.region.lower().strip() not in ALLOWED_REGIONS:
+			raise ValueError(f"Região não suportada: '{self.region}'. Escolha uma região válida de Portugal.")
+		if self.category.lower().strip() not in ALLOWED_CATEGORIES:
+			raise ValueError(f"Categoria não suportada: '{self.category}'.")
+		if self.client_type.lower().strip() not in ALLOWED_CLIENT_TYPES:
+			raise ValueError(f"Tipo de cliente inválido: '{self.client_type}'.")
+		if self.priority.lower().strip() not in ALLOWED_PRIORITIES:
+			raise ValueError(f"Prioridade inválida: '{self.priority}'.")
+		return self
 
 
 class ProspectOut(BaseModel):
@@ -328,13 +378,23 @@ class ProspectOut(BaseModel):
 class ProspectUpdateIn(BaseModel):
 	status: Optional[str] = None
 	priority: Optional[str] = None
-	notes: Optional[str] = None
+	notes: Optional[str] = Field(default=None, max_length=2000)
+
+	from pydantic import model_validator
+
+	@model_validator(mode="after")
+	def validate_enum_fields(self):
+		if self.status is not None and self.status.lower() not in ALLOWED_STATUSES:
+			raise ValueError(f"Estado inválido: '{self.status}'. Valores aceites: {ALLOWED_STATUSES}")
+		if self.priority is not None and self.priority.lower() not in ALLOWED_PRIORITIES:
+			raise ValueError(f"Prioridade inválida: '{self.priority}'. Valores aceites: {ALLOWED_PRIORITIES}")
+		return self
 
 
 class OutreachSendIn(BaseModel):
-	prospect_ids: list[int]
-	subject: Optional[str] = None
-	message: Optional[str] = None
+	prospect_ids: list[int] = Field(min_length=1, max_length=MAX_OUTREACH_PER_BATCH)
+	subject: Optional[str] = Field(default=None, max_length=200)
+	message: Optional[str] = Field(default=None, max_length=5000)
 
 
 app = FastAPI(title=APP_NAME)
@@ -649,19 +709,53 @@ def list_leads(_: str = Depends(get_current_user)) -> list[LeadOut]:
 # SCRAPER & PROSPECÇÃO B2B (PROTEGIDO)
 # ==========================================
 
+def _is_email_safe(email: str) -> bool:
+	"""Valida se o e-mail não pertence a domínios blacklistados, não é interno e tem formato aceitável."""
+	email = email.lower().strip()
+	if len(email) > 254:
+		return False
+	if not re.match(r"^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$", email):
+		return False
+	domain = email.split("@")[-1]
+	if domain in BLACKLISTED_EMAIL_DOMAINS:
+		return False
+	# Filtrar e-mails com extensões de ficheiro (artefactos de regex em imagens)
+	if any(email.endswith(ext) for ext in (".png", ".jpg", ".jpeg", ".svg", ".gif", ".webp", ".pdf")):
+		return False
+	# Filtrar e-mails claramente não-empresariais ou com termos de privacidade
+	blocked_prefixes = ("noreply", "no-reply", "donotreply", "bounce", "mailer-daemon", "postmaster")
+	if any(email.startswith(p) for p in blocked_prefixes):
+		return False
+	return True
+
+
+def _sanitize_str(value: str, max_len: int = 200) -> str:
+	"""Remove caracteres de controlo e limita o comprimento."""
+	# Remove HTML tags e caracteres de controlo
+	value = re.sub(r"<[^>]+>", "", value)
+	value = re.sub(r"[\x00-\x1f\x7f]", "", value)
+	return value.strip()[:max_len]
+
+
 def scrape_b2b_prospects(region: str, category: str, client_type: str, priority: str) -> list[dict]:
 	"""
 	Algoritmo de pesquisa e raspagem de leads B2B por região e categoria em Portugal.
+	Entradas já validadas por allowlist no Pydantic antes de chegar aqui.
 	"""
-	query = f"{category} {region} Portugal contactos email"
-	prospects_found = []
-	seen_emails = set()
+	# Sanitizar inputs antes de usar em queries
+	region = _sanitize_str(region, 80)
+	category = _sanitize_str(category, 80)
+	client_type = _sanitize_str(client_type, 50)
+	priority = priority.lower().strip()
 
-	# Base de prospeção regional precursora para gerar resultados imediatos e altamente relevantes
+	query = f"{category} {region} Portugal contacto email"
+	prospects_found = []
+	seen_emails: set[str] = set()
+
 	reg_cap = region.capitalize()
-	reg_clean = region.lower().strip().replace(" ", "")
+	reg_clean = re.sub(r"[^a-z0-9]", "", region.lower())
 	cat_cap = category.capitalize()
-	cat_clean = category.lower().strip().replace(" ", "")
+	cat_clean = re.sub(r"[^a-z0-9]", "", category.lower())
 
 	curated_leads = [
 		{
@@ -704,44 +798,68 @@ def scrape_b2b_prospects(region: str, category: str, client_type: str, priority:
 		from duckduckgo_search import DDGS
 
 		with DDGS() as ddgs:
-			results = list(ddgs.text(query, max_results=10))
-			email_pattern = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
+			results = list(ddgs.text(query, max_results=15))
+			email_pattern = re.compile(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}")
 
 			for r in results:
-				title = r.get("title", "")
-				snippet = r.get("body", "")
+				if len(prospects_found) >= MAX_PROSPECTS_PER_SEARCH:
+					break
+				title = _sanitize_str(r.get("title", ""), 120)
+				snippet = r.get("body", "")[:1000]  # Limitar tamanho do snippet
 				href = r.get("href", "")
 
-				found_emails = email_pattern.findall(snippet + " " + title)
-				if found_emails:
-					for em in found_emails:
-						em_clean = em.lower().strip()
-						if em_clean not in seen_emails and not em_clean.endswith((".png", ".jpg", ".jpeg", ".svg", "example.com")):
-							seen_emails.add(em_clean)
-							prospects_found.append({
-								"name": title[:80] or f"Empresa {category}",
-								"email": em_clean,
-								"phone": "+351 912 000 000",
-								"company": title[:80],
-								"website": href,
-								"category": category,
-								"region": region,
-								"client_type": client_type,
-								"priority": priority,
-							})
-	except Exception as err:
-		print(f"[SCRAPER] Aviso na pesquisa em tempo real: {err}")
+				# Validar URL do website (só http/https)
+				if href and not re.match(r"^https?://", href):
+					href = ""
+				href = href[:250]
 
-	# Combinar com resultados de prospeção rápida
+				found_emails = email_pattern.findall(snippet + " " + title)
+				for em in found_emails:
+					em_clean = em.lower().strip()
+					if em_clean not in seen_emails and _is_email_safe(em_clean):
+						seen_emails.add(em_clean)
+						prospects_found.append({
+							"name": title or f"Empresa {category}",
+							"email": em_clean,
+							"phone": "",
+							"company": title or f"Empresa {category}",
+							"website": href,
+							"category": category,
+							"region": region,
+							"client_type": client_type,
+							"priority": priority,
+						})
+	except Exception as err:
+		print(f"[SCRAPER] Aviso na pesquisa em tempo real: {type(err).__name__}: {err}")
+
+	# Combinar com leads de prospeção regional curada (apenas se não duplicados)
 	for lead in curated_leads:
-		if lead["email"] not in seen_emails:
+		if len(prospects_found) >= MAX_PROSPECTS_PER_SEARCH:
+			break
+		if lead["email"] not in seen_emails and _is_email_safe(lead["email"]):
 			seen_emails.add(lead["email"])
 			prospects_found.append(lead)
 
 	return prospects_found
 
 
-def send_outreach_email_via_resend(prospect: dict, custom_subject: Optional[str] = None, custom_message: Optional[str] = None) -> bool:
+def _escape_html(text: str) -> str:
+	"""Escapa caracteres HTML para prevenir XSS no corpo do e-mail."""
+	return (
+		text
+		.replace("&", "&amp;")
+		.replace("<", "&lt;")
+		.replace(">", "&gt;")
+		.replace('"', "&quot;")
+		.replace("'", "&#x27;")
+	)
+
+
+def send_outreach_email_via_resend(
+	prospect: dict,
+	custom_subject: Optional[str] = None,
+	custom_message: Optional[str] = None,
+) -> bool:
 	api_key = os.getenv("RESEND_API_KEY")
 	if not api_key or not HAS_RESEND:
 		print("[RESEND OUTREACH] Ignorado: RESEND_API_KEY em falta ou biblioteca resend indisponível.")
@@ -749,14 +867,22 @@ def send_outreach_email_via_resend(prospect: dict, custom_subject: Optional[str]
 
 	resend.api_key = api_key
 	from_email = os.getenv("SENDER_EMAIL", "NEXUGAL <onboarding@resend.dev>")
-	to_email = prospect["email"]
-	name = prospect["name"]
-	company = prospect["company"] or prospect["name"]
-	category = prospect["category"]
+	to_email = str(prospect["email"]).lower().strip()
 
-	subject = custom_subject or f"Otimização tecnológica & automação para {company} — NEXUGAL"
+	# Validação de segurança: garantir que o e-mail de destino é seguro antes de enviar
+	if not _is_email_safe(to_email):
+		print(f"[RESEND OUTREACH] E-mail bloqueado por política de segurança: {to_email}")
+		return False
 
-	default_body = f"""Olá {name},
+	name = _sanitize_str(str(prospect.get("name") or "Cliente"), 120)
+	company = _sanitize_str(str(prospect.get("company") or prospect.get("name") or "a vossa empresa"), 120)
+	category = _sanitize_str(str(prospect.get("category") or "tecnologia"), 100)
+
+	# Sanitizar o assunto e a mensagem personalizada para prevenir header injection
+	raw_subject = custom_subject or f"Otimização tecnológica & automação para {company} — NEXUGAL"
+	subject = re.sub(r"[\r\n]", "", raw_subject)[:200]
+
+	raw_message = custom_message or f"""Olá {name},
 
 Esperamos que esteja a ter uma excelente semana.
 
@@ -764,23 +890,30 @@ Somos a NEXUGAL, uma consultoria tecnológica sediada em Braga especializada em 
 
 Gostaríamos de agendar uma breve conversa sem compromisso de 10 minutos para analisar como podemos ajudar a {company} a poupar tempo e escalar os seus resultados através da tecnologia.
 
-Pode responder a este e-mail ou agendar uma chamada connosco em nexugal.com.
+Pode responder a este e-mail ou agendar uma chamada connosco em https://www.nexugal.com.
 
 Com os melhores cumprimentos,
 
 Equipa NEXUGAL
 Braga, Portugal
-nexugal.geral@gmail.com | +351 912 423 912
+nexugal.geral@gmail.com
 https://www.nexugal.com"""
 
-	body = custom_message or default_body
+	# Escapar HTML para prevenir XSS
+	body_escaped = _escape_html(raw_message)
 
 	html_content = f"""<!DOCTYPE html>
-<html>
+<html lang="pt-PT">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
 <body style="font-family: Arial, sans-serif; background-color: #0d1117; padding: 20px; color: #c9d1d9;">
     <div style="max-width: 600px; margin: 0 auto; background: #161b22; padding: 30px; border-radius: 16px; border: 1px solid #30363d;">
         <h2 style="color: #00D1FF; font-family: monospace; letter-spacing: 2px;">NEXUGAL</h2>
-        <div style="white-space: pre-wrap; font-size: 15px; line-height: 1.6; color: #e6edf3;">{body}</div>
+        <div style="white-space: pre-wrap; font-size: 15px; line-height: 1.6; color: #e6edf3;">{body_escaped}</div>
+        <hr style="border-color: #30363d; margin: 28px 0;">
+        <p style="font-size: 11px; color: #8b949e; line-height: 1.5;">
+            Este e-mail foi enviado pela NEXUGAL — Consultoria Tecnológica, Braga, Portugal.<br>
+            Se não deseja receber mais comunicações da nossa parte, por favor responda com o assunto <strong>"Cancelar subscrição"</strong> e removeremos o seu endereço imediatamente, em conformidade com o RGPD.
+        </p>
     </div>
 </body>
 </html>"""
@@ -792,14 +925,19 @@ https://www.nexugal.com"""
 			"subject": subject,
 			"html": html_content,
 		})
+		print(f"[RESEND OUTREACH] E-mail enviado com sucesso para: {to_email}")
 		return True
 	except Exception as e:
-		print(f"[RESEND OUTREACH ERROR]: {e}")
+		print(f"[RESEND OUTREACH ERROR] Falha ao enviar para {to_email}: {type(e).__name__}: {e}")
 		return False
 
 
 @app.post("/api/scraper/search")
 def run_scraper_search(payload: ScraperSearchIn, _: str = Depends(get_current_user)):
+	# Auditoria de segurança: registar quem fez a pesquisa e quando
+	print(f"[SCRAPER AUDIT] Pesquisa iniciada — região: {payload.region}, categoria: {payload.category}, "
+		  f"tipo: {payload.client_type}, prioridade: {payload.priority}, ts: {datetime.now(timezone.utc).isoformat()}")
+
 	results = scrape_b2b_prospects(
 		region=payload.region.strip(),
 		category=payload.category.strip(),
@@ -811,6 +949,10 @@ def run_scraper_search(payload: ScraperSearchIn, _: str = Depends(get_current_us
 	inserted_count = 0
 	try:
 		for p in results:
+			# Validação final antes de inserir na base de dados
+			if not _is_email_safe(p.get("email", "")):
+				print(f"[SCRAPER] E-mail rejeitado na inserção: {p.get('email')}")
+				continue
 			existing = execute_sql(conn, "SELECT id FROM prospects WHERE email = ?", (p["email"],))
 			if not existing:
 				execute_insert_sql(
@@ -820,14 +962,14 @@ def run_scraper_search(payload: ScraperSearchIn, _: str = Depends(get_current_us
 					VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 					""",
 					(
-						p["name"],
+						_sanitize_str(p["name"], 200),
 						p["email"],
-						p["phone"],
-						p["company"],
-						p["website"],
-						p["region"],
-						p["category"],
-						p["client_type"],
+						_sanitize_str(p.get("phone", ""), 40),
+						_sanitize_str(p.get("company", ""), 200),
+						_sanitize_str(p.get("website", ""), 250),
+						_sanitize_str(p["region"], 100),
+						_sanitize_str(p["category"], 100),
+						_sanitize_str(p["client_type"], 50),
 						p["priority"],
 						"novo",
 						"",
@@ -838,6 +980,7 @@ def run_scraper_search(payload: ScraperSearchIn, _: str = Depends(get_current_us
 	finally:
 		conn.close()
 
+	print(f"[SCRAPER AUDIT] Pesquisa concluída — {len(results)} encontrados, {inserted_count} novos inseridos")
 	return {"success": True, "found": len(results), "new_inserted": inserted_count}
 
 
@@ -920,21 +1063,40 @@ def send_prospect_outreach(payload: OutreachSendIn, _: str = Depends(get_current
 	if not payload.prospect_ids:
 		raise HTTPException(status_code=400, detail="Selecione pelo menos um prospect.")
 
+	if len(payload.prospect_ids) > MAX_OUTREACH_PER_BATCH:
+		raise HTTPException(
+			status_code=400,
+			detail=f"Máximo de {MAX_OUTREACH_PER_BATCH} e-mails por operação. Divida em lotes.",
+		)
+
+	# Garantir que não há IDs duplicados na lista (previne envio em duplicado)
+	unique_ids = list(dict.fromkeys(payload.prospect_ids))
+
 	conn = get_db_connection()
 	sent_count = 0
+	failed_count = 0
 	try:
-		for pid in payload.prospect_ids:
+		for pid in unique_ids:
 			rows = execute_sql(conn, "SELECT * FROM prospects WHERE id = ?", (pid,))
 			if not rows:
+				print(f"[OUTREACH] Prospect ID {pid} não encontrado. Ignorado.")
 				continue
 			prospect = rows[0]
+
+			# Não enviar para prospects já marcados como 'ignorado'
+			if prospect.get("status") == "ignorado":
+				print(f"[OUTREACH] Prospect ID {pid} está ignorado. Saltado.")
+				continue
 
 			sent = send_outreach_email_via_resend(prospect, payload.subject, payload.message)
 			if sent:
 				execute_sql(conn, "UPDATE prospects SET status = 'contactado' WHERE id = ?", (pid,))
 				sent_count += 1
+			else:
+				failed_count += 1
 	finally:
 		conn.close()
 
-	return {"success": True, "sent_count": sent_count}
+	print(f"[OUTREACH AUDIT] Lote concluído — enviados: {sent_count}, falhados: {failed_count}")
+	return {"success": True, "sent_count": sent_count, "failed_count": failed_count}
 
