@@ -4,58 +4,76 @@
 
   <!-- Página principal PT -->
   <url>
-    <loc>https://sbruzzi.it/</loc>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://sbruzzi.it/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://sbruzzi.it/us" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://sbruzzi.it/" />
+    <loc>https://www.nexugal.com/</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.nexugal.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nexugal.com/us" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nexugal.com/" />
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <!-- Página principal EN -->
   <url>
-    <loc>https://sbruzzi.it/us</loc>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://sbruzzi.it/" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://sbruzzi.it/us" />
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://sbruzzi.it/" />
+    <loc>https://www.nexugal.com/us</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.nexugal.com/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nexugal.com/us" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://www.nexugal.com/" />
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
 
   <!-- Contacto PT -->
   <url>
-    <loc>https://sbruzzi.it/contacto</loc>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://sbruzzi.it/contacto" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://sbruzzi.it/us/contact" />
+    <loc>https://www.nexugal.com/contacto</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.nexugal.com/contacto" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nexugal.com/us/contact" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- Contact EN -->
   <url>
-    <loc>https://sbruzzi.it/us/contact</loc>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://sbruzzi.it/contacto" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://sbruzzi.it/us/contact" />
+    <loc>https://www.nexugal.com/us/contact</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.nexugal.com/contacto" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nexugal.com/us/contact" />
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
 
   <!-- FAQ PT -->
   <url>
-    <loc>https://sbruzzi.it/faq</loc>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://sbruzzi.it/faq" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://sbruzzi.it/us/faq" />
+    <loc>https://www.nexugal.com/faq</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.nexugal.com/faq" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nexugal.com/us/faq" />
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <!-- FAQ EN -->
   <url>
-    <loc>https://sbruzzi.it/us/faq</loc>
-    <xhtml:link rel="alternate" hreflang="pt" href="https://sbruzzi.it/faq" />
-    <xhtml:link rel="alternate" hreflang="en" href="https://sbruzzi.it/us/faq" />
+    <loc>https://www.nexugal.com/us/faq</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.nexugal.com/faq" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nexugal.com/us/faq" />
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+
+  <!-- Privacidade PT -->
+  <url>
+    <loc>https://www.nexugal.com/privacidade</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.nexugal.com/privacidade" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nexugal.com/us/privacy" />
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Privacy EN -->
+  <url>
+    <loc>https://www.nexugal.com/us/privacy</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.nexugal.com/privacidade" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nexugal.com/us/privacy" />
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
   </url>
 
 </urlset>

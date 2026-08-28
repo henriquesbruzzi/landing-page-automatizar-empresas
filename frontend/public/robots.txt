@@ -1,5 +1,5 @@
 # robots.txt — NEXUGAL
-# https://sbruzzi.it
+# https://www.nexugal.com
 
 User-agent: *
 Allow: /
@@ -7,7 +7,7 @@ Disallow: /api/
 Disallow: /admin/
 
 # Sitemap
-Sitemap: https://sbruzzi.it/sitemap.xml
+Sitemap: https://www.nexugal.com/sitemap.xml
 
 # Crawl-delay (opcional, respeitar bots)
 Crawl-delay: 1

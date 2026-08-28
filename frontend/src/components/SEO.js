@@ -9,7 +9,7 @@ import { Helmet } from 'react-helmet-async';
  *  - page: 'home' | 'contact' | 'faq'
  */
 
-const BASE_URL = process.env.REACT_APP_SITE_URL || 'https://projeto-teste-weld.vercel.app';
+const BASE_URL = process.env.REACT_APP_SITE_URL || 'https://www.nexugal.com';
 
 // Dados SEO por idioma e página
 const seoData = {
@@ -89,10 +89,8 @@ const organizationSchema = {
     availableLanguage: ['Portuguese', 'English'],
   },
   sameAs: [
-    'https://linkedin.com',
-    'https://github.com',
-    'https://instagram.com',
-    'https://x.com',
+    'https://www.linkedin.com/company/nexugal',
+    'https://www.instagram.com/nexugal',
   ],
 };
 
@@ -353,7 +351,7 @@ function getFaqSchema(lang) {
 
 function SEO({ lang = 'pt', page = 'home' }) {
   const data = seoData[lang]?.[page] || seoData.pt.home;
-  const htmlLang = lang === 'pt' ? 'pt-BR' : 'en-US';
+  const htmlLang = lang === 'pt' ? 'pt-PT' : 'en-US';
   const altLang = lang === 'pt' ? 'en' : 'pt';
 
   // Compor todos os schemas JSON-LD
