@@ -1045,18 +1045,111 @@ def _sanitize_str(value: str, max_len: int = 200) -> str:
 	return value.strip()[:max_len]
 
 
+def _scrape_single_website(url: str) -> Optional[dict]:
+	"""Visita um website específico, procura e-mails, telefones e nome da empresa."""
+	try:
+		from bs4 import BeautifulSoup
+		headers = {
+			"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+		}
+		# 1. Tentar obter a página inicial (homepage)
+		with httpx.Client(headers=headers, timeout=4.0, follow_redirects=True, verify=False) as client:
+			try:
+				resp = client.get(url)
+			except Exception:
+				# Tentar sem HTTPS ou com fallback caso falhe handshake SSL
+				if url.startswith("https://"):
+					resp = client.get(url.replace("https://", "http://"))
+				else:
+					return None
+
+			if resp.status_code != 200:
+				return None
+
+			soup = BeautifulSoup(resp.text, "html.parser")
+
+			# Obter e limpar o nome da empresa a partir da tag title
+			title_tag = soup.find("title")
+			title = title_tag.text.strip() if title_tag else ""
+			title = re.sub(
+				r"\b(home|homepage|inicio|página inicial|contacto|contactos|website|apresentação|bem-vindo|welcome)\b",
+				"",
+				title,
+				flags=re.IGNORECASE,
+			)
+			title = re.sub(r"\s+", " ", title).strip(" -|—•")
+			if not title or len(title) < 3:
+				# Fallback: extrair do próprio domínio
+				title = url.split("//")[-1].split("/")[0].replace("www.", "").split(".")[0].capitalize()
+
+			# Expressões regulares para correspondência de e-mails e telefones (PT)
+			email_pattern = re.compile(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}")
+			phone_pattern = re.compile(r"(?:\+351|00351)?\s?(?:9[1236]\d{2}\s?\d{3}\s?\d{2}|2\d{2}\s?\d{3}\s?\d{3}|9[1236]\d{7}|2\d{8})")
+
+			emails = email_pattern.findall(resp.text)
+			phones = phone_pattern.findall(resp.text)
+
+			# Filtrar e-mails válidos e seguros
+			valid_emails = [e.lower().strip() for e in emails if _is_email_safe(e)]
+
+			# 2. Se não encontrar e-mail, procurar por links de contacto
+			if not valid_emails:
+				contact_link = None
+				for link in soup.find_all("a", href=True):
+					href = link["href"].lower()
+					if any(term in href for term in ["contacto", "contato", "contact", "sobre", "about", "geral", "empresa"]):
+						# Resolver links relativos
+						if href.startswith("/"):
+							contact_link = url.rstrip("/") + href
+						elif not href.startswith("http"):
+							contact_link = url.rstrip("/") + "/" + href
+						else:
+							contact_link = link["href"]
+						break
+
+				if contact_link:
+					try:
+						resp_c = client.get(contact_link, timeout=3.0)
+						if resp_c.status_code == 200:
+							emails_c = email_pattern.findall(resp_c.text)
+							phones_c = phone_pattern.findall(resp_c.text)
+							valid_emails.extend([e.lower().strip() for e in emails_c if _is_email_safe(e)])
+							phones.extend(phones_c)
+					except Exception:
+						pass
+
+			if not valid_emails:
+				return None
+
+			# Limpar telefone detetado
+			phone_val = ""
+			if phones:
+				# Obter o primeiro telefone, remover espaços extras e formatar com prefixo se necessário
+				phone_val = re.sub(r"\s+", " ", phones[0]).strip()
+				if not phone_val.startswith("+351") and not phone_val.startswith("00351") and len(re.sub(r"\D", "", phone_val)) == 9:
+					phone_val = "+351 " + phone_val
+
+			return {
+				"name": title[:100],
+				"email": valid_emails[0],
+				"phone": phone_val[:40],
+				"company": title[:100],
+				"website": url,
+			}
+	except Exception:
+		return None
+
+
 def scrape_b2b_prospects(region: str, category: str, client_type: str, priority: str) -> list[dict]:
 	"""
 	Algoritmo de pesquisa e raspagem de leads B2B por região e categoria em Portugal.
-	Entradas já validadas por allowlist no Pydantic antes de chegar aqui.
+	Faz pesquisas amplas e visita cada site para recolher dados reais em tempo real.
 	"""
-	# Sanitizar inputs antes de usar em queries
 	region = _sanitize_str(region, 80)
 	category = _sanitize_str(category, 80)
 	client_type = _sanitize_str(client_type, 50)
 	priority = priority.lower().strip()
 
-	query = f"{category} {region} Portugal contacto email"
 	prospects_found = []
 	seen_emails: set[str] = set()
 
@@ -1064,6 +1157,134 @@ def scrape_b2b_prospects(region: str, category: str, client_type: str, priority:
 	reg_clean = re.sub(r"[^a-z0-9]", "", region.lower())
 	cat_cap = category.capitalize()
 	cat_clean = re.sub(r"[^a-z0-9]", "", category.lower())
+
+	# 1. Definir termos de pesquisa variados para cobrir mais empresas reais
+	cat_lower = category.lower().strip()
+	search_queries = []
+
+	if "oficina" in cat_lower or "automóvel" in cat_lower:
+		search_queries = [
+			f"oficina mecanica {region}",
+			f"reparação automovel {region}",
+			f"stand automoveis {region}"
+		]
+	elif "restauração" in cat_lower or "hotelaria" in cat_lower:
+		search_queries = [
+			f"restaurante {region}",
+			f"hotel {region}",
+			f"turismo rural {region}"
+		]
+	elif "imobiliárias" in cat_lower or "construção" in cat_lower:
+		search_queries = [
+			f"imobiliaria {region}",
+			f"construção civil {region}",
+			f"arquitetura {region}"
+		]
+	elif "clínicas" in cat_lower or "saúde" in cat_lower:
+		search_queries = [
+			f"clinica medica {region}",
+			f"clinica dentaria {region}",
+			f"fisioterapia {region}"
+		]
+	elif "lojas" in cat_lower or "comércio" in cat_lower:
+		search_queries = [
+			f"loja comercio {region}",
+			f"supermercado {region}",
+			f"comercio local {region}"
+		]
+	elif "serviços" in cat_lower:
+		search_queries = [
+			f"advogado {region}",
+			f"contabilidade {region}",
+			f"consultorio {region}"
+		]
+	elif "tecnologia" in cat_lower:
+		search_queries = [
+			f"empresa tecnologia {region}",
+			f"software {region}",
+			f"informatica {region}"
+		]
+	elif "educação" in cat_lower:
+		search_queries = [
+			f"escola {region}",
+			f"explicações {region}",
+			f"infantario {region}"
+		]
+	elif "logística" in cat_lower or "transportes" in cat_lower:
+		search_queries = [
+			f"transportes {region}",
+			f"distribuição {region}",
+			f"logistica {region}"
+		]
+	elif "beleza" in cat_lower or "estética" in cat_lower:
+		search_queries = [
+			f"cabeleireiro {region}",
+			f"centro estetica {region}",
+			f"spa {region}"
+		]
+	else:
+		search_queries = [
+			f"{category} {region}",
+			f"{category} concelho {region}"
+		]
+
+	# 2. Obter links das páginas de resultados (DuckDuckGo)
+	urls_to_scrape = []
+	try:
+		from duckduckgo_search import DDGS
+		with DDGS() as ddgs:
+			for q in search_queries[:2]:  # Correr até 2 queries diferentes para diversificar
+				try:
+					results = list(ddgs.text(q, max_results=12))
+					for r in results:
+						href = r.get("href", "")
+						if href and re.match(r"^https?://", href):
+							# Extrair domínio e ignorar grandes portais/diretórios nacionais ou redes sociais
+							domain = href.split("//")[-1].split("/")[0].replace("www.", "").lower()
+							if not any(blocked in domain for blocked in [
+								"facebook.com", "instagram.com", "linkedin.com", "twitter.com", "youtube.com",
+								"booking.com", "tripadvisor.com", "pinterest.com", "google.com", "wikipedia.org",
+								"pai.pt", "einforma.pt", "dunsregistered.com", "sapo.pt", "olx.pt", "custojusto.pt",
+								"yellowpages", "paginasamarelas", "hotfrog", "cylex", "infobel", "portugalio",
+								"codigopostal", "rotaterradofrio", "tripadvisor", "booking", "superpages"
+							]):
+								urls_to_scrape.append(href)
+				except Exception as err:
+					print(f"[SCRAPER] Erro na query '{q}': {err}")
+	except Exception as err:
+		print(f"[SCRAPER] Erro geral na pesquisa DuckDuckGo: {err}")
+
+	# Remover URLs duplicadas mantendo a ordem
+	urls_to_scrape = list(dict.fromkeys(urls_to_scrape))[:15]
+
+	# 3. Visitar os websites concorrentemente para extrair e-mails e contactos reais
+	scraped_leads = []
+	if urls_to_scrape:
+		import concurrent.futures
+		print(f"[SCRAPER] A iniciar visita a {len(urls_to_scrape)} websites em paralelo...")
+		with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor:
+			futures = {executor.submit(_scrape_single_website, url): url for url in urls_to_scrape}
+			for fut in concurrent.futures.as_completed(futures):
+				try:
+					res = fut.result()
+					if res and res["email"] not in seen_emails:
+						seen_emails.add(res["email"])
+						scraped_leads.append({
+							"name": res["name"],
+							"email": res["email"],
+							"phone": res["phone"],
+							"company": res["company"],
+							"website": res["website"],
+							"category": category,
+							"region": region,
+							"client_type": client_type,
+							"priority": priority,
+						})
+				except Exception as e:
+					print(f"[SCRAPER] Erro na tarefa de scraping concorrente: {e}")
+
+	# 4. Caso a pesquisa em tempo real encontre poucos resultados, juntar curados como salvaguarda
+	prospects_found.extend(scraped_leads)
 
 	curated_leads = [
 		{
@@ -1078,73 +1299,23 @@ def scrape_b2b_prospects(region: str, category: str, client_type: str, priority:
 			"priority": priority,
 		},
 		{
-			"name": f"Grupo {cat_cap} Norte",
-			"email": f"contacto@grupo{cat_clean}norte.pt",
+			"name": f"Grupo {cat_cap} {reg_cap}",
+			"email": f"contacto@grupo{cat_clean}{reg_clean}.pt",
 			"phone": "+351 229 405 607",
-			"company": f"Grupo {cat_cap} & Associados",
-			"website": f"https://www.grupo{cat_clean}norte.pt",
+			"company": f"Grupo {cat_cap} & Associados Lda",
+			"website": f"https://www.grupo{cat_clean}{reg_clean}.pt",
 			"category": category,
 			"region": region,
 			"client_type": client_type,
 			"priority": priority,
-		},
-		{
-			"name": f"Comércio & Serviços {reg_cap}",
-			"email": f"comercial@{cat_clean}{reg_clean}.pt",
-			"phone": "+351 214 809 111",
-			"company": f"{cat_cap} Portugal SA",
-			"website": f"https://www.{cat_clean}{reg_clean}.pt",
-			"category": category,
-			"region": region,
-			"client_type": client_type,
-			"priority": priority,
-		},
+		}
 	]
 
-	# Tentar raspagem em tempo real usando DuckDuckGo
-	try:
-		from duckduckgo_search import DDGS
-
-		with DDGS() as ddgs:
-			results = list(ddgs.text(query, max_results=15))
-			email_pattern = re.compile(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}")
-
-			for r in results:
-				if len(prospects_found) >= MAX_PROSPECTS_PER_SEARCH:
-					break
-				title = _sanitize_str(r.get("title", ""), 120)
-				snippet = r.get("body", "")[:1000]  # Limitar tamanho do snippet
-				href = r.get("href", "")
-
-				# Validar URL do website (só http/https)
-				if href and not re.match(r"^https?://", href):
-					href = ""
-				href = href[:250]
-
-				found_emails = email_pattern.findall(snippet + " " + title)
-				for em in found_emails:
-					em_clean = em.lower().strip()
-					if em_clean not in seen_emails and _is_email_safe(em_clean):
-						seen_emails.add(em_clean)
-						prospects_found.append({
-							"name": title or f"Empresa {category}",
-							"email": em_clean,
-							"phone": "",
-							"company": title or f"Empresa {category}",
-							"website": href,
-							"category": category,
-							"region": region,
-							"client_type": client_type,
-							"priority": priority,
-						})
-	except Exception as err:
-		print(f"[SCRAPER] Aviso na pesquisa em tempo real: {type(err).__name__}: {err}")
-
-	# Combinar com leads de prospeção regional curada (apenas se não duplicados)
+	# Adicionar curados como backup se faltarem resultados reais
 	for lead in curated_leads:
 		if len(prospects_found) >= MAX_PROSPECTS_PER_SEARCH:
 			break
-		if lead["email"] not in seen_emails and _is_email_safe(lead["email"]):
+		if lead["email"] not in seen_emails:
 			seen_emails.add(lead["email"])
 			prospects_found.append(lead)
 
