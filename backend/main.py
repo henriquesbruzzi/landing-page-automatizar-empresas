@@ -1227,9 +1227,11 @@ https://www.nexugal.com"""
 </html>"""
 
 	try:
+		reply_to_email = os.getenv("NOTIFICATION_EMAIL", "nexugal.geral@gmail.com")
 		resend.Emails.send({
 			"from": from_email,
 			"to": [to_email],
+			"reply_to": reply_to_email,
 			"subject": subject,
 			"html": html_content,
 		})
@@ -1752,9 +1754,12 @@ def send_test_email(payload: TestEmailIn, _: str = Depends(get_current_user)):
 	if not _is_email_safe(to_email):
 		raise HTTPException(status_code=422, detail=f"Endereço de e-mail inválido ou bloqueado: '{to_email}'")
 
-	# Sanitizar e escapar
-	subject = re.sub(r"[\r\n]", "", payload.subject)[:200]
-	body_escaped = _escape_html(payload.message)
+	# Sanitizar e substituir tags de teste
+	raw_subject = payload.subject.replace("{name}", "Cliente Exemplo").replace("{company}", "Empresa Exemplo")
+	raw_message = payload.message.replace("{name}", "Cliente Exemplo").replace("{company}", "Empresa Exemplo")
+
+	subject = re.sub(r"[\r\n]", "", raw_subject)[:200]
+	body_escaped = _escape_html(raw_message)
 
 	html_content = f"""<!DOCTYPE html>
 <html lang="pt-PT">
@@ -1780,9 +1785,11 @@ def send_test_email(payload: TestEmailIn, _: str = Depends(get_current_user)):
 	try:
 		resend.api_key = api_key
 		from_email = os.getenv("SENDER_EMAIL", "NEXUGAL <onboarding@resend.dev>")
+		reply_to_email = os.getenv("NOTIFICATION_EMAIL", "nexugal.geral@gmail.com")
 		resend.Emails.send({
 			"from": from_email,
 			"to": [to_email],
+			"reply_to": reply_to_email,
 			"subject": f"[TESTE] {subject}",
 			"html": html_content,
 		})
