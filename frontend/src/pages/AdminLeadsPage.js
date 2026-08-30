@@ -71,6 +71,16 @@ function AdminLeadsPage() {
   const [outreachStatusMsg, setOutreachStatusMsg] = useState('');
   const [showOutreachModal, setShowOutreachModal] = useState(false);
 
+  // Upload CSV / Excel
+  const [uploadFile, setUploadFile] = useState(null);
+  const [uploadPriority, setUploadPriority] = useState('media');
+  const [uploadClientType, setUploadClientType] = useState('PMEs');
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadMsg, setUploadMsg] = useState('');
+  const [uploadErrors, setUploadErrors] = useState([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = React.useRef(null);
+
   // Carregar Leads do Website
   const loadLeads = async () => {
     setIsLoadingLeads(true);
@@ -193,6 +203,66 @@ function AdminLeadsPage() {
       }
     } catch (err) {
       console.error('Erro ao atualizar prospect:', err);
+    }
+  };
+
+  // Upload de ficheiro CSV / Excel
+  const handleFileUpload = async (e) => {
+    e.preventDefault();
+    if (!uploadFile) return;
+    setIsUploading(true);
+    setUploadMsg('');
+    setUploadErrors([]);
+
+    const formData = new FormData();
+    formData.append('file', uploadFile);
+    formData.append('priority', uploadPriority);
+    formData.append('client_type', uploadClientType);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/scraper/upload`, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,
+      });
+
+      if (response.status === 401) {
+        navigate('/admin/login');
+        return;
+      }
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.detail || 'Erro ao importar ficheiro.');
+
+      const parts = [`✓ Importação concluída! ${data.imported} novo(s) prospect(s) adicionado(s).`];
+      if (data.duplicate > 0) parts.push(`${data.duplicate} ignorado(s) por duplicado.`);
+      setUploadMsg(parts.join(' '));
+      if (data.parse_errors && data.parse_errors.length > 0) {
+        setUploadErrors(data.parse_errors);
+      }
+      setUploadFile(null);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+      loadProspects();
+    } catch (err) {
+      setUploadMsg(`❌ Erro: ${err.message}`);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files[0];
+    if (file) {
+      const ext = file.name.split('.').pop().toLowerCase();
+      if (['csv', 'xlsx', 'xls'].includes(ext)) {
+        setUploadFile(file);
+        setUploadMsg('');
+        setUploadErrors([]);
+      } else {
+        setUploadMsg('❌ Apenas ficheiros .csv ou .xlsx são suportados.');
+      }
     }
   };
 
@@ -352,6 +422,168 @@ function AdminLeadsPage() {
         {/* TAB 2: WEB SCRAPER & PROSPECÇÃO B2B */}
         {activeTab === 'scraper' && (
           <div className="space-y-8">
+            {/* Painel de Upload CSV / Excel */}
+            <div className="bg-[#0e1117] border border-white/10 rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden">
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-neon/[0.02] blur-3xl pointer-events-none rounded-full" />
+
+              <div className="mb-6">
+                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                  <span>📂</span> Importar Prospects via CSV / Excel
+                </h2>
+                <p className="text-gray-400 text-xs mt-1">
+                  Faça upload de um ficheiro <span className="text-cyan-neon font-semibold">.csv</span> ou <span className="text-cyan-neon font-semibold">.xlsx</span> com a lista de empresas. O sistema detecta automaticamente as colunas (nome, email, telefone, empresa, website, região, categoria). Máximo: <span className="text-white font-medium">500 linhas · 5 MB</span>.
+                </p>
+              </div>
+
+              <form onSubmit={handleFileUpload}>
+                {/* Zona de Drag-and-Drop */}
+                <div
+                  onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={handleDrop}
+                  onClick={() => fileInputRef.current?.click()}
+                  className={`relative border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300 mb-5 ${
+                    isDragging
+                      ? 'border-cyan-neon bg-cyan-neon/10 scale-[1.01]'
+                      : uploadFile
+                      ? 'border-green-500/50 bg-green-500/[0.04]'
+                      : 'border-white/15 hover:border-cyan-neon/50 hover:bg-white/[0.02]'
+                  }`}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".csv,.xlsx,.xls"
+                    className="hidden"
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      if (f) { setUploadFile(f); setUploadMsg(''); setUploadErrors([]); }
+                    }}
+                  />
+
+                  {uploadFile ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="w-12 h-12 rounded-xl bg-green-500/15 border border-green-500/30 flex items-center justify-center text-2xl">
+                        {uploadFile.name.endsWith('.xlsx') || uploadFile.name.endsWith('.xls') ? '📊' : '📄'}
+                      </div>
+                      <p className="text-white font-semibold text-sm">{uploadFile.name}</p>
+                      <p className="text-gray-400 text-xs">{(uploadFile.size / 1024).toFixed(1)} KB</p>
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); setUploadFile(null); setUploadMsg(''); setUploadErrors([]); if (fileInputRef.current) fileInputRef.current.value = ''; }}
+                        className="text-red-400/70 hover:text-red-400 text-xs underline mt-1"
+                      >
+                        Remover ficheiro
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2 pointer-events-none">
+                      <div className="w-12 h-12 rounded-xl bg-cyan-neon/10 border border-cyan-neon/20 flex items-center justify-center text-2xl">
+                        {isDragging ? '⬇️' : '☁️'}
+                      </div>
+                      <p className="text-white font-medium text-sm">
+                        {isDragging ? 'Largue o ficheiro aqui' : 'Arraste o ficheiro ou clique para selecionar'}
+                      </p>
+                      <p className="text-gray-500 text-xs">Suporta .CSV e .XLSX · máx. 500 linhas · 5 MB</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Opções de Prioridade e Tipo de Cliente */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">
+                      Prioridade a Atribuir
+                    </label>
+                    <select
+                      value={uploadPriority}
+                      onChange={(e) => setUploadPriority(e.target.value)}
+                      className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                    >
+                      <option value="alta">🔴 Alta Prioridade</option>
+                      <option value="media">🟡 Média Prioridade</option>
+                      <option value="baixa">⚪ Baixa Prioridade</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">
+                      Tipo de Cliente
+                    </label>
+                    <select
+                      value={uploadClientType}
+                      onChange={(e) => setUploadClientType(e.target.value)}
+                      className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                    >
+                      <option value="PMEs">PMEs (Pequenas e Médias)</option>
+                      <option value="Micro-empresas">Micro-empresas & Locais</option>
+                      <option value="Corporativo">Corporativo / Grandes Contas</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Legenda de colunas aceites */}
+                <div className="bg-black/40 border border-white/[0.07] rounded-xl px-4 py-3 mb-5">
+                  <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2">Colunas reconhecidas automaticamente:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { label: 'email / e-mail / mail', required: true },
+                      { label: 'nome / name' },
+                      { label: 'empresa / company' },
+                      { label: 'telefone / phone / tel' },
+                      { label: 'website / site / url' },
+                      { label: 'região / region / cidade' },
+                      { label: 'categoria / setor' },
+                      { label: 'notas / notes' },
+                    ].map((col) => (
+                      <span
+                        key={col.label}
+                        className={`px-2.5 py-1 rounded-full text-[10px] font-mono ${
+                          col.required
+                            ? 'bg-cyan-neon/15 text-cyan-neon border border-cyan-neon/30'
+                            : 'bg-white/[0.05] text-gray-400 border border-white/10'
+                        }`}
+                      >
+                        {col.required ? '* ' : ''}{col.label}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-gray-500 text-[10px] mt-2">* Campo obrigatório</p>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={!uploadFile || isUploading}
+                  className="w-full sm:w-auto bg-cyan-neon text-black font-semibold text-xs tracking-widest uppercase px-8 py-3.5 rounded-full hover:bg-white hover:shadow-[0_0_20px_rgba(0,209,255,0.4)] transition-all duration-300 disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center gap-2"
+                >
+                  {isUploading ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                      A Importar Prospects...
+                    </>
+                  ) : (
+                    <><span>📤</span> Importar Ficheiro</>
+                  )}
+                </button>
+
+                {/* Resultado do Upload */}
+                {uploadMsg && (
+                  <div className={`mt-4 p-4 rounded-xl text-xs font-medium ${uploadMsg.startsWith('✓') ? 'bg-cyan-neon/10 text-cyan-neon border border-cyan-neon/30' : 'bg-red-500/10 text-red-400 border border-red-500/30'}`}>
+                    {uploadMsg}
+                  </div>
+                )}
+                {uploadErrors.length > 0 && (
+                  <div className="mt-3 p-4 rounded-xl bg-yellow-500/[0.07] border border-yellow-500/20">
+                    <p className="text-yellow-400 text-xs font-semibold mb-2">⚠️ Avisos de importação ({uploadErrors.length}):</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      {uploadErrors.map((err, i) => (
+                        <li key={i} className="text-yellow-400/80 text-[11px] font-mono">{err}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </form>
+            </div>
+
             {/* Painel de Controlo do Scraper */}
             <div className="bg-[#0e1117] border border-white/10 rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-neon/[0.03] blur-3xl pointer-events-none rounded-full" />

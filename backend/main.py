@@ -1,6 +1,8 @@
 import base64
+import csv
 import hashlib
 import hmac
+import io
 import os
 import re
 import sqlite3
@@ -8,10 +10,16 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 
 import jwt
-from fastapi import Cookie, Depends, FastAPI, HTTPException, Request, Response, status
+from fastapi import Cookie, Depends, FastAPI, File, Form, HTTPException, Request, Response, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, EmailStr, Field
+
+try:
+	import openpyxl
+	HAS_OPENPYXL = True
+except ImportError:
+	HAS_OPENPYXL = False
 
 try:
 	import resend
@@ -332,6 +340,29 @@ MAX_PROSPECTS_PER_SEARCH = 30
 
 # Limite máximo de e-mails de outreach por operação
 MAX_OUTREACH_PER_BATCH = 20
+
+# Limites para upload de ficheiros CSV/Excel
+MAX_UPLOAD_ROWS = 500           # Linhas máximas por ficheiro
+MAX_UPLOAD_FILE_MB = 5          # Tamanho máximo em MB
+ALLOWED_UPLOAD_MIME = {
+	"text/csv",
+	"application/vnd.ms-excel",
+	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+	"text/plain",        # Alguns clientes enviam CSV como text/plain
+	"application/octet-stream",  # Fallback genérico — verificamos extensão também
+}
+
+# Mapeamento de nomes de coluna possíveis para campos normalizados (flexível para qualquer idioma)
+CSV_COLUMN_MAP = {
+	"name": ["nome", "name", "empresa", "company", "razão social", "designação", "contact name"],
+	"email": ["email", "e-mail", "mail", "correio eletrónico", "e mail"],
+	"phone": ["telefone", "telemovel", "telemóvel", "phone", "tel", "contacto", "contact", "móvel", "mobile"],
+	"company": ["empresa", "company", "nome empresa", "organização", "organization", "entidade"],
+	"website": ["website", "site", "url", "web", "www", "homepage"],
+	"region": ["região", "region", "cidade", "city", "localidade", "location", "distrito", "district"],
+	"category": ["categoria", "category", "setor", "sector", "atividade", "activity", "área"],
+	"notes": ["notas", "notes", "observações", "observations", "comentários", "comments"],
+}
 
 
 class ScraperSearchIn(BaseModel):
@@ -1100,3 +1131,223 @@ def send_prospect_outreach(payload: OutreachSendIn, _: str = Depends(get_current
 	print(f"[OUTREACH AUDIT] Lote concluído — enviados: {sent_count}, falhados: {failed_count}")
 	return {"success": True, "sent_count": sent_count, "failed_count": failed_count}
 
+
+# ==========================================
+# UPLOAD CSV / EXCEL — IMPORTAÇÃO DE PROSPECTS
+# ==========================================
+
+def _detect_column(headers: list[str], field: str) -> Optional[str]:
+	"""Detecta o nome real da coluna no ficheiro para um campo normalizado."""
+	aliases = CSV_COLUMN_MAP.get(field, [])
+	for h in headers:
+		if h.lower().strip() in aliases:
+			return h
+	return None
+
+
+def _parse_csv_rows(content: bytes, priority: str, client_type: str) -> tuple[list[dict], list[str]]:
+	"""Faz parse de um CSV e retorna (linhas_válidas, erros)."""
+	errors = []
+	rows = []
+	try:
+		text = content.decode("utf-8-sig")  # utf-8-sig remove BOM de ficheiros Windows
+	except UnicodeDecodeError:
+		try:
+			text = content.decode("latin-1")
+		except Exception:
+			return [], ["Não foi possível descodificar o ficheiro. Use UTF-8 ou Latin-1."]
+
+	reader = csv.DictReader(io.StringIO(text))
+	headers = reader.fieldnames or []
+
+	email_col = _detect_column(list(headers), "email")
+	if not email_col:
+		return [], ["Coluna de e-mail não encontrada. Certifique-se que o ficheiro tem uma coluna 'email', 'e-mail' ou 'mail'."]
+
+	for i, row in enumerate(reader, start=2):
+		if len(rows) >= MAX_UPLOAD_ROWS:
+			errors.append(f"Limite de {MAX_UPLOAD_ROWS} linhas atingido. As restantes foram ignoradas.")
+			break
+		row_email = (row.get(email_col) or "").strip().lower()
+		if not row_email:
+			continue  # Linha sem e-mail — ignorar silenciosamente
+		if not _is_email_safe(row_email):
+			errors.append(f"Linha {i}: e-mail inválido ou bloqueado — '{row_email}'")
+			continue
+
+		name_col = _detect_column(list(headers), "name")
+		company_col = _detect_column(list(headers), "company")
+		phone_col = _detect_column(list(headers), "phone")
+		website_col = _detect_column(list(headers), "website")
+		region_col = _detect_column(list(headers), "region")
+		category_col = _detect_column(list(headers), "category")
+		notes_col = _detect_column(list(headers), "notes")
+
+		rows.append({
+			"name": _sanitize_str(row.get(name_col, "") if name_col else row.get(company_col, row_email), 200),
+			"email": row_email,
+			"phone": _sanitize_str(row.get(phone_col, "") if phone_col else "", 40),
+			"company": _sanitize_str(row.get(company_col, "") if company_col else "", 200),
+			"website": _sanitize_str(row.get(website_col, "") if website_col else "", 250),
+			"region": _sanitize_str(row.get(region_col, "") if region_col else "", 100),
+			"category": _sanitize_str(row.get(category_col, "") if category_col else "", 100),
+			"notes": _sanitize_str(row.get(notes_col, "") if notes_col else "", 500),
+			"client_type": client_type,
+			"priority": priority,
+		})
+	return rows, errors
+
+
+def _parse_excel_rows(content: bytes, priority: str, client_type: str) -> tuple[list[dict], list[str]]:
+	"""Faz parse de um ficheiro Excel (.xlsx) e retorna (linhas_válidas, erros)."""
+	if not HAS_OPENPYXL:
+		return [], ["Suporte a Excel não disponível no servidor. Use formato CSV."]
+
+	errors = []
+	rows = []
+	try:
+		wb = openpyxl.load_workbook(io.BytesIO(content), read_only=True, data_only=True)
+		ws = wb.active
+	except Exception as e:
+		return [], [f"Não foi possível abrir o ficheiro Excel: {e}"]
+
+	all_rows = list(ws.iter_rows(values_only=True))
+	if not all_rows:
+		return [], ["O ficheiro Excel está vazio."]
+
+	# Primeira linha são os cabeçalhos
+	header_row = [str(h).strip() if h is not None else "" for h in all_rows[0]]
+
+	email_col_idx = None
+	for idx, h in enumerate(header_row):
+		if h.lower() in CSV_COLUMN_MAP["email"]:
+			email_col_idx = idx
+			break
+
+	if email_col_idx is None:
+		return [], ["Coluna de e-mail não encontrada. Certifique-se que o ficheiro Excel tem uma coluna 'email', 'e-mail' ou 'mail'."]
+
+	def get_col(row_vals: tuple, field: str) -> str:
+		for idx, h in enumerate(header_row):
+			if h.lower() in CSV_COLUMN_MAP.get(field, []):
+				val = row_vals[idx] if idx < len(row_vals) else None
+				return str(val).strip() if val is not None else ""
+		return ""
+
+	for i, row_vals in enumerate(all_rows[1:], start=2):
+		if len(rows) >= MAX_UPLOAD_ROWS:
+			errors.append(f"Limite de {MAX_UPLOAD_ROWS} linhas atingido. As restantes foram ignoradas.")
+			break
+
+		row_email = (str(row_vals[email_col_idx]).strip().lower() if row_vals[email_col_idx] else "")
+		if not row_email or row_email in ("none", "nan", ""):
+			continue
+		if not _is_email_safe(row_email):
+			errors.append(f"Linha {i}: e-mail inválido ou bloqueado — '{row_email}'")
+			continue
+
+		company_val = get_col(row_vals, "company")
+		name_val = get_col(row_vals, "name") or company_val or row_email
+
+		rows.append({
+			"name": _sanitize_str(name_val, 200),
+			"email": row_email,
+			"phone": _sanitize_str(get_col(row_vals, "phone"), 40),
+			"company": _sanitize_str(company_val, 200),
+			"website": _sanitize_str(get_col(row_vals, "website"), 250),
+			"region": _sanitize_str(get_col(row_vals, "region"), 100),
+			"category": _sanitize_str(get_col(row_vals, "category"), 100),
+			"notes": _sanitize_str(get_col(row_vals, "notes"), 500),
+			"client_type": client_type,
+			"priority": priority,
+		})
+
+	return rows, errors
+
+
+@app.post("/api/scraper/upload")
+async def upload_prospects_file(
+	file: UploadFile = File(...),
+	priority: str = Form(default="media"),
+	client_type: str = Form(default="PMEs"),
+	_: str = Depends(get_current_user),
+):
+	# Validar prioridade e tipo de cliente (allowlist)
+	if priority.lower() not in ALLOWED_PRIORITIES:
+		raise HTTPException(status_code=422, detail=f"Prioridade inválida: '{priority}'.")
+	if client_type.lower() not in ALLOWED_CLIENT_TYPES:
+		raise HTTPException(status_code=422, detail=f"Tipo de cliente inválido: '{client_type}'.")
+
+	# Validar extensão e tipo MIME do ficheiro
+	filename = (file.filename or "").lower()
+	ext = filename.rsplit(".", 1)[-1] if "." in filename else ""
+	if ext not in ("csv", "xlsx", "xls"):
+		raise HTTPException(
+			status_code=422,
+			detail="Formato de ficheiro não suportado. Use .csv ou .xlsx",
+		)
+
+	# Ler conteúdo do ficheiro (com limite de tamanho)
+	max_bytes = MAX_UPLOAD_FILE_MB * 1024 * 1024
+	content = await file.read(max_bytes + 1)
+	if len(content) > max_bytes:
+		raise HTTPException(
+			status_code=413,
+			detail=f"Ficheiro demasiado grande. Máximo permitido: {MAX_UPLOAD_FILE_MB}MB.",
+		)
+
+	print(f"[UPLOAD AUDIT] Ficheiro recebido: '{file.filename}', {len(content)} bytes, prioridade: {priority}, tipo: {client_type}")
+
+	# Parse do ficheiro consoante o formato
+	if ext == "csv":
+		parsed_rows, parse_errors = _parse_csv_rows(content, priority.lower(), client_type)
+	else:  # xlsx / xls
+		parsed_rows, parse_errors = _parse_excel_rows(content, priority.lower(), client_type)
+
+	if not parsed_rows and parse_errors:
+		raise HTTPException(status_code=422, detail=" | ".join(parse_errors))
+
+	# Inserir prospects na base de dados (ignorar duplicados por e-mail)
+	conn = get_db_connection()
+	inserted = 0
+	duplicate = 0
+	try:
+		for p in parsed_rows:
+			existing = execute_sql(conn, "SELECT id FROM prospects WHERE email = ?", (p["email"],))
+			if existing:
+				duplicate += 1
+				continue
+			execute_insert_sql(
+				conn,
+				"""
+				INSERT INTO prospects (name, email, phone, company, website, region, category, client_type, priority, status, notes, created_at)
+				VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+				""",
+				(
+					p["name"],
+					p["email"],
+					p["phone"],
+					p["company"],
+					p["website"],
+					p["region"] or "Importado",
+					p["category"] or "Importado",
+					p["client_type"],
+					p["priority"],
+					"novo",
+					p["notes"],
+					datetime.now(timezone.utc).isoformat(),
+				),
+			)
+			inserted += 1
+	finally:
+		conn.close()
+
+	print(f"[UPLOAD AUDIT] Importação concluída — {inserted} novos, {duplicate} duplicados, {len(parse_errors)} erros de parsing")
+
+	return {
+		"success": True,
+		"imported": inserted,
+		"duplicate": duplicate,
+		"parse_errors": parse_errors[:20],  # Máximo de 20 erros devolvidos
+		"total_rows": len(parsed_rows),
+	}
