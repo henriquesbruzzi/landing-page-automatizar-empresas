@@ -92,6 +92,11 @@ function AdminLeadsPage() {
   const [categoryOutreachMsg, setCategoryOutreachMsg] = useState('');
   const [showCategoryConfirm, setShowCategoryConfirm] = useState(false);
 
+  // Teste de E-mail
+  const [testEmailTo, setTestEmailTo] = useState('');
+  const [isSendingTest, setIsSendingTest] = useState(false);
+  const [testEmailMsg, setTestEmailMsg] = useState('');
+
   // Carregar Leads do Website
   const loadLeads = async () => {
     setIsLoadingLeads(true);
@@ -790,6 +795,64 @@ function AdminLeadsPage() {
                     {categoryOutreachMsg}
                   </div>
                 )}
+
+                {/* --- TESTE DE E-MAIL --- */}
+                <div className="border-t border-white/[0.08] pt-5 mt-2">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-orange-400 mb-3 flex items-center gap-1.5">
+                    <span>⚗️</span> Testar E-mail Antes de Enviar
+                  </p>
+                  <p className="text-gray-500 text-[11px] mb-4">
+                    Envia uma cópia do e-mail acima (assunto + mensagem) para um endereço à tua escolha, com um banner de <strong className="text-orange-300">"TESTE"</strong> no topo. Ideal para verificar a formatação antes do envio em massa.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <input
+                      type="email"
+                      value={testEmailTo}
+                      onChange={(e) => { setTestEmailTo(e.target.value); setTestEmailMsg(''); }}
+                      placeholder="teu@email.com"
+                      className="flex-1 bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:border-orange-400 focus:outline-none"
+                    />
+                    <button
+                      type="button"
+                      disabled={!testEmailTo || !categoryOutreachSubject || !categoryOutreachMessage || isSendingTest}
+                      onClick={async () => {
+                        setIsSendingTest(true);
+                        setTestEmailMsg('');
+                        try {
+                          const res = await fetch(`${API_BASE_URL}/api/scraper/test-email`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            credentials: 'include',
+                            body: JSON.stringify({
+                              to_email: testEmailTo,
+                              subject: categoryOutreachSubject || 'Teste NEXUGAL',
+                              message: categoryOutreachMessage || 'Mensagem de teste.',
+                            }),
+                          });
+                          const data = await res.json();
+                          if (!res.ok) throw new Error(data.detail || 'Erro ao enviar teste.');
+                          setTestEmailMsg(`✓ ${data.message}`);
+                        } catch (err) {
+                          setTestEmailMsg(`❌ ${err.message}`);
+                        } finally {
+                          setIsSendingTest(false);
+                        }
+                      }}
+                      className="bg-orange-500/90 text-white font-semibold text-xs tracking-wider uppercase px-6 py-2.5 rounded-xl hover:bg-orange-400 transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none flex items-center gap-2 flex-shrink-0"
+                    >
+                      {isSendingTest ? (
+                        <><span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" /> A enviar...</>
+                      ) : (
+                        <><span>📨</span> Enviar Teste</>
+                      )}
+                    </button>
+                  </div>
+                  {testEmailMsg && (
+                    <p className={`mt-3 text-xs font-medium ${testEmailMsg.startsWith('✓') ? 'text-green-400' : 'text-red-400'}`}>
+                      {testEmailMsg}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
 

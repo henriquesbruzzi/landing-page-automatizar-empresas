@@ -695,8 +695,14 @@ class OutreachByCategoryIn(BaseModel):
 	category: str = Field(min_length=1, max_length=100)
 	subject: str = Field(min_length=1, max_length=200)
 	message: str = Field(min_length=1, max_length=5000)
-	priority_filter: Optional[str] = Field(default=None, max_length=20)  # filtrar por prioridade
-	status_filter: str = Field(default="novo", max_length=20)  # só enviar para 'novo' por defeito
+	priority_filter: Optional[str] = Field(default=None, max_length=20)
+	status_filter: str = Field(default="novo", max_length=20)
+
+
+class TestEmailIn(BaseModel):
+	to_email: EmailStr
+	subject: str = Field(min_length=1, max_length=200)
+	message: str = Field(min_length=1, max_length=5000)
 
 
 app = FastAPI(title=APP_NAME)
@@ -1729,3 +1735,59 @@ def send_outreach_by_category(
 		"failed_count": failed_count,
 		"total_found": len(rows),
 	}
+
+
+# ==========================================
+# TESTE DE EMAIL — ENVIO INDIVIDUAL
+# ==========================================
+
+@app.post("/api/scraper/test-email")
+def send_test_email(payload: TestEmailIn, _: str = Depends(get_current_user)):
+	"""Envia um e-mail de teste para um endereço específico para validar o template antes de enviar em massa."""
+	api_key = os.getenv("RESEND_API_KEY")
+	if not api_key or not HAS_RESEND:
+		raise HTTPException(status_code=503, detail="RESEND_API_KEY não configurada. Configure a variável de ambiente no Railway.")
+
+	to_email = str(payload.to_email).lower().strip()
+	if not _is_email_safe(to_email):
+		raise HTTPException(status_code=422, detail=f"Endereço de e-mail inválido ou bloqueado: '{to_email}'")
+
+	# Sanitizar e escapar
+	subject = re.sub(r"[\r\n]", "", payload.subject)[:200]
+	body_escaped = _escape_html(payload.message)
+
+	html_content = f"""<!DOCTYPE html>
+<html lang="pt-PT">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head>
+<body style="font-family: Arial, sans-serif; background-color: #0d1117; padding: 20px; color: #c9d1d9;">
+    <div style="max-width: 600px; margin: 0 auto; background: #161b22; padding: 30px; border-radius: 16px; border: 1px solid #30363d;">
+        <div style="background: #ff6b2b22; border: 1px solid #ff6b2b55; border-radius: 8px; padding: 10px 14px; margin-bottom: 20px;">
+            <p style="color: #ff9a6c; font-size: 11px; font-weight: bold; margin: 0; font-family: monospace;">
+                ⚗️ E-MAIL DE TESTE — Enviado pelo painel NEXUGAL Admin. Não é um envio real em massa.
+            </p>
+        </div>
+        <h2 style="color: #00D1FF; font-family: monospace; letter-spacing: 2px;">NEXUGAL</h2>
+        <div style="white-space: pre-wrap; font-size: 15px; line-height: 1.6; color: #e6edf3;">{body_escaped}</div>
+        <hr style="border-color: #30363d; margin: 28px 0;">
+        <p style="font-size: 11px; color: #8b949e; line-height: 1.5;">
+            Este e-mail foi enviado pela NEXUGAL — Consultoria Tecnológica, Braga, Portugal.<br>
+            Se não deseja receber mais comunicações da nossa parte, por favor responda com o assunto <strong>"Cancelar subscrição"</strong>.
+        </p>
+    </div>
+</body>
+</html>"""
+
+	try:
+		resend.api_key = api_key
+		from_email = os.getenv("SENDER_EMAIL", "NEXUGAL <onboarding@resend.dev>")
+		resend.Emails.send({
+			"from": from_email,
+			"to": [to_email],
+			"subject": f"[TESTE] {subject}",
+			"html": html_content,
+		})
+		print(f"[TEST EMAIL] Enviado para: {to_email} | Assunto: {subject}")
+		return {"success": True, "message": f"E-mail de teste enviado com sucesso para {to_email}!"}
+	except Exception as e:
+		print(f"[TEST EMAIL ERROR] {type(e).__name__}: {e}")
+		raise HTTPException(status_code=500, detail=f"Erro ao enviar: {e}")
