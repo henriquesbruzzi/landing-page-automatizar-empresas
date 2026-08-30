@@ -11,6 +11,9 @@ function formatDate(value) {
   }
 }
 
+// Estas listas têm de corresponder às allowlists do backend (ALLOWED_REGIONS
+// e ALLOWED_CATEGORIES em backend/main.py). Um valor que não conste lá é
+// recusado com erro 422.
 const REGIOES = [
   'Braga',
   'Porto',
@@ -23,6 +26,14 @@ const REGIOES = [
   'Setúbal',
   'Viseu',
   'Vila Real',
+  'Guimarães',
+  'Barcelos',
+  'Évora',
+  'Bragança',
+  'Portalegre',
+  'Castelo Branco',
+  'Santarém',
+  'Beja',
 ];
 
 const CATEGORIAS = [
@@ -33,6 +44,9 @@ const CATEGORIAS = [
   'Lojas & Comércio Local',
   'Serviços Profissionais',
   'Tecnologia & Consultoria',
+  'Educação & Formação',
+  'Logística & Transportes',
+  'Beleza & Estética',
 ];
 
 function AdminLeadsPage() {
@@ -70,6 +84,14 @@ function AdminLeadsPage() {
   const [outreachMessage, setOutreachMessage] = useState('');
   const [outreachStatusMsg, setOutreachStatusMsg] = useState('');
   const [showOutreachModal, setShowOutreachModal] = useState(false);
+  // Contactos que não foram enviados e porquê (endereço pessoal, cancelado, etc.)
+  const [outreachSkipped, setOutreachSkipped] = useState([]);
+  // Autorização explícita para escrever a endereços de pessoas (joao.silva@)
+  const [allowPersonal, setAllowPersonal] = useState(false);
+  // Segunda confirmação antes de disparar e-mails a empresas reais
+  const [outreachConfirmed, setOutreachConfirmed] = useState(false);
+  // Erro ao gravar uma alteração num prospect (antes falhava em silêncio)
+  const [prospectUpdateError, setProspectUpdateError] = useState('');
 
   // Carregar Leads do Website
   const loadLeads = async () => {
@@ -168,7 +190,19 @@ function AdminLeadsPage() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.detail || 'Erro ao executar o scraper.');
 
-      setScrapingMsg(`✓ Pesquisa concluída! Encontrados ${data.found} prospects (${data.new_inserted} novos guardados).`);
+      // O backend explica sempre o que aconteceu — incluindo quando não encontra
+      // nada. Antes eram inventadas empresas para a lista nunca vir vazia.
+      const d = data.diagnostics || {};
+      const detalhe = [
+        d.sites_visited != null ? `${d.sites_visited} site(s) visitado(s)` : null,
+        d.directories_skipped ? `${d.directories_skipped} diretório(s) ignorado(s)` : null,
+        d.blocked_by_robots ? `${d.blocked_by_robots} bloqueado(s) por robots.txt` : null,
+        d.suppressed_skipped ? `${d.suppressed_skipped} na lista de não-contactar` : null,
+      ].filter(Boolean).join(' · ');
+
+      setScrapingMsg(
+        `${data.success ? '✓' : '⚠️'} ${data.message || ''}${detalhe ? `\n${detalhe}` : ''}`
+      );
       loadProspects();
     } catch (err) {
       setScrapingMsg(`❌ Erro: ${err.message}`);
@@ -179,6 +213,7 @@ function AdminLeadsPage() {
 
   // Atualizar Estado / Prioridade do Prospect
   const handleUpdateProspect = async (id, updates) => {
+    setProspectUpdateError('');
     try {
       const response = await fetch(`${API_BASE_URL}/api/scraper/prospects/${id}`, {
         method: 'PATCH',
@@ -186,13 +221,32 @@ function AdminLeadsPage() {
         credentials: 'include',
         body: JSON.stringify(updates),
       });
-      if (response.ok) {
-        setProspects((prev) =>
-          prev.map((p) => (p.id === id ? { ...p, ...updates } : p))
-        );
+
+      if (response.status === 401) {
+        navigate('/admin/login');
+        return;
       }
+      if (!response.ok) {
+        let detalhe = `erro ${response.status}`;
+        try {
+          const corpo = await response.json();
+          detalhe = corpo.detail || detalhe;
+        } catch {}
+        throw new Error(detalhe);
+      }
+
+      // Marcar como "ignorado" também impede envios futuros para este endereço
+      setProspects((prev) =>
+        prev.map((p) =>
+          p.id === id
+            ? { ...p, ...updates, suppressed: updates.status === 'ignorado' ? true : p.suppressed }
+            : p
+        )
+      );
     } catch (err) {
-      console.error('Erro ao atualizar prospect:', err);
+      // Falhar em silêncio era o pior cenário: parecia guardado e não estava.
+      setProspectUpdateError(`Não foi possível guardar a alteração: ${err.message}`);
+      loadProspects();
     }
   };
 
@@ -201,6 +255,7 @@ function AdminLeadsPage() {
     if (selectedProspectIds.length === 0) return;
     setIsSendingOutreach(true);
     setOutreachStatusMsg('');
+    setOutreachSkipped([]);
     try {
       const response = await fetch(`${API_BASE_URL}/api/scraper/send-outreach`, {
         method: 'POST',
@@ -210,6 +265,7 @@ function AdminLeadsPage() {
           prospect_ids: selectedProspectIds,
           subject: outreachSubject || undefined,
           message: outreachMessage || undefined,
+          allow_personal: allowPersonal,
         }),
       });
 
@@ -221,9 +277,16 @@ function AdminLeadsPage() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.detail || 'Erro ao enviar e-mails de prospecção.');
 
-      setOutreachStatusMsg(`✓ E-mails enviados com sucesso para ${data.sent_count} prospects!`);
+      setOutreachSkipped(data.skipped || []);
+      const naoEnviados = (data.skipped || []).length + (data.failed_count || 0);
+      setOutreachStatusMsg(
+        `✓ ${data.sent_count} e-mail(s) enviado(s).` +
+          (naoEnviados ? ` ${naoEnviados} não foram enviados — ver lista abaixo.` : '')
+      );
       setSelectedProspectIds([]);
-      setShowOutreachModal(false);
+      setOutreachConfirmed(false);
+      // Manter a janela aberta quando há algo por explicar
+      if (!naoEnviados) setShowOutreachModal(false);
       loadProspects();
     } catch (err) {
       setOutreachStatusMsg(`❌ Erro: ${err.message}`);
@@ -231,6 +294,14 @@ function AdminLeadsPage() {
       setIsSendingOutreach(false);
     }
   };
+
+  // Quem está mesmo selecionado, para a janela de envio poder avisar antes de
+  // disparar e-mails para empresas reais.
+  const selecionadosParaEnvio = prospects.filter((p) => selectedProspectIds.includes(p.id));
+  const pessoaisSelecionados = selecionadosParaEnvio.filter((p) => !p.is_role_address && !p.suppressed);
+  const bloqueadosSelecionados = selecionadosParaEnvio.filter((p) => p.suppressed);
+  const enviaveis = selecionadosParaEnvio.length - bloqueadosSelecionados.length
+    - (allowPersonal ? 0 : pessoaisSelecionados.length);
 
   const toggleSelectProspect = (id) => {
     setSelectedProspectIds((prev) =>
@@ -452,7 +523,7 @@ function AdminLeadsPage() {
               </form>
 
               {scrapingMsg && (
-                <div className={`p-4 rounded-xl text-xs font-medium ${scrapingMsg.startsWith('✓') ? 'bg-cyan-neon/10 text-cyan-neon border border-cyan-neon/30' : 'bg-red-500/10 text-red-400 border border-red-500/30'}`}>
+                <div className={`p-4 rounded-xl text-xs font-medium whitespace-pre-line ${scrapingMsg.startsWith('✓') ? 'bg-cyan-neon/10 text-cyan-neon border border-cyan-neon/30' : scrapingMsg.startsWith('⚠️') ? 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/30' : 'bg-red-500/10 text-red-400 border border-red-500/30'}`}>
                   {scrapingMsg}
                 </div>
               )}
@@ -511,7 +582,12 @@ function AdminLeadsPage() {
 
               {/* Botão de Envio de Outreach */}
               <button
-                onClick={() => setShowOutreachModal(true)}
+                onClick={() => {
+                  setOutreachConfirmed(false);
+                  setOutreachSkipped([]);
+                  setOutreachStatusMsg('');
+                  setShowOutreachModal(true);
+                }}
                 disabled={selectedProspectIds.length === 0}
                 className="w-full md:w-auto bg-cyan-neon/15 border border-cyan-neon text-cyan-neon text-xs font-semibold uppercase tracking-wider px-5 py-2 rounded-full hover:bg-cyan-neon hover:text-black transition-all duration-300 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-2"
               >
@@ -522,6 +598,15 @@ function AdminLeadsPage() {
             {/* Tabela de Prospects */}
             {isLoadingProspects && <p className="text-gray-400 text-sm">A carregar lista de prospects...</p>}
             {prospectsError && <p className="text-red-400 text-sm">{prospectsError}</p>}
+
+            {prospectUpdateError && (
+              <div className="mb-4 p-3 rounded-xl text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/30 flex items-start justify-between gap-3">
+                <span>⚠️ {prospectUpdateError}</span>
+                <button onClick={() => setProspectUpdateError('')} className="text-red-300 hover:text-white shrink-0">
+                  fechar
+                </button>
+              </div>
+            )}
 
             {!isLoadingProspects && !prospectsError && (
               <div className="overflow-x-auto border border-white/10 rounded-2xl bg-[#0a0a0a]">
@@ -578,6 +663,41 @@ function AdminLeadsPage() {
                             <a href={`mailto:${p.email}`} className="text-cyan-neon hover:underline text-xs">
                               {p.email}
                             </a>
+                            <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+                              {p.suppressed ? (
+                                <span
+                                  title="Pediu para não ser contactado. Nunca recebe e-mail."
+                                  className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-red-500/15 text-red-400 border border-red-500/30"
+                                >
+                                  não contactar
+                                </span>
+                              ) : p.is_role_address ? (
+                                <span
+                                  title="Endereço geral da empresa (geral@, info@...). Pode ser contactado em contexto B2B."
+                                  className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-green-500/15 text-green-400 border border-green-500/30"
+                                >
+                                  empresa
+                                </span>
+                              ) : (
+                                <span
+                                  title="Endereço de uma pessoa. O RGPD é bem mais exigente — só é contactado com autorização expressa."
+                                  className="px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wider bg-yellow-500/15 text-yellow-400 border border-yellow-500/30"
+                                >
+                                  pessoal
+                                </span>
+                              )}
+                              {p.source_url && (
+                                <a
+                                  href={p.source_url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  title={`Recolhido em ${p.source_url}`}
+                                  className="text-[10px] text-gray-500 hover:text-cyan-neon underline"
+                                >
+                                  origem
+                                </a>
+                              )}
+                            </div>
                           </td>
                           <td className="px-4 py-4 text-gray-300 text-xs">{p.phone || '-'}</td>
                           <td className="px-4 py-4 text-gray-300 text-xs">{p.region}</td>
@@ -617,6 +737,9 @@ function AdminLeadsPage() {
                             <button
                               onClick={() => {
                                 setSelectedProspectIds([p.id]);
+                                setOutreachConfirmed(false);
+                                setOutreachSkipped([]);
+                                setOutreachStatusMsg('');
                                 setShowOutreachModal(true);
                               }}
                               className="text-cyan-neon hover:underline font-medium"
@@ -639,9 +762,36 @@ function AdminLeadsPage() {
                   <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
                     <span>✉️</span> Prospecção por E-mail (Resend)
                   </h3>
-                  <p className="text-gray-400 text-xs mb-6">
-                    A enviar para <strong className="text-cyan-neon">{selectedProspectIds.length}</strong> prospect(s) selecionado(s).
+                  <p className="text-gray-400 text-xs mb-4">
+                    Selecionados: <strong className="text-white">{selectedProspectIds.length}</strong> ·
+                    Vão receber e-mail: <strong className="text-cyan-neon">{Math.max(0, enviaveis)}</strong>
                   </p>
+
+                  {(bloqueadosSelecionados.length > 0 || pessoaisSelecionados.length > 0) && (
+                    <div className="mb-5 p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-[11px] text-yellow-300 space-y-2">
+                      {bloqueadosSelecionados.length > 0 && (
+                        <p>
+                          <strong>{bloqueadosSelecionados.length}</strong> contacto(s) pediram para não ser
+                          contactados. Ficam sempre de fora.
+                        </p>
+                      )}
+                      {pessoaisSelecionados.length > 0 && (
+                        <label className="flex items-start gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={allowPersonal}
+                            onChange={(e) => setAllowPersonal(e.target.checked)}
+                            className="mt-0.5 rounded border-white/20 text-cyan-neon focus:ring-0 cursor-pointer"
+                          />
+                          <span>
+                            <strong>{pessoaisSelecionados.length}</strong> são endereços de pessoas
+                            (ex.: joao.silva@). O RGPD é bem mais exigente com estes do que com
+                            geral@empresa.pt. Marque só se souber o que está a fazer.
+                          </span>
+                        </label>
+                      )}
+                    </div>
+                  )}
 
                   <div className="space-y-4 mb-6">
                     <div>
@@ -677,17 +827,46 @@ function AdminLeadsPage() {
                     </div>
                   )}
 
+                  {outreachSkipped.length > 0 && (
+                    <div className="mb-4 text-[11px] text-gray-300 bg-black/40 p-3 rounded-xl border border-white/10">
+                      <p className="font-semibold text-gray-200 mb-1.5">Não enviados:</p>
+                      <ul className="space-y-1 list-disc list-inside text-gray-400">
+                        {outreachSkipped.map((linha, i) => (
+                          <li key={i}>{linha}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Confirmação obrigatória: isto escreve a empresas reais. */}
+                  <label className="flex items-start gap-2 mb-5 text-[11px] text-gray-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={outreachConfirmed}
+                      onChange={(e) => setOutreachConfirmed(e.target.checked)}
+                      className="mt-0.5 rounded border-white/20 text-cyan-neon focus:ring-0 cursor-pointer"
+                    />
+                    <span>
+                      Confirmo que quero enviar este e-mail a {Math.max(0, enviaveis)} empresa(s) reais.
+                      Cada envio fica registado e inclui ligação de cancelamento.
+                    </span>
+                  </label>
+
                   <div className="flex items-center justify-end gap-3">
                     <button
-                      onClick={() => setShowOutreachModal(false)}
+                      onClick={() => {
+                        setShowOutreachModal(false);
+                        setOutreachConfirmed(false);
+                        setOutreachSkipped([]);
+                      }}
                       className="px-5 py-2.5 text-xs text-gray-400 hover:text-white transition-colors"
                     >
                       Cancelar
                     </button>
                     <button
                       onClick={handleSendOutreach}
-                      disabled={isSendingOutreach}
-                      className="bg-cyan-neon text-black font-semibold text-xs uppercase tracking-wider px-6 py-2.5 rounded-full hover:bg-white transition-all disabled:opacity-50 flex items-center gap-2"
+                      disabled={isSendingOutreach || !outreachConfirmed || enviaveis < 1}
+                      className="bg-cyan-neon text-black font-semibold text-xs uppercase tracking-wider px-6 py-2.5 rounded-full hover:bg-white transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     >
                       {isSendingOutreach ? (
                         <>

@@ -4,12 +4,16 @@ import hmac
 import os
 import re
 import sqlite3
+import time
 from datetime import datetime, timedelta, timezone
 from typing import Optional
+from urllib.parse import urljoin, urlparse
+from urllib.robotparser import RobotFileParser
 
 import jwt
 from fastapi import Cookie, Depends, FastAPI, HTTPException, Request, Response, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, EmailStr, Field
 
@@ -18,6 +22,16 @@ try:
 	HAS_RESEND = True
 except ImportError:
 	HAS_RESEND = False
+
+# O scraper é acessório; o formulário de contactos do site é que dá dinheiro.
+# Se estas bibliotecas faltarem, a API tem de arrancar na mesma — só o scraper
+# fica indisponível, com uma mensagem clara no painel.
+try:
+	import httpx
+	from bs4 import BeautifulSoup
+	HAS_SCRAPER_DEPS = True
+except ImportError:
+	HAS_SCRAPER_DEPS = False
 
 try:
 	import psycopg2
@@ -157,6 +171,9 @@ def get_db_connection():
 
 
 def execute_sql(conn, query: str, params: tuple = ()):
+	# Nota: quando a query não devolve linhas (UPDATE/INSERT/DELETE/DDL) é preciso
+	# fazer commit explícito. Sem isto, o psycopg2 e o sqlite3 descartam a escrita
+	# ao fechar a ligação e a alteração perde-se em silêncio.
 	if IS_POSTGRES:
 		pg_query = query.replace("?", "%s")
 		with conn.cursor() as cur:
@@ -164,12 +181,14 @@ def execute_sql(conn, query: str, params: tuple = ()):
 			if cur.description:
 				rows = cur.fetchall()
 				return [dict(r) for r in rows]
+			conn.commit()
 			return []
 	else:
 		cur = conn.execute(query, params)
 		if cur.description:
 			rows = cur.fetchall()
 			return [dict(r) for r in rows]
+		conn.commit()
 		return []
 
 
@@ -340,10 +359,6 @@ class ScraperSearchIn(BaseModel):
 	client_type: str = Field(default="PMEs", max_length=50)
 	priority: str = Field(default="media", max_length=20)
 
-	@classmethod
-	def __get_validators__(cls):
-		yield cls.validate
-
 	from pydantic import model_validator
 
 	@model_validator(mode="after")
@@ -373,6 +388,12 @@ class ProspectOut(BaseModel):
 	status: str
 	notes: str
 	created_at: str
+	# Onde o contacto foi recolhido (exigência do art. 14.º do RGPD)
+	source_url: str = ""
+	# True = endereço da empresa (geral@...); False = endereço de uma pessoa
+	is_role_address: bool = True
+	# True = pediu para não ser contactado; nunca recebe e-mail
+	suppressed: bool = False
 
 
 class ProspectUpdateIn(BaseModel):
@@ -395,6 +416,9 @@ class OutreachSendIn(BaseModel):
 	prospect_ids: list[int] = Field(min_length=1, max_length=MAX_OUTREACH_PER_BATCH)
 	subject: Optional[str] = Field(default=None, max_length=200)
 	message: Optional[str] = Field(default=None, max_length=5000)
+	# Endereços de pessoas (joao.silva@) só são contactados com confirmação
+	# explícita — o RGPD é bem mais exigente com eles do que com geral@empresa.pt.
+	allow_personal: bool = False
 
 
 app = FastAPI(title=APP_NAME)
@@ -405,7 +429,6 @@ if raw_origins:
 else:
 	allowed_origins = [
 		"https://nexusgal-laddingpage.vercel.app",
-		"https://projeto-teste-weld.vercel.app",
 		"https://nexugal.com",
 		"https://www.nexugal.com",
 		"http://localhost:3000",
@@ -418,7 +441,7 @@ app.add_middleware(
 	CORSMiddleware,
 	allow_origins=allowed_origins,
 	allow_credentials=True,
-	allow_methods=["GET", "POST", "OPTIONS"],
+	allow_methods=["GET", "POST", "PATCH", "OPTIONS"],
 	allow_headers=["Content-Type", "Authorization"],
 )
 
@@ -434,6 +457,72 @@ async def security_headers(request: Request, call_next):
 	if IS_PRODUCTION:
 		response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload"
 	return response
+
+
+def _try_ddl(conn, statement: str, label: str) -> None:
+	"""
+	Executa uma instrução de estrutura tolerando falhas (ex.: coluna já existe).
+	No Postgres uma instrução falhada aborta a transação, por isso é preciso
+	fazer rollback antes de continuar.
+	"""
+	try:
+		execute_sql(conn, statement)
+	except Exception as err:
+		try:
+			conn.rollback()
+		except Exception:
+			pass
+		print(f"[MIGRAÇÃO] '{label}' ignorada: {type(err).__name__}")
+
+
+def ensure_scraper_schema(conn) -> None:
+	"""
+	Acrescenta o que o scraper passou a precisar, sem destruir dados existentes:
+	origem do contacto (exigido pelo art. 14.º do RGPD), marca de endereço de
+	função, lista de quem pediu para não ser contactado e registo de envios.
+	"""
+	bool_type = "BOOLEAN DEFAULT FALSE" if IS_POSTGRES else "INTEGER DEFAULT 0"
+	pk = "SERIAL PRIMARY KEY" if IS_POSTGRES else "INTEGER PRIMARY KEY AUTOINCREMENT"
+	text_type = "VARCHAR(255)" if IS_POSTGRES else "TEXT"
+
+	_try_ddl(conn, f"ALTER TABLE prospects ADD COLUMN source_url {text_type} DEFAULT ''", "prospects.source_url")
+	_try_ddl(conn, f"ALTER TABLE prospects ADD COLUMN is_role_address {bool_type}", "prospects.is_role_address")
+
+	# Quem pediu para não voltar a ser contactado. Sobrevive a novas pesquisas:
+	# mesmo que a empresa volte a aparecer, nunca mais recebe e-mail.
+	_try_ddl(
+		conn,
+		f"""
+		CREATE TABLE IF NOT EXISTS email_suppressions (
+			id {pk},
+			email {text_type} NOT NULL UNIQUE,
+			reason TEXT DEFAULT '',
+			created_at TEXT NOT NULL
+		)
+		""",
+		"tabela email_suppressions",
+	)
+
+	# Registo de todos os envios — prova de diligência exigida pelo RGPD e base
+	# para o limite de envios por hora.
+	_try_ddl(
+		conn,
+		f"""
+		CREATE TABLE IF NOT EXISTS outreach_log (
+			id {pk},
+			prospect_id INTEGER,
+			email {text_type} NOT NULL,
+			subject TEXT DEFAULT '',
+			outcome {text_type} NOT NULL,
+			created_at TEXT NOT NULL
+		)
+		""",
+		"tabela outreach_log",
+	)
+
+	# Impede duplicados à conta da base de dados, não só à conta do código.
+	_try_ddl(conn, "CREATE UNIQUE INDEX IF NOT EXISTS idx_prospects_email ON prospects (email)", "índice único prospects.email")
+	_try_ddl(conn, "CREATE INDEX IF NOT EXISTS idx_outreach_log_created ON outreach_log (created_at)", "índice outreach_log.created_at")
 
 
 def ensure_tables_and_admin() -> None:
@@ -560,6 +649,8 @@ def ensure_tables_and_admin() -> None:
 					ADMIN_USERNAME,
 				),
 			)
+
+		ensure_scraper_schema(conn)
 
 		if IS_POSTGRES:
 			conn.commit()
@@ -709,6 +800,91 @@ def list_leads(_: str = Depends(get_current_user)) -> list[LeadOut]:
 # SCRAPER & PROSPECÇÃO B2B (PROTEGIDO)
 # ==========================================
 
+# --- Configuração da raspagem (ajustável por variáveis de ambiente) ---
+
+# Identifica o robô perante os sites visitados, como manda a boa prática.
+SCRAPER_USER_AGENT = os.getenv(
+	"SCRAPER_USER_AGENT",
+	"NexugalProspectBot/1.0 (+https://www.nexugal.com; contacto: nexugal.geral@gmail.com)",
+)
+# Nº máximo de sites que a raspagem abre por pesquisa.
+SCRAPER_MAX_SITES = int(os.getenv("SCRAPER_MAX_SITES", "12"))
+# Nº máximo de subpáginas ("contactos", "sobre") abertas por site.
+SCRAPER_MAX_SUBPAGES = int(os.getenv("SCRAPER_MAX_SUBPAGES", "2"))
+SCRAPER_TIMEOUT_SECONDS = float(os.getenv("SCRAPER_TIMEOUT_SECONDS", "8"))
+# Pausa entre pedidos, para não sobrecarregar sites pequenos.
+SCRAPER_DELAY_SECONDS = float(os.getenv("SCRAPER_DELAY_SECONDS", "1.0"))
+# Limite de bytes lidos por página (evita descarregar ficheiros enormes).
+SCRAPER_MAX_PAGE_BYTES = 1_200_000
+
+# Prefixos de endereços "de função": pertencem à empresa e não identificam uma
+# pessoa concreta. Em contexto B2B são muito menos sensíveis à luz do RGPD, por
+# isso são os únicos que o outreach contacta por omissão.
+ROLE_EMAIL_PREFIXES = {
+	"geral", "info", "contacto", "contactos", "contact", "comercial",
+	"vendas", "sales", "email", "mail", "escritorio", "secretaria",
+	"secretariado", "administracao", "admin", "hello", "ola", "marketing",
+	"apoio", "suporte", "support", "office", "reservas", "encomendas",
+	"financeiro", "loja", "clientes", "empresa", "agenda", "marcacoes",
+	"apoiocliente", "apoioaocliente", "atendimento", "servicos", "oficina",
+	"assistencia", "orcamentos", "orcamento", "direcao", "gerencia",
+	"administrativo", "rececao", "correio", "restaurante", "hotel",
+	"geral1", "geral2",
+}
+
+# Caixas que existem para outro fim. Escrever-lhes com uma proposta comercial
+# é intrusivo e não chega a quem decide — não vale a pena recolhê-las.
+WRONG_PURPOSE_PREFIXES = (
+	"recrutamento", "recursoshumanos", "rh", "emprego", "empregos",
+	"curriculo", "curriculos", "candidaturas", "jobs", "careers",
+	"privacidade", "dpo", "rgpd", "legal", "juridico",
+	"reclamacoes", "livroreclamacoes", "denuncias", "imprensa", "press",
+)
+
+# Sites que aparecem nas pesquisas mas não são a empresa em si: diretórios,
+# redes sociais, jornais, portais de emprego, classificados.
+EXCLUDED_SITE_DOMAINS = (
+	"facebook.com", "instagram.com", "linkedin.com", "twitter.com", "x.com",
+	"youtube.com", "tiktok.com", "pinterest.com", "wikipedia.org",
+	"paginasamarelas.pt", "infoempresas.com.pt", "racius.com", "einforma.pt",
+	"olx.pt", "custojusto.pt", "standvirtual.com", "indeed.com",
+	"netempregos.com", "sapo.pt", "publico.pt", "jn.pt", "dn.pt",
+	"tripadvisor.com", "booking.com", "google.com", "bing.com",
+	"yelp.com", "empresite.jornaldenegocios.pt", "guiadaempresa.pt",
+	"amazon.com", "ebay.com", "marktplaats.nl", "coberturaonline.pt",
+)
+
+# Domínios que aparecem no código dos sites mas nunca são contactos reais.
+JUNK_EMAIL_DOMAINS = {
+	"sentry.io", "wixpress.com", "wix.com", "godaddy.com", "squarespace.com",
+	"shopify.com", "cloudflare.com", "gstatic.com", "googleapis.com",
+	"schema.org", "w3.org", "domain.com", "email.com", "yourdomain.com",
+	"site.com", "empresa.pt", "seudominio.pt",
+}
+
+# Caminhos típicos de páginas de contacto em sites portugueses.
+CONTACT_LINK_HINTS = (
+	"contacto", "contactos", "contact", "contacte", "fale-connosco",
+	"quem-somos", "sobre", "about", "empresa",
+)
+
+
+def _mask_email(email: str) -> str:
+	"""Mascara um e-mail para poder aparecer nos registos sem expor dados pessoais."""
+	try:
+		local, domain = email.split("@", 1)
+	except ValueError:
+		return "***"
+	return f"{local[:1]}{'*' * max(1, len(local) - 1)}@{domain}"
+
+
+def _is_role_address(email: str) -> bool:
+	"""True se for um endereço da empresa (geral@, info@...) e não de uma pessoa."""
+	local = email.split("@", 1)[0].lower()
+	local_base = re.sub(r"[._-]?\d+$", "", local)
+	return local_base in ROLE_EMAIL_PREFIXES or local in ROLE_EMAIL_PREFIXES
+
+
 def _is_email_safe(email: str) -> bool:
 	"""Valida se o e-mail não pertence a domínios blacklistados, não é interno e tem formato aceitável."""
 	email = email.lower().strip()
@@ -716,15 +892,25 @@ def _is_email_safe(email: str) -> bool:
 		return False
 	if not re.match(r"^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$", email):
 		return False
+	if ".." in email:
+		return False
 	domain = email.split("@")[-1]
-	if domain in BLACKLISTED_EMAIL_DOMAINS:
+	if domain in BLACKLISTED_EMAIL_DOMAINS or domain in JUNK_EMAIL_DOMAINS:
+		return False
+	# Subdomínios de serviços técnicos (ex.: o1234.ingest.sentry.io)
+	if any(domain.endswith("." + junk) for junk in JUNK_EMAIL_DOMAINS):
 		return False
 	# Filtrar e-mails com extensões de ficheiro (artefactos de regex em imagens)
-	if any(email.endswith(ext) for ext in (".png", ".jpg", ".jpeg", ".svg", ".gif", ".webp", ".pdf")):
+	if any(email.endswith(ext) for ext in (".png", ".jpg", ".jpeg", ".svg", ".gif", ".webp", ".pdf", ".css", ".js")):
 		return False
 	# Filtrar e-mails claramente não-empresariais ou com termos de privacidade
-	blocked_prefixes = ("noreply", "no-reply", "donotreply", "bounce", "mailer-daemon", "postmaster")
+	blocked_prefixes = ("noreply", "no-reply", "donotreply", "bounce", "mailer-daemon", "postmaster", "abuse")
 	if any(email.startswith(p) for p in blocked_prefixes):
+		return False
+	# Caixas de recrutamento, jurídico, reclamações... não são contactos comerciais
+	local = email.split("@", 1)[0]
+	local_base = re.sub(r"[._-]", "", local)
+	if local_base in WRONG_PURPOSE_PREFIXES:
 		return False
 	return True
 
@@ -737,110 +923,298 @@ def _sanitize_str(value: str, max_len: int = 200) -> str:
 	return value.strip()[:max_len]
 
 
-def scrape_b2b_prospects(region: str, category: str, client_type: str, priority: str) -> list[dict]:
+def _robots_allows(client, url: str, robots_cache: dict) -> bool:
+	"""Verifica o robots.txt do site antes de o visitar. Em caso de dúvida, permite."""
+	try:
+		parts = urlparse(url)
+		origin = f"{parts.scheme}://{parts.netloc}"
+	except Exception:
+		return False
+
+	if origin not in robots_cache:
+		parser = RobotFileParser()
+		try:
+			resp = client.get(f"{origin}/robots.txt", timeout=SCRAPER_TIMEOUT_SECONDS)
+			if resp.status_code == 200 and len(resp.text) < 200_000:
+				parser.parse(resp.text.splitlines())
+			else:
+				# Sem robots.txt legível: o site não impõe restrições.
+				parser.parse([])
+		except Exception:
+			parser.parse([])
+		robots_cache[origin] = parser
+
+	try:
+		return robots_cache[origin].can_fetch(SCRAPER_USER_AGENT, url)
+	except Exception:
+		return True
+
+
+def _fetch_html(client, url: str) -> str:
+	"""Descarrega uma página HTML com limites de tempo e de tamanho. '' em caso de falha."""
+	try:
+		resp = client.get(url, timeout=SCRAPER_TIMEOUT_SECONDS)
+	except Exception:
+		return ""
+	if resp.status_code != 200:
+		return ""
+	if "html" not in resp.headers.get("content-type", "").lower():
+		return ""
+	return resp.text[:SCRAPER_MAX_PAGE_BYTES]
+
+
+def _extract_contacts_from_html(html: str, page_url: str) -> dict:
+	"""Extrai título, e-mails e telefone de uma página. Prefere mailto:/tel: ao texto solto."""
+	emails: list[str] = []
+	phones: list[str] = []
+	title = ""
+
+	try:
+		soup = BeautifulSoup(html, "html.parser")
+	except Exception:
+		soup = None
+
+	if soup is not None:
+		if soup.title and soup.title.string:
+			title = _sanitize_str(str(soup.title.string), 160)
+		for tag in soup.find_all("a", href=True):
+			href = tag["href"].strip()
+			low = href.lower()
+			if low.startswith("mailto:"):
+				candidate = href[7:].split("?")[0].strip().lower()
+				if candidate:
+					emails.append(candidate)
+			elif low.startswith("tel:"):
+				phones.append(re.sub(r"[^\d+]", "", href[4:]))
+		# Remover script/style antes de ler o texto solto
+		for bad in soup(["script", "style", "noscript"]):
+			bad.decompose()
+		text = soup.get_text(" ", strip=True)
+	else:
+		text = re.sub(r"<[^>]+>", " ", html)
+
+	text = text[:200_000]
+	emails.extend(re.findall(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}", text))
+	phones.extend(re.findall(r"(?:\+351[\s.\-]?)?[29]\d{2}[\s.\-]?\d{3}[\s.\-]?\d{3}", text))
+
+	clean_emails: list[str] = []
+	for em in emails:
+		em = em.lower().strip().strip(".")
+		if _is_email_safe(em) and em not in clean_emails:
+			clean_emails.append(em)
+
+	phone = ""
+	for raw in phones:
+		digits = re.sub(r"[^\d]", "", raw)
+		if digits.startswith("351"):
+			digits = digits[3:]
+		if len(digits) == 9 and digits[0] in "29":
+			phone = f"+351 {digits}"
+			break
+
+	return {"title": title, "emails": clean_emails, "phone": phone, "url": page_url}
+
+
+def _find_contact_pages(html: str, base_url: str) -> list[str]:
+	"""Devolve ligações internas para páginas de contacto/sobre."""
+	found: list[str] = []
+	try:
+		soup = BeautifulSoup(html, "html.parser")
+	except Exception:
+		return found
+
+	base_host = urlparse(base_url).netloc
+	for tag in soup.find_all("a", href=True):
+		href = tag["href"].strip()
+		if href.startswith(("mailto:", "tel:", "#", "javascript:")):
+			continue
+		label = f"{href} {tag.get_text(' ', strip=True)}".lower()
+		if not any(hint in label for hint in CONTACT_LINK_HINTS):
+			continue
+		full = urljoin(base_url, href).split("#")[0]
+		if urlparse(full).netloc != base_host:
+			continue
+		if full not in found and full != base_url:
+			found.append(full)
+		if len(found) >= SCRAPER_MAX_SUBPAGES:
+			break
+	return found
+
+
+def _search_candidate_sites(query: str, max_results: int) -> tuple[list[dict], str]:
+	"""Pesquisa no DuckDuckGo e devolve (resultados, mensagem_de_erro)."""
+	try:
+		try:
+			from ddgs import DDGS
+		except ImportError:
+			from duckduckgo_search import DDGS
+	except ImportError:
+		return [], "Biblioteca de pesquisa não instalada no servidor."
+
+	try:
+		with DDGS() as ddgs:
+			raw = list(ddgs.text(query, max_results=max_results))
+	except Exception as err:
+		return [], (
+			f"A pesquisa falhou ({type(err).__name__}). "
+			"Pode ser limite de pedidos do DuckDuckGo — tente daqui a alguns minutos."
+		)
+
+	results = []
+	for r in raw:
+		href = (r.get("href") or r.get("url") or "").strip()
+		if not re.match(r"^https?://", href):
+			continue
+		results.append({"url": href[:250], "title": _sanitize_str(r.get("title", ""), 160)})
+	return results, ""
+
+
+def scrape_b2b_prospects(region: str, category: str, client_type: str, priority: str) -> tuple[list[dict], dict]:
 	"""
-	Algoritmo de pesquisa e raspagem de leads B2B por região e categoria em Portugal.
-	Entradas já validadas por allowlist no Pydantic antes de chegar aqui.
+	Procura empresas reais por região e categoria, abre os sites encontrados e
+	recolhe os contactos publicamente disponíveis nessas páginas.
+
+	Só recolhe o que a própria empresa publica no seu site, respeita o robots.txt
+	de cada site, identifica-se no User-Agent e espaça os pedidos. Nunca inventa
+	dados: se não encontrar nada, devolve lista vazia.
+
+	Devolve (prospects, diagnóstico).
 	"""
-	# Sanitizar inputs antes de usar em queries
 	region = _sanitize_str(region, 80)
 	category = _sanitize_str(category, 80)
 	client_type = _sanitize_str(client_type, 50)
 	priority = priority.lower().strip()
 
-	query = f"{category} {region} Portugal contacto email"
-	prospects_found = []
+	diag = {
+		"search_error": "",
+		"sites_found": 0,
+		"sites_visited": 0,
+		"pages_read": 0,
+		"blocked_by_robots": 0,
+		"directories_skipped": 0,
+		"personal_addresses": 0,
+	}
+
+	if not HAS_SCRAPER_DEPS:
+		diag["search_error"] = (
+			"As bibliotecas de raspagem (httpx, beautifulsoup4) não estão instaladas "
+			"no servidor. O resto da aplicação continua a funcionar."
+		)
+		return [], diag
+
+	query = f"{category} {region} Portugal contactos"
+	candidates, search_error = _search_candidate_sites(query, SCRAPER_MAX_SITES * 2)
+	diag["search_error"] = search_error
+	diag["sites_found"] = len(candidates)
+
+	if not candidates:
+		return [], diag
+
+	prospects_found: list[dict] = []
 	seen_emails: set[str] = set()
+	seen_hosts: set[str] = set()
+	robots_cache: dict = {}
 
-	reg_cap = region.capitalize()
-	reg_clean = re.sub(r"[^a-z0-9]", "", region.lower())
-	cat_cap = category.capitalize()
-	cat_clean = re.sub(r"[^a-z0-9]", "", category.lower())
+	headers = {
+		"User-Agent": SCRAPER_USER_AGENT,
+		"Accept": "text/html,application/xhtml+xml",
+		"Accept-Language": "pt-PT,pt;q=0.9",
+	}
 
-	curated_leads = [
-		{
-			"name": f"Oficina Auto {reg_cap}",
-			"email": f"geral@oficinaauto{reg_clean}.pt",
-			"phone": "+351 253 102 304",
-			"company": f"Auto {reg_cap} Reparações Lda",
-			"website": f"https://www.auto{reg_clean}.pt",
-			"category": category,
-			"region": region,
-			"client_type": client_type,
-			"priority": priority,
-		},
-		{
-			"name": f"Grupo {cat_cap} Norte",
-			"email": f"contacto@grupo{cat_clean}norte.pt",
-			"phone": "+351 229 405 607",
-			"company": f"Grupo {cat_cap} & Associados",
-			"website": f"https://www.grupo{cat_clean}norte.pt",
-			"category": category,
-			"region": region,
-			"client_type": client_type,
-			"priority": priority,
-		},
-		{
-			"name": f"Comércio & Serviços {reg_cap}",
-			"email": f"comercial@{cat_clean}{reg_clean}.pt",
-			"phone": "+351 214 809 111",
-			"company": f"{cat_cap} Portugal SA",
-			"website": f"https://www.{cat_clean}{reg_clean}.pt",
-			"category": category,
-			"region": region,
-			"client_type": client_type,
-			"priority": priority,
-		},
-	]
-
-	# Tentar raspagem em tempo real usando DuckDuckGo
 	try:
-		from duckduckgo_search import DDGS
-
-		with DDGS() as ddgs:
-			results = list(ddgs.text(query, max_results=15))
-			email_pattern = re.compile(r"[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}")
-
-			for r in results:
-				if len(prospects_found) >= MAX_PROSPECTS_PER_SEARCH:
-					break
-				title = _sanitize_str(r.get("title", ""), 120)
-				snippet = r.get("body", "")[:1000]  # Limitar tamanho do snippet
-				href = r.get("href", "")
-
-				# Validar URL do website (só http/https)
-				if href and not re.match(r"^https?://", href):
-					href = ""
-				href = href[:250]
-
-				found_emails = email_pattern.findall(snippet + " " + title)
-				for em in found_emails:
-					em_clean = em.lower().strip()
-					if em_clean not in seen_emails and _is_email_safe(em_clean):
-						seen_emails.add(em_clean)
-						prospects_found.append({
-							"name": title or f"Empresa {category}",
-							"email": em_clean,
-							"phone": "",
-							"company": title or f"Empresa {category}",
-							"website": href,
-							"category": category,
-							"region": region,
-							"client_type": client_type,
-							"priority": priority,
-						})
+		client = httpx.Client(headers=headers, follow_redirects=True, timeout=SCRAPER_TIMEOUT_SECONDS)
 	except Exception as err:
-		print(f"[SCRAPER] Aviso na pesquisa em tempo real: {type(err).__name__}: {err}")
+		diag["search_error"] = f"Não foi possível iniciar o cliente HTTP: {type(err).__name__}"
+		return [], diag
 
-	# Combinar com leads de prospeção regional curada (apenas se não duplicados)
-	for lead in curated_leads:
-		if len(prospects_found) >= MAX_PROSPECTS_PER_SEARCH:
-			break
-		if lead["email"] not in seen_emails and _is_email_safe(lead["email"]):
-			seen_emails.add(lead["email"])
-			prospects_found.append(lead)
+	try:
+		for candidate in candidates:
+			if diag["sites_visited"] >= SCRAPER_MAX_SITES:
+				break
+			if len(prospects_found) >= MAX_PROSPECTS_PER_SEARCH:
+				break
 
-	return prospects_found
+			url = candidate["url"]
+			host = urlparse(url).netloc.lower()
+			# Um prospect por empresa: chega o primeiro site de cada domínio.
+			if not host or host in seen_hosts:
+				continue
+			# Diretórios, redes sociais e jornais não são a empresa que procuramos.
+			bare_host = host[4:] if host.startswith("www.") else host
+			if any(bare_host == d or bare_host.endswith("." + d) for d in EXCLUDED_SITE_DOMAINS):
+				diag["directories_skipped"] += 1
+				continue
+			seen_hosts.add(host)
+
+			if not _robots_allows(client, url, robots_cache):
+				diag["blocked_by_robots"] += 1
+				continue
+
+			diag["sites_visited"] += 1
+			html = _fetch_html(client, url)
+			time.sleep(SCRAPER_DELAY_SECONDS)
+			if not html:
+				continue
+			diag["pages_read"] += 1
+
+			info = _extract_contacts_from_html(html, url)
+
+			# Se a página inicial não tiver contactos, tentar a página de contactos.
+			if not info["emails"]:
+				for sub_url in _find_contact_pages(html, url):
+					if not _robots_allows(client, sub_url, robots_cache):
+						continue
+					sub_html = _fetch_html(client, sub_url)
+					time.sleep(SCRAPER_DELAY_SECONDS)
+					if not sub_html:
+						continue
+					diag["pages_read"] += 1
+					sub_info = _extract_contacts_from_html(sub_html, sub_url)
+					if sub_info["emails"]:
+						sub_info["title"] = sub_info["title"] or info["title"] or candidate["title"]
+						sub_info["phone"] = sub_info["phone"] or info["phone"]
+						info = sub_info
+						break
+
+			if not info["emails"]:
+				continue
+
+			company_name = info["title"] or candidate["title"] or host
+			# Limpar sufixos comuns dos títulos de página ("Empresa | Contactos")
+			company_name = re.split(r"\s+[|\-–—]\s+", company_name)[0][:200] or host
+
+			for email in info["emails"]:
+				if email in seen_emails:
+					continue
+				is_role = _is_role_address(email)
+				if not is_role:
+					# Endereços pessoais são recolhidos mas ficam marcados; o
+					# outreach não lhes escreve sem autorização explícita.
+					diag["personal_addresses"] += 1
+				seen_emails.add(email)
+				prospects_found.append({
+					"name": company_name,
+					"email": email,
+					"phone": info["phone"],
+					"company": company_name,
+					"website": f"{urlparse(url).scheme}://{host}",
+					"source_url": info["url"][:250],
+					"is_role_address": is_role,
+					"category": category,
+					"region": region,
+					"client_type": client_type,
+					"priority": priority,
+				})
+				# Um contacto por empresa é suficiente para prospeção.
+				break
+	finally:
+		try:
+			client.close()
+		except Exception:
+			pass
+
+	return prospects_found, diag
+
 
 
 def _escape_html(text: str) -> str:
@@ -855,28 +1229,151 @@ def _escape_html(text: str) -> str:
 	)
 
 
+# ==========================================
+# OUTREACH: SUPRESSÃO, LIMITES E ENVIO
+# ==========================================
+
+# Endereço público desta API — usado nas ligações de cancelamento dos e-mails.
+PUBLIC_API_URL = (
+	os.getenv("PUBLIC_API_URL")
+	or "https://carefree-unity-production-49b1.up.railway.app"
+).rstrip("/")
+
+# Teto de segurança de envios por hora, independente do tamanho dos lotes.
+MAX_OUTREACH_PER_HOUR = int(os.getenv("MAX_OUTREACH_PER_HOUR", "50"))
+
+# Endereço para onde vão os pedidos de remoção enviados por e-mail.
+UNSUBSCRIBE_MAILBOX = os.getenv("UNSUBSCRIBE_MAILBOX", "nexugal.geral@gmail.com")
+
+
+def _unsubscribe_token(email: str) -> str:
+	"""Assinatura que prova que a ligação de cancelamento saiu de um e-mail nosso."""
+	mac = hmac.new(
+		JWT_SECRET.encode("utf-8"),
+		email.lower().strip().encode("utf-8"),
+		hashlib.sha256,
+	).hexdigest()
+	return mac[:32]
+
+
+def _unsubscribe_url(email: str) -> str:
+	from urllib.parse import quote
+
+	return (
+		f"{PUBLIC_API_URL}/api/outreach/unsubscribe"
+		f"?e={quote(email)}&t={_unsubscribe_token(email)}"
+	)
+
+
+def is_email_suppressed(conn, email: str) -> bool:
+	"""True se este endereço pediu para não voltar a ser contactado."""
+	rows = execute_sql(
+		conn,
+		"SELECT id FROM email_suppressions WHERE email = ?",
+		(email.lower().strip(),),
+	)
+	return bool(rows)
+
+
+def add_email_suppression(conn, email: str, reason: str) -> None:
+	"""Acrescenta um endereço à lista de não-contactar (idempotente)."""
+	email = email.lower().strip()
+	if is_email_suppressed(conn, email):
+		return
+	try:
+		execute_insert_sql(
+			conn,
+			"INSERT INTO email_suppressions (email, reason, created_at) VALUES (?, ?, ?)",
+			(email, _sanitize_str(reason, 200), datetime.now(timezone.utc).isoformat()),
+		)
+	except Exception as err:
+		try:
+			conn.rollback()
+		except Exception:
+			pass
+		print(f"[SUPRESSÃO] Falha ao registar {_mask_email(email)}: {type(err).__name__}")
+
+
+def log_outreach(conn, prospect_id: Optional[int], email: str, subject: str, outcome: str) -> None:
+	"""Regista o envio. Serve de prova de diligência e alimenta o limite horário."""
+	try:
+		execute_insert_sql(
+			conn,
+			"INSERT INTO outreach_log (prospect_id, email, subject, outcome, created_at) VALUES (?, ?, ?, ?, ?)",
+			(
+				prospect_id,
+				email.lower().strip()[:255],
+				_sanitize_str(subject, 200),
+				outcome[:50],
+				datetime.now(timezone.utc).isoformat(),
+			),
+		)
+	except Exception as err:
+		try:
+			conn.rollback()
+		except Exception:
+			pass
+		print(f"[OUTREACH LOG] Falha ao registar envio: {type(err).__name__}")
+
+
+def outreach_sent_last_hour(conn) -> int:
+	cutoff = (datetime.now(timezone.utc) - timedelta(hours=1)).isoformat()
+	try:
+		rows = execute_sql(
+			conn,
+			"SELECT COUNT(*) AS total FROM outreach_log WHERE outcome = 'sent' AND created_at > ?",
+			(cutoff,),
+		)
+	except Exception:
+		return 0
+	if not rows:
+		return 0
+	return int(list(rows[0].values())[0] or 0)
+
+
+def resolve_sender() -> tuple[str, str]:
+	"""
+	Devolve (remetente, erro). Recusa enviar prospeção a partir do domínio de
+	testes do Resend: os e-mails iriam quase todos para spam e queimariam a
+	reputação de envio antes de haver clientes.
+	"""
+	sender = (os.getenv("SENDER_EMAIL") or "").strip()
+	if not sender:
+		return "", (
+			"SENDER_EMAIL não está definida no servidor. Configure um remetente "
+			"do domínio nexugal.com (verificado no Resend com SPF/DKIM) antes de enviar."
+		)
+	if "resend.dev" in sender.lower() and os.getenv("ALLOW_TEST_SENDER") != "1":
+		return "", (
+			"O remetente configurado ainda é o domínio de testes do Resend "
+			"(onboarding@resend.dev). Verifique o domínio nexugal.com no Resend e "
+			"defina SENDER_EMAIL antes de enviar prospeção."
+		)
+	return sender, ""
+
+
 def send_outreach_email_via_resend(
 	prospect: dict,
+	sender: str,
 	custom_subject: Optional[str] = None,
 	custom_message: Optional[str] = None,
-) -> bool:
+) -> tuple[bool, str]:
+	"""Envia um e-mail de prospeção. Devolve (enviado, motivo_da_falha)."""
 	api_key = os.getenv("RESEND_API_KEY")
 	if not api_key or not HAS_RESEND:
-		print("[RESEND OUTREACH] Ignorado: RESEND_API_KEY em falta ou biblioteca resend indisponível.")
-		return False
+		return False, "RESEND_API_KEY em falta ou biblioteca resend indisponível."
 
 	resend.api_key = api_key
-	from_email = os.getenv("SENDER_EMAIL", "NEXUGAL <onboarding@resend.dev>")
 	to_email = str(prospect["email"]).lower().strip()
 
 	# Validação de segurança: garantir que o e-mail de destino é seguro antes de enviar
 	if not _is_email_safe(to_email):
-		print(f"[RESEND OUTREACH] E-mail bloqueado por política de segurança: {to_email}")
-		return False
+		return False, "Endereço bloqueado pela política de segurança."
 
 	name = _sanitize_str(str(prospect.get("name") or "Cliente"), 120)
 	company = _sanitize_str(str(prospect.get("company") or prospect.get("name") or "a vossa empresa"), 120)
 	category = _sanitize_str(str(prospect.get("category") or "tecnologia"), 100)
+	source_url = _sanitize_str(str(prospect.get("source_url") or prospect.get("website") or ""), 250)
 
 	# Sanitizar o assunto e a mensagem personalizada para prevenir header injection
 	raw_subject = custom_subject or f"Otimização tecnológica & automação para {company} — NEXUGAL"
@@ -901,6 +1398,16 @@ https://www.nexugal.com"""
 
 	# Escapar HTML para prevenir XSS
 	body_escaped = _escape_html(raw_message)
+	unsubscribe_link = _unsubscribe_url(to_email)
+
+	# Art. 14.º do RGPD: dizer à empresa de onde veio o contacto.
+	if source_url:
+		origem_html = (
+			"Obtivemos o seu endereço a partir da informação de contacto publicada em "
+			f'<a href="{_escape_html(source_url)}" style="color:#8b949e;">{_escape_html(source_url)}</a>. '
+		)
+	else:
+		origem_html = "Obtivemos o seu endereço a partir da informação de contacto publicada no site da sua empresa. "
 
 	html_content = f"""<!DOCTYPE html>
 <html lang="pt-PT">
@@ -912,7 +1419,10 @@ https://www.nexugal.com"""
         <hr style="border-color: #30363d; margin: 28px 0;">
         <p style="font-size: 11px; color: #8b949e; line-height: 1.5;">
             Este e-mail foi enviado pela NEXUGAL — Consultoria Tecnológica, Braga, Portugal.<br>
-            Se não deseja receber mais comunicações da nossa parte, por favor responda com o assunto <strong>"Cancelar subscrição"</strong> e removeremos o seu endereço imediatamente, em conformidade com o RGPD.
+            {origem_html}<br>
+            Não deseja receber mais comunicações nossas?
+            <a href="{unsubscribe_link}" style="color: #00D1FF;">Cancelar com um clique</a>.
+            O seu endereço é removido de imediato e em definitivo, nos termos do RGPD.
         </p>
     </div>
 </body>
@@ -920,16 +1430,26 @@ https://www.nexugal.com"""
 
 	try:
 		resend.Emails.send({
-			"from": from_email,
+			"from": sender,
 			"to": [to_email],
 			"subject": subject,
 			"html": html_content,
+			"headers": {
+				# Exigido na prática pelo Gmail/Yahoo a quem envia em massa.
+				"List-Unsubscribe": f"<{unsubscribe_link}>, <mailto:{UNSUBSCRIBE_MAILBOX}?subject=Cancelar%20subscricao>",
+				"List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+			},
 		})
-		print(f"[RESEND OUTREACH] E-mail enviado com sucesso para: {to_email}")
-		return True
+		print(f"[RESEND OUTREACH] E-mail enviado para: {_mask_email(to_email)}")
+		return True, ""
 	except Exception as e:
-		print(f"[RESEND OUTREACH ERROR] Falha ao enviar para {to_email}: {type(e).__name__}: {e}")
-		return False
+		print(f"[RESEND OUTREACH ERROR] Falha ao enviar para {_mask_email(to_email)}: {type(e).__name__}")
+		return False, f"Falha no envio ({type(e).__name__})."
+
+
+# ==========================================
+# ENDPOINTS DO SCRAPER
+# ==========================================
 
 
 @app.post("/api/scraper/search")
@@ -938,7 +1458,7 @@ def run_scraper_search(payload: ScraperSearchIn, _: str = Depends(get_current_us
 	print(f"[SCRAPER AUDIT] Pesquisa iniciada — região: {payload.region}, categoria: {payload.category}, "
 		  f"tipo: {payload.client_type}, prioridade: {payload.priority}, ts: {datetime.now(timezone.utc).isoformat()}")
 
-	results = scrape_b2b_prospects(
+	results, diag = scrape_b2b_prospects(
 		region=payload.region.strip(),
 		category=payload.category.strip(),
 		client_type=payload.client_type.strip(),
@@ -947,23 +1467,30 @@ def run_scraper_search(payload: ScraperSearchIn, _: str = Depends(get_current_us
 
 	conn = get_db_connection()
 	inserted_count = 0
+	suppressed_skipped = 0
 	try:
 		for p in results:
+			email = p.get("email", "")
 			# Validação final antes de inserir na base de dados
-			if not _is_email_safe(p.get("email", "")):
-				print(f"[SCRAPER] E-mail rejeitado na inserção: {p.get('email')}")
+			if not _is_email_safe(email):
 				continue
-			existing = execute_sql(conn, "SELECT id FROM prospects WHERE email = ?", (p["email"],))
-			if not existing:
+			# Nunca voltar a guardar quem pediu para não ser contactado
+			if is_email_suppressed(conn, email):
+				suppressed_skipped += 1
+				continue
+			existing = execute_sql(conn, "SELECT id FROM prospects WHERE email = ?", (email,))
+			if existing:
+				continue
+			try:
 				execute_insert_sql(
 					conn,
 					"""
-					INSERT INTO prospects (name, email, phone, company, website, region, category, client_type, priority, status, notes, created_at)
-					VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+					INSERT INTO prospects (name, email, phone, company, website, region, category, client_type, priority, status, notes, created_at, source_url, is_role_address)
+					VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 					""",
 					(
 						_sanitize_str(p["name"], 200),
-						p["email"],
+						email,
 						_sanitize_str(p.get("phone", ""), 40),
 						_sanitize_str(p.get("company", ""), 200),
 						_sanitize_str(p.get("website", ""), 250),
@@ -974,14 +1501,46 @@ def run_scraper_search(payload: ScraperSearchIn, _: str = Depends(get_current_us
 						"novo",
 						"",
 						datetime.now(timezone.utc).isoformat(),
+						_sanitize_str(p.get("source_url", ""), 250),
+						bool(p.get("is_role_address", False)),
 					),
 				)
 				inserted_count += 1
+			except Exception as err:
+				try:
+					conn.rollback()
+				except Exception:
+					pass
+				print(f"[SCRAPER] Inserção ignorada para {_mask_email(email)}: {type(err).__name__}")
 	finally:
 		conn.close()
 
-	print(f"[SCRAPER AUDIT] Pesquisa concluída — {len(results)} encontrados, {inserted_count} novos inseridos")
-	return {"success": True, "found": len(results), "new_inserted": inserted_count}
+	print(f"[SCRAPER AUDIT] Pesquisa concluída — {len(results)} encontrados, {inserted_count} novos, "
+		  f"{diag['sites_visited']} sites visitados, {diag['blocked_by_robots']} bloqueados por robots.txt")
+
+	if diag["search_error"]:
+		message = diag["search_error"]
+	elif not results:
+		message = (
+			f"Nenhum contacto encontrado. Visitámos {diag['sites_visited']} site(s) "
+			f"mas nenhum publica e-mail acessível. Tente outra categoria ou região."
+		)
+	else:
+		message = (
+			f"{len(results)} contacto(s) encontrado(s) em {diag['sites_visited']} site(s) visitado(s); "
+			f"{inserted_count} novo(s) guardado(s)."
+		)
+
+	return {
+		"success": not bool(diag["search_error"]),
+		"found": len(results),
+		"new_inserted": inserted_count,
+		"message": message,
+		"diagnostics": {
+			**diag,
+			"suppressed_skipped": suppressed_skipped,
+		},
+	}
 
 
 @app.get("/api/scraper/prospects", response_model=list[ProspectOut])
@@ -994,7 +1553,10 @@ def list_prospects(
 ):
 	conn = get_db_connection()
 	try:
-		query = "SELECT id, name, email, phone, company, website, region, category, client_type, priority, status, notes, created_at FROM prospects WHERE 1=1"
+		query = (
+			"SELECT id, name, email, phone, company, website, region, category, client_type, "
+			"priority, status, notes, created_at, source_url, is_role_address FROM prospects WHERE 1=1"
+		)
 		params = []
 		if region:
 			query += " AND LOWER(region) = LOWER(?)"
@@ -1011,6 +1573,8 @@ def list_prospects(
 		query += " ORDER BY created_at DESC"
 
 		rows = execute_sql(conn, query, tuple(params))
+		suppressed_rows = execute_sql(conn, "SELECT email FROM email_suppressions", ())
+		suppressed = {str(r["email"]).lower() for r in suppressed_rows}
 	finally:
 		conn.close()
 
@@ -1029,6 +1593,9 @@ def list_prospects(
 			status=r["status"],
 			notes=r["notes"] or "",
 			created_at=r["created_at"],
+			source_url=r.get("source_url") or "",
+			is_role_address=bool(r.get("is_role_address")),
+			suppressed=str(r["email"]).lower() in suppressed,
 		)
 		for r in rows
 	]
@@ -1041,21 +1608,30 @@ def update_prospect(prospect_id: int, payload: ProspectUpdateIn, _: str = Depend
 		fields = []
 		params = []
 		if payload.status:
+			# Guardar sempre em minúsculas: o resto do código compara com 'ignorado'
 			fields.append("status = ?")
-			params.append(payload.status)
+			params.append(payload.status.lower().strip())
 		if payload.priority:
 			fields.append("priority = ?")
-			params.append(payload.priority)
+			params.append(payload.priority.lower().strip())
 		if payload.notes is not None:
 			fields.append("notes = ?")
 			params.append(payload.notes)
 
-		if fields:
-			params.append(prospect_id)
-			execute_sql(conn, f"UPDATE prospects SET {', '.join(fields)} WHERE id = ?", tuple(params))
+		if not fields:
+			return {"success": True, "updated": False}
+
+		params.append(prospect_id)
+		execute_sql(conn, f"UPDATE prospects SET {', '.join(fields)} WHERE id = ?", tuple(params))
+
+		# Marcar como 'ignorado' equivale a pedir para não ser contactado.
+		if payload.status and payload.status.lower().strip() == "ignorado":
+			rows = execute_sql(conn, "SELECT email FROM prospects WHERE id = ?", (prospect_id,))
+			if rows:
+				add_email_suppression(conn, str(rows[0]["email"]), "marcado como ignorado no painel")
 	finally:
 		conn.close()
-	return {"success": True}
+	return {"success": True, "updated": True}
 
 
 @app.post("/api/scraper/send-outreach")
@@ -1069,34 +1645,116 @@ def send_prospect_outreach(payload: OutreachSendIn, _: str = Depends(get_current
 			detail=f"Máximo de {MAX_OUTREACH_PER_BATCH} e-mails por operação. Divida em lotes.",
 		)
 
+	sender, sender_error = resolve_sender()
+	if sender_error:
+		raise HTTPException(status_code=400, detail=sender_error)
+
 	# Garantir que não há IDs duplicados na lista (previne envio em duplicado)
 	unique_ids = list(dict.fromkeys(payload.prospect_ids))
 
 	conn = get_db_connection()
 	sent_count = 0
 	failed_count = 0
+	skipped: list[str] = []
 	try:
+		already_sent = outreach_sent_last_hour(conn)
+		remaining_quota = max(0, MAX_OUTREACH_PER_HOUR - already_sent)
+		if remaining_quota <= 0:
+			raise HTTPException(
+				status_code=429,
+				detail=(
+					f"Limite de {MAX_OUTREACH_PER_HOUR} e-mails por hora atingido "
+					"(proteção da reputação do domínio). Tente mais tarde."
+				),
+			)
+
 		for pid in unique_ids:
+			if sent_count >= remaining_quota:
+				skipped.append("limite horário atingido")
+				break
+
 			rows = execute_sql(conn, "SELECT * FROM prospects WHERE id = ?", (pid,))
 			if not rows:
-				print(f"[OUTREACH] Prospect ID {pid} não encontrado. Ignorado.")
 				continue
 			prospect = rows[0]
+			email = str(prospect.get("email") or "").lower().strip()
 
 			# Não enviar para prospects já marcados como 'ignorado'
-			if prospect.get("status") == "ignorado":
-				print(f"[OUTREACH] Prospect ID {pid} está ignorado. Saltado.")
+			if str(prospect.get("status") or "").lower() == "ignorado":
+				skipped.append(f"{prospect.get('company') or email}: marcado como ignorado")
 				continue
 
-			sent = send_outreach_email_via_resend(prospect, payload.subject, payload.message)
-			if sent:
+			# Nunca escrever a quem pediu para não ser contactado
+			if is_email_suppressed(conn, email):
+				skipped.append(f"{prospect.get('company') or email}: pediu para não ser contactado")
+				log_outreach(conn, pid, email, payload.subject or "", "suppressed")
+				continue
+
+			# Endereços de pessoas (joao.silva@) exigem confirmação explícita:
+			# o RGPD trata-os de forma bem mais exigente do que geral@empresa.pt.
+			if not bool(prospect.get("is_role_address")) and not payload.allow_personal:
+				skipped.append(f"{prospect.get('company') or email}: endereço pessoal, precisa de confirmação")
+				continue
+
+			ok, reason = send_outreach_email_via_resend(prospect, sender, payload.subject, payload.message)
+			if ok:
 				execute_sql(conn, "UPDATE prospects SET status = 'contactado' WHERE id = ?", (pid,))
+				log_outreach(conn, pid, email, payload.subject or "", "sent")
 				sent_count += 1
 			else:
+				log_outreach(conn, pid, email, payload.subject or "", "failed")
+				skipped.append(f"{prospect.get('company') or email}: {reason}")
 				failed_count += 1
 	finally:
 		conn.close()
 
-	print(f"[OUTREACH AUDIT] Lote concluído — enviados: {sent_count}, falhados: {failed_count}")
-	return {"success": True, "sent_count": sent_count, "failed_count": failed_count}
+	print(f"[OUTREACH AUDIT] Lote concluído — enviados: {sent_count}, falhados: {failed_count}, ignorados: {len(skipped)}")
+	return {
+		"success": True,
+		"sent_count": sent_count,
+		"failed_count": failed_count,
+		"skipped": skipped[:MAX_OUTREACH_PER_BATCH],
+	}
 
+
+# ==========================================
+# CANCELAMENTO DE SUBSCRIÇÃO (PÚBLICO)
+# ==========================================
+
+_UNSUB_PAGE = """<!DOCTYPE html>
+<html lang="pt-PT"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXUGAL — Subscrição cancelada</title></head>
+<body style="font-family: Arial, sans-serif; background:#0d1117; color:#c9d1d9; padding:40px;">
+  <div style="max-width:540px; margin:0 auto; background:#161b22; border:1px solid #30363d; border-radius:16px; padding:32px;">
+    <h2 style="color:#00D1FF; font-family:monospace; letter-spacing:2px;">NEXUGAL</h2>
+    <p style="font-size:16px; line-height:1.6;">{mensagem}</p>
+    <p style="font-size:12px; color:#8b949e;">NEXUGAL — Consultoria Tecnológica, Braga, Portugal</p>
+  </div>
+</body></html>"""
+
+
+def _process_unsubscribe(email: str, token: str) -> str:
+	email = (email or "").lower().strip()
+	if not email or not hmac.compare_digest(token or "", _unsubscribe_token(email)):
+		return "Ligação de cancelamento inválida ou expirada. Responda ao e-mail que recebeu e removemos o seu endereço manualmente."
+
+	conn = get_db_connection()
+	try:
+		add_email_suppression(conn, email, "cancelamento pedido pelo destinatário")
+		execute_sql(conn, "UPDATE prospects SET status = 'ignorado' WHERE email = ?", (email,))
+	finally:
+		conn.close()
+	print(f"[UNSUBSCRIBE] Endereço removido a pedido: {_mask_email(email)}")
+	return "O seu endereço foi removido. Não voltará a receber comunicações da NEXUGAL."
+
+
+@app.get("/api/outreach/unsubscribe", response_class=HTMLResponse)
+def unsubscribe_get(e: str = "", t: str = ""):
+	return HTMLResponse(_UNSUB_PAGE.replace("{mensagem}", _process_unsubscribe(e, t)))
+
+
+@app.post("/api/outreach/unsubscribe", response_class=HTMLResponse)
+def unsubscribe_post(e: str = "", t: str = ""):
+	# Suporta o cancelamento de um clique do Gmail/Yahoo (List-Unsubscribe-Post).
+	return HTMLResponse(_UNSUB_PAGE.replace("{mensagem}", _process_unsubscribe(e, t)))
