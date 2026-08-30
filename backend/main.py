@@ -354,14 +354,277 @@ ALLOWED_UPLOAD_MIME = {
 
 # Mapeamento de nomes de coluna possíveis para campos normalizados (flexível para qualquer idioma)
 CSV_COLUMN_MAP = {
-	"name": ["nome", "name", "empresa", "company", "razão social", "designação", "contact name"],
-	"email": ["email", "e-mail", "mail", "correio eletrónico", "e mail"],
-	"phone": ["telefone", "telemovel", "telemóvel", "phone", "tel", "contacto", "contact", "móvel", "mobile"],
-	"company": ["empresa", "company", "nome empresa", "organização", "organization", "entidade"],
-	"website": ["website", "site", "url", "web", "www", "homepage"],
-	"region": ["região", "region", "cidade", "city", "localidade", "location", "distrito", "district"],
-	"category": ["categoria", "category", "setor", "sector", "atividade", "activity", "área"],
-	"notes": ["notas", "notes", "observações", "observations", "comentários", "comments"],
+	"name": [
+		"nome", "name", "razão social", "designação", "contact name",
+		"responsavel", "responsável", "pessoa", "pessoa de contacto",
+	],
+	"email": [
+		"email", "e-mail", "mail", "e mail", "correio eletrónico",
+		"email address", "endereço email", "endereço de email",
+		"email comercial", "email de contacto", "contacto email",
+	],
+	"phone": [
+		"telefone", "telemovel", "telemóvel", "phone", "tel", "contacto",
+		"contact", "móvel", "mobile", "telefone fixo", "tlm", "tlf",
+		"telefone de contacto", "numero", "número",
+	],
+	"company": [
+		"empresa", "company", "nome empresa", "nome da empresa",
+		"organização", "organization", "entidade", "estabelecimento",
+		"designação social", "designação", "nome comercial",
+	],
+	"website": ["website", "site", "url", "web", "www", "homepage", "página web", "link"],
+	"region": [
+		"região", "region", "cidade", "city", "localidade", "location",
+		"distrito", "district", "município", "municipio", "concelho",
+		"rota", "zona", "area", "área",
+	],
+	"category": [
+		"categoria", "category", "setor", "sector", "atividade",
+		"activity", "área", "segmento", "tipo", "ramo",
+	],
+	"notes": [
+		"notas", "notes", "observações", "observations",
+		"comentários", "comments", "descricao", "descrição",
+	],
+}
+
+# Templates de e-mail por categoria (assunto + corpo personalizados)
+CATEGORY_EMAIL_TEMPLATES: dict[str, dict] = {
+	"Oficinas & Automóvel": {
+		"subject": "Digitalização & Automatização para a Vossa Oficina — NEXUGAL",
+		"message": """Olá {name},
+
+Esperamos que esteja a ter uma excelente semana.
+
+Somos a NEXUGAL, uma consultoria tecnológica sediada em Braga especializada em apoiar oficinas e negócios do setor automóvel a modernizarem a sua operação.
+
+Sabemos que gerir agendamentos, orçamentos, stock de peças e comunicação com clientes pode ser um processo moroso e propenso a erros. É exatamente aqui que entramos — desenvolvemos plataformas digitais à medida e soluções de automação que permitem:
+
+• 📅 Agendamento online automático (sem chamadas)
+• 📋 Orçamentos e faturas digitais em segundos
+• 📦 Controlo de stock em tempo real
+• 📲 Notificações automáticas aos clientes por SMS/email
+
+Gostaríamos de agendar uma conversa de 10 minutos para mostrar como estas ferramentas podem poupar horas por dia na {company}.
+
+Está disponível para uma breve chamada esta semana?
+
+Com os melhores cumprimentos,
+Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
+	},
+	"Restauração & Hotelaria": {
+		"subject": "Mais reservas, menos trabalho manual para a {company} — NEXUGAL",
+		"message": """Olá {name},
+
+Esperamos que o negócio esteja a correr bem!
+
+Somos a NEXUGAL, uma consultoria tecnológica de Braga especializada no setor da restauração e hotelaria. Trabalhamos com restaurantes, cafés e hotéis que querem crescer sem aumentar a carga administrativa.
+
+O que costumamos implementar:
+
+• 🍽️ Sistema de reservas online 24/7 (integrado com o seu site)
+• 📊 Painel de gestão centralizado (mesas, pedidos, faturação)
+• 📧 E-mails automáticos de confirmação e lembrete aos clientes
+• ⭐ Pedidos automáticos de avaliação Google após visita
+• 📱 Carta digital com QR Code (sem custos de impressão)
+
+Tudo isto traduz-se em mais reservas, menos no-shows e menos trabalho manual para si e a sua equipa.
+
+Pode ter interesse em conhecer melhor? Posso enviar um exemplo prático da plataforma.
+
+Com os melhores cumprimentos,
+Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
+	},
+	"Imobiliárias & Construção": {
+		"subject": "Gestão de Imóveis e Clientes mais eficiente para a {company} — NEXUGAL",
+		"message": """Olá {name},
+
+Uma breve mensagem da NEXUGAL, consultoria tecnológica sediada em Braga.
+
+Trabalhamos com imobiliárias e empresas de construção que querem profissionalizar a sua presença digital e automatizar processos de captação de clientes e gestão de carteira.
+
+Algumas soluções que desenvolvemos para o setor:
+
+• 🏠 Website profissional com pesquisa de imóveis integrada
+• 📩 Sistema automático de follow-up com leads (e-mails/SMS)
+• 📊 CRM simples para gerir clientes e imóveis em pipeline
+• 📸 Galerias e visitas virtuais integradas
+• 📋 Geração automática de propostas e contratos
+
+O objetivo é simples: que a {company} apareça melhor online e converta mais contactos em vendas.
+
+Tem 10 minutos para uma conversa sem compromisso?
+
+Com os melhores cumprimentos,
+Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
+	},
+	"Clínicas & Saúde": {
+		"subject": "Redução de faltas e mais eficiência para a {company} — NEXUGAL",
+		"message": """Olá {name},
+
+Contactamo-lo da NEXUGAL, uma consultoria tecnológica de Braga focada em soluções para clínicas e prestadores de serviços de saúde.
+
+Sabemos que no setor da saúde, as ausências de pacientes, os telefonemas de marcação e a gestão de fichas clínicas consomem muito tempo e recursos. As soluções que desenvolvemos ajudam a:
+
+• 📅 Reduzir no-shows em até 40% com lembretes automáticos
+• 💻 Permitir marcações online 24h (sem secretária para atender)
+• 📁 Digitalizar e organizar fichas de pacientes em segurança
+• 📊 Relatórios automáticos de ocupação e faturação
+• 🔒 Em conformidade com o RGPD e proteção de dados de saúde
+
+Trata-se de um sistema simples de implementar, sem necessidade de hardware novo.
+
+Gostaria de ver uma demonstração rápida de como funcionaria para a {company}?
+
+Com os melhores cumprimentos,
+Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
+	},
+	"Lojas & Comércio Local": {
+		"subject": "Venda mais online e em loja com a {company} — NEXUGAL",
+		"message": """Olá {name},
+
+Contactamo-lo da NEXUGAL, consultoria tecnológica de Braga especializada em ajudar comércios locais a crescerem online.
+
+Hoje em dia, a maioria dos clientes pesquisa online antes de entrar na loja. Se a {company} não aparece nas primeiras pesquisas, está a perder clientes para a concorrência — mesmo que tenha os melhores produtos.
+
+O que podemos fazer pela {company}:
+
+• 🌐 Loja online integrada com o stock da loja física
+• 🔍 Otimização no Google (SEO e Google Meu Negócio)
+• 📣 Automação de promoções por e-mail e SMS
+• 💳 Programa de fidelização digital (sem cartões físicos)
+• 📊 Relatórios simples de vendas e produtos mais populares
+
+Conseguimos colocar uma loja online a funcionar em poucos dias, sem complicações técnicas.
+
+Tem interesse em saber mais? Posso mostrar exemplos de lojas similares à {company}.
+
+Com os melhores cumprimentos,
+Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
+	},
+	"Serviços Profissionais": {
+		"subject": "Automatize o seu processo comercial — NEXUGAL",
+		"message": """Olá {name},
+
+Uma rápida mensagem da NEXUGAL, consultoria tecnológica sediada em Braga.
+
+Trabalhamos com prestadores de serviços profissionais — advogados, contabilistas, consultores, engenheiros — que querem modernizar a forma como gerem clientes e proposta comerciais.
+
+O que habitualmente automatizamos:
+
+• 📝 Propostas comerciais personalizadas em minutos (não horas)
+• 📅 Calendário de reuniões online (sem trocas de e-mails)
+• 📊 Dashboard de clientes e projetos em curso
+• 🔄 Follow-up automático de propostas enviadas
+• 💬 Portal do cliente para partilha segura de documentos
+
+O resultado: menos tempo em tarefas administrativas e mais tempo para o que realmente importa.
+
+Estaria disponível para uma chamada de 15 minutos para ver se faz sentido para a {company}?
+
+Com os melhores cumprimentos,
+Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
+	},
+	"Tecnologia & Consultoria": {
+		"subject": "Parceria estratégica em tecnologia — NEXUGAL",
+		"message": """Olá {name},
+
+Contactamo-lo da NEXUGAL, uma consultoria tecnológica de Braga especializada em desenvolvimento web, automação e IA aplicada a negócios.
+
+Identificámos a {company} como uma organização com perfil alinhado para uma possível parceria ou colaboração em projetos tecnológicos. A nossa equipa trabalha com:
+
+• 🤖 Automação de processos internos com IA
+• 🌐 Desenvolvimento de plataformas web de alta performance
+• 📊 Dashboards e relatórios automatizados
+• 🔗 Integrações entre sistemas (APIs, ERPs, CRMs)
+• 🔒 Auditorias de segurança e compliance digital
+
+Se estiverem a desenvolver projetos que possam beneficiar de capacidade técnica adicional, ou se tiverem clientes com necessidades nesta área, gostaríamos de explorar uma conversa.
+
+Está disponível para um breve contacto?
+
+Com os melhores cumprimentos,
+Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
+	},
+	"Educação & Formação": {
+		"subject": "Plataforma digital para a {company} — NEXUGAL",
+		"message": """Olá {name},
+
+Contactamo-lo da NEXUGAL, consultoria tecnológica de Braga especializada em soluções digitais para o setor educativo e de formação.
+
+O mercado da educação mudou — hoje os alunos e formandos esperam acesso digital, plataformas simples e comunicação rápida. As soluções que desenvolvemos incluem:
+
+• 🎓 Portal do aluno com materiais, horários e notas
+• 📝 Inscrições online e pagamentos automáticos
+• 📧 Comunicação automatizada com encarregados/alunos
+• 📊 Relatórios de assiduidade e desempenho
+• 🎥 Integração com plataformas de e-learning (Moodle, etc.)
+
+Com uma plataforma digital adequada, a {company} pode reduzir o trabalho administrativo significativamente e melhorar a experiência dos alunos.
+
+Poderíamos marcar uma breve demonstração?
+
+Com os melhores cumprimentos,
+Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
+	},
+	"Logística & Transportes": {
+		"subject": "Otimização de rotas e gestão de frotas para a {company} — NEXUGAL",
+		"message": """Olá {name},
+
+Uma mensagem da NEXUGAL, consultoria tecnológica sediada em Braga, especializada em soluções de digitalização para empresas de logística e transportes.
+
+Sabemos que neste setor, cada minuto e cada quilómetro contam. As nossas soluções ajudam empresas como a {company} a:
+
+• 🗺️ Otimizar rotas de entrega em tempo real
+• 📦 Rastreamento de encomendas com notificações automáticas ao cliente
+• 🚛 Gestão digital de frota (manutenções, km, motoristas)
+• 📋 Guias de remessa e documentação digital
+• 📊 Análise de eficiência por rota, veículo e motorista
+
+O objetivo é reduzir custos operacionais e aumentar a satisfação dos clientes finais.
+
+Gostaria de agendar uma conversa de 15 minutos para perceber se podemos ajudar?
+
+Com os melhores cumprimentos,
+Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
+	},
+	"Beleza & Estética": {
+		"subject": "Mais marcações, menos no-shows para a {company} — NEXUGAL",
+		"message": """Olá {name},
+
+Contactamo-lo da NEXUGAL, consultoria tecnológica de Braga com experiência em soluções digitais para salões, spas e centros de estética.
+
+Sabemos que gerir a agenda, reduzir faltas de clientes e manter um fluxo constante de marcações são os maiores desafios do dia a dia. As nossas soluções resolvem exatamente isso:
+
+• 📅 Marcações online 24h (clientes marcam sozinhos, a qualquer hora)
+• 🔔 Lembretes automáticos por SMS/e-mail (redução de no-shows)
+• 💇 Perfil digital do cliente com histórico de serviços
+• ⭐ Pedido automático de avaliação Google após visita
+• 🎁 Sistema de fidelização com pontos e promoções
+
+Muitos dos nossos clientes recuperam o investimento logo no primeiro mês, apenas com a redução de faltas.
+
+Tem interesse em ver como funcionaria para a {company}?
+
+Com os melhores cumprimentos,
+Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
+	},
+	"default": {
+		"subject": "Otimização tecnológica & automação para a {company} — NEXUGAL",
+		"message": """Olá {name},
+
+Esperamos que esteja a ter uma excelente semana.
+
+Somos a NEXUGAL, uma consultoria tecnológica sediada em Braga especializada em apoiar empresas a automatizarem processos manuais, desenvolverem plataformas web de alta performance e aumentarem a sua eficiência operacional.
+
+Gostaríamos de agendar uma breve conversa sem compromisso de 10 minutos para analisar como podemos ajudar a {company} a poupar tempo e escalar os seus resultados através da tecnologia.
+
+Pode responder a este e-mail ou agendar uma chamada connosco em https://www.nexugal.com.
+
+Com os melhores cumprimentos,
+Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
+	},
 }
 
 
@@ -426,6 +689,14 @@ class OutreachSendIn(BaseModel):
 	prospect_ids: list[int] = Field(min_length=1, max_length=MAX_OUTREACH_PER_BATCH)
 	subject: Optional[str] = Field(default=None, max_length=200)
 	message: Optional[str] = Field(default=None, max_length=5000)
+
+
+class OutreachByCategoryIn(BaseModel):
+	category: str = Field(min_length=1, max_length=100)
+	subject: str = Field(min_length=1, max_length=200)
+	message: str = Field(min_length=1, max_length=5000)
+	priority_filter: Optional[str] = Field(default=None, max_length=20)  # filtrar por prioridade
+	status_filter: str = Field(default="novo", max_length=20)  # só enviar para 'novo' por defeito
 
 
 app = FastAPI(title=APP_NAME)
@@ -1348,6 +1619,113 @@ async def upload_prospects_file(
 		"success": True,
 		"imported": inserted,
 		"duplicate": duplicate,
-		"parse_errors": parse_errors[:20],  # Máximo de 20 erros devolvidos
+		"parse_errors": parse_errors[:20],
 		"total_rows": len(parsed_rows),
+	}
+
+
+# ==========================================
+# TEMPLATES POR CATEGORIA & ENVIO AUTOMÁTICO
+# ==========================================
+
+@app.get("/api/scraper/category-templates")
+def get_category_templates(_: str = Depends(get_current_user)) -> dict:
+	"""Devolve todos os templates de e-mail disponíveis por categoria."""
+	result = {}
+	for cat, tpl in CATEGORY_EMAIL_TEMPLATES.items():
+		if cat == "default":
+			continue
+		result[cat] = {
+			"subject": tpl["subject"],
+			"message": tpl["message"],
+		}
+	return {"templates": result, "categories": list(result.keys())}
+
+
+@app.post("/api/scraper/send-outreach-by-category")
+def send_outreach_by_category(
+	payload: OutreachByCategoryIn,
+	_: str = Depends(get_current_user),
+):
+	"""Envia e-mails de prospecção a todos os prospects de uma categoria específica."""
+	# Validar filtros
+	if payload.priority_filter and payload.priority_filter.lower() not in ALLOWED_PRIORITIES:
+		raise HTTPException(status_code=422, detail=f"Prioridade inválida: '{payload.priority_filter}'.")
+	if payload.status_filter.lower() not in ALLOWED_STATUSES:
+		raise HTTPException(status_code=422, detail=f"Estado inválido: '{payload.status_filter}'.")
+
+	conn = get_db_connection()
+	sent_count = 0
+	skipped_count = 0
+	failed_count = 0
+
+	try:
+		# Construir query com filtros
+		query = "SELECT * FROM prospects WHERE LOWER(category) = LOWER(?)"
+		params: list = [payload.category]
+
+		if payload.status_filter:
+			query += " AND LOWER(status) = LOWER(?)"
+			params.append(payload.status_filter)
+
+		if payload.priority_filter:
+			query += " AND LOWER(priority) = LOWER(?)"
+			params.append(payload.priority_filter)
+
+		rows = execute_sql(conn, query, tuple(params))
+
+		if not rows:
+			return {
+				"success": True,
+				"sent_count": 0,
+				"skipped_count": 0,
+				"failed_count": 0,
+				"message": f"Nenhum prospect encontrado para a categoria '{payload.category}' com os filtros selecionados.",
+			}
+
+		if len(rows) > MAX_OUTREACH_PER_BATCH:
+			raise HTTPException(
+				status_code=400,
+				detail=f"Encontrados {len(rows)} prospects nesta categoria. Máximo por lote: {MAX_OUTREACH_PER_BATCH}. Filtre por prioridade ou estado para reduzir.",
+			)
+
+		for prospect in rows:
+			if prospect.get("status") == "ignorado":
+				skipped_count += 1
+				continue
+
+			# Personalizar o assunto e mensagem com dados do prospect
+			prospect_name = str(prospect.get("name") or "Cliente").strip()
+			prospect_company = str(prospect.get("company") or prospect_name).strip()
+
+			personalized_subject = payload.subject.replace("{name}", prospect_name).replace("{company}", prospect_company)
+			personalized_message = payload.message.replace("{name}", prospect_name).replace("{company}", prospect_company)
+
+			sent = send_outreach_email_via_resend(
+				prospect,
+				custom_subject=personalized_subject,
+				custom_message=personalized_message,
+			)
+
+			if sent:
+				execute_sql(
+					conn,
+					"UPDATE prospects SET status = 'contactado' WHERE id = ?",
+					(prospect["id"],),
+				)
+				sent_count += 1
+			else:
+				failed_count += 1
+
+	finally:
+		conn.close()
+
+	print(f"[OUTREACH BY CATEGORY] Categoria: '{payload.category}' — enviados: {sent_count}, saltados: {skipped_count}, falhados: {failed_count}")
+
+	return {
+		"success": True,
+		"sent_count": sent_count,
+		"skipped_count": skipped_count,
+		"failed_count": failed_count,
+		"total_found": len(rows),
 	}

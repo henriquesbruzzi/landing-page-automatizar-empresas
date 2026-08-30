@@ -81,6 +81,17 @@ function AdminLeadsPage() {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = React.useRef(null);
 
+  // Envio por Categoria
+  const [categoryTemplates, setCategoryTemplates] = useState({});
+  const [categoryOutreachCat, setCategoryOutreachCat] = useState('');
+  const [categoryOutreachSubject, setCategoryOutreachSubject] = useState('');
+  const [categoryOutreachMessage, setCategoryOutreachMessage] = useState('');
+  const [categoryOutreachPriority, setCategoryOutreachPriority] = useState('');
+  const [categoryOutreachStatus, setCategoryOutreachStatus] = useState('novo');
+  const [isCategoryOutreaching, setIsCategoryOutreaching] = useState(false);
+  const [categoryOutreachMsg, setCategoryOutreachMsg] = useState('');
+  const [showCategoryConfirm, setShowCategoryConfirm] = useState(false);
+
   // Carregar Leads do Website
   const loadLeads = async () => {
     setIsLoadingLeads(true);
@@ -134,6 +145,7 @@ function AdminLeadsPage() {
   useEffect(() => {
     loadLeads();
     loadProspects();
+    loadCategoryTemplates();
   }, [navigate]);
 
   useEffect(() => {
@@ -141,6 +153,66 @@ function AdminLeadsPage() {
       loadProspects();
     }
   }, [filterRegion, filterCategory, filterStatus, filterPriority, activeTab]);
+
+  // Carregar templates de categoria do backend
+  const loadCategoryTemplates = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/scraper/category-templates`, {
+        credentials: 'include',
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setCategoryTemplates(data.templates || {});
+      }
+    } catch {}
+  };
+
+  // Quando muda a categoria, preenche automaticamente o template
+  const handleCategoryChange = (cat) => {
+    setCategoryOutreachCat(cat);
+    setCategoryOutreachMsg('');
+    if (cat && categoryTemplates[cat]) {
+      setCategoryOutreachSubject(categoryTemplates[cat].subject);
+      setCategoryOutreachMessage(categoryTemplates[cat].message);
+    } else {
+      setCategoryOutreachSubject('');
+      setCategoryOutreachMessage('');
+    }
+  };
+
+  // Enviar e-mails por categoria
+  const handleCategoryOutreach = async () => {
+    if (!categoryOutreachCat || !categoryOutreachSubject || !categoryOutreachMessage) return;
+    setIsCategoryOutreaching(true);
+    setCategoryOutreachMsg('');
+    setShowCategoryConfirm(false);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/scraper/send-outreach-by-category`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          category: categoryOutreachCat,
+          subject: categoryOutreachSubject,
+          message: categoryOutreachMessage,
+          priority_filter: categoryOutreachPriority || null,
+          status_filter: categoryOutreachStatus,
+        }),
+      });
+      if (res.status === 401) { navigate('/admin/login'); return; }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || 'Erro ao enviar.');
+      const parts = [`✓ ${data.sent_count} e-mail(s) enviado(s)!`];
+      if (data.skipped_count > 0) parts.push(`${data.skipped_count} ignorado(s).`);
+      if (data.failed_count > 0) parts.push(`${data.failed_count} falhado(s).`);
+      setCategoryOutreachMsg(parts.join(' '));
+      loadProspects();
+    } catch (err) {
+      setCategoryOutreachMsg(`❌ Erro: ${err.message}`);
+    } finally {
+      setIsCategoryOutreaching(false);
+    }
+  };
 
   const logout = async () => {
     try {
@@ -582,6 +654,143 @@ function AdminLeadsPage() {
                   </div>
                 )}
               </form>
+            </div>
+
+            {/* Painel de Envio Automático por Categoria */}
+            <div className="bg-[#0e1117] border border-white/10 rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-72 h-72 bg-purple-500/[0.03] blur-3xl pointer-events-none rounded-full" />
+
+              <div className="mb-6">
+                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                  <span>📧</span> Envio Automático por Categoria
+                </h2>
+                <p className="text-gray-400 text-xs mt-1">
+                  Selecione uma categoria e o sistema preenche automaticamente um e-mail personalizado para esse setor. Pode editar antes de enviar. Substitui <span className="font-mono text-cyan-neon text-[11px]">{"{"}{"{"}name{"}"}{"}"}</span> e <span className="font-mono text-cyan-neon text-[11px]">{"{"}{"{"}company{"}"}{"}"}</span> automaticamente com os dados de cada empresa.
+                </p>
+              </div>
+
+              <div className="space-y-5">
+                {/* Linha 1: Categoria + Filtros */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="sm:col-span-1">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">Categoria *</label>
+                    <select
+                      value={categoryOutreachCat}
+                      onChange={(e) => handleCategoryChange(e.target.value)}
+                      className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                    >
+                      <option value="">-- Selecione uma categoria --</option>
+                      {Object.keys(categoryTemplates).map((cat) => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">Filtrar por Prioridade</label>
+                    <select
+                      value={categoryOutreachPriority}
+                      onChange={(e) => setCategoryOutreachPriority(e.target.value)}
+                      className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                    >
+                      <option value="">Todas as prioridades</option>
+                      <option value="alta">🔴 Alta Prioridade</option>
+                      <option value="media">🟡 Média Prioridade</option>
+                      <option value="baixa">⚪ Baixa Prioridade</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">Filtrar por Estado</label>
+                    <select
+                      value={categoryOutreachStatus}
+                      onChange={(e) => setCategoryOutreachStatus(e.target.value)}
+                      className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                    >
+                      <option value="novo">🆕 Apenas Novos</option>
+                      <option value="contactado">📩 Já Contactados</option>
+                      <option value="convertido">✅ Convertidos</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Assunto */}
+                <div>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">Assunto do E-mail</label>
+                  <input
+                    type="text"
+                    value={categoryOutreachSubject}
+                    onChange={(e) => setCategoryOutreachSubject(e.target.value)}
+                    placeholder="Ex: Digitalização & Automação para a {company} — NEXUGAL"
+                    maxLength={200}
+                    className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:border-cyan-neon focus:outline-none"
+                  />
+                  <p className="text-gray-500 text-[10px] mt-1">Use <span className="font-mono text-cyan-neon/70">{'{name}'}</span> e <span className="font-mono text-cyan-neon/70">{'{company}'}</span> para personalização automática.</p>
+                </div>
+
+                {/* Corpo do Email */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-cyan-neon">Corpo do E-mail</label>
+                    {categoryOutreachMessage && (
+                      <span className="text-gray-500 text-[10px]">{categoryOutreachMessage.length}/5000 caracteres</span>
+                    )}
+                  </div>
+                  <textarea
+                    value={categoryOutreachMessage}
+                    onChange={(e) => setCategoryOutreachMessage(e.target.value)}
+                    rows={12}
+                    maxLength={5000}
+                    placeholder="O template da categoria aparece aqui automaticamente ao selecionar uma categoria acima..."
+                    className="w-full bg-black border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-cyan-neon focus:outline-none font-mono leading-relaxed resize-y"
+                  />
+                </div>
+
+                {/* Botão de Envio + Confirmação */}
+                {!showCategoryConfirm ? (
+                  <button
+                    type="button"
+                    disabled={!categoryOutreachCat || !categoryOutreachSubject || !categoryOutreachMessage || isCategoryOutreaching}
+                    onClick={() => setShowCategoryConfirm(true)}
+                    className="bg-purple-500 text-white font-semibold text-xs tracking-widest uppercase px-8 py-3.5 rounded-full hover:bg-purple-400 hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] transition-all duration-300 disabled:opacity-40 disabled:pointer-events-none flex items-center gap-2"
+                  >
+                    <span>📤</span> Enviar a Todos de "{categoryOutreachCat || '...'}"
+                  </button>
+                ) : (
+                  <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                    <div className="flex-1">
+                      <p className="text-purple-300 text-sm font-semibold">⚠️ Confirmar envio</p>
+                      <p className="text-purple-200/70 text-xs mt-1">
+                        Serão enviados e-mails a <strong>todos os prospects</strong> da categoria <strong>"{categoryOutreachCat}"</strong> com estado <strong>"{categoryOutreachStatus}"</strong>{categoryOutreachPriority ? ` e prioridade "${categoryOutreachPriority}"` : ''}. Esta ação não pode ser desfeita.
+                      </p>
+                    </div>
+                    <div className="flex gap-2 flex-shrink-0">
+                      <button
+                        onClick={() => setShowCategoryConfirm(false)}
+                        className="px-4 py-2 text-xs rounded-full border border-white/20 text-gray-400 hover:text-white transition-colors"
+                      >
+                        Cancelar
+                      </button>
+                      <button
+                        onClick={handleCategoryOutreach}
+                        disabled={isCategoryOutreaching}
+                        className="px-5 py-2 text-xs rounded-full bg-purple-500 text-white font-bold hover:bg-purple-400 transition-colors disabled:opacity-50 flex items-center gap-1.5"
+                      >
+                        {isCategoryOutreaching ? (
+                          <><span className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" /> A enviar...</>
+                        ) : (
+                          <>✓ Confirmar Envio</>
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Resultado */}
+                {categoryOutreachMsg && (
+                  <div className={`p-4 rounded-xl text-xs font-medium ${categoryOutreachMsg.startsWith('✓') ? 'bg-cyan-neon/10 text-cyan-neon border border-cyan-neon/30' : 'bg-red-500/10 text-red-400 border border-red-500/30'}`}>
+                    {categoryOutreachMsg}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Painel de Controlo do Scraper */}
