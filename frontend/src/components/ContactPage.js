@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
-import ServiceSelect from './ServiceSelect';
+import Dropdown from './Dropdown';
 
 const API_BASE_URL = (process.env.REACT_APP_API_URL || 'http://localhost:8000').replace(/\/$/, '');
 
@@ -15,29 +15,43 @@ function ContactPage() {
     email: '',
     phone: '',
     company: '',
-    service: '',
+    source: '',
+    sourceOther: '',
     message: '',
   });
 
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
   const [submitError, setSubmitError] = useState('');
-  const [erroMensagem, setErroMensagem] = useState('');
-  const [erroServico, setErroServico] = useState('');
+  const [erroOrigem, setErroOrigem] = useState('');
 
-  // A última opção da lista é sempre o "Outro"
-  const opcaoOutro = f.serviceOptions[f.serviceOptions.length - 1];
-  const mensagemObrigatoria = formData.service === opcaoOutro;
+  // A última opção da lista é sempre o "Outro". Quando é essa, abre-se um
+  // campo de texto para o visitante escrever a origem pelas próprias palavras.
+  const opcaoOutro = f.sourceOptions[f.sourceOptions.length - 1];
+  const escreveOrigem = formData.source === opcaoOutro;
+
+  // O que segue para o backend: a opção escolhida ou, no caso do "Outro",
+  // o texto escrito à frente.
+  const origem = escreveOrigem
+    ? `${opcaoOutro}: ${formData.sourceOther.trim()}`
+    : formData.source;
+
+  // O aviso é o mesmo sítio, mas o realce vermelho vai para o campo em falta
+  const erroLista = escreveOrigem ? '' : erroOrigem;
+  const erroTexto = escreveOrigem ? erroOrigem : '';
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErroMensagem('');
   };
 
-  const escolherServico = (valor) => {
-    setFormData((dados) => ({ ...dados, service: valor }));
-    setErroServico('');
-    setErroMensagem('');
+  const escolherOrigem = (valor) => {
+    setFormData((dados) => ({ ...dados, source: valor, sourceOther: '' }));
+    setErroOrigem('');
+  };
+
+  const escreverOrigem = (e) => {
+    setFormData((dados) => ({ ...dados, sourceOther: e.target.value }));
+    setErroOrigem('');
   };
 
   const handleSubmit = async (e) => {
@@ -46,20 +60,19 @@ function ContactPage() {
     const mensagem = formData.message.trim();
 
     // Validação também no envio, não apenas no que se vê no ecrã
-    if (!formData.service) {
-      setErroServico(f.serviceError);
+    if (!formData.source) {
+      setErroOrigem(f.sourceError);
       return;
     }
 
-    if (mensagemObrigatoria && !mensagem) {
-      setErroMensagem(f.messageErrorOther);
+    if (escreveOrigem && !formData.sourceOther.trim()) {
+      setErroOrigem(f.sourceOtherError);
       return;
     }
 
     setIsSending(true);
     setSubmitError('');
-    setErroMensagem('');
-    setErroServico('');
+    setErroOrigem('');
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/leads`, {
@@ -68,11 +81,17 @@ function ContactPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ...formData,
-          // O backend exige mensagem. Quando o visitante escolhe um dos seis
-          // serviços e não escreve nada, segue uma linha automática com o
-          // serviço escolhido, para o pedido não ser recusado.
-          message: mensagem || `${f.messageAutoPrefix}${formData.service}.`,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          // O backend guarda isto na coluna `service` (é dele, não se mexe).
+          // Desde que o campo passou a ser "Como soube de nós?", é a origem
+          // do contacto que vai nessa coluna.
+          service: origem,
+          // O backend exige mensagem. Quando o visitante não escreve nada,
+          // segue uma linha automática, para o pedido não ser recusado.
+          message: mensagem || `${f.messageAutoPrefix}${origem}.`,
           language: lang,
         }),
       });
@@ -85,7 +104,7 @@ function ContactPage() {
 
       setIsSending(false);
       setIsSent(true);
-      setFormData({ name: '', email: '', phone: '', company: '', service: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', company: '', source: '', sourceOther: '', message: '' });
     } catch (error) {
       setIsSending(false);
       setSubmitError(error.message || (lang === 'pt' ? 'Erro inesperado.' : 'Unexpected error.'));
@@ -238,32 +257,49 @@ function ContactPage() {
                   </div>
                 </div>
 
-                {/* Serviço */}
+                {/* Como soube de nós */}
                 <div>
-                  <label id="etiqueta-servico" className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
-                    {f.service}
+                  <label id="etiqueta-origem" className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
+                    {f.source}
                   </label>
-                  <ServiceSelect
-                    labelId="etiqueta-servico"
-                    value={formData.service}
-                    options={f.serviceOptions}
-                    placeholder={f.servicePlaceholder}
-                    onChange={escolherServico}
+                  <Dropdown
+                    labelId="etiqueta-origem"
+                    value={formData.source}
+                    options={f.sourceOptions}
+                    placeholder={f.sourcePlaceholder}
+                    onChange={escolherOrigem}
                     campoClasses={inputClasses}
-                    erro={erroServico}
-                    erroId="erro-servico"
+                    erro={erroLista}
+                    erroId="erro-origem"
                   />
-                  {erroServico && (
-                    <p id="erro-servico" role="alert" className="text-red-400 text-xs mt-2 leading-relaxed">
-                      {erroServico}
+                  {escreveOrigem && (
+                    <input
+                      type="text"
+                      name="sourceOther"
+                      value={formData.sourceOther}
+                      onChange={escreverOrigem}
+                      placeholder={f.sourceOtherPlaceholder}
+                      // O backend só aceita 120 caracteres nesta coluna, e o
+                      // prefixo "Outro: " já leva alguns
+                      maxLength={100}
+                      autoFocus
+                      aria-label={f.sourceOtherPlaceholder}
+                      aria-invalid={erroTexto ? 'true' : 'false'}
+                      aria-describedby={erroTexto ? 'erro-origem' : undefined}
+                      className={`${inputClasses} mt-3 ${erroTexto ? 'ring-1 ring-red-400/70' : ''}`}
+                    />
+                  )}
+                  {erroOrigem && (
+                    <p id="erro-origem" role="alert" className="text-red-400 text-xs mt-2 leading-relaxed">
+                      {erroOrigem}
                     </p>
                   )}
                 </div>
 
-                {/* Mensagem: obrigatória apenas quando o serviço é "Outro" */}
+                {/* Mensagem */}
                 <div>
                   <label htmlFor="message" className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
-                    {mensagemObrigatoria ? f.messageRequired : f.messageOptional}
+                    {f.messageOptional}
                   </label>
                   <textarea
                     id="message"
@@ -272,15 +308,8 @@ function ContactPage() {
                     onChange={handleChange}
                     placeholder={f.messagePlaceholder}
                     rows={5}
-                    aria-invalid={erroMensagem ? 'true' : 'false'}
-                    aria-describedby={erroMensagem ? 'erro-mensagem' : undefined}
-                    className={`${inputClasses} resize-none ${erroMensagem ? 'ring-1 ring-red-400/70' : ''}`}
+                    className={`${inputClasses} resize-none`}
                   />
-                  {erroMensagem && (
-                    <p id="erro-mensagem" role="alert" className="text-red-400 text-xs mt-2 leading-relaxed">
-                      {erroMensagem}
-                    </p>
-                  )}
                 </div>
 
                 {/* Botão Submit */}

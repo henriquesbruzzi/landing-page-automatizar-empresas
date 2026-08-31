@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 
 const NENHUMA = -1;
 
-function ServiceSelect({ value, options, placeholder, onChange, campoClasses, labelId, erro, erroId }) {
+function Dropdown({ value, options, placeholder, onChange, campoClasses, labelId, erro, erroId }) {
   const [aberta, setAberta] = useState(false);
   const [ativo, setAtivo] = useState(NENHUMA);
   const raiz = useRef(null);
@@ -182,4 +182,4 @@ function ServiceSelect({ value, options, placeholder, onChange, campoClasses, la
   );
 }
 
-export default ServiceSelect;
+export default Dropdown;

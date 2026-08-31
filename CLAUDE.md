@@ -73,9 +73,13 @@ de chegar.
 2. Nunca commitar direto no `main`. Ramo próprio: `rui/<assunto>`.
 3. O Claude altera os ficheiros e **verifica que o build passa** antes de dar
    por concluído: `cd frontend && npm install && npm run build`.
-4. O Rui envia com o GitHub Desktop (botão "Push origin").
-5. A Vercel gera um link de pré-visualização desse ramo → o Rui vê o resultado.
-6. Se estiver bem: Pull Request → merge no `main` → o site real atualiza.
+4. **O Claude faz o commit e o push do ramo** (`git push -u origin rui/<assunto>`).
+   Não mandar o Rui publicar pelo GitHub Desktop — ele já tem o ramo no GitHub
+   sem fazer nada. Única exceção: `rui/frontend` publica o site real (ver ponto
+   6), por isso esse pede confirmação expressa antes do push.
+5. O Rui vê o resultado localmente, no `npm start` (ver abaixo). **Não há links
+   de pré-visualização por ramo** — a Vercel só constrói o ramo de produção.
+6. Se estiver bem: Pull Request → o Henrique revê → merge.
 
 Para ver o site localmente: `cd frontend && npm install && npm start`
 (precisa de Node.js instalado; abre em http://localhost:3000).
@@ -104,11 +108,16 @@ Para ver o site localmente: `cd frontend && npm install && npm start`
 
 ## 6. Estado da infraestrutura
 
-- **Vercel:** projeto `nexusgal-laddingpage`. Verificado a 20/08/2026:
-  **não estava ligado ao GitHub** — os deploys eram manuais por CLI
-  (`vercel --prod` a partir de `frontend/`). Consequência enquanto assim for:
-  não há deploy automático nem links de pré-visualização, e o que está online
-  pode não corresponder ao que está no GitHub.
+- **Vercel:** projeto `nexusgal-laddingpage`. Verificado a 30/08/2026: **está
+  ligado ao GitHub e faz deploy automático, mas o ramo de produção é
+  `rui/frontend`, não o `main`.** Ou seja, **qualquer push para `rui/frontend`
+  vai direto para o nexugal.com, sem passar por Pull Request** — o oposto do
+  fluxo da secção 4. Enquanto o Henrique não mudar o ramo de produção para
+  `main`, um merge em `rui/frontend` é o mesmo que publicar.
+  Para confirmar o que está mesmo online: descarregar o `static/js/main.*.js`
+  do site e procurar lá dentro `REACT_APP_VERCEL_GIT_COMMIT_SHA`.
+  (A versão anterior desta secção dizia que a Vercel não estava ligada ao
+  GitHub e que os deploys eram manuais por CLI. Já não é verdade.)
 - **Railway:** corre o backend (`backend/Procfile` → `uvicorn main:app`) e a
   base de dados Postgres.
 - **GitHub:** repo público, na conta pessoal do Henrique. O Rui é collaborator.
