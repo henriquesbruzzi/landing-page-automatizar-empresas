@@ -460,7 +460,7 @@ function AdminLeadsPage() {
                       <th className="px-4 py-3.5">E-mail</th>
                       <th className="px-4 py-3.5">Telefone</th>
                       <th className="px-4 py-3.5">Empresa</th>
-                      <th className="px-4 py-3.5">Serviço</th>
+                      <th className="px-4 py-3.5">Como soube</th>
                       <th className="px-4 py-3.5">Idioma</th>
                       <th className="px-4 py-3.5">Mensagem</th>
                     </tr>
