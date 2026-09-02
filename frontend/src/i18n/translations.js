@@ -90,10 +90,8 @@ const translations = {
       titleHighlight: 'Connosco',
       description: 'Preencha o formulário abaixo e a nossa equipa entrará em contacto consigo no prazo de um dia útil.',
       form: {
-        firstName: 'Primeiro Nome',
-        firstNamePlaceholder: 'João',
-        lastName: 'Último Nome',
-        lastNamePlaceholder: 'Silva',
+        name: 'Primeiro e Último Nome',
+        namePlaceholder: 'João Silva',
         email: 'Email',
         emailPlaceholder: 'seuemail@exemplo.com',
         phone: 'Telefone',
@@ -109,7 +107,10 @@ const translations = {
           'Evento ou conferência',
           'Notícia ou imprensa',
           'Recomendação de amigo ou colega',
-          'Fontes offline',
+          'Já era cliente',
+          'Contacto direto da NEXUGAL',
+          // "Outro" tem de ficar sempre em último: o formulário identifica-o
+          // pela última posição da lista para abrir a caixa de texto.
           'Outro',
         ],
         sourceError: 'Selecione uma opção para continuarmos.',
@@ -353,10 +354,8 @@ const translations = {
       titleHighlight: 'Touch',
       description: 'Fill in the form below and our team will get back to you within one business day.',
       form: {
-        firstName: 'First Name',
-        firstNamePlaceholder: 'John',
-        lastName: 'Last Name',
-        lastNamePlaceholder: 'Smith',
+        name: 'First and Last Name',
+        namePlaceholder: 'John Smith',
         email: 'Email',
         emailPlaceholder: 'youremail@example.com',
         phone: 'Phone',
@@ -372,7 +371,10 @@ const translations = {
           'Event or Conference',
           'News Article or Press Coverage',
           'Friend or Colleague Recommendation',
-          'Offline Sources',
+          'Already a client',
+          'Direct contact from NEXUGAL',
+          // "Other" must stay last: the form identifies it by the list's final
+          // position in order to open the free-text box.
           'Other',
         ],
         sourceError: 'Please select an option so we can continue.',

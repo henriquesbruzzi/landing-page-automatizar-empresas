@@ -11,8 +11,7 @@ function ContactPage() {
   const f = t.contact.form;
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
     phone: '',
     company: '',
@@ -82,8 +81,7 @@ function ContactPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          // O backend tem uma só coluna para o nome; juntam-se os dois campos.
-          name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
+          name: formData.name.trim(),
           email: formData.email,
           phone: formData.phone,
           company: formData.company,
@@ -106,7 +104,7 @@ function ContactPage() {
 
       setIsSending(false);
       setIsSent(true);
-      setFormData({ firstName: '', lastName: '', email: '', phone: '', company: '', source: '', sourceOther: '', message: '' });
+      setFormData({ name: '', email: '', phone: '', company: '', source: '', sourceOther: '', message: '' });
     } catch (error) {
       setIsSending(false);
       setSubmitError(error.message || (lang === 'pt' ? 'Erro inesperado.' : 'Unexpected error.'));
@@ -188,46 +186,24 @@ function ContactPage() {
             {/* Form */}
             {!isSent && (
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Primeiro e último nome. O backend só tem uma coluna `name`,
-                    por isso os dois seguem juntos no envio. 55 caracteres cada
-                    para o resultado nunca passar do limite de 120 dele. */}
+                {/* Nome e Email */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
-                      {f.firstName}
+                      {f.name}
                     </label>
                     <input
                       type="text"
-                      name="firstName"
-                      value={formData.firstName}
+                      name="name"
+                      value={formData.name}
                       onChange={handleChange}
-                      placeholder={f.firstNamePlaceholder}
-                      autoComplete="given-name"
-                      maxLength={55}
+                      placeholder={f.namePlaceholder}
+                      autoComplete="name"
+                      maxLength={120}
                       required
                       className={inputClasses}
                     />
                   </div>
-                  <div>
-                    <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
-                      {f.lastName}
-                    </label>
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleChange}
-                      placeholder={f.lastNamePlaceholder}
-                      autoComplete="family-name"
-                      maxLength={55}
-                      required
-                      className={inputClasses}
-                    />
-                  </div>
-                </div>
-
-                {/* Email e Telefone */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
                       {f.email}
@@ -243,6 +219,10 @@ function ContactPage() {
                       className={inputClasses}
                     />
                   </div>
+                </div>
+
+                {/* Telefone e Empresa */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
                       {f.phone}
@@ -266,24 +246,22 @@ function ContactPage() {
                       className={inputClasses}
                     />
                   </div>
-                </div>
-
-                {/* Empresa */}
-                <div>
-                  <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
-                    {f.company}
-                  </label>
-                  <input
-                    type="text"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleChange}
-                    placeholder={f.companyPlaceholder}
-                    autoComplete="organization"
-                    maxLength={120}
-                    required
-                    className={inputClasses}
-                  />
+                  <div>
+                    <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
+                      {f.company}
+                    </label>
+                    <input
+                      type="text"
+                      name="company"
+                      value={formData.company}
+                      onChange={handleChange}
+                      placeholder={f.companyPlaceholder}
+                      autoComplete="organization"
+                      maxLength={120}
+                      required
+                      className={inputClasses}
+                    />
+                  </div>
                 </div>
 
                 {/* Como soube de nós */}
