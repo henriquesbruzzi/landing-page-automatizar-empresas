@@ -11,7 +11,8 @@ function ContactPage() {
   const f = t.contact.form;
 
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     phone: '',
     company: '',
@@ -81,7 +82,8 @@ function ContactPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: formData.name,
+          // O backend tem uma só coluna para o nome; juntam-se os dois campos.
+          name: `${formData.firstName.trim()} ${formData.lastName.trim()}`.trim(),
           email: formData.email,
           phone: formData.phone,
           company: formData.company,
@@ -104,7 +106,7 @@ function ContactPage() {
 
       setIsSending(false);
       setIsSent(true);
-      setFormData({ name: '', email: '', phone: '', company: '', source: '', sourceOther: '', message: '' });
+      setFormData({ firstName: '', lastName: '', email: '', phone: '', company: '', source: '', sourceOther: '', message: '' });
     } catch (error) {
       setIsSending(false);
       setSubmitError(error.message || (lang === 'pt' ? 'Erro inesperado.' : 'Unexpected error.'));
@@ -186,22 +188,46 @@ function ContactPage() {
             {/* Form */}
             {!isSent && (
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Nome e Email */}
+                {/* Primeiro e último nome. O backend só tem uma coluna `name`,
+                    por isso os dois seguem juntos no envio. 55 caracteres cada
+                    para o resultado nunca passar do limite de 120 dele. */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
-                      {f.name}
+                      {f.firstName}
                     </label>
                     <input
                       type="text"
-                      name="name"
-                      value={formData.name}
+                      name="firstName"
+                      value={formData.firstName}
                       onChange={handleChange}
-                      placeholder={f.namePlaceholder}
+                      placeholder={f.firstNamePlaceholder}
+                      autoComplete="given-name"
+                      maxLength={55}
                       required
                       className={inputClasses}
                     />
                   </div>
+                  <div>
+                    <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
+                      {f.lastName}
+                    </label>
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      placeholder={f.lastNamePlaceholder}
+                      autoComplete="family-name"
+                      maxLength={55}
+                      required
+                      className={inputClasses}
+                    />
+                  </div>
+                </div>
+
+                {/* Email e Telefone */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
                       {f.email}
@@ -212,14 +238,11 @@ function ContactPage() {
                       value={formData.email}
                       onChange={handleChange}
                       placeholder={f.emailPlaceholder}
+                      autoComplete="email"
                       required
                       className={inputClasses}
                     />
                   </div>
-                </div>
-
-                {/* Telefone e Empresa */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
                     <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
                       {f.phone}
@@ -239,22 +262,28 @@ function ContactPage() {
                       pattern="[+0-9 ().-]+"
                       title={f.phoneHint}
                       maxLength={40}
+                      required
                       className={inputClasses}
                     />
                   </div>
-                  <div>
-                    <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
-                      {f.company}
-                    </label>
-                    <input
-                      type="text"
-                      name="company"
-                      value={formData.company}
-                      onChange={handleChange}
-                      placeholder={f.companyPlaceholder}
-                      className={inputClasses}
-                    />
-                  </div>
+                </div>
+
+                {/* Empresa */}
+                <div>
+                  <label className="text-gray-200 text-xs font-medium tracking-[0.15em] mb-2 block">
+                    {f.company}
+                  </label>
+                  <input
+                    type="text"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleChange}
+                    placeholder={f.companyPlaceholder}
+                    autoComplete="organization"
+                    maxLength={120}
+                    required
+                    className={inputClasses}
+                  />
                 </div>
 
                 {/* Como soube de nós */}
