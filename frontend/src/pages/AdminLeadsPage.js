@@ -147,16 +147,22 @@ function AdminLeadsPage() {
     }
   };
 
+  // As funções de carregamento são recriadas a cada render; incluí-las nas
+  // dependências punha o painel em ciclo infinito de pedidos. Silenciar o aviso
+  // é o remédio que o próprio react-scripts sugere e não altera o comportamento.
+  // Sem isto o build falha na Vercel, que corre com CI=true (avisos = erros).
   useEffect(() => {
     loadLeads();
     loadProspects();
     loadCategoryTemplates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
 
   useEffect(() => {
     if (activeTab === 'scraper') {
       loadProspects();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterRegion, filterCategory, filterStatus, filterPriority, activeTab]);
 
   // Carregar templates de categoria do backend
