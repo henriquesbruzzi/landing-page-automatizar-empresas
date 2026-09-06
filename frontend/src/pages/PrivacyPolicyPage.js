@@ -60,7 +60,7 @@ function PrivacyPolicyPage() {
               <p>Braga, Portugal</p>
               <p>
                 {pt ? 'Contacto: ' : 'Contact: '}
-                <a href="mailto:nexugal.geral@gmail.com" className="text-cyan-neon hover:underline">nexugal.geral@gmail.com</a>
+                <a href="mailto:geral@nexugal.com" className="text-cyan-neon hover:underline">geral@nexugal.com</a>
               </p>
             </div>
           </section>
@@ -162,8 +162,8 @@ function PrivacyPolicyPage() {
               ))}
               <p className="text-gray-400 text-xs mt-3">
                 {pt
-                  ? 'Para exercer os seus direitos, contacte-nos em nexugal.geral@gmail.com. Respondemos no prazo máximo de 30 dias.'
-                  : 'To exercise your rights, contact us at nexugal.geral@gmail.com. We respond within a maximum of 30 days.'}
+                  ? 'Para exercer os seus direitos, contacte-nos em geral@nexugal.com. Respondemos no prazo máximo de 30 dias.'
+                  : 'To exercise your rights, contact us at geral@nexugal.com. We respond within a maximum of 30 days.'}
               </p>
             </div>
           </section>
@@ -252,7 +252,7 @@ function PrivacyPolicyPage() {
         {/* Rodapé da página */}
         <div className="mt-16 pt-8 border-t border-white/10 text-center">
           <p className="text-gray-400 text-xs tracking-[0.1em]">
-            © {new Date().getFullYear()} NEXUGAL · nexugal.geral@gmail.com
+            © {new Date().getFullYear()} NEXUGAL · geral@nexugal.com
           </p>
         </div>
       </main>

@@ -216,7 +216,7 @@ const translations = {
       },
       contact: {
         title: 'Contacto',
-        email: 'nexugal.geral@gmail.com',
+        email: 'geral@nexugal.com',
         phone: '+351 912 423 912',
         address: 'Braga, Portugal',
       },
@@ -480,7 +480,7 @@ const translations = {
       },
       contact: {
         title: 'Contact',
-        email: 'nexugal.geral@gmail.com',
+        email: 'geral@nexugal.com',
         phone: '+351 912 423 912',
         address: 'Braga, Portugal',
       },

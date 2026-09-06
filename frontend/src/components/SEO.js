@@ -84,7 +84,7 @@ const organizationSchema = {
   contactPoint: {
     '@type': 'ContactPoint',
     telephone: '+351912423912',
-    email: 'nexugal.geral@gmail.com',
+    email: 'geral@nexugal.com',
     contactType: 'customer service',
     availableLanguage: ['Portuguese', 'English'],
   },
@@ -116,7 +116,7 @@ const localBusinessSchema = {
   image: `${BASE_URL}/icons/favicon.png`,
   url: BASE_URL,
   telephone: '+351912423912',
-  email: 'nexugal.geral@gmail.com',
+  email: 'geral@nexugal.com',
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Braga',
