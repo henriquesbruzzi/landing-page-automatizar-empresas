@@ -100,7 +100,7 @@ def send_lead_email_notification(payload: "LeadIn", lead_id: int):
                 <div class="value">{lead_company}</div>
             </div>
             <div class="field">
-                <div class="label">Serviço de Interesse</div>
+                <div class="label">Como soube de nós</div>
                 <div class="value">{lead_service}</div>
             </div>
             <div class="field">
