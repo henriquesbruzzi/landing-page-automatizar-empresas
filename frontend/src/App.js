@@ -28,7 +28,7 @@ function Layout({ lang }) {
   return (
     <>
       <SEO lang={lang} page="home" />
-      <div className="relative bg-black overflow-hidden">
+      <div className="relative bg-white overflow-hidden">
         {/* Vídeo de fundo em loop — apenas no Hero */}
         <div className="relative min-h-screen">
           {/* Imagem estática — aparece até o vídeo carregar */}
@@ -57,6 +57,14 @@ function Layout({ lang }) {
           >
             <source src="/videos/landingpage.mp4" type="video/mp4" />
           </video>
+
+          {/* Véu branco sobre o vídeo. O vídeo é escuro e o site passou a
+              branco: sem isto o texto azul do hero ficava ilegível. Fica como
+              tapa-buraco até o hero ser refeito, que é quando o vídeo sai. */}
+          <div
+            className="absolute inset-0 z-[1] bg-white/95 pointer-events-none"
+            aria-hidden="true"
+          />
 
           <div className="relative z-10">
             <Header />

@@ -60,7 +60,7 @@ function Hero() {
           {/* Coluna esquerda — título, subtítulo e CTA */}
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
             {/* Título principal com Typewriter */}
-            <h1 className="grid font-display text-white text-3xl sm:text-4xl md:text-5xl lg:text-4xl xl:text-5xl font-bold leading-tight tracking-[0.06em]">
+            <h1 className="grid font-display text-azul-profundo text-3xl sm:text-4xl md:text-5xl lg:text-4xl xl:text-5xl font-bold leading-tight tracking-[0.06em]">
               {/* Cópia invisível: reserva desde o início o espaço do título
                   completo, para que nada salte enquanto as letras aparecem */}
               <span className="col-start-1 row-start-1 invisible" aria-hidden="true">
@@ -75,17 +75,17 @@ function Hero() {
                 {displayedLine1}
                 <br />
                 {displayedLine2Start}
-                <span className="text-cyan-neon">{displayedHighlight}</span>
+                <span className="text-azul-vivo">{displayedHighlight}</span>
                 {/* Cursor piscante */}
                 {showCursor && (
-                  <span className="inline-block w-[3px] h-[0.9em] bg-cyan-neon ml-1 align-middle animate-blink" />
+                  <span className="inline-block w-[3px] h-[0.9em] bg-azul-medio ml-1 align-middle animate-blink" />
                 )}
               </span>
             </h1>
 
             {/* Fase 1 — subtítulo */}
             <p
-              className={`texto-sobre-video text-white/90 text-sm md:text-base leading-relaxed max-w-md mt-6 text-justify ${entrada}`}
+              className={`texto-sobre-video text-texto text-sm md:text-base leading-relaxed max-w-md mt-6 text-justify ${entrada}`}
               style={atraso(ATRASO_SUBTITULO)}
             >
               {t.hero.subtitle}
@@ -99,19 +99,19 @@ function Hero() {
                 text-sm
                 sm:text-base
                 font-normal
-                text-white
+                text-azul-medio
                 tracking-[0.15em]
                 px-10
                 py-4
                 mt-10
                 border
-                border-cyan-neon
+                border-azul-medio
                 rounded-full
-                bg-black/90
+                bg-white/90
                 cursor-pointer
-                hover:shadow-neon-glow
-                hover:text-cyan-neon
-                hover:border-cyan-neon
+                hover:shadow-azul
+                hover:text-azul-medio
+                hover:border-azul-medio
                 active:scale-95
                 ${entrada}
               `}
@@ -132,20 +132,20 @@ function Hero() {
                 <a
                   href={`#${service.id}`}
                   onClick={() => pedirDestaque(service.id)}
-                  className="group flex items-center gap-4 py-4 border-b border-white/10 hover:border-cyan-neon/40 transition-colors duration-300"
+                  className="group flex items-center gap-4 py-4 border-b border-linha hover:border-azul-claro transition-colors duration-300"
                 >
                   {/* Marcador */}
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-neon/40 group-hover:bg-cyan-neon group-hover:shadow-neon-glow transition-all duration-300 shrink-0" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-azul-claro group-hover:bg-azul-medio group-hover:shadow-azul transition-all duration-300 shrink-0" />
 
                   {/* Nome do serviço */}
-                  <span className="texto-sobre-video text-white/90 text-xs sm:text-sm tracking-[0.06em] leading-relaxed group-hover:text-white transition-colors duration-300">
+                  <span className="texto-sobre-video text-texto text-xs sm:text-sm tracking-[0.06em] leading-relaxed group-hover:text-azul-profundo transition-colors duration-300">
                     {service.title}
                   </span>
 
                   {/* Seta que surge no hover */}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="ml-auto w-4 h-4 text-cyan-neon opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 shrink-0"
+                    className="ml-auto w-4 h-4 text-azul-medio opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 shrink-0"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"

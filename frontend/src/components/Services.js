@@ -107,21 +107,21 @@ function Services() {
   }, [destacar, semAnimacao]);
 
   return (
-    <section id="servicos" className="relative py-24 md:py-32 bg-black" aria-labelledby="services-title">
+    <section id="servicos" className="relative py-24 md:py-32 bg-white" aria-labelledby="services-title">
       {/* Linha divisória sutil no topo */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-cyan-neon/30 to-transparent"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-azul-claro to-transparent"></div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
         {/* Header da secção */}
         <Entrada className="text-center mb-20">
-          <span className="font-display text-cyan-neon text-xs tracking-[0.3em] uppercase mb-4 block">
+          <span className="font-display text-azul-medio text-xs tracking-[0.3em] uppercase mb-4 block">
             {t.services.subtitle}
           </span>
-          <h2 id="services-title" className="font-display text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-[0.05em] mb-6">
+          <h2 id="services-title" className="font-display text-azul-profundo text-3xl md:text-4xl lg:text-5xl font-bold tracking-[0.05em] mb-6">
             {t.services.title}
-            <span className="text-cyan-neon">{t.services.titleHighlight}</span>
+            <span className="text-azul-vivo">{t.services.titleHighlight}</span>
           </h2>
-          <p className="text-white/90 max-w-2xl mx-auto text-sm md:text-base leading-relaxed text-justify">
+          <p className="text-texto max-w-2xl mx-auto text-sm md:text-base leading-relaxed text-justify">
             {t.services.description}
           </p>
         </Entrada>
@@ -138,30 +138,30 @@ function Services() {
               <div
                 id={service.id}
                 ref={(elemento) => { cartoes.current[service.id] = elemento; }}
-                className="group relative h-full scroll-mt-32 p-8 rounded-2xl border border-white/5 bg-white/[0.02] backdrop-blur-sm hover:border-cyan-neon/30 hover:bg-white/[0.04] transition-colors duration-500"
+                className="group relative h-full scroll-mt-32 p-8 rounded-2xl border border-linha bg-neve hover:border-azul-claro hover:bg-white hover:shadow-azul transition-all duration-500"
               >
                 {/* Glow sutil no hover */}
-                <div className="absolute inset-0 rounded-2xl bg-cyan-neon/0 group-hover:bg-cyan-neon/[0.02] transition-all duration-500"></div>
+                <div className="absolute inset-0 rounded-2xl bg-azul-vivo/0 group-hover:bg-azul-vivo/[0.02] transition-all duration-500"></div>
 
                 <div className="relative z-10">
                   {/* Ícone */}
-                  <div className="text-cyan-neon mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <div className="text-azul-medio mb-6 group-hover:scale-110 transition-transform duration-300">
                     {icons[service.icon]}
                   </div>
 
                   {/* Título do serviço */}
-                  <h3 className="font-display text-white text-base md:text-lg font-semibold tracking-[0.05em] mb-4">
+                  <h3 className="font-display text-azul-profundo text-base md:text-lg font-semibold tracking-[0.05em] mb-4">
                     {service.title}
                   </h3>
 
                   {/* Descrição */}
-                  <p className="text-white/90 text-sm font-medium leading-relaxed text-justify">
+                  <p className="text-texto text-sm font-medium leading-relaxed text-justify">
                     {service.description}
                   </p>
                 </div>
 
                 {/* Linha inferior decorativa */}
-                <div className="absolute bottom-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-cyan-neon/0 group-hover:via-cyan-neon/20 to-transparent transition-all duration-500"></div>
+                <div className="absolute bottom-0 left-8 right-8 h-[1px] bg-gradient-to-r from-transparent via-azul-claro group-hover:via-azul-claro to-transparent transition-all duration-500"></div>
               </div>
             </Entrada>
           ))}
