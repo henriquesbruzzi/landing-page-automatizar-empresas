@@ -24,7 +24,34 @@ import { useLanguage } from '../i18n/LanguageContext';
 // sobra, dentro de um contentor que para de crescer aos 1280px. Cada pixel que
 // se tire aqui é um pixel que o cartão ganha, e é o cartão que tem de se ler.
 const LG = { altura: 56, espaco: 16, largura: 164, nucleo: 88 };
-const SM = { altura: 48, espaco: 12, nucleo: 76 };
+
+/**
+ * Medidas da fila de peças, a versão empilhada.
+ *
+ * Estão todas aqui, e só aqui, porque mudam em bloco: mexer no tamanho da peça
+ * sem mexer no espaço e no corpo do nome desalinha o leque, que é desenhado a
+ * partir destes mesmos números.
+ *
+ * AVISO, para quem vier depois. Acima de quatro origens esta disposição fica no
+ * limite. Com cinco, a peça desce para 57px e o nome para 10px, e "WhatsApp"
+ * ocupa 51 desses 57. Um nome mais comprido, "Transportadora" por exemplo, não
+ * cabe. Quando isso acontecer, a saída não é encolher mais: é mudar de
+ * disposição, provavelmente para uma coluna de caixas com o leque ao lado, que
+ * aguenta qualquer número de origens e qualquer comprimento de nome.
+ */
+const FILA = {
+  ate4: { peca: 66, altura: 56, espaco: 12, nome: 11 },
+  de5: { peca: 57, altura: 52, espaco: 8, nome: 10 },
+  nucleo: 76,
+  leque: 62,
+  saida: 34,
+};
+
+/** As medidas mudam de patamar aos cinco. Ver o aviso em FILA. */
+const medidasFila = (n) => (n > 4 ? FILA.de5 : FILA.ate4);
+
+/** Largura que a fila ocupa, e é também a do SVG do leque. */
+const larguraFila = (n, m) => n * m.peca + (n - 1) * m.espaco;
 
 const alturaColuna = (m) => m.altura * 4 + m.espaco * 3;
 const centroCaixa = (m, i) => m.altura / 2 + i * (m.altura + m.espaco);
@@ -201,6 +228,74 @@ function SetaSaida({ largura = 40 }) {
   );
 }
 
+/**
+ * Peça da fila: símbolo dentro de um quadrado, nome por baixo.
+ *
+ * O nome não quebra linha de propósito. Se quebrasse, as peças ficavam com
+ * alturas diferentes e o leque deixava de assentar. Um nome que não caiba
+ * transborda, e transbordar é para dar nas vistas: ver o aviso em FILA.
+ */
+function Peca({ origem, m }) {
+  const Simbolo = SIMBOLOS[origem.id] || IconeCaixa;
+  return (
+    <div style={{ width: m.peca }} className="text-center">
+      <div
+        style={{ height: m.altura }}
+        className="flex items-center justify-center rounded-lg border border-linha bg-white shadow-azul"
+      >
+        <Simbolo />
+      </div>
+      <span
+        style={{ fontSize: m.nome }}
+        className="mt-1.5 block whitespace-nowrap font-sans leading-tight text-azul-profundo"
+      >
+        {origem.nome}
+      </span>
+    </div>
+  );
+}
+
+/**
+ * Leque que desce: uma seta por origem, do meio de cada peça até ao núcleo.
+ *
+ * As curvas saem daqui com as mesmas medidas que desenham a fila, por isso
+ * caem sempre no meio de cada peça, com três origens ou com cinco.
+ */
+function LequeDescendente({ n, m }) {
+  const { defs, clara } = usePontas();
+  const largura = larguraFila(n, m);
+  const altura = FILA.leque;
+  const meio = largura / 2;
+  const fim = altura - 10;
+
+  return (
+    <svg
+      width={largura}
+      height={altura}
+      viewBox={`0 0 ${largura} ${altura}`}
+      className="shrink-0 overflow-visible"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {defs}
+      {Array.from({ length: n }, (_, i) => {
+        const x = m.peca / 2 + i * (m.peca + m.espaco);
+        // Desce a direito da peça e só depois fecha, para se ver de onde vem
+        return (
+          <path
+            key={i}
+            d={`M${x},0 C${x},${altura * 0.46} ${meio},${altura * 0.4} ${meio},${fim}`}
+            fill="none"
+            stroke="#4FA3DC"
+            strokeWidth="1.8"
+            markerEnd={`url(#${clara})`}
+          />
+        );
+      })}
+    </svg>
+  );
+}
+
 /** Seta vertical, na versão empilhada. */
 function SetaBaixo({ altura = 44, forte = false }) {
   const { defs, clara, media } = usePontas();
@@ -326,6 +421,7 @@ function Cartao({ resumo }) {
 function EsquemaIntegracoes() {
   const { t } = useLanguage();
   const { descricao, origens, resumo } = t.hero.esquema;
+  const medidas = medidasFila(origens.length);
 
   return (
     <div className="w-full">
@@ -365,24 +461,24 @@ function EsquemaIntegracoes() {
       </div>
 
       {/* ---------- telemóvel, tablet e portátil pequeno: de cima para baixo ----------
-          As origens ficam empilhadas pela mesma ordem, e não em grelha de
-          dois por dois: é a ordem vertical que emparelha cada origem com a
-          sua linha no cartão, e numa grelha essa ordem deixa de se ver. */}
+          As origens ficam numa fila, e cada uma tem a sua seta a descer até ao
+          núcleo. Já estiveram empilhadas à largura toda, encostadas umas às
+          outras, e aí só cabia uma seta: lia-se "o WhatsApp entra no N" em vez
+          de "estas quatro entram no N", que é o argumento do esquema. A fila
+          devolve o leque, que é o mesmo gesto do ecrã largo.
+
+          A ordem da fila é a mesma das linhas do cartão, da esquerda para a
+          direita, e é ela que emparelha cada origem com o seu resultado. */}
       <div className="flex flex-col items-center xl:hidden">
-        {/* Mesma largura máxima do cartão, para a coluna toda assentar no
-            mesmo alinhamento em vez de as caixas ficarem mais estreitas */}
-        <div
-          className="flex w-full max-w-sm flex-col"
-          style={{ gap: SM.espaco }}
-        >
+        <div className="flex" style={{ gap: medidas.espaco }}>
           {origens.map((origem) => (
-            <Caixa key={origem.id} origem={origem} altura={SM.altura} />
+            <Peca key={origem.id} origem={origem} m={medidas} />
           ))}
         </div>
 
-        <SetaBaixo altura={40} />
-        <Nucleo tamanho={SM.nucleo} />
-        <SetaBaixo altura={36} forte />
+        <LequeDescendente n={origens.length} m={medidas} />
+        <Nucleo tamanho={FILA.nucleo} />
+        <SetaBaixo altura={FILA.saida} forte />
 
         <div className="w-full max-w-sm">
           <Cartao resumo={resumo} />
