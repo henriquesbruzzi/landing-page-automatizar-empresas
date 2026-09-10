@@ -81,7 +81,7 @@ function CookieBanner() {
             </button>
             <button
               onClick={() => accept('all')}
-              className="text-xs tracking-[0.1em] px-5 py-3 rounded-full border border-azul-medio text-white bg-azul-medio hover:bg-azul-profundo hover:border-azul-profundo hover:shadow-azul transition-all duration-300"
+              className="rounded-full bg-azul-medio px-5 py-3 text-xs font-semibold tracking-[0.1em] text-white shadow-azul transition-colors duration-300 hover:bg-azul-profundo active:scale-95"
             >
               {cb.acceptAll}
             </button>

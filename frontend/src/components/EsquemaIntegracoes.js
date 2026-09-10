@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useId } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
 
 /**
@@ -111,22 +111,35 @@ function Nucleo({ tamanho }) {
   );
 }
 
-/* Ponta de seta partilhada. Um id por cor, para não colidirem entre si. */
-function Pontas() {
-  return (
+/* Ponta de seta.
+ *
+ * Os ids TÊM de ser únicos por SVG. Eram fixos, e como cada seta traz as suas
+ * definições havia quatro `ponta-clara` no documento. O url(#...) resolve
+ * sempre para a primeira, que vive no layout de ecrã largo: em telemóvel esse
+ * layout está em display:none e as setas ficavam sem ponta, riscos soltos.
+ * O useId dá um sufixo diferente a cada montagem e o problema não volta. */
+function usePontas() {
+  const id = useId().replace(/:/g, '');
+  const clara = `clara-${id}`;
+  const media = `media-${id}`;
+
+  const defs = (
     <defs>
-      <marker id="ponta-clara" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <marker id={clara} viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
         <path d="M0,0 L10,5 L0,10 z" fill="#4FA3DC" />
       </marker>
-      <marker id="ponta-media" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <marker id={media} viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
         <path d="M0,0 L10,5 L0,10 z" fill="#1B5AA8" />
       </marker>
     </defs>
   );
+
+  return { defs, clara, media };
 }
 
 /** Quatro curvas que saem do meio de cada caixa e convergem no núcleo. */
 function SetasConvergentes({ largura = 96 }) {
+  const { defs, clara } = usePontas();
   const h = alturaColuna(LG);
   const destino = { x: largura - 4, y: h / 2 };
   return (
@@ -138,7 +151,7 @@ function SetasConvergentes({ largura = 96 }) {
       aria-hidden="true"
       focusable="false"
     >
-      <Pontas />
+      {defs}
       {[0, 1, 2, 3].map((i) => {
         const y = centroCaixa(LG, i);
         // Sai na horizontal da caixa e só depois curva, para se ver de onde vem
@@ -151,7 +164,7 @@ function SetasConvergentes({ largura = 96 }) {
             fill="none"
             stroke="#4FA3DC"
             strokeWidth="1.8"
-            markerEnd="url(#ponta-clara)"
+            markerEnd={`url(#${clara})`}
           />
         );
       })}
@@ -161,6 +174,7 @@ function SetasConvergentes({ largura = 96 }) {
 
 /** Seta única, do núcleo para o cartão. */
 function SetaSaida({ largura = 52 }) {
+  const { defs, media } = usePontas();
   return (
     <svg
       width={largura}
@@ -170,20 +184,22 @@ function SetaSaida({ largura = 52 }) {
       aria-hidden="true"
       focusable="false"
     >
-      <Pontas />
+      {defs}
       <path
         d={`M0,8 L${largura - 6},8`}
         fill="none"
         stroke="#1B5AA8"
         strokeWidth="2.2"
-        markerEnd="url(#ponta-media)"
+        markerEnd={`url(#${media})`}
       />
     </svg>
   );
 }
 
-/** Seta vertical, só no telemóvel. */
-function SetaBaixo({ altura = 44, cor = '#4FA3DC', ponta = 'ponta-clara' }) {
+/** Seta vertical, na versão empilhada. */
+function SetaBaixo({ altura = 44, forte = false }) {
+  const { defs, clara, media } = usePontas();
+  const cor = forte ? '#1B5AA8' : '#4FA3DC';
   return (
     <svg
       width="16"
@@ -193,13 +209,13 @@ function SetaBaixo({ altura = 44, cor = '#4FA3DC', ponta = 'ponta-clara' }) {
       aria-hidden="true"
       focusable="false"
     >
-      <Pontas />
+      {defs}
       <path
         d={`M8,0 L8,${altura - 6}`}
         fill="none"
         stroke={cor}
         strokeWidth="2"
-        markerEnd={`url(#${ponta})`}
+        markerEnd={`url(#${forte ? media : clara})`}
       />
     </svg>
   );
@@ -217,11 +233,18 @@ function SetaBaixo({ altura = 44, cor = '#4FA3DC', ponta = 'ponta-clara' }) {
    texto em vez de adivinhado aqui: adivinhar obrigava esta função a conhecer as
    palavras de cada língua, e são duas. */
 const REALCE = /\*([^*]+)\*/g;
-const PARTIR = /(\d+(?:[\s\u00a0]\d{3})*(?:\s?€)?)/g;
-const SO_NUMERO = /^\d+(?:[\s\u00a0]\d{3})*(?:\s?€)?$/;
+// Apanha as duas escritas de dinheiro que o site usa: "18 420 €" em português,
+// com espaço a separar os milhares e o símbolo atrás, e "€18,420" em inglês,
+// com o símbolo à frente e vírgula. A vírgula só conta como separador quando vem
+// seguida de três dígitos, por isso "lançadas, 2 por rever" não se cola.
+const MOEDA = String.raw`(?:€\s?)?\d+(?:[\s\u00a0,]\d{3})*(?:\s?€)?`;
+const PARTIR = new RegExp(`(${MOEDA})`, 'g');
+const SO_NUMERO = new RegExp(`^${MOEDA}$`);
 
+/* whitespace-nowrap: "2 dias" e "3 à espera de si" são um bloco. Sem isto a
+   linha partia entre o número e a unidade e sobrava uma palavra órfã. */
 function Forte({ cor, children }) {
-  return <span className={`font-display font-bold ${cor}`}>{children}</span>;
+  return <span className={`whitespace-nowrap font-display font-bold ${cor}`}>{children}</span>;
 }
 
 function comNumeros(texto, corNumero) {
@@ -270,7 +293,7 @@ function Cartao({ resumo }) {
                 <>
                   {' '}
                   {/* A única parte realçada do cartão: é a que pede acção */}
-                  <strong className="font-sans font-bold text-azul-medio">
+                  <strong className="whitespace-nowrap font-sans font-bold text-azul-medio">
                     {comNumeros(linha.destaque, 'text-azul-medio')}
                   </strong>
                 </>
@@ -310,8 +333,14 @@ function EsquemaIntegracoes() {
           é anunciado a dobrar. */}
       <p className="sr-only">{descricao}</p>
 
-      {/* ---------- ecrã largo: da esquerda para a direita ---------- */}
-      <div className="hidden lg:flex lg:items-center">
+      {/* ---------- ecrã largo: da esquerda para a direita ----------
+          A partir de xl, não de lg. Da esquerda para a direita o esquema ocupa
+          420px fixos (caixas, setas, núcleo) e o cartão fica com o que sobra.
+          Entre 1024 e 1280 sobrava quase nada: a 1152 o cartão ficava com
+          117px de largura e 720 de altura, uma fita, e a legenda saía do ecrã.
+          Nessa faixa passa a valer a versão empilhada, onde o cartão tem
+          sempre a largura toda da coluna. */}
+      <div className="hidden xl:flex xl:items-center">
         <div
           className="flex shrink-0 flex-col"
           style={{ width: LG.largura, gap: LG.espaco }}
@@ -330,11 +359,11 @@ function EsquemaIntegracoes() {
         </div>
       </div>
 
-      {/* ---------- telemóvel e tablet: de cima para baixo ----------
+      {/* ---------- telemóvel, tablet e portátil pequeno: de cima para baixo ----------
           As origens ficam empilhadas pela mesma ordem, e não em grelha de
           dois por dois: é a ordem vertical que emparelha cada origem com a
           sua linha no cartão, e numa grelha essa ordem deixa de se ver. */}
-      <div className="flex flex-col items-center lg:hidden">
+      <div className="flex flex-col items-center xl:hidden">
         {/* Mesma largura máxima do cartão, para a coluna toda assentar no
             mesmo alinhamento em vez de as caixas ficarem mais estreitas */}
         <div
@@ -348,7 +377,7 @@ function EsquemaIntegracoes() {
 
         <SetaBaixo altura={40} />
         <Nucleo tamanho={SM.nucleo} />
-        <SetaBaixo altura={36} cor="#1B5AA8" ponta="ponta-media" />
+        <SetaBaixo altura={36} forte />
 
         <div className="w-full max-w-sm">
           <Cartao resumo={resumo} />

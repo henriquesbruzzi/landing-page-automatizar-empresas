@@ -15,20 +15,16 @@ function CallToAction() {
       {/* Linha divisória no topo */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-azul-claro to-transparent"></div>
 
-      {/* Glow central de fundo */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-azul-vivo/[0.04] blur-[150px] rounded-full pointer-events-none"></div>
-
-      {/* Partículas decorativas */}
-      <div className="absolute top-16 left-[15%] w-1 h-1 rounded-full bg-azul-claro animate-pulse"></div>
-      <div className="absolute bottom-20 right-[20%] w-1.5 h-1.5 rounded-full bg-azul-claro/70 animate-pulse" style={{ animationDelay: '1s' }}></div>
-      <div className="absolute top-1/3 right-[10%] w-1 h-1 rounded-full bg-azul-claro/60 animate-pulse" style={{ animationDelay: '2s' }}></div>
+      {/* A mancha desfocada e as três partículas que aqui estavam vinham do
+          fundo preto, onde davam profundidade. Sobre branco a mancha era
+          invisível e as partículas liam-se como sujidade no ecrã. */}
 
       <div className="max-w-4xl mx-auto px-6 md:px-10 relative z-10 text-center">
         {/* Título de impacto */}
         <Entrada>
           <h2
             id="cta-title"
-            className="font-display text-azul-profundo text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-[0.04em] leading-tight mb-8"
+            className="font-display text-azul-profundo text-3xl sm:text-4xl md:text-5xl font-bold tracking-[0.04em] leading-tight mb-8"
           >
             {t.cta.title_start}
             <span className="text-azul-vivo">{t.cta.title_highlight}</span>
@@ -38,7 +34,7 @@ function CallToAction() {
 
         {/* Descrição */}
         <Entrada atraso={ATRASO_ENTRE_BLOCOS}>
-          <p className="text-texto text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-12 text-justify">
+          <p className="text-texto text-sm md:text-base max-w-2xl mx-auto leading-relaxed mb-12">
             {t.cta.description}
           </p>
         </Entrada>
@@ -47,26 +43,7 @@ function CallToAction() {
         <Entrada className="flex flex-col items-center gap-4" atraso={ATRASO_ENTRE_BLOCOS * 2}>
           <button
             onClick={() => navigate(lang === 'pt' ? '/contacto' : '/us/contact')}
-            className="
-              text-sm
-              md:text-base
-              font-normal
-              text-white
-              tracking-[0.15em]
-              px-12
-              py-5
-              border-2
-              border-azul-medio
-              rounded-full
-              bg-azul-medio
-              cursor-pointer
-              transition-all
-              duration-500
-              hover:bg-azul-profundo
-              hover:border-azul-profundo
-              hover:shadow-azul-lg
-              active:scale-95
-            "
+            className="rounded-full bg-azul-medio px-9 py-4 text-sm font-semibold tracking-[0.06em] text-white shadow-azul transition-colors duration-300 hover:bg-azul-profundo active:scale-95 sm:text-base"
           >
             {t.cta.button}
           </button>

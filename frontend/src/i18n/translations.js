@@ -194,15 +194,15 @@ const translations = {
       items: [
         {
           question: 'Que tipo de serviços a NEXUGAL oferece?',
-          answer: 'Oferecemos uma gama completa de serviços tecnológicos: desenvolvimento web (sites, aplicações e plataformas), cibersegurança (auditorias, monitoramento e proteção de dados), soluções cloud (migração e gestão), consultoria em inteligência artificial, análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7.',
+          answer: 'Oferecemos uma gama completa de serviços tecnológicos: desenvolvimento web (sites, aplicações e plataformas), cibersegurança (auditorias, monitorização e proteção de dados), soluções cloud (migração e gestão), consultoria em inteligência artificial, análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7.',
         },
         {
           question: 'Quanto tempo demora um projeto de desenvolvimento web?',
-          answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 2 a 4 semanas, enquanto uma aplicação web mais complexa pode levar entre 2 a 6 meses. Na fase de diagnóstico, definimos um roadmap claro com prazos detalhados para cada etapa.',
+          answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 2 a 4 semanas, enquanto uma aplicação web mais complexa pode levar entre 2 a 6 meses. Na fase de diagnóstico, dizemos o que fica pronto em cada etapa e quando.',
         },
         {
           question: 'Como funciona o processo de trabalho da NEXUGAL?',
-          answer: 'O nosso processo segue 5 etapas: (1) Diagnóstico — mapeamos as necessidades do seu negócio; (2) Estratégia — desenhamos a arquitetura e o plano técnico; (3) Execução — desenvolvimento ágil com entregas contínuas; (4) Deploy — lançamento com zero downtime; (5) Evolução — suporte contínuo e otimização constante.',
+          answer: 'O nosso processo tem quatro etapas. Diagnóstico, percebemos como o trabalho corre hoje, ao pormenor, e daí sai um relatório com o que pode mudar e o que isso traz à empresa. Planeamento, dizemos o que vamos fazer, quanto custa e em quanto tempo, antes de começarmos. Desenvolvimento, fazemos por partes e vai vendo a funcionar antes de estar tudo pronto, para se corrigir cedo o que for preciso. Acompanhamento, fica a funcionar e nós ficamos por perto, com alguém a quem ligar quando for preciso.',
         },
         {
           question: 'A NEXUGAL trabalha com empresas de que dimensão?',
@@ -210,7 +210,7 @@ const translations = {
         },
         {
           question: 'Oferecem suporte após a entrega do projeto?',
-          answer: 'Sim! Oferecemos suporte técnico contínuo 24/7 e manutenção proativa. Após a entrega, acompanhamos o desempenho da solução, realizamos atualizações de segurança e garantimos que tudo funciona na perfeição.',
+          answer: 'Sim! Oferecemos suporte técnico contínuo 24/7 e manutenção proativa. Após a entrega, acompanhamos o desempenho da solução, aplicamos atualizações de segurança e corrigimos o que for aparecendo.',
         },
         {
           question: 'Qual é o custo dos vossos serviços?',
@@ -307,7 +307,7 @@ const translations = {
     hero: {
       title_line1: 'Let your business',
       title_line2_start: 'run ',
-      title_line2_highlight: 'itself',
+      title_line2_highlight: 'on its own',
       subtitle: 'Information that lives in scattered places comes together in one, without anyone copying anything.',
       cta: 'Talk to us',
       ctaSecundario: 'See examples',
@@ -328,9 +328,9 @@ const translations = {
             { texto: '47 invoices posted, 2 to review' },
             {
               texto: '3 items out of stock',
-              nota: 'supplier alerted on *8/09*, no reply for *2 days*',
+              nota: 'supplier alerted on *Sep 8*, no reply for *2 days*',
             },
-            { texto: '18 420 € sold, 6 310 € outstanding' },
+            { texto: '€18,420 sold, €6,310 outstanding' },
             { texto: '20 requests answered,', destaque: '3 waiting on you' },
           ],
           rodape: 'schedule this summary to suit you',
@@ -488,11 +488,11 @@ const translations = {
         },
         {
           question: 'How long does a web development project take?',
-          answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 2 to 4 weeks, while a more complex web application can take between 2 to 6 months. During the discovery phase, we define a clear roadmap with detailed deadlines for each stage.',
+          answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 2 to 4 weeks, while a more complex web application can take between 2 to 6 months. During the discovery phase, we tell you what is ready at each stage and when.',
         },
         {
           question: 'How does NEXUGAL\'s work process function?',
-          answer: 'Our process follows 5 stages: (1) Discovery — we map your business needs; (2) Strategy — we design the architecture and technical plan; (3) Execution — agile development with continuous deliveries; (4) Deploy — launch with zero downtime; (5) Evolution — continuous support and constant optimization.',
+          answer: 'Our process has four stages. Discovery, we look in detail at how the work runs today, and from that comes a report with what can change and what that brings to the company. Planning, we tell you what we will do, what it costs and how long it takes, before we start. Development, we build it in parts and you see it working before everything is finished, so whatever needs correcting is caught early. Ongoing support, it keeps running and we stay close by, with someone to call when you need it.',
         },
         {
           question: 'What size companies does NEXUGAL work with?',
@@ -500,7 +500,7 @@ const translations = {
         },
         {
           question: 'Do you offer support after project delivery?',
-          answer: 'Yes! We offer continuous 24/7 technical support and proactive maintenance. After delivery, we monitor the solution\'s performance, carry out security updates and ensure everything works perfectly.',
+          answer: 'Yes! We offer continuous 24/7 technical support and proactive maintenance. After delivery, we monitor the solution\'s performance, apply security updates and fix whatever comes up.',
         },
         {
           question: 'What is the cost of your services?',

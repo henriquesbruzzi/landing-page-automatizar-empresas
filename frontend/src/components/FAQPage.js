@@ -67,7 +67,7 @@ function FAQPage() {
                 {t.faq.title}
                 <span className="text-azul-vivo">{t.faq.titleHighlight}</span>
               </h1>
-              <p className="text-texto text-sm md:text-base max-w-lg mx-auto leading-relaxed text-justify">
+              <p className="text-texto text-sm md:text-base max-w-lg mx-auto leading-relaxed">
                 {t.faq.description}
               </p>
             </Entrada>
@@ -128,7 +128,7 @@ function FAQPage() {
                     >
                       <div className="px-6 md:px-8 pb-6 md:pb-8">
                         <div className="h-[1px] bg-gradient-to-r from-azul-claro via-azul-claro to-transparent mb-5"></div>
-                        <p className="text-texto text-sm leading-relaxed text-justify">
+                        <p className="text-texto text-sm leading-relaxed">
                           {item.answer}
                         </p>
                       </div>
@@ -148,25 +148,7 @@ function FAQPage() {
               </p>
               <button
                 onClick={() => navigate(lang === 'pt' ? '/contacto' : '/us/contact')}
-                className="
-                  text-sm
-                  font-normal
-                  text-white
-                  tracking-[0.15em]
-                  px-10
-                  py-4
-                  border
-                  border-azul-medio
-                  rounded-full
-                  bg-azul-medio
-                  cursor-pointer
-                  transition-all
-                  duration-500
-                  hover:bg-azul-profundo
-                  hover:border-azul-profundo
-                  hover:shadow-azul
-                  active:scale-95
-                "
+                className="rounded-full bg-azul-medio px-9 py-4 text-sm font-semibold tracking-[0.06em] text-white shadow-azul transition-colors duration-300 hover:bg-azul-profundo active:scale-95 sm:text-base"
               >
                 {lang === 'pt' ? 'Fale Connosco' : 'Contact Us'}
               </button>

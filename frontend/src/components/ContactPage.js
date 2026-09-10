@@ -116,7 +116,7 @@ function ContactPage() {
   };
 
   const inputClasses =
-    'w-full bg-white border border-linha rounded-xl px-5 py-4 text-azul-profundo text-sm tracking-wide placeholder:text-texto focus:outline-none focus:border-azul-medio focus:shadow-azul transition-all duration-300';
+    'w-full bg-white border border-linha rounded-xl px-5 py-4 text-azul-profundo text-sm tracking-wide placeholder:text-suave focus:outline-none focus:border-azul-medio focus:shadow-azul transition-all duration-300';
 
   return (
     <div className="relative min-h-screen bg-white overflow-hidden">
@@ -166,7 +166,7 @@ function ContactPage() {
               </span>
               <h1 id="contact-title" className="font-display text-azul-profundo text-3xl md:text-4xl lg:text-5xl font-bold tracking-[0.05em] mb-4">
                 {t.contact.title}
-                <span className="text-azul-vivo ml-3">{t.contact.titleHighlight}</span>
+                <span className="text-azul-vivo">{t.contact.titleHighlight}</span>
               </h1>
               <p className="text-texto text-sm md:text-base max-w-lg mx-auto leading-relaxed">
                 {t.contact.description}
@@ -337,7 +337,7 @@ function ContactPage() {
                     ${
                       isSending
                         ? 'border-linha text-suave bg-neve cursor-not-allowed'
-                        : 'border-azul-medio text-white bg-azul-medio hover:bg-azul-profundo hover:border-azul-profundo hover:shadow-azul-lg active:scale-[0.98]'
+                        : 'bg-azul-medio text-white shadow-azul hover:bg-azul-profundo active:scale-[0.98]'
                     }
                   `}
                 >

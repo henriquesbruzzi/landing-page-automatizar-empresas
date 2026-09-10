@@ -68,7 +68,7 @@ function Process() {
                   </h3>
 
                   {/* Descrição */}
-                  <p className="text-texto text-sm font-medium leading-relaxed text-justify">
+                  <p className="text-texto text-sm font-medium leading-relaxed">
                     {step.description}
                   </p>
                 </div>

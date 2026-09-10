@@ -127,7 +127,7 @@ function Dropdown({ value, options, placeholder, onChange, campoClasses, labelId
           aberta ? 'border-azul-medio shadow-azul' : ''
         } ${erro ? 'ring-1 ring-red-500' : ''}`}
       >
-        <span className={value ? 'text-azul-profundo' : 'text-texto'}>
+        <span className={value ? 'text-azul-profundo' : 'text-suave'}>
           {value || placeholder}
         </span>
         <svg

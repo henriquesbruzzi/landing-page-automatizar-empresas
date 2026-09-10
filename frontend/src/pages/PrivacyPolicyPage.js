@@ -13,7 +13,6 @@ function PrivacyPolicyPage() {
   return (
     <div className="relative min-h-screen bg-white text-texto overflow-x-hidden">
       {/* Glow de fundo */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-azul-vivo/[0.03] blur-[120px] rounded-full pointer-events-none" />
 
       {/* Header */}
       <div className="relative z-10 px-6 md:px-10 lg:px-16 pt-8 border-b border-linha">
@@ -39,15 +38,15 @@ function PrivacyPolicyPage() {
             {pt ? 'Política de Privacidade' : 'Privacy Policy'}
             <span className="text-azul-vivo"> & Cookies</span>
           </h1>
-          <p className="text-texto text-sm leading-relaxed text-justify">
+          <p className="text-texto text-sm leading-relaxed">
             {pt
-              ? 'Última atualização: agosto de 2025 · Em conformidade com o RGPD (Regulamento Geral sobre a Proteção de Dados) e a Lei n.º 41/2004 (Lei do ePrivacy).'
-              : 'Last updated: August 2025 · In compliance with the GDPR (General Data Protection Regulation) and Directive 2002/58/EC (ePrivacy Directive).'}
+              ? 'Última atualização: setembro de 2026 · Em conformidade com o RGPD (Regulamento Geral sobre a Proteção de Dados) e a Lei n.º 41/2004 (Lei do ePrivacy).'
+              : 'Last updated: September 2026 · In compliance with the GDPR (General Data Protection Regulation) and Directive 2002/58/EC (ePrivacy Directive).'}
           </p>
         </div>
 
         {/* Secções */}
-        <div className="space-y-10 text-texto text-sm leading-relaxed text-justify">
+        <div className="space-y-10 text-texto text-sm leading-relaxed">
 
           {/* 1 — Responsável */}
           <section>
@@ -74,13 +73,18 @@ function PrivacyPolicyPage() {
             <div className="pl-8 border-l border-linha space-y-3">
               <p>{pt ? 'Recolhemos os seguintes dados através do formulário de contacto:' : 'We collect the following data through the contact form:'}</p>
               <ul className="list-none space-y-1.5">
+                {/* Esta lista tem de bater certo com os campos do ContactPage.
+                    Nome, e-mail, telefone, empresa e a origem do contacto são
+                    obrigatórios no formulário; só a mensagem é facultativa.
+                    O idioma vai junto porque o formulário o envia. */}
                 {[
-                  pt ? '• Nome completo' : '• Full name',
-                  pt ? '• Endereço de e-mail' : '• Email address',
-                  pt ? '• Número de telefone (opcional)' : '• Phone number (optional)',
-                  pt ? '• Nome da empresa (opcional)' : '• Company name (optional)',
-                  pt ? '• Serviço de interesse' : '• Service of interest',
-                  pt ? '• Mensagem / descrição do projeto' : '• Message / project description',
+                  pt ? '• Nome (obrigatório)' : '• Name (required)',
+                  pt ? '• Endereço de e-mail (obrigatório)' : '• Email address (required)',
+                  pt ? '• Número de telefone (obrigatório)' : '• Phone number (required)',
+                  pt ? '• Nome da empresa (obrigatório)' : '• Company name (required)',
+                  pt ? '• Como soube de nós (obrigatório)' : '• How you heard about us (required)',
+                  pt ? '• Mensagem, com a descrição do que precisa (facultativa)' : '• Message describing what you need (optional)',
+                  pt ? '• Idioma em que preencheu o formulário' : '• Language you filled the form in',
                 ].map((item) => (
                   <li key={item} className="text-texto">{item}</li>
                 ))}

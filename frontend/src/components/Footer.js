@@ -49,7 +49,6 @@ function Footer() {
       <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-azul-claro to-transparent"></div>
 
       {/* Glow decorativo de fundo */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-azul-vivo/[0.03] blur-[120px] rounded-full pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16 relative z-10">
         {/* Grid principal */}

@@ -66,14 +66,14 @@ function About() {
             {t.about.title}
             <span className="text-azul-vivo">{t.about.titleHighlight}</span>
           </h2>
-          <p className="text-texto max-w-3xl mx-auto text-sm md:text-base leading-relaxed text-justify">
+          <p className="text-texto max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
             {t.about.description}
           </p>
         </Entrada>
 
         {/* De onde vem a forma de trabalhar dos dois */}
         <Entrada className="text-center mb-12">
-          <p className="text-texto max-w-3xl mx-auto text-sm md:text-base leading-relaxed text-justify">
+          <p className="text-texto max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
             {fundadores.intro}
           </p>
         </Entrada>
@@ -115,7 +115,7 @@ function About() {
                     </div>
                   </div>
 
-                  <p className="text-texto text-sm font-medium leading-relaxed flex-1 text-justify">
+                  <p className="text-texto text-sm font-medium leading-relaxed flex-1">
                     {pessoa.description}
                   </p>
 
