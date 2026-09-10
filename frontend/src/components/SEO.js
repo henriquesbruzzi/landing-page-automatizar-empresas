@@ -1,5 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import translations from '../i18n/translations';
 
 /**
  * Componente SEO reutilizável — gere meta tags dinâmicas + JSON-LD
@@ -15,15 +16,15 @@ const BASE_URL = process.env.REACT_APP_SITE_URL || 'https://www.nexugal.com';
 const seoData = {
   pt: {
     home: {
-      title: 'NEXUGAL — Consultoria Tecnológica | Desenvolvimento Web, Cibersegurança & Cloud',
+      title: 'NEXUGAL, Consultoria Tecnológica | Desenvolvimento Web, Cibersegurança & Cloud',
       description:
-        'NEXUGAL — Consultoria tecnológica em Braga, Portugal. Especialistas em desenvolvimento web, cibersegurança, soluções cloud, inteligência artificial e análise de dados. Transformação digital para a sua empresa.',
+        'NEXUGAL, consultoria tecnológica em Braga, Portugal. Especialistas em desenvolvimento web, cibersegurança, soluções cloud, inteligência artificial e análise de dados. Transformação digital para a sua empresa.',
       canonical: `${BASE_URL}/`,
       alternate: `${BASE_URL}/us`,
       ogLocale: 'pt_PT',
     },
     contact: {
-      title: 'Contacto — NEXUGAL | Fale Connosco',
+      title: 'Contacto, NEXUGAL | Fale Connosco',
       description:
         'Entre em contacto com a NEXUGAL. Preencha o formulário e a nossa equipa responde em 24 horas. Consultoria tecnológica em Braga, Portugal.',
       canonical: `${BASE_URL}/contacto`,
@@ -31,7 +32,7 @@ const seoData = {
       ogLocale: 'pt_PT',
     },
     faq: {
-      title: 'FAQ — NEXUGAL | Perguntas Frequentes sobre Consultoria Tecnológica',
+      title: 'FAQ, NEXUGAL | Perguntas Frequentes sobre Consultoria Tecnológica',
       description:
         'Respostas às perguntas mais frequentes sobre os serviços da NEXUGAL: desenvolvimento web, cibersegurança, cloud, IA, prazos, custos e suporte.',
       canonical: `${BASE_URL}/faq`,
@@ -41,15 +42,15 @@ const seoData = {
   },
   en: {
     home: {
-      title: 'NEXUGAL — Technology Consulting | Web Development, Cybersecurity & Cloud',
+      title: 'NEXUGAL, Technology Consulting | Web Development, Cybersecurity & Cloud',
       description:
-        'NEXUGAL — Technology consultancy in Braga, Portugal. Experts in web development, cybersecurity, cloud solutions, artificial intelligence and data analytics. Digital transformation for your business.',
+        'NEXUGAL, technology consultancy in Braga, Portugal. Experts in web development, cybersecurity, cloud solutions, artificial intelligence and data analytics. Digital transformation for your business.',
       canonical: `${BASE_URL}/us`,
       alternate: `${BASE_URL}/`,
       ogLocale: 'en_US',
     },
     contact: {
-      title: 'Contact — NEXUGAL | Get in Touch',
+      title: 'Contact, NEXUGAL | Get in Touch',
       description:
         'Get in touch with NEXUGAL. Fill out the form and our team will respond within 24 hours. Technology consultancy in Braga, Portugal.',
       canonical: `${BASE_URL}/us/contact`,
@@ -57,7 +58,7 @@ const seoData = {
       ogLocale: 'en_US',
     },
     faq: {
-      title: 'FAQ — NEXUGAL | Frequently Asked Questions about Technology Consulting',
+      title: 'FAQ, NEXUGAL | Frequently Asked Questions about Technology Consulting',
       description:
         'Answers to frequently asked questions about NEXUGAL services: web development, cybersecurity, cloud, AI, timelines, costs and support.',
       canonical: `${BASE_URL}/us/faq`,
@@ -260,80 +261,13 @@ const serviceSchema = {
   ],
 };
 
-// Schema.org JSON-LD — FAQPage (rich results no Google)
+// Schema.org JSON-LD, FAQPage (rich results no Google)
+//
+// As perguntas vêm do translations.js, que é onde vive o texto do site. Já
+// estiveram escritas aqui outra vez, à mão, e as duas cópias afastaram-se: o
+// ecrã dizia uma coisa e o Google era informado de outra. Uma fonte só.
 function getFaqSchema(lang) {
-  const faqItems = {
-    pt: [
-      {
-        question: 'Que tipo de serviços a NEXUGAL oferece?',
-        answer: 'Oferecemos uma gama completa de serviços tecnológicos: desenvolvimento web (sites, aplicações e plataformas), cibersegurança (auditorias, monitorização e proteção de dados), soluções cloud (migração e gestão), consultoria em inteligência artificial, análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7.',
-      },
-      {
-        question: 'Quanto tempo demora um projeto de desenvolvimento web?',
-        answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 2 a 4 semanas, enquanto uma aplicação web mais complexa pode levar entre 2 a 6 meses. Na fase de diagnóstico, dizemos o que fica pronto em cada etapa e quando.',
-      },
-      {
-        question: 'Como funciona o processo de trabalho da NEXUGAL?',
-        answer: 'O nosso processo tem quatro etapas. Diagnóstico, percebemos como o trabalho corre hoje, ao pormenor, e daí sai um relatório com o que pode mudar e o que isso traz à empresa. Planeamento, dizemos o que vamos fazer, quanto custa e em quanto tempo, antes de começarmos. Desenvolvimento, fazemos por partes e vai vendo a funcionar antes de estar tudo pronto, para se corrigir cedo o que for preciso. Acompanhamento, fica a funcionar e nós ficamos por perto, com alguém a quem ligar quando for preciso.',
-      },
-      {
-        question: 'A NEXUGAL trabalha com empresas de que dimensão?',
-        answer: 'Trabalhamos com empresas de todas as dimensões, desde startups e PMEs até grandes corporações. As nossas soluções são personalizadas para se adaptarem às necessidades e ao orçamento de cada cliente.',
-      },
-      {
-        question: 'Oferecem suporte após a entrega do projeto?',
-        answer: 'Sim! Oferecemos suporte técnico contínuo 24/7 e manutenção proativa. Após a entrega, acompanhamos o desempenho da solução, aplicamos atualizações de segurança e corrigimos o que for aparecendo.',
-      },
-      {
-        question: 'Qual é o custo dos vossos serviços?',
-        answer: 'Cada projeto é único, por isso o custo depende dos requisitos específicos, da complexidade e do prazo desejado. Oferecemos uma consulta gratuita e sem compromisso onde apresentamos um orçamento personalizado e transparente.',
-      },
-      {
-        question: 'A consulta inicial é gratuita?',
-        answer: 'Sim, a primeira consulta é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. Pode agendar através do nosso formulário de contacto.',
-      },
-      {
-        question: 'Em que regiões a NEXUGAL opera?',
-        answer: 'Estamos sediados em Braga, Portugal, mas trabalhamos com clientes em todo o território português e também no Brasil. Como muitos dos nossos serviços são prestados remotamente, podemos atender clientes em qualquer parte do mundo.',
-      },
-    ],
-    en: [
-      {
-        question: 'What type of services does NEXUGAL offer?',
-        answer: 'We offer a complete range of technology services: web development (websites, applications and platforms), cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management), artificial intelligence consulting, data analytics with customized dashboards, and continuous 24/7 technical support.',
-      },
-      {
-        question: 'How long does a web development project take?',
-        answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 2 to 4 weeks, while a more complex web application can take between 2 to 6 months. During the discovery phase, we tell you what is ready at each stage and when.',
-      },
-      {
-        question: "How does NEXUGAL's work process function?",
-        answer: 'Our process has four stages. Discovery, we look in detail at how the work runs today, and from that comes a report with what can change and what that brings to the company. Planning, we tell you what we will do, what it costs and how long it takes, before we start. Development, we build it in parts and you see it working before everything is finished, so whatever needs correcting is caught early. Ongoing support, it keeps running and we stay close by, with someone to call when you need it.',
-      },
-      {
-        question: 'What size companies does NEXUGAL work with?',
-        answer: "We work with companies of all sizes, from startups and SMEs to large corporations. Our solutions are customized to adapt to each client's needs and budget.",
-      },
-      {
-        question: 'Do you offer support after project delivery?',
-        answer: "Yes! We offer continuous 24/7 technical support and proactive maintenance. After delivery, we monitor the solution's performance, apply security updates and fix whatever comes up.",
-      },
-      {
-        question: 'What is the cost of your services?',
-        answer: 'Each project is unique, so the cost depends on the specific requirements, complexity and desired timeline. We offer a free, no-obligation consultation where we present a personalized and transparent quote.',
-      },
-      {
-        question: 'Is the initial consultation free?',
-        answer: 'Yes, the first consultation is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. You can schedule it through our contact form.',
-      },
-      {
-        question: 'In which regions does NEXUGAL operate?',
-        answer: 'We are based in Braga, Portugal, but we work with clients across the entire Portuguese territory and also in Brazil. Since many of our services are provided remotely, we can serve clients anywhere in the world.',
-      },
-    ],
-  };
-
-  const items = faqItems[lang] || faqItems.pt;
+  const items = (translations[lang] || translations.pt).faq.items;
 
   return {
     '@context': 'https://schema.org',
@@ -387,7 +321,7 @@ function SEO({ lang = 'pt', page = 'home' }) {
       <meta property="og:image" content={`${BASE_URL}/images/og-image.png`} />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content="NEXUGAL — Codificando o Amanhã da sua Empresa" />
+      <meta property="og:image:alt" content="NEXUGAL, Codificando o Amanhã da sua Empresa" />
       <meta property="og:locale" content={data.ogLocale} />
 
       {/* Twitter Card */}

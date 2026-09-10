@@ -144,22 +144,22 @@ function PrivacyPolicyPage() {
               </p>
               {(pt
                 ? [
-                    '• Acesso — obter confirmação e cópia dos seus dados',
-                    '• Retificação — corrigir dados inexatos ou incompletos',
-                    '• Apagamento — solicitar a eliminação dos seus dados ("direito ao esquecimento")',
-                    '• Limitação — restringir o tratamento em determinadas circunstâncias',
-                    '• Portabilidade — receber os dados em formato estruturado e legível',
-                    '• Oposição — opor-se ao tratamento baseado em interesse legítimo',
-                    '• Reclamação — apresentar queixa à CNPD (www.cnpd.pt)',
+                    '• Acesso, obter confirmação e cópia dos seus dados',
+                    '• Retificação, corrigir dados inexatos ou incompletos',
+                    '• Apagamento, solicitar a eliminação dos seus dados ("direito ao esquecimento")',
+                    '• Limitação, restringir o tratamento em determinadas circunstâncias',
+                    '• Portabilidade, receber os dados em formato estruturado e legível',
+                    '• Oposição, opor-se ao tratamento baseado em interesse legítimo',
+                    '• Reclamação, apresentar queixa à CNPD (www.cnpd.pt)',
                   ]
                 : [
-                    '• Access — obtain confirmation and a copy of your data',
-                    '• Rectification — correct inaccurate or incomplete data',
-                    '• Erasure — request deletion of your data ("right to be forgotten")',
-                    '• Restriction — restrict processing in certain circumstances',
-                    '• Portability — receive data in a structured, machine-readable format',
-                    '• Objection — object to processing based on legitimate interest',
-                    '• Complaint — lodge a complaint with the supervisory authority',
+                    '• Access, obtain confirmation and a copy of your data',
+                    '• Rectification, correct inaccurate or incomplete data',
+                    '• Erasure, request deletion of your data ("right to be forgotten")',
+                    '• Restriction, restrict processing in certain circumstances',
+                    '• Portability, receive data in a structured, machine-readable format',
+                    '• Objection, object to processing based on legitimate interest',
+                    '• Complaint, lodge a complaint with the supervisory authority',
                   ]
               ).map((item) => (
                 <p key={item} className="text-texto">{item}</p>

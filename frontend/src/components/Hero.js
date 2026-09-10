@@ -83,7 +83,11 @@ function Hero() {
       <MancaFundo />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-10 lg:px-16">
-        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-12">
+        {/* A partir de xl o esquema deita-se da esquerda para a direita e
+            precisa de mais linha do que a coluna do texto: daí a fatia mudar
+            de 0.9/1.1 para 0.72/1.28. Abaixo de xl o esquema está empilhado e
+            as duas colunas voltam a ficar quase iguais. */}
+        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-12 xl:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)]">
           {/* ---------------- esquerda: título, subtítulo e acções ------------- */}
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
             <h1 className="grid font-display text-3xl font-bold leading-tight tracking-[0.04em] text-azul-profundo sm:text-4xl md:text-5xl lg:text-4xl xl:text-5xl">

@@ -220,10 +220,6 @@ const translations = {
           question: 'A consulta inicial é gratuita?',
           answer: 'Sim, a primeira consulta é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. Pode agendar através do nosso formulário de contacto.',
         },
-        {
-          question: 'Em que regiões a NEXUGAL opera?',
-          answer: 'Estamos sediados em Braga, Portugal, mas trabalhamos com clientes em todo o território português e também no Brasil. Como muitos dos nossos serviços são prestados remotamente, podemos atender clientes em qualquer parte do mundo.',
-        },
       ],
     },
     cta: {
@@ -509,10 +505,6 @@ const translations = {
         {
           question: 'Is the initial consultation free?',
           answer: 'Yes, the first consultation is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. You can schedule it through our contact form.',
-        },
-        {
-          question: 'In which regions does NEXUGAL operate?',
-          answer: 'We are based in Braga, Portugal, but we work with clients across the entire Portuguese territory and also in Brazil. Since many of our services are provided remotely, we can serve clients anywhere in the world.',
         },
       ],
     },

@@ -730,7 +730,7 @@ function AdminLeadsPage() {
                     type="text"
                     value={categoryOutreachSubject}
                     onChange={(e) => setCategoryOutreachSubject(e.target.value)}
-                    placeholder="Ex: Digitalização & Automação para a {company} — NEXUGAL"
+                    placeholder="Ex: Digitalização & Automação para a {company}, NEXUGAL"
                     maxLength={200}
                     className="w-full bg-white border border-linha rounded-xl px-4 py-2.5 text-sm text-azul-profundo placeholder-texto focus:border-azul-medio focus:outline-none"
                   />

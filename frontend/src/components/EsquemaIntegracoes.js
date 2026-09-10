@@ -18,7 +18,12 @@ import { useLanguage } from '../i18n/LanguageContext';
  */
 
 // Geometria da coluna de origens. O SVG das setas depende destes números.
-const LG = { altura: 56, espaco: 16, largura: 176, nucleo: 96 };
+//
+// As medidas de LG são apertadas de propósito. Da esquerda para a direita o
+// esquema gasta largura fixa (caixas, setas, núcleo) e o cartão fica com o que
+// sobra, dentro de um contentor que para de crescer aos 1280px. Cada pixel que
+// se tire aqui é um pixel que o cartão ganha, e é o cartão que tem de se ler.
+const LG = { altura: 56, espaco: 16, largura: 164, nucleo: 88 };
 const SM = { altura: 48, espaco: 12, nucleo: 76 };
 
 const alturaColuna = (m) => m.altura * 4 + m.espaco * 3;
@@ -138,7 +143,7 @@ function usePontas() {
 }
 
 /** Quatro curvas que saem do meio de cada caixa e convergem no núcleo. */
-function SetasConvergentes({ largura = 96 }) {
+function SetasConvergentes({ largura = 76 }) {
   const { defs, clara } = usePontas();
   const h = alturaColuna(LG);
   const destino = { x: largura - 4, y: h / 2 };
@@ -173,7 +178,7 @@ function SetasConvergentes({ largura = 96 }) {
 }
 
 /** Seta única, do núcleo para o cartão. */
-function SetaSaida({ largura = 52 }) {
+function SetaSaida({ largura = 40 }) {
   const { defs, media } = usePontas();
   return (
     <svg
