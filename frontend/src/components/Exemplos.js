@@ -2,32 +2,45 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
-import EsquemaIntegracoes from './EsquemaIntegracoes';
+import VisualExemplo from './VisuaisExemplos';
 
 /**
  * Secção de exemplos.
  *
- * Substituiu a grelha de seis cartões que aqui estava. Os cartões diziam o que
+ * Substituiu a grelha de cartões que aqui estava. Os cartões diziam o que
  * fazemos por categorias; estes blocos mostram uma situação concreta de cada
  * vez, começando pela dor e acabando no que passa a chegar sozinho.
  *
- * O desenho de cada bloco é o mesmo do hero, e é o mesmo componente: texto à
- * esquerda, esquema à direita, empilhados no telemóvel. A ordem dos blocos vem
- * do translations.js e é deliberada, o mais forte abre e o mais forte fecha.
+ * Cada bloco tem o SEU desenho, não o esquema de setas do hero. Quatro blocos
+ * com o mesmo esquema liam-se como um só repetido quatro vezes, e o primeiro
+ * repetia o hero. A unidade vem da paleta, da letra e do estilo das caixas.
+ *
+ * O lado alterna de bloco para bloco e as alturas dos desenhos são diferentes
+ * de propósito, para o olho não se instalar.
  */
 
 // Afasta o alvo do menu fixo quando se salta pelo índice
 const FOLGA_DO_MENU = 'scroll-mt-28';
 
 function Bloco({ bloco, par }) {
+  // Nos ímpares o desenho vem primeiro. Em coluna única o texto fica sempre
+  // por cima: quem lê precisa da história antes do desenho.
+  const desenhoAEsquerda = par;
+
   return (
     <div
       id={bloco.id}
       className={`${FOLGA_DO_MENU} ${par ? 'bg-neve' : 'bg-white'}`}
     >
       <div className="mx-auto w-full max-w-7xl px-6 py-16 md:px-10 md:py-20 lg:px-16">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-12">
-          <div>
+        <div
+          className={`grid grid-cols-1 items-center gap-10 lg:gap-14 ${
+            desenhoAEsquerda
+              ? 'lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]'
+              : 'lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]'
+          }`}
+        >
+          <div className={desenhoAEsquerda ? 'lg:order-2' : ''}>
             <span className="mb-3 block font-display text-xs font-semibold uppercase tracking-[0.22em] text-azul-medio">
               {bloco.rotulo}
             </span>
@@ -41,7 +54,9 @@ function Bloco({ bloco, par }) {
             </p>
           </div>
 
-          <EsquemaIntegracoes esquema={bloco.esquema} />
+          <div className={desenhoAEsquerda ? 'lg:order-1' : ''}>
+            <VisualExemplo visual={bloco.visual} arte={bloco.arte} />
+          </div>
         </div>
       </div>
     </div>
@@ -112,10 +127,10 @@ function Exemplos() {
           <p className="mt-6 text-sm leading-relaxed text-texto md:text-base">{e.subtitulo}</p>
         </div>
 
-        {/* Índice. Em fila no computador, e a passar à linha no telemóvel: seis
-            etiquetas não cabem numa fila de 380px, e uma barra que se arrasta
-            para o lado esconde metade delas sem avisar. A passar à linha, vê-se
-            tudo de uma vez. */}
+        {/* Índice. Em fila no computador, e a passar à linha no telemóvel:
+            quatro etiquetas não cabem numa fila de 380px, e uma barra que se
+            arrasta para o lado esconde as de trás sem avisar. A passar à linha
+            vê-se tudo de uma vez. */}
         <nav aria-label={e.indiceTitulo} className="mt-10">
           <ul className="flex flex-wrap items-center justify-center gap-2.5">
             {e.blocos.map((bloco) => (
@@ -133,7 +148,7 @@ function Exemplos() {
         </nav>
       </div>
 
-      {/* ---------------- os seis blocos ---------------- */}
+      {/* ---------------- os quatro blocos ---------------- */}
       <div className="mt-12">
         {e.blocos.map((bloco, i) => (
           <Bloco key={bloco.id} bloco={bloco} par={i % 2 === 1} />

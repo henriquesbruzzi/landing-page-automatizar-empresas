@@ -51,163 +51,115 @@ const translations = {
     exemplos: {
       rotulo: 'EXEMPLOS',
       titulo: 'Isto é o que fazemos, em concreto',
-      subtitulo: 'Seis situações que se repetem em quase todas as empresas. Cada uma mostra o que entra, o que se junta, e o que passa a chegar sozinho.',
+      subtitulo: 'Quatro situações que se repetem em quase todas as empresas. Cada uma mostra o que entra, o que se junta, e o que passa a chegar sozinho.',
       indiceTitulo: 'Saltar para',
-      // A ORDEM é deliberada: o mais forte abre, o mais forte fecha, o mais
-      // fraco fica ao meio. O índice segue esta mesma ordem, sozinho.
+      // Cada bloco tem o seu próprio desenho, moldado à história que conta. A
+      // unidade vem da paleta, da letra e do estilo das caixas, não de serem
+      // todos iguais. O esquema de setas ficou só no hero.
+      //
+      // O campo `visual` diz qual dos desenhos usar. Um bloco novo obriga a um
+      // desenho novo: não há aqui um molde que sirva para tudo, e é de
+      // propósito.
       blocos: [
         {
           id: 'exemplo-faturacao',
+          visual: 'papel',
           indice: 'Contabilidade e faturação',
           rotulo: 'CONTABILIDADE E FATURAÇÃO',
           dor: 'Alguém passa duas manhãs por mês a lançar faturas de fornecedor.',
-          explicacao: 'As faturas chegam por email, por WhatsApp e em papel, e acabam todas escritas à mão no mesmo sítio. Passam a ser lidas e lançadas sozinhas, e o que precisa mesmo de olhos fica numa lista curta.',
-          esquema: {
-            descricao: 'Faturas que chegam por email, por WhatsApp, em papel e pelo seu ERP juntam-se num sítio só e dão origem ao fecho do mês.',
-            origens: [
-              { id: 'email', nome: 'Email' },
-              { id: 'whatsapp', nome: 'WhatsApp' },
-              { id: 'papel', nome: 'Papel' },
-              { id: 'erp', nome: 'O seu ERP' },
+          explicacao: 'Chegam por email, por WhatsApp e em papel. Passam a ser lidas e transformadas em dados sozinhas, e o que precisa mesmo de olhos fica numa lista curta.',
+          arte: {
+            descricao: 'Uma pilha de faturas em papel dá origem a uma tabela de dados já preenchida.',
+            papelEtiqueta: 'FATURA',
+            papelLegenda: 'papel, PDF, foto',
+            colunas: ['FORNECEDOR', 'DOC', 'VALOR'],
+            linhas: [
+              { fornecedor: 'Malhas do Ave', doc: 'FT 1184', valor: '1 240,00' },
+              { fornecedor: 'Tintex', doc: 'FT A/9042', valor: '418,60' },
+              { fornecedor: 'Fios e Cores', doc: 'FT 331', valor: '96,40' },
             ],
-            resumo: {
-              titulo: 'Fecho de setembro',
-              entrega: 'enviado ao contabilista a 1/10',
-              linhas: [
-                { texto: '214 faturas lançadas' },
-                { texto: '3 por rever, fornecedor sem NIF' },
-                // O "12/08" fica sem peso de propósito: a data não é o número
-                // que interessa. Marcar o "1" à mão desliga a procura no resto
-                // da linha, senão a data saía em negrito e partida ao meio.
-                { texto: '*1* repetida, já lançada a 12/08' },
-              ],
-            },
+            // Duas linhas por preencher, desenhadas como barras: mostram que o
+            // trabalho continua a andar depois de a imagem ficar parada.
+            porPreencher: 2,
+            resumo: { total: '214', totalTexto: 'lançadas em setembro,', rever: '3', reverTexto: 'por rever' },
           },
         },
         {
-          id: 'exemplo-clientes',
-          indice: 'Resposta a clientes',
-          rotulo: 'RESPOSTA A CLIENTES',
-          dor: 'As mesmas cinco perguntas, todos os dias, em três sítios diferentes.',
-          explicacao: 'O que chega por email, por WhatsApp e pelo formulário do site é lido, cruzado com a encomenda, e a resposta fica escrita à espera de um clique. Nada sai sem alguém aprovar.',
-          esquema: {
-            descricao: 'Mensagens que chegam por email, por WhatsApp, pelo formulário do site e pelo seu ERP juntam-se num sítio só e dão origem a respostas já escritas.',
-            origens: [
-              { id: 'email', nome: 'Email' },
-              { id: 'whatsapp', nome: 'WhatsApp' },
-              { id: 'formulario', nome: 'Formulário' },
-              { id: 'erp', nome: 'O seu ERP' },
+          id: 'exemplo-pedidos',
+          visual: 'conversa',
+          indice: 'Pedidos de clientes',
+          rotulo: 'PEDIDOS DE CLIENTES',
+          dor: 'As mesmas cinco perguntas todos os dias, e as encomendas anotadas num papel.',
+          explicacao: 'O que chega por email, por WhatsApp e pelo formulário é lido, cruzado com a encomenda, e a resposta fica escrita à espera de um clique. Nada sai sem alguém aprovar.',
+          arte: {
+            descricao: 'Uma pergunta de cliente e a resposta já escrita, à espera de aprovação, ao lado do que o dia rendeu.',
+            pergunta: 'Boa tarde, a minha encomenda 4471 ainda não chegou.',
+            perguntaOrigem: 'cliente, WhatsApp, 14h02',
+            resposta: 'Saiu do armazém ontem às 17h20, entrega prevista para amanhã, dia 10.',
+            selo: 'à espera de aprovação',
+            contadores: [
+              { numero: '34', legenda: 'mensagens tratadas hoje' },
+              { numero: '0', legenda: 'chamadas atendidas', realce: true },
             ],
-            resumo: {
-              titulo: 'Hoje, 18h00',
-              linhas: [
-                { texto: '34 mensagens tratadas' },
-                { texto: '5 à espera de si' },
-                { texto: 'resposta em *6 minutos*, em média' },
-              ],
-            },
-          },
-        },
-        {
-          id: 'exemplo-encomendas',
-          indice: 'Encomendas e pedidos',
-          rotulo: 'ENCOMENDAS E PEDIDOS',
-          dor: 'As encomendas entram por telefone e ficam anotadas num papel.',
-          explicacao: 'O cliente passa a encomendar sozinho, num portal com a tabela do dia já lá dentro. A encomenda entra direta na preparação, sem ninguém copiar nada, e o telefone deixa de tocar para isto.',
-          esquema: {
-            descricao: 'Encomendas que chegam pelo portal, por WhatsApp, por email e pelo seu ERP juntam-se num sítio só e entram diretas na preparação.',
-            origens: [
-              { id: 'portal', nome: 'Portal' },
-              { id: 'whatsapp', nome: 'WhatsApp' },
-              { id: 'email', nome: 'Email' },
-              { id: 'erp', nome: 'O seu ERP' },
-            ],
-            resumo: {
-              titulo: 'Hoje, 9h00',
-              linhas: [
-                { texto: '37 encomendas recebidas' },
-                { texto: '0 chamadas atendidas' },
-                { texto: 'todas prontas para carga' },
-              ],
-            },
-          },
-        },
-        {
-          id: 'exemplo-seguranca',
-          indice: 'Cópias de segurança e acessos',
-          rotulo: 'CÓPIAS DE SEGURANÇA E ACESSOS',
-          dor: 'Se o computador do escritório morrer hoje, o que é que se perde?',
-          explicacao: 'As cópias passam a fazer-se sozinhas e a ser verificadas, os acessos de quem sai são retirados no próprio dia, e todas as semanas recebe um resumo do que aconteceu.',
-          esquema: {
-            descricao: 'O servidor, os computadores, o email e a nuvem passam a ser acompanhados num sítio só e dão origem a um resumo semanal.',
-            origens: [
-              { id: 'servidor', nome: 'Servidor' },
-              { id: 'computadores', nome: 'Computadores' },
-              { id: 'email', nome: 'Email' },
-              { id: 'nuvem', nome: 'Nuvem' },
-            ],
-            resumo: {
-              titulo: 'Semana de 31/08 a 6/09',
-              linhas: [
-                { texto: '*7 de 7* cópias feitas e verificadas' },
-                { texto: '*1* acesso removido, saiu a 29/08' },
-                { texto: '*1* falha resolvida às *3h14*, sem ninguém dar por ela' },
-              ],
-            },
+            nota: '5 à espera de si',
           },
         },
         {
           id: 'exemplo-stock',
+          visual: 'discordancia',
           indice: 'Stock e compras',
           rotulo: 'STOCK E COMPRAS',
           dor: 'O stock do programa diz uma coisa e o armazém diz outra.',
           explicacao: 'O ERP, a loja e o portal da transportadora passam a falar entre si. As diferenças aparecem numa lista de manhã, em vez de aparecerem ao cliente na hora de entregar.',
-          esquema: {
-            descricao: 'O seu ERP, a loja online, o portal da transportadora e o Excel passam a falar entre si e dão origem a uma lista de divergências.',
-            origens: [
-              { id: 'erp', nome: 'O seu ERP' },
-              { id: 'loja', nome: 'Loja online' },
-              { id: 'transporte', nome: 'Transporte' },
-              { id: 'excel', nome: 'Excel' },
+          arte: {
+            descricao: 'Duas listas do mesmo stock, lado a lado, com duas linhas que não batem certo assinaladas.',
+            colunas: ['NO PROGRAMA', 'NA LOJA'],
+            // `bate` a falso é o que acende a cor de alerta, e é a única coisa
+            // que a acende neste bloco.
+            artigos: [
+              { ref: 'FIL-2240', esquerda: '84', direita: '84', bate: true },
+              { ref: 'COR-118', esquerda: '12', direita: '19', bate: false },
+              { ref: 'BAT-90A', esquerda: '7', direita: '7', bate: true },
+              { ref: 'JNT-04', esquerda: '40', direita: '36', bate: false },
             ],
-            resumo: {
+            cartao: {
               titulo: 'Hoje, 6h05',
               linhas: [
-                { texto: '5 487 referências verificadas' },
-                { texto: '12 divergências, 9 corrigidas sozinhas' },
-                { texto: '3 precisam de decisão' },
+                { numero: '5 487', texto: 'referências verificadas', proprioBloco: true },
+                { numero: '9', texto: 'corrigidas sozinhas' },
+                { numero: '3', texto: 'precisam de decisão', destaque: true },
               ],
             },
+            rodape: 'antes de o cliente dar por isso',
           },
         },
         {
           id: 'exemplo-numeros',
+          visual: 'margem',
           indice: 'Números do negócio',
           rotulo: 'NÚMEROS DO NEGÓCIO',
           dor: 'Só se sabe se o mês correu bem quando o contabilista fecha as contas.',
           explicacao: 'Os números que andam espalhados por quatro programas juntam-se num só e chegam por email na segunda de manhã. Ninguém refaz tabelas no fim do mês.',
-          esquema: {
-            descricao: 'O seu ERP, a faturação, a loja online e o Excel juntam-se num sítio só e dão origem a um resumo semanal por email.',
-            origens: [
-              { id: 'erp', nome: 'O seu ERP' },
-              { id: 'faturacao', nome: 'Faturação' },
-              { id: 'loja', nome: 'Loja online' },
-              { id: 'excel', nome: 'Excel' },
+          arte: {
+            descricao: 'Margem por artigo na semana 37: quatro artigos acima de zero e um abaixo.',
+            titulo: 'MARGEM POR ARTIGO, SEMANA 37',
+            zero: '0%',
+            // `valor` é o número que manda no comprimento da barra. Negativo
+            // atravessa para a esquerda do zero e acende a cor de alerta.
+            barras: [
+              { nome: 'Filtros', valor: 38, etiqueta: '38%' },
+              { nome: 'Correias', valor: 31, etiqueta: '31%' },
+              { nome: 'Baterias', valor: 22, etiqueta: '22%' },
+              { nome: 'Juntas', valor: 9, etiqueta: '9%' },
+              { nome: 'Óleos', valor: -7, etiqueta: '-7%' },
             ],
-            resumo: {
-              titulo: 'Semana 37',
-              linhas: [
-                { texto: 'margem média *21%*, menos *3 pontos* que a semana passada' },
-                { texto: '4 artigos a dar prejuízo' },
-                { texto: '3 clientes acima do plafond' },
-              ],
-            },
+            remate: 'Um artigo a dar prejuízo, e ninguém sabia.',
           },
         },
       ],
       convite: {
         frase: 'Não viu o seu caso? A maior parte do que fazemos parece-se com isto.',
-        botao: 'Falar connosco',
+        botao: 'Entre em contacto',
       },
       // A tira cresce quando houver capacidade real de integrar mais uma coisa,
       // não se enche à partida. Cada entrada leva `logo` quando o ficheiro
@@ -507,158 +459,102 @@ const translations = {
     exemplos: {
       rotulo: 'EXAMPLES',
       titulo: 'This is what we do, in practice',
-      subtitulo: 'Six situations that come up in almost every company. Each one shows what goes in, what gets brought together, and what starts arriving on its own.',
+      subtitulo: 'Four situations that come up in almost every company. Each one shows what goes in, what gets brought together, and what starts arriving on its own.',
       indiceTitulo: 'Jump to',
       blocos: [
         {
           id: 'exemplo-faturacao',
+          visual: 'papel',
           indice: 'Accounting and invoicing',
           rotulo: 'ACCOUNTING AND INVOICING',
           dor: 'Someone spends two mornings a month entering supplier invoices.',
-          explicacao: 'Invoices arrive by email, by WhatsApp and on paper, and all end up typed by hand into the same place. They start being read and entered on their own, and whatever really needs a human eye ends up on a short list.',
-          esquema: {
-            descricao: 'Invoices arriving by email, by WhatsApp, on paper and through your ERP come together in one place and produce the month end close.',
-            origens: [
-              { id: 'email', nome: 'Email' },
-              { id: 'whatsapp', nome: 'WhatsApp' },
-              { id: 'papel', nome: 'Paper' },
-              { id: 'erp', nome: 'Your ERP' },
+          explicacao: 'They arrive by email, by WhatsApp and on paper. They start being read and turned into data on their own, and whatever really needs a human eye ends up on a short list.',
+          arte: {
+            descricao: 'A stack of paper invoices turns into a table of data that is already filled in.',
+            papelEtiqueta: 'INVOICE',
+            papelLegenda: 'paper, PDF, photo',
+            colunas: ['SUPPLIER', 'DOC', 'AMOUNT'],
+            linhas: [
+              { fornecedor: 'Malhas do Ave', doc: 'FT 1184', valor: '1 240,00' },
+              { fornecedor: 'Tintex', doc: 'FT A/9042', valor: '418,60' },
+              { fornecedor: 'Fios e Cores', doc: 'FT 331', valor: '96,40' },
             ],
-            resumo: {
-              titulo: 'September close',
-              entrega: 'sent to the accountant on 1/10',
-              linhas: [
-                { texto: '214 invoices entered' },
-                { texto: '3 to review, supplier with no tax number' },
-                { texto: '*1* duplicate, already entered on 12/08' },
-              ],
-            },
+            porPreencher: 2,
+            resumo: { total: '214', totalTexto: 'entered in September,', rever: '3', reverTexto: 'to review' },
           },
         },
         {
-          id: 'exemplo-clientes',
-          indice: 'Customer replies',
-          rotulo: 'CUSTOMER REPLIES',
-          dor: 'The same five questions, every day, in three different places.',
-          explicacao: 'What arrives by email, by WhatsApp and through the website form is read, matched against the order, and the reply is written and waiting for one click. Nothing goes out without someone approving it.',
-          esquema: {
-            descricao: 'Messages arriving by email, by WhatsApp, through the website form and through your ERP come together in one place and produce replies that are already written.',
-            origens: [
-              { id: 'email', nome: 'Email' },
-              { id: 'whatsapp', nome: 'WhatsApp' },
-              { id: 'formulario', nome: 'Form' },
-              { id: 'erp', nome: 'Your ERP' },
+          id: 'exemplo-pedidos',
+          visual: 'conversa',
+          indice: 'Customer requests',
+          rotulo: 'CUSTOMER REQUESTS',
+          dor: 'The same five questions every day, and orders written down on a piece of paper.',
+          explicacao: 'What arrives by email, by WhatsApp and through the form is read, matched against the order, and the reply is written and waiting for one click. Nothing goes out without someone approving it.',
+          arte: {
+            descricao: 'A customer question and the reply already written, waiting for approval, next to what the day brought in.',
+            pergunta: 'Good afternoon, my order 4471 still has not arrived.',
+            perguntaOrigem: 'customer, WhatsApp, 14:02',
+            resposta: 'It left the warehouse yesterday at 17:20, delivery expected tomorrow, the 10th.',
+            selo: 'waiting for approval',
+            contadores: [
+              { numero: '34', legenda: 'messages handled today' },
+              { numero: '0', legenda: 'calls answered', realce: true },
             ],
-            resumo: {
-              titulo: 'Today, 18:00',
-              linhas: [
-                { texto: '34 messages handled' },
-                { texto: '5 waiting on you' },
-                { texto: 'replies in *6 minutes*, on average' },
-              ],
-            },
-          },
-        },
-        {
-          id: 'exemplo-encomendas',
-          indice: 'Orders and requests',
-          rotulo: 'ORDERS AND REQUESTS',
-          dor: 'Orders come in by phone and get written down on a piece of paper.',
-          explicacao: 'Customers order on their own, through a portal with the price list of the day already in it. The order goes straight into picking, with nobody copying anything, and the phone stops ringing for this.',
-          esquema: {
-            descricao: 'Orders arriving through the portal, by WhatsApp, by email and through your ERP come together in one place and go straight into picking.',
-            origens: [
-              { id: 'portal', nome: 'Portal' },
-              { id: 'whatsapp', nome: 'WhatsApp' },
-              { id: 'email', nome: 'Email' },
-              { id: 'erp', nome: 'Your ERP' },
-            ],
-            resumo: {
-              titulo: 'Today, 9:00',
-              linhas: [
-                { texto: '37 orders received' },
-                { texto: '0 calls answered' },
-                { texto: 'all ready for loading' },
-              ],
-            },
-          },
-        },
-        {
-          id: 'exemplo-seguranca',
-          indice: 'Backups and access',
-          rotulo: 'BACKUPS AND ACCESS',
-          dor: 'If the office computer dies today, what is lost?',
-          explicacao: 'Backups start running and being checked on their own, access for people who leave is removed the same day, and every week you get a summary of what happened.',
-          esquema: {
-            descricao: 'The server, the computers, email and the cloud are watched from one place and produce a weekly summary.',
-            origens: [
-              { id: 'servidor', nome: 'Server' },
-              { id: 'computadores', nome: 'Computers' },
-              { id: 'email', nome: 'Email' },
-              { id: 'nuvem', nome: 'Cloud' },
-            ],
-            resumo: {
-              titulo: 'Week of 31/08 to 6/09',
-              linhas: [
-                { texto: '*7 of 7* backups made and checked' },
-                { texto: '*1* access removed, left on 29/08' },
-                { texto: '*1* failure resolved at *3:14*, with nobody noticing' },
-              ],
-            },
+            nota: '5 waiting on you',
           },
         },
         {
           id: 'exemplo-stock',
+          visual: 'discordancia',
           indice: 'Stock and purchasing',
           rotulo: 'STOCK AND PURCHASING',
           dor: 'The stock in the system says one thing and the warehouse says another.',
           explicacao: 'The ERP, the shop and the carrier portal start talking to each other. Differences show up on a list in the morning, instead of showing up to the customer at delivery time.',
-          esquema: {
-            descricao: 'Your ERP, the online shop, the carrier portal and Excel start talking to each other and produce a list of discrepancies.',
-            origens: [
-              { id: 'erp', nome: 'Your ERP' },
-              { id: 'loja', nome: 'Online shop' },
-              { id: 'transporte', nome: 'Carrier' },
-              { id: 'excel', nome: 'Excel' },
+          arte: {
+            descricao: 'Two lists of the same stock, side by side, with two lines that do not match flagged.',
+            colunas: ['IN THE SYSTEM', 'IN THE SHOP'],
+            artigos: [
+              { ref: 'FIL-2240', esquerda: '84', direita: '84', bate: true },
+              { ref: 'COR-118', esquerda: '12', direita: '19', bate: false },
+              { ref: 'BAT-90A', esquerda: '7', direita: '7', bate: true },
+              { ref: 'JNT-04', esquerda: '40', direita: '36', bate: false },
             ],
-            resumo: {
+            cartao: {
               titulo: 'Today, 6:05',
               linhas: [
-                { texto: '5 487 references checked' },
-                { texto: '12 discrepancies, 9 corrected on their own' },
-                { texto: '3 need a decision' },
+                { numero: '5 487', texto: 'references checked', proprioBloco: true },
+                { numero: '9', texto: 'corrected on their own' },
+                { numero: '3', texto: 'need a decision', destaque: true },
               ],
             },
+            rodape: 'before the customer notices',
           },
         },
         {
           id: 'exemplo-numeros',
+          visual: 'margem',
           indice: 'Business numbers',
           rotulo: 'BUSINESS NUMBERS',
           dor: 'You only know whether the month went well once the accountant closes the books.',
           explicacao: 'The numbers scattered across four systems come together in one place and arrive by email on Monday morning. Nobody rebuilds spreadsheets at the end of the month.',
-          esquema: {
-            descricao: 'Your ERP, invoicing, the online shop and Excel come together in one place and produce a weekly summary by email.',
-            origens: [
-              { id: 'erp', nome: 'Your ERP' },
-              { id: 'faturacao', nome: 'Invoicing' },
-              { id: 'loja', nome: 'Online shop' },
-              { id: 'excel', nome: 'Excel' },
+          arte: {
+            descricao: 'Margin per product in week 37: four products above zero and one below.',
+            titulo: 'MARGIN PER PRODUCT, WEEK 37',
+            zero: '0%',
+            barras: [
+              { nome: 'Filters', valor: 38, etiqueta: '38%' },
+              { nome: 'Belts', valor: 31, etiqueta: '31%' },
+              { nome: 'Batteries', valor: 22, etiqueta: '22%' },
+              { nome: 'Gaskets', valor: 9, etiqueta: '9%' },
+              { nome: 'Oils', valor: -7, etiqueta: '-7%' },
             ],
-            resumo: {
-              titulo: 'Week 37',
-              linhas: [
-                { texto: 'average margin *21%*, *3 points* below last week' },
-                { texto: '4 products losing money' },
-                { texto: '3 customers over their credit limit' },
-              ],
-            },
+            remate: 'One product losing money, and nobody knew.',
           },
         },
       ],
       convite: {
         frase: 'Not seeing your situation? Most of what we do looks like this.',
-        botao: 'Talk to us',
+        botao: 'Get in touch',
       },
       tira: {
         texto: 'We integrate with',

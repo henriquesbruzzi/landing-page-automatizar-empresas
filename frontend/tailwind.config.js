@@ -31,6 +31,14 @@ module.exports = {
           vivo: '#1595DC',     // acentos
           claro: '#4FA3DC',    // apoio, linhas, setas
         },
+        // Cor de alerta. Entra só onde alguma coisa está mal: as duas linhas
+        // que não batem certo no exemplo do stock, e o artigo a dar prejuízo
+        // no da margem. Se aparecer em mais algum sítio, está a mentir.
+        alerta: {
+          DEFAULT: '#C2410C', // 5,16 para 1 sobre branco
+          fundo: '#FFF4EE',   // preenchimento da linha assinalada
+          linha: '#F0C9B3',   // contorno da linha assinalada
+        },
         neve: '#F4F7FB',  // fundos suaves e faixas
         linha: '#DCE5EF', // contornos e separadores
         texto: '#42506A', // texto corrido
