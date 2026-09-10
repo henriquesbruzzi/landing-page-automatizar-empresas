@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
-import { pedirDestaque } from '../utils/destaqueServico';
 import Entrada from './Entrada';
 
 // Espera entre as quatro colunas, para entrarem em cadeia
@@ -134,15 +133,14 @@ function Footer() {
               {f.services.title}
             </h4>
             <ul className="space-y-3">
-              {f.services.items.map((servico) => (
-                <li key={servico.id}>
+              {t.exemplos.blocos.map((bloco) => (
+                <li key={bloco.id}>
                   <a
-                    href={`#${servico.id}`}
-                    onClick={() => pedirDestaque(servico.id)}
+                    href={`#${bloco.id}`}
                     className="text-texto text-sm hover:text-azul-medio transition-colors duration-300 flex items-center gap-2 group"
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-azul-claro group-hover:bg-azul-medio transition-colors duration-300"></span>
-                    {servico.label}
+                    {bloco.indice}
                   </a>
                 </li>
               ))}

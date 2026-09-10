@@ -2,7 +2,7 @@ const translations = {
   pt: {
     nav: {
       home: 'HOME',
-      services: 'SERVIÇOS',
+      services: 'EXEMPLOS DE SERVIÇOS',
       about: 'SOBRE',
       faq: 'FAQ',
       contact: 'CONTACTO',
@@ -46,6 +46,185 @@ const translations = {
           ],
           rodape: 'agende este resumo ao seu gosto',
         },
+      },
+    },
+    exemplos: {
+      rotulo: 'EXEMPLOS',
+      titulo: 'Isto é o que fazemos, em concreto',
+      subtitulo: 'Seis situações que se repetem em quase todas as empresas. Cada uma mostra o que entra, o que se junta, e o que passa a chegar sozinho.',
+      indiceTitulo: 'Saltar para',
+      // A ORDEM é deliberada: o mais forte abre, o mais forte fecha, o mais
+      // fraco fica ao meio. O índice segue esta mesma ordem, sozinho.
+      blocos: [
+        {
+          id: 'exemplo-faturacao',
+          indice: 'Contabilidade e faturação',
+          rotulo: 'CONTABILIDADE E FATURAÇÃO',
+          dor: 'Alguém passa duas manhãs por mês a lançar faturas de fornecedor.',
+          explicacao: 'As faturas chegam por email, por WhatsApp e em papel, e acabam todas escritas à mão no mesmo sítio. Passam a ser lidas e lançadas sozinhas, e o que precisa mesmo de olhos fica numa lista curta.',
+          esquema: {
+            descricao: 'Faturas que chegam por email, por WhatsApp, em papel e pelo seu ERP juntam-se num sítio só e dão origem ao fecho do mês.',
+            origens: [
+              { id: 'email', nome: 'Email' },
+              { id: 'whatsapp', nome: 'WhatsApp' },
+              { id: 'papel', nome: 'Papel' },
+              { id: 'erp', nome: 'O seu ERP' },
+            ],
+            resumo: {
+              titulo: 'Fecho de setembro',
+              entrega: 'enviado ao contabilista a 1/10',
+              linhas: [
+                { texto: '214 faturas lançadas' },
+                { texto: '3 por rever, fornecedor sem NIF' },
+                // O "12/08" fica sem peso de propósito: a data não é o número
+                // que interessa. Marcar o "1" à mão desliga a procura no resto
+                // da linha, senão a data saía em negrito e partida ao meio.
+                { texto: '*1* repetida, já lançada a 12/08' },
+              ],
+            },
+          },
+        },
+        {
+          id: 'exemplo-clientes',
+          indice: 'Resposta a clientes',
+          rotulo: 'RESPOSTA A CLIENTES',
+          dor: 'As mesmas cinco perguntas, todos os dias, em três sítios diferentes.',
+          explicacao: 'O que chega por email, por WhatsApp e pelo formulário do site é lido, cruzado com a encomenda, e a resposta fica escrita à espera de um clique. Nada sai sem alguém aprovar.',
+          esquema: {
+            descricao: 'Mensagens que chegam por email, por WhatsApp, pelo formulário do site e pelo seu ERP juntam-se num sítio só e dão origem a respostas já escritas.',
+            origens: [
+              { id: 'email', nome: 'Email' },
+              { id: 'whatsapp', nome: 'WhatsApp' },
+              { id: 'formulario', nome: 'Formulário' },
+              { id: 'erp', nome: 'O seu ERP' },
+            ],
+            resumo: {
+              titulo: 'Hoje, 18h00',
+              linhas: [
+                { texto: '34 mensagens tratadas' },
+                { texto: '5 à espera de si' },
+                { texto: 'resposta em *6 minutos*, em média' },
+              ],
+            },
+          },
+        },
+        {
+          id: 'exemplo-encomendas',
+          indice: 'Encomendas e pedidos',
+          rotulo: 'ENCOMENDAS E PEDIDOS',
+          dor: 'As encomendas entram por telefone e ficam anotadas num papel.',
+          explicacao: 'O cliente passa a encomendar sozinho, num portal com a tabela do dia já lá dentro. A encomenda entra direta na preparação, sem ninguém copiar nada, e o telefone deixa de tocar para isto.',
+          esquema: {
+            descricao: 'Encomendas que chegam pelo portal, por WhatsApp, por email e pelo seu ERP juntam-se num sítio só e entram diretas na preparação.',
+            origens: [
+              { id: 'portal', nome: 'Portal' },
+              { id: 'whatsapp', nome: 'WhatsApp' },
+              { id: 'email', nome: 'Email' },
+              { id: 'erp', nome: 'O seu ERP' },
+            ],
+            resumo: {
+              titulo: 'Hoje, 9h00',
+              linhas: [
+                { texto: '37 encomendas recebidas' },
+                { texto: '0 chamadas atendidas' },
+                { texto: 'todas prontas para carga' },
+              ],
+            },
+          },
+        },
+        {
+          id: 'exemplo-seguranca',
+          indice: 'Cópias de segurança e acessos',
+          rotulo: 'CÓPIAS DE SEGURANÇA E ACESSOS',
+          dor: 'Se o computador do escritório morrer hoje, o que é que se perde?',
+          explicacao: 'As cópias passam a fazer-se sozinhas e a ser verificadas, os acessos de quem sai são retirados no próprio dia, e todas as semanas recebe um resumo do que aconteceu.',
+          esquema: {
+            descricao: 'O servidor, os computadores, o email e a nuvem passam a ser acompanhados num sítio só e dão origem a um resumo semanal.',
+            origens: [
+              { id: 'servidor', nome: 'Servidor' },
+              { id: 'computadores', nome: 'Computadores' },
+              { id: 'email', nome: 'Email' },
+              { id: 'nuvem', nome: 'Nuvem' },
+            ],
+            resumo: {
+              titulo: 'Semana de 31/08 a 6/09',
+              linhas: [
+                { texto: '*7 de 7* cópias feitas e verificadas' },
+                { texto: '*1* acesso removido, saiu a 29/08' },
+                { texto: '*1* falha resolvida às *3h14*, sem ninguém dar por ela' },
+              ],
+            },
+          },
+        },
+        {
+          id: 'exemplo-stock',
+          indice: 'Stock e compras',
+          rotulo: 'STOCK E COMPRAS',
+          dor: 'O stock do programa diz uma coisa e o armazém diz outra.',
+          explicacao: 'O ERP, a loja e o portal da transportadora passam a falar entre si. As diferenças aparecem numa lista de manhã, em vez de aparecerem ao cliente na hora de entregar.',
+          esquema: {
+            descricao: 'O seu ERP, a loja online, o portal da transportadora e o Excel passam a falar entre si e dão origem a uma lista de divergências.',
+            origens: [
+              { id: 'erp', nome: 'O seu ERP' },
+              { id: 'loja', nome: 'Loja online' },
+              { id: 'transporte', nome: 'Transporte' },
+              { id: 'excel', nome: 'Excel' },
+            ],
+            resumo: {
+              titulo: 'Hoje, 6h05',
+              linhas: [
+                { texto: '5 487 referências verificadas' },
+                { texto: '12 divergências, 9 corrigidas sozinhas' },
+                { texto: '3 precisam de decisão' },
+              ],
+            },
+          },
+        },
+        {
+          id: 'exemplo-numeros',
+          indice: 'Números do negócio',
+          rotulo: 'NÚMEROS DO NEGÓCIO',
+          dor: 'Só se sabe se o mês correu bem quando o contabilista fecha as contas.',
+          explicacao: 'Os números que andam espalhados por quatro programas juntam-se num só e chegam por email na segunda de manhã. Ninguém refaz tabelas no fim do mês.',
+          esquema: {
+            descricao: 'O seu ERP, a faturação, a loja online e o Excel juntam-se num sítio só e dão origem a um resumo semanal por email.',
+            origens: [
+              { id: 'erp', nome: 'O seu ERP' },
+              { id: 'faturacao', nome: 'Faturação' },
+              { id: 'loja', nome: 'Loja online' },
+              { id: 'excel', nome: 'Excel' },
+            ],
+            resumo: {
+              titulo: 'Semana 37',
+              linhas: [
+                { texto: 'margem média *21%*, menos *3 pontos* que a semana passada' },
+                { texto: '4 artigos a dar prejuízo' },
+                { texto: '3 clientes acima do plafond' },
+              ],
+            },
+          },
+        },
+      ],
+      convite: {
+        frase: 'Não viu o seu caso? A maior parte do que fazemos parece-se com isto.',
+        botao: 'Falar connosco',
+      },
+      // A tira cresce quando houver capacidade real de integrar mais uma coisa,
+      // não se enche à partida. Cada entrada leva `logo` quando o ficheiro
+      // existir, e passa a imagem sem a tira ser refeita.
+      tira: {
+        texto: 'Fazemos integrações com',
+        ferramentas: [
+          { id: 'gmail', nome: 'Gmail' },
+          { id: 'outlook', nome: 'Outlook' },
+          { id: 'excel', nome: 'Excel' },
+          { id: 'google-sheets', nome: 'Google Sheets' },
+          { id: 'primavera', nome: 'Cegid Primavera' },
+          { id: 'moloni', nome: 'Moloni' },
+          { id: 'invoicexpress', nome: 'InvoiceXpress' },
+          { id: 'shopify', nome: 'Shopify' },
+          { id: 'woocommerce', nome: 'WooCommerce' },
+        ],
       },
     },
     services: {
@@ -255,9 +434,9 @@ const translations = {
         title: 'Links Rápidos',
         items: [
           { label: 'Home', href: '#home' },
-          { label: 'Serviços', href: '#servicos' },
+          { label: 'Exemplos', href: '#exemplos' },
           { label: 'Como trabalhamos', href: '#processo' },
-          { label: 'Sobre', href: '#sobre' },
+          { label: 'Sobre', href: '/sobre' },
         ],
       },
       legalLinks: [
@@ -266,16 +445,6 @@ const translations = {
       ],
       services: {
         title: 'Serviços',
-        // Nomes curtos dos cartões da secção de serviços, pela mesma ordem.
-        // O id aponta ao cartão respetivo e acende-o à chegada.
-        items: [
-          { id: 'servico-automacao', label: 'Automação administrativa' },
-          { id: 'servico-sistemas', label: 'Sistemas e integrações' },
-          { id: 'servico-ia', label: 'Inteligência artificial' },
-          { id: 'servico-web', label: 'Sites e canais' },
-          { id: 'servico-dados', label: 'Dados e relatórios' },
-          { id: 'servico-seguranca', label: 'Segurança, cloud e apoio' },
-        ],
       },
       social: {
         title: 'Redes Sociais',
@@ -297,7 +466,7 @@ const translations = {
   en: {
     nav: {
       home: 'HOME',
-      services: 'SERVICES',
+      services: 'SERVICE EXAMPLES',
       about: 'ABOUT',
       faq: 'FAQ',
       contact: 'CONTACT',
@@ -333,6 +502,177 @@ const translations = {
           ],
           rodape: 'schedule this summary to suit you',
         },
+      },
+    },
+    exemplos: {
+      rotulo: 'EXAMPLES',
+      titulo: 'This is what we do, in practice',
+      subtitulo: 'Six situations that come up in almost every company. Each one shows what goes in, what gets brought together, and what starts arriving on its own.',
+      indiceTitulo: 'Jump to',
+      blocos: [
+        {
+          id: 'exemplo-faturacao',
+          indice: 'Accounting and invoicing',
+          rotulo: 'ACCOUNTING AND INVOICING',
+          dor: 'Someone spends two mornings a month entering supplier invoices.',
+          explicacao: 'Invoices arrive by email, by WhatsApp and on paper, and all end up typed by hand into the same place. They start being read and entered on their own, and whatever really needs a human eye ends up on a short list.',
+          esquema: {
+            descricao: 'Invoices arriving by email, by WhatsApp, on paper and through your ERP come together in one place and produce the month end close.',
+            origens: [
+              { id: 'email', nome: 'Email' },
+              { id: 'whatsapp', nome: 'WhatsApp' },
+              { id: 'papel', nome: 'Paper' },
+              { id: 'erp', nome: 'Your ERP' },
+            ],
+            resumo: {
+              titulo: 'September close',
+              entrega: 'sent to the accountant on 1/10',
+              linhas: [
+                { texto: '214 invoices entered' },
+                { texto: '3 to review, supplier with no tax number' },
+                { texto: '*1* duplicate, already entered on 12/08' },
+              ],
+            },
+          },
+        },
+        {
+          id: 'exemplo-clientes',
+          indice: 'Customer replies',
+          rotulo: 'CUSTOMER REPLIES',
+          dor: 'The same five questions, every day, in three different places.',
+          explicacao: 'What arrives by email, by WhatsApp and through the website form is read, matched against the order, and the reply is written and waiting for one click. Nothing goes out without someone approving it.',
+          esquema: {
+            descricao: 'Messages arriving by email, by WhatsApp, through the website form and through your ERP come together in one place and produce replies that are already written.',
+            origens: [
+              { id: 'email', nome: 'Email' },
+              { id: 'whatsapp', nome: 'WhatsApp' },
+              { id: 'formulario', nome: 'Form' },
+              { id: 'erp', nome: 'Your ERP' },
+            ],
+            resumo: {
+              titulo: 'Today, 18:00',
+              linhas: [
+                { texto: '34 messages handled' },
+                { texto: '5 waiting on you' },
+                { texto: 'replies in *6 minutes*, on average' },
+              ],
+            },
+          },
+        },
+        {
+          id: 'exemplo-encomendas',
+          indice: 'Orders and requests',
+          rotulo: 'ORDERS AND REQUESTS',
+          dor: 'Orders come in by phone and get written down on a piece of paper.',
+          explicacao: 'Customers order on their own, through a portal with the price list of the day already in it. The order goes straight into picking, with nobody copying anything, and the phone stops ringing for this.',
+          esquema: {
+            descricao: 'Orders arriving through the portal, by WhatsApp, by email and through your ERP come together in one place and go straight into picking.',
+            origens: [
+              { id: 'portal', nome: 'Portal' },
+              { id: 'whatsapp', nome: 'WhatsApp' },
+              { id: 'email', nome: 'Email' },
+              { id: 'erp', nome: 'Your ERP' },
+            ],
+            resumo: {
+              titulo: 'Today, 9:00',
+              linhas: [
+                { texto: '37 orders received' },
+                { texto: '0 calls answered' },
+                { texto: 'all ready for loading' },
+              ],
+            },
+          },
+        },
+        {
+          id: 'exemplo-seguranca',
+          indice: 'Backups and access',
+          rotulo: 'BACKUPS AND ACCESS',
+          dor: 'If the office computer dies today, what is lost?',
+          explicacao: 'Backups start running and being checked on their own, access for people who leave is removed the same day, and every week you get a summary of what happened.',
+          esquema: {
+            descricao: 'The server, the computers, email and the cloud are watched from one place and produce a weekly summary.',
+            origens: [
+              { id: 'servidor', nome: 'Server' },
+              { id: 'computadores', nome: 'Computers' },
+              { id: 'email', nome: 'Email' },
+              { id: 'nuvem', nome: 'Cloud' },
+            ],
+            resumo: {
+              titulo: 'Week of 31/08 to 6/09',
+              linhas: [
+                { texto: '*7 of 7* backups made and checked' },
+                { texto: '*1* access removed, left on 29/08' },
+                { texto: '*1* failure resolved at *3:14*, with nobody noticing' },
+              ],
+            },
+          },
+        },
+        {
+          id: 'exemplo-stock',
+          indice: 'Stock and purchasing',
+          rotulo: 'STOCK AND PURCHASING',
+          dor: 'The stock in the system says one thing and the warehouse says another.',
+          explicacao: 'The ERP, the shop and the carrier portal start talking to each other. Differences show up on a list in the morning, instead of showing up to the customer at delivery time.',
+          esquema: {
+            descricao: 'Your ERP, the online shop, the carrier portal and Excel start talking to each other and produce a list of discrepancies.',
+            origens: [
+              { id: 'erp', nome: 'Your ERP' },
+              { id: 'loja', nome: 'Online shop' },
+              { id: 'transporte', nome: 'Carrier' },
+              { id: 'excel', nome: 'Excel' },
+            ],
+            resumo: {
+              titulo: 'Today, 6:05',
+              linhas: [
+                { texto: '5 487 references checked' },
+                { texto: '12 discrepancies, 9 corrected on their own' },
+                { texto: '3 need a decision' },
+              ],
+            },
+          },
+        },
+        {
+          id: 'exemplo-numeros',
+          indice: 'Business numbers',
+          rotulo: 'BUSINESS NUMBERS',
+          dor: 'You only know whether the month went well once the accountant closes the books.',
+          explicacao: 'The numbers scattered across four systems come together in one place and arrive by email on Monday morning. Nobody rebuilds spreadsheets at the end of the month.',
+          esquema: {
+            descricao: 'Your ERP, invoicing, the online shop and Excel come together in one place and produce a weekly summary by email.',
+            origens: [
+              { id: 'erp', nome: 'Your ERP' },
+              { id: 'faturacao', nome: 'Invoicing' },
+              { id: 'loja', nome: 'Online shop' },
+              { id: 'excel', nome: 'Excel' },
+            ],
+            resumo: {
+              titulo: 'Week 37',
+              linhas: [
+                { texto: 'average margin *21%*, *3 points* below last week' },
+                { texto: '4 products losing money' },
+                { texto: '3 customers over their credit limit' },
+              ],
+            },
+          },
+        },
+      ],
+      convite: {
+        frase: 'Not seeing your situation? Most of what we do looks like this.',
+        botao: 'Talk to us',
+      },
+      tira: {
+        texto: 'We integrate with',
+        ferramentas: [
+          { id: 'gmail', nome: 'Gmail' },
+          { id: 'outlook', nome: 'Outlook' },
+          { id: 'excel', nome: 'Excel' },
+          { id: 'google-sheets', nome: 'Google Sheets' },
+          { id: 'primavera', nome: 'Cegid Primavera' },
+          { id: 'moloni', nome: 'Moloni' },
+          { id: 'invoicexpress', nome: 'InvoiceXpress' },
+          { id: 'shopify', nome: 'Shopify' },
+          { id: 'woocommerce', nome: 'WooCommerce' },
+        ],
       },
     },
     services: {
@@ -542,9 +882,9 @@ const translations = {
         title: 'Quick Links',
         items: [
           { label: 'Home', href: '#home' },
-          { label: 'Services', href: '#servicos' },
+          { label: 'Examples', href: '#exemplos' },
           { label: 'How we work', href: '#processo' },
-          { label: 'About', href: '#sobre' },
+          { label: 'About', href: '/us/about' },
         ],
       },
       legalLinks: [
@@ -553,14 +893,6 @@ const translations = {
       ],
       services: {
         title: 'Services',
-        items: [
-          { id: 'servico-automacao', label: 'Administrative automation' },
-          { id: 'servico-sistemas', label: 'Systems and integrations' },
-          { id: 'servico-ia', label: 'Artificial intelligence' },
-          { id: 'servico-web', label: 'Websites and channels' },
-          { id: 'servico-dados', label: 'Data and reporting' },
-          { id: 'servico-seguranca', label: 'Security, cloud and support' },
-        ],
       },
       social: {
         title: 'Social Media',

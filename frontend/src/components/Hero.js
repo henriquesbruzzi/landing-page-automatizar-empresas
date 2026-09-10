@@ -68,10 +68,8 @@ function Hero() {
   const entrada = classesEntrada(isTypingDone, semAnimacao);
   const atraso = (ms) => atrasoEntrada(ms, isTypingDone, semAnimacao);
 
-  // TEMPORARIO. "Ver exemplos" aponta aos Serviços porque ainda não há secção
-  // de exemplos. Quando ela existir, é para lá que este botão passa a levar.
-  const irParaServicos = () => {
-    const alvo = document.getElementById('servicos');
+  const irParaExemplos = () => {
+    const alvo = document.getElementById('exemplos');
     if (alvo) alvo.scrollIntoView({ behavior: semAnimacao ? 'auto' : 'smooth' });
   };
 
@@ -133,7 +131,7 @@ function Hero() {
               </button>
 
               <button
-                onClick={irParaServicos}
+                onClick={irParaExemplos}
                 className="border-b-2 border-azul-claro pb-1 text-sm font-semibold text-azul-medio transition-colors duration-300 hover:border-azul-medio sm:text-base"
               >
                 {t.hero.ctaSecundario}
@@ -143,7 +141,7 @@ function Hero() {
 
           {/* ---------------- direita: esquema de integrações ------------------ */}
           <div className={entrada} style={atraso(ATRASO_ESQUEMA)}>
-            <EsquemaIntegracoes />
+            <EsquemaIntegracoes esquema={t.hero.esquema} />
           </div>
         </div>
       </div>

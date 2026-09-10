@@ -1,8 +1,11 @@
 import React, { useId } from 'react';
-import { useLanguage } from '../i18n/LanguageContext';
 
 /**
- * Esquema de integrações do hero.
+ * Esquema de integrações.
+ *
+ * Serve o hero e os seis blocos da secção de exemplos. Recebe os dados por
+ * `esquema` e não os vai buscar a lado nenhum: é o mesmo desenho com outro
+ * conteúdo, e não sete componentes parecidos.
  *
  * Lê-se como uma frase, da esquerda para a direita: isto tudo entra, junta-se
  * aqui, e sai isto.
@@ -53,7 +56,7 @@ const medidasFila = (n) => (n > 4 ? FILA.de5 : FILA.ate4);
 /** Largura que a fila ocupa, e é também a do SVG do leque. */
 const larguraFila = (n, m) => n * m.peca + (n - 1) * m.espaco;
 
-const alturaColuna = (m) => m.altura * 4 + m.espaco * 3;
+const alturaColuna = (m, n) => m.altura * n + m.espaco * (n - 1);
 const centroCaixa = (m, i) => m.altura / 2 + i * (m.altura + m.espaco);
 
 /* ---------------------------------------------------------------- símbolos */
@@ -102,11 +105,102 @@ function IconeBalao() {
   );
 }
 
+function IconePapel() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
+      <path d="M6 3h8l4 4v14H6z" {...tracos} />
+      <path d="M14 3v4h4M9 12h6M9 16h4" {...tracos} />
+    </svg>
+  );
+}
+
+function IconeFormulario() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
+      <rect x="4" y="3.5" width="16" height="17" rx="2" {...tracos} />
+      <path d="M8 8.5h8M8 12.5h8M8 16.5h4" {...tracos} />
+    </svg>
+  );
+}
+
+function IconePortal() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
+      <rect x="3" y="4.5" width="18" height="15" rx="2" {...tracos} />
+      <path d="M3 9h18M6.5 6.75h.01M9 6.75h.01" {...tracos} />
+    </svg>
+  );
+}
+
+function IconeServidor() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
+      <rect x="3.5" y="4" width="17" height="6.5" rx="1.5" {...tracos} />
+      <rect x="3.5" y="13.5" width="17" height="6.5" rx="1.5" {...tracos} />
+      <path d="M7 7.25h.01M7 16.75h.01" {...tracos} />
+    </svg>
+  );
+}
+
+function IconeComputadores() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
+      <rect x="2.5" y="5" width="14" height="10" rx="1.5" {...tracos} />
+      <path d="M6.5 18.5h6M9.5 15v3.5" {...tracos} />
+      <rect x="17" y="10" width="4.5" height="9" rx="1.2" {...tracos} />
+    </svg>
+  );
+}
+
+function IconeNuvem() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
+      <path d="M7 18.5a4 4 0 0 1-.3-8A5.5 5.5 0 0 1 17.4 9.6 3.8 3.8 0 0 1 17 18.5z" {...tracos} />
+    </svg>
+  );
+}
+
+function IconeLoja() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
+      <path d="M4 9.5h16v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z" {...tracos} />
+      <path d="M4.5 9.5 6 4h12l1.5 5.5M9.5 13.5h5" {...tracos} />
+    </svg>
+  );
+}
+
+function IconeTransporte() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
+      <path d="M2.5 6.5h11v9h-11zM13.5 10h4l3 3v2.5h-7z" {...tracos} />
+      <path d="M7 18a1.6 1.6 0 1 0 0-3.2A1.6 1.6 0 0 0 7 18zM17.5 18a1.6 1.6 0 1 0 0-3.2 1.6 1.6 0 0 0 0 3.2z" {...tracos} />
+    </svg>
+  );
+}
+
+function IconeFaturacao() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
+      <path d="M5.5 3.5h13v17l-2.2-1.5-2.1 1.5-2.2-1.5L9.8 20.5 7.7 19l-2.2 1.5z" {...tracos} />
+      <path d="M9 8.5h6M9 12h6" {...tracos} />
+    </svg>
+  );
+}
+
 const SIMBOLOS = {
   email: IconeEnvelope,
   excel: IconeFolha,
   erp: IconeCaixa,
   whatsapp: IconeBalao,
+  papel: IconePapel,
+  formulario: IconeFormulario,
+  portal: IconePortal,
+  servidor: IconeServidor,
+  computadores: IconeComputadores,
+  nuvem: IconeNuvem,
+  loja: IconeLoja,
+  transporte: IconeTransporte,
+  faturacao: IconeFaturacao,
 };
 
 /* ------------------------------------------------------------------ peças */
@@ -170,9 +264,9 @@ function usePontas() {
 }
 
 /** Quatro curvas que saem do meio de cada caixa e convergem no núcleo. */
-function SetasConvergentes({ largura = 76 }) {
+function SetasConvergentes({ n, largura = 76 }) {
   const { defs, clara } = usePontas();
-  const h = alturaColuna(LG);
+  const h = alturaColuna(LG, n);
   const destino = { x: largura - 4, y: h / 2 };
   return (
     <svg
@@ -184,7 +278,7 @@ function SetasConvergentes({ largura = 76 }) {
       focusable="false"
     >
       {defs}
-      {[0, 1, 2, 3].map((i) => {
+      {Array.from({ length: n }, (_, i) => {
         const y = centroCaixa(LG, i);
         // Sai na horizontal da caixa e só depois curva, para se ver de onde vem
         const c1 = { x: largura * 0.46, y };
@@ -348,25 +442,32 @@ function Forte({ cor, children }) {
 }
 
 function comNumeros(texto, corNumero) {
-  // split com grupo de captura devolve o que está entre asteriscos nos índices
-  // ímpares. Esses saem realçados inteiros; no resto procuram-se os números.
-  return texto.split(REALCE).map((pedaco, i) =>
-    i % 2 === 1 ? (
-      <Forte key={i} cor={corNumero}>
-        {pedaco}
+  // Quem marca, manda. Se a linha traz asteriscos, só o que está marcado leva
+  // peso e o resto fica quieto. É a única forma de escrever "1 repetida, já
+  // lançada a 12/08" com o 1 em negrito e a data não: a procura automática
+  // não sabe distinguir um número que interessa de uma data que não interessa,
+  // e ainda partia o "12/08" em dois pedaços.
+  if (REALCE.test(texto)) {
+    REALCE.lastIndex = 0;
+    return texto.split(REALCE).map((pedaco, i) =>
+      i % 2 === 1 ? (
+        <Forte key={i} cor={corNumero}>
+          {pedaco}
+        </Forte>
+      ) : (
+        <React.Fragment key={i}>{pedaco}</React.Fragment>
+      )
+    );
+  }
+
+  // Sem marcas, procuram-se os números
+  return texto.split(PARTIR).map((parte, j) =>
+    SO_NUMERO.test(parte) ? (
+      <Forte key={j} cor={corNumero}>
+        {parte}
       </Forte>
     ) : (
-      <React.Fragment key={i}>
-        {pedaco.split(PARTIR).map((parte, j) =>
-          SO_NUMERO.test(parte) ? (
-            <Forte key={j} cor={corNumero}>
-              {parte}
-            </Forte>
-          ) : (
-            <React.Fragment key={j}>{parte}</React.Fragment>
-          )
-        )}
-      </React.Fragment>
+      <React.Fragment key={j}>{parte}</React.Fragment>
     )
   );
 }
@@ -377,7 +478,11 @@ function Cartao({ resumo }) {
       <div className="overflow-hidden rounded-xl border border-linha bg-white shadow-azul-lg">
         <div className="bg-azul-profundo px-5 py-3.5">
           <p className="font-sans text-sm font-semibold leading-snug text-white">{resumo.titulo}</p>
-          <p className="mt-0.5 font-sans text-xs leading-snug text-white/80">{resumo.entrega}</p>
+          {/* Só o fecho de contas é que segue para alguém. Os outros resumos
+              não têm destinatário, e uma linha vazia abria buraco no cabeçalho. */}
+          {resumo.entrega && (
+            <p className="mt-0.5 font-sans text-xs leading-snug text-white/80">{resumo.entrega}</p>
+          )}
         </div>
 
         <ul>
@@ -418,9 +523,8 @@ function Cartao({ resumo }) {
 
 /* ------------------------------------------------------------------ tudo */
 
-function EsquemaIntegracoes() {
-  const { t } = useLanguage();
-  const { descricao, origens, resumo } = t.hero.esquema;
+function EsquemaIntegracoes({ esquema }) {
+  const { descricao, origens, resumo } = esquema;
   const medidas = medidasFila(origens.length);
 
   return (
@@ -451,7 +555,7 @@ function EsquemaIntegracoes() {
           ))}
         </div>
 
-        <SetasConvergentes />
+        <SetasConvergentes n={origens.length} />
         <Nucleo tamanho={LG.nucleo} />
         <SetaSaida />
 

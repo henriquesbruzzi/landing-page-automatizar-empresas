@@ -4,9 +4,8 @@ import { LanguageProvider } from './i18n/LanguageContext';
 import SEO from './components/SEO';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import Services from './components/Services';
+import Exemplos from './components/Exemplos';
 import Process from './components/Process';
-import About from './components/About';
 import CallToAction from './components/CallToAction';
 import Footer from './components/Footer';
 import ContactPage from './components/ContactPage';
@@ -14,6 +13,7 @@ import FAQPage from './components/FAQPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import AdminLeadsPage from './pages/AdminLeadsPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import SobrePage from './pages/SobrePage';
 import CookieBanner from './components/CookieBanner';
 import BotaoContactoFlutuante from './components/BotaoContactoFlutuante';
 
@@ -37,9 +37,8 @@ function Layout({ lang }) {
         </main>
 
         {/* Secções seguintes */}
-        <Services />
+        <Exemplos />
         <Process />
-        <About />
         <CallToAction />
         <Footer />
         <CookieBanner />
@@ -111,6 +110,27 @@ function App() {
         />
 
         {/* Admin — Login */}
+        {/* PT, quem somos */}
+        <Route
+          path="/sobre"
+          element={
+            <>
+              <SEO lang="pt" page="home" />
+              <SobrePage />
+            </>
+          }
+        />
+        {/* EN, about */}
+        <Route
+          path="/us/about"
+          element={
+            <>
+              <SEO lang="en" page="home" />
+              <SobrePage />
+            </>
+          }
+        />
+
         <Route path="/admin/login" element={<AdminLoginPage />} />
 
         {/* Admin — Leads (restrito) */}

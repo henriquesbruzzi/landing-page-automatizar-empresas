@@ -68,19 +68,19 @@ function Header() {
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-azul-medio group-hover:w-full transition-all duration-300"></span>
             </a>
             <a
-              href="#servicos"
+              href="#exemplos"
               className="text-texto text-sm tracking-[0.15em] hover:text-azul-profundo transition-all duration-300 relative group"
             >
               {t.nav.services}
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-azul-medio group-hover:w-full transition-all duration-300"></span>
             </a>
-            <a
-              href="#sobre"
-              className="text-texto text-sm tracking-[0.15em] hover:text-azul-profundo transition-all duration-300 relative group"
+            <button
+              onClick={() => navigate(lang === 'pt' ? '/sobre' : '/us/about')}
+              className="text-texto text-sm tracking-[0.15em] hover:text-azul-profundo transition-all duration-300 relative group cursor-pointer"
             >
               {t.nav.about}
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-azul-medio group-hover:w-full transition-all duration-300"></span>
-            </a>
+            </button>
             <button
               onClick={() => navigate(lang === 'pt' ? '/faq' : '/us/faq')}
               className="text-texto text-sm tracking-[0.15em] hover:text-azul-profundo transition-all duration-300 relative group cursor-pointer"
@@ -154,19 +154,21 @@ function Header() {
             {t.nav.home}
           </a>
           <a
-            href="#servicos"
+            href="#exemplos"
             onClick={() => setIsMenuOpen(false)}
             className="text-texto text-2xl tracking-[0.2em] hover:text-azul-medio transition-all duration-300"
           >
             {t.nav.services}
           </a>
-          <a
-            href="#sobre"
-            onClick={() => setIsMenuOpen(false)}
-            className="text-texto text-2xl tracking-[0.2em] hover:text-azul-medio transition-all duration-300"
+          <button
+            onClick={() => {
+              setIsMenuOpen(false);
+              navigate(lang === 'pt' ? '/sobre' : '/us/about');
+            }}
+            className="text-texto text-2xl tracking-[0.2em] hover:text-azul-medio transition-all duration-300 cursor-pointer"
           >
             {t.nav.about}
-          </a>
+          </button>
           <button
             onClick={() => {
               setIsMenuOpen(false);
