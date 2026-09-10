@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './i18n/LanguageContext';
 import SEO from './components/SEO';
@@ -23,58 +23,19 @@ function RequireAdminAuth({ children }) {
 }
 
 function Layout({ lang }) {
-  const [videoLoaded, setVideoLoaded] = useState(false);
-
   return (
     <>
       <SEO lang={lang} page="home" />
       <div className="relative bg-white overflow-hidden">
-        {/* Vídeo de fundo em loop — apenas no Hero */}
-        <div className="relative min-h-screen">
-          {/* Imagem estática — aparece até o vídeo carregar */}
-          <img
-            src="/images/foto principal.png"
-            alt="NEXUGAL — Consultoria tecnológica, escritório moderno com equipa de desenvolvimento"
-            className={`absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-1000 ${
-              videoLoaded ? 'opacity-0' : 'opacity-100'
-            }`}
-            loading="eager"
-            width="1920"
-            height="1080"
-          />
+        {/* O hero era um vídeo escuro com um véu branco a 95% por cima, para o
+            texto azul se ler. Saíram os dois: o hero traz agora o seu próprio
+            fundo, e o desenho do esquema é que conta a história. */}
+        <Header />
+        <main>
+          <Hero />
+        </main>
 
-          {/* Vídeo de fundo */}
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            onCanPlayThrough={() => setVideoLoaded(true)}
-            className={`absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-1000 ${
-              videoLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
-            aria-hidden="true"
-          >
-            <source src="/videos/landingpage.mp4" type="video/mp4" />
-          </video>
-
-          {/* Véu branco sobre o vídeo. O vídeo é escuro e o site passou a
-              branco: sem isto o texto azul do hero ficava ilegível. Fica como
-              tapa-buraco até o hero ser refeito, que é quando o vídeo sai. */}
-          <div
-            className="absolute inset-0 z-[1] bg-white/95 pointer-events-none"
-            aria-hidden="true"
-          />
-
-          <div className="relative z-10">
-            <Header />
-            <main>
-              <Hero />
-            </main>
-          </div>
-        </div>
-
-        {/* Secções com fundo sólido preto */}
+        {/* Secções seguintes */}
         <Services />
         <Process />
         <About />

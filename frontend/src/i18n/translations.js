@@ -10,8 +10,37 @@ const translations = {
       title_line1: 'Deixe a sua empresa',
       title_line2_start: 'andar ',
       title_line2_highlight: 'sozinha',
-      subtitle: 'Menos trabalho manual. Mais tempo para o que interessa.',
-      cta: 'Contacte-nos',
+      subtitle: 'A informação que anda espalhada por quatro sítios junta-se num só, sem ninguém copiar nada.',
+      cta: 'Falar connosco',
+      ctaSecundario: 'Ver exemplos',
+      esquema: {
+        // Lido por quem usa leitor de ecrã, em vez do desenho
+        descricao: 'Quatro origens de informação, email, Excel, o seu ERP e WhatsApp, juntam-se num sítio só e dão origem a um resumo semanal.',
+        // A ORDEM destas quatro é a mesma das linhas do resumo, e é ela que faz
+        // a correspondência entre origem e resultado. Mexer numa obriga a mexer
+        // na outra, senão o esquema passa a mentir.
+        origens: [
+          { id: 'email', nome: 'Email' },
+          { id: 'excel', nome: 'Excel' },
+          { id: 'erp', nome: 'O seu ERP' },
+          { id: 'whatsapp', nome: 'WhatsApp' },
+        ],
+        resumo: {
+          titulo: 'O seu resumo de segunda-feira',
+          entrega: 'chega ao email às 7h30',
+          // Uma linha por origem, pela mesma ordem. Os números ganham peso
+          // sozinhos, o componente encontra-os: não é preciso marcá-los aqui.
+          linhas: [
+            { texto: '47 faturas lançadas, 2 por rever' },
+            { texto: '3 artigos em rutura de stock' },
+            { texto: '18 420 € vendidos, 6 310 € por receber' },
+            // O `destaque` é a única parte realçada do cartão, porque é a
+            // única que pede acção a quem o lê
+            { texto: '20 pedidos respondidos,', destaque: '3 à espera de si' },
+          ],
+          rodape: 'sozinho, todas as segundas',
+        },
+      },
     },
     services: {
       subtitle: 'O que fazemos',
@@ -274,8 +303,31 @@ const translations = {
       title_line1: 'Let your business',
       title_line2_start: 'run ',
       title_line2_highlight: 'itself',
-      subtitle: 'Less manual work. More time for what matters.',
-      cta: 'Contact us',
+      subtitle: 'The information scattered across four places comes together in one, without anyone copying anything.',
+      cta: 'Talk to us',
+      ctaSecundario: 'See examples',
+      esquema: {
+        descricao: 'Four sources of information, email, Excel, your ERP and WhatsApp, come together in one place and produce a weekly summary.',
+        // Same order as the summary lines below. The order is what pairs each
+        // source with its result, so the two lists move together or not at all.
+        origens: [
+          { id: 'email', nome: 'Email' },
+          { id: 'excel', nome: 'Excel' },
+          { id: 'erp', nome: 'Your ERP' },
+          { id: 'whatsapp', nome: 'WhatsApp' },
+        ],
+        resumo: {
+          titulo: 'Your Monday summary',
+          entrega: 'arrives by email at 7:30',
+          linhas: [
+            { texto: '47 invoices posted, 2 to review' },
+            { texto: '3 items out of stock' },
+            { texto: '18 420 € sold, 6 310 € outstanding' },
+            { texto: '20 requests answered,', destaque: '3 waiting on you' },
+          ],
+          rodape: 'on its own, every Monday',
+        },
+      },
     },
     services: {
       subtitle: 'What we do',
