@@ -34,7 +34,7 @@ module.exports = {
         neve: '#F4F7FB',  // fundos suaves e faixas
         linha: '#DCE5EF', // contornos e separadores
         texto: '#42506A', // texto corrido
-        suave: '#7C8AA3', // texto secundário e legendas
+        suave: '#5C6B85', // texto secundário e legendas
       },
       boxShadow: {
         // Relevo discreto, sempre em azul-profundo diluído. Substitui o

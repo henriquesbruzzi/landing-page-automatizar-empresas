@@ -31,7 +31,7 @@ vercel.json  na raiz: manda a Vercel construir SÓ o frontend
 
 - `src/components/` — Header, Hero, About, Services, Process, CallToAction, ContactPage, FAQPage, Footer, SEO
 - `src/pages/` — AdminLoginPage, AdminLeadsPage
-- `src/chatbot/` — widget de chat
+- `src/chatbot/` — código de um widget de chat, **desligado** (ver secção 5)
 - `src/i18n/translations.js` — **todo o texto do site em PT e EN vive aqui**.
   Para mudar palavras no site, é quase sempre este ficheiro, não os componentes.
 - `public/` — imagens, vídeo, ícones, sitemap.xml, robots.txt
@@ -90,11 +90,25 @@ Para ver o site localmente: `cd frontend && npm install && npm start`
 
 - **`frontend/vercel.json` está morto.** Quem manda é o `vercel.json` da raiz.
   Editar o de dentro não faz nada. Não vale a pena tentar.
-- **O chatbot não é IA.** As respostas estão escritas à mão em
-  `src/chatbot/services/chatService.js` (`simulateAIResponse`). Não fala com o
-  backend nem com modelo nenhum. Mudar o que ele diz = editar esse ficheiro.
-- **O chatbot afirma "10+ anos de experiência e 200+ projetos entregues".**
-  A empresa está a nascer. Isto é para corrigir, não para replicar noutros sítios.
+- **O chatbot está desligado e não há planos para o ligar.** A pasta
+  `src/chatbot/` não é importada em lado nenhum — nem no `App.js`, nem em
+  componente nenhum. Nada dela é construída nem chega ao browser: não há
+  widget no site. **O código fica no repo de propósito. Não apagar.**
+  Enquanto assim for, nada do que lá está escrito é texto do site.
+- **Dentro desse código desligado** as respostas são fixas, escritas à mão em
+  `src/chatbot/services/chatService.js` (`simulateAIResponse`), e afirmam
+  "10+ anos de experiência e 200+ projetos entregues". A empresa está a nascer,
+  portanto é falso — mas **nenhum visitante vê isto**, porque o widget não corre.
+  Não replicar noutros sítios. Só passa a ser preciso corrigir no dia em que
+  alguém decidir ligar o widget.
+- **`src/i18n/translations.js` tem um bloco `chatbot:` em PT e EN.** São textos
+  órfãos do widget desligado. Ao contrário do resto do chatbot, estes **vão no
+  bundle** (o `translations.js` é importado), mas não são mostrados em lado
+  nenhum. Ficam pelo mesmo motivo que o resto do código do chatbot.
+
+  Como confirmar que o widget continua fora do site, depois de um `npm run build`:
+  procurar `simulateAIResponse` ou `ChatWidget` em `build/static/js/*.js`.
+  A 10/09/2026 dava zero ocorrências para ambos.
 - **`src/components/SEO.js`** tem `BASE_URL` com fallback para
   `https://projeto-teste-weld.vercel.app` — domínio errado, contamina canonical
   e sitemap. Corrigir quando houver domínio próprio.
