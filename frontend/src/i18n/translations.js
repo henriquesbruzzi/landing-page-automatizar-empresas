@@ -5,6 +5,7 @@ const translations = {
       services: 'SERVIÇOS',
       about: 'SOBRE',
       faq: 'FAQ',
+      contact: 'CONTACTO',
     },
     hero: {
       title_line1: 'Deixe a sua empresa',
@@ -299,6 +300,7 @@ const translations = {
       services: 'SERVICES',
       about: 'ABOUT',
       faq: 'FAQ',
+      contact: 'CONTACT',
     },
     hero: {
       title_line1: 'Let your business',

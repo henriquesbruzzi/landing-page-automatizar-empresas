@@ -89,6 +89,15 @@ function Header() {
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-azul-medio group-hover:w-full transition-all duration-300"></span>
             </button>
 
+            {/* Mesmo destino do "Falar connosco" do hero */}
+            <button
+              onClick={() => navigate(lang === 'pt' ? '/contacto' : '/us/contact')}
+              className="text-texto text-sm tracking-[0.15em] hover:text-azul-profundo transition-all duration-300 relative group cursor-pointer"
+            >
+              {t.nav.contact}
+              <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-azul-medio group-hover:w-full transition-all duration-300"></span>
+            </button>
+
             {/* Bandeira para trocar idioma */}
             <button
               onClick={toggleLanguage}
@@ -166,6 +175,15 @@ function Header() {
             className="text-texto text-2xl tracking-[0.2em] hover:text-azul-medio transition-all duration-300 cursor-pointer"
           >
             {t.nav.faq}
+          </button>
+          <button
+            onClick={() => {
+              setIsMenuOpen(false);
+              navigate(lang === 'pt' ? '/contacto' : '/us/contact');
+            }}
+            className="text-texto text-2xl tracking-[0.2em] hover:text-azul-medio transition-all duration-300 cursor-pointer"
+          >
+            {t.nav.contact}
           </button>
 
           {/* Bandeira para trocar idioma - Mobile */}

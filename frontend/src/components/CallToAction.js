@@ -11,7 +11,7 @@ function CallToAction() {
   const navigate = useNavigate();
 
   return (
-    <section className="relative py-28 md:py-36 bg-white overflow-hidden" aria-labelledby="cta-title">
+    <section id="contacto-final" className="relative py-28 md:py-36 bg-white overflow-hidden" aria-labelledby="cta-title">
       {/* Linha divisória no topo */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-azul-claro to-transparent"></div>
 

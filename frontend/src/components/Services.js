@@ -106,8 +106,11 @@ function Services() {
     };
   }, [destacar, semAnimacao]);
 
+  // O pt e o pb estão separados de propósito: só o topo encolheu, para apertar
+  // a passagem do hero. O fundo fica igual, para o intervalo até ao "Como
+  // trabalhamos" não mudar.
   return (
-    <section id="servicos" className="relative py-24 md:py-32 bg-white" aria-labelledby="services-title">
+    <section id="servicos" className="relative pt-16 pb-24 md:pt-20 md:pb-32 bg-white" aria-labelledby="services-title">
       {/* Linha divisória sutil no topo */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-azul-claro to-transparent"></div>
 

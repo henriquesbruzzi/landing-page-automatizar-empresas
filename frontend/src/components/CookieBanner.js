@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
-
-const CONSENT_KEY = 'nexugal_cookie_consent';
+import { CHAVE_CONSENTIMENTO, anunciarAviso } from '../utils/avisoCookies';
 
 function CookieBanner() {
   const { lang, t } = useLanguage();
@@ -10,16 +9,23 @@ function CookieBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem(CONSENT_KEY);
+    const stored = localStorage.getItem(CHAVE_CONSENTIMENTO);
     if (!stored) {
       // Pequeno atraso para não aparecer durante a animação de entrada da página
       const timer = setTimeout(() => setVisible(true), 1200);
       return () => clearTimeout(timer);
     }
+    return undefined;
   }, []);
 
+  // Quem partilha o canto de baixo precisa de saber que este aviso está lá
+  useEffect(() => {
+    anunciarAviso(visible);
+    return () => anunciarAviso(false);
+  }, [visible]);
+
   const accept = (type) => {
-    localStorage.setItem(CONSENT_KEY, type);
+    localStorage.setItem(CHAVE_CONSENTIMENTO, type);
     setVisible(false);
   };
 

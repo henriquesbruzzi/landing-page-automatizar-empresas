@@ -78,7 +78,7 @@ function Hero() {
   return (
     <section
       id="home"
-      className="relative w-full overflow-hidden bg-white pb-20 pt-28 lg:pb-28 lg:pt-32"
+      className="relative w-full overflow-hidden bg-white pb-12 pt-28 lg:pb-16 lg:pt-32"
     >
       <MancaFundo />
 
@@ -125,6 +125,7 @@ function Hero() {
               {/* Cheio de propósito. Vazado, perdia a atenção para o botão do
                   aviso de cookies, que é o oposto do que se quer. */}
               <button
+                id="cta-hero"
                 onClick={() => navigate(lang === 'pt' ? '/contacto' : '/us/contact')}
                 className="rounded-full bg-azul-medio px-9 py-4 text-sm font-semibold tracking-[0.06em] text-white shadow-azul transition-colors duration-300 hover:bg-azul-profundo active:scale-95 sm:text-base"
               >

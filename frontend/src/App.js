@@ -15,6 +15,7 @@ import AdminLoginPage from './pages/AdminLoginPage';
 import AdminLeadsPage from './pages/AdminLeadsPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import CookieBanner from './components/CookieBanner';
+import BotaoContactoFlutuante from './components/BotaoContactoFlutuante';
 
 // A autenticação é gerida pelo cookie HttpOnly no servidor.
 // O AdminLeadsPage redireciona automaticamente para login em caso de 401.
@@ -42,6 +43,7 @@ function Layout({ lang }) {
         <CallToAction />
         <Footer />
         <CookieBanner />
+        <BotaoContactoFlutuante />
       </div>
     </>
   );

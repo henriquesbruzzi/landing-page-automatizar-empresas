@@ -411,7 +411,7 @@ function Cartao({ resumo }) {
         </ul>
       </div>
 
-      <p className="mt-3 text-center font-sans text-xs text-suave">{resumo.rodape}</p>
+      <p className="mt-4 text-center font-sans text-[13px] text-suave">{resumo.rodape}</p>
     </div>
   );
 }
