@@ -68,6 +68,8 @@ function Hero() {
   const entrada = classesEntrada(isTypingDone, semAnimacao);
   const atraso = (ms) => atrasoEntrada(ms, isTypingDone, semAnimacao);
 
+  // TEMPORARIO. "Ver exemplos" aponta aos Serviços porque ainda não há secção
+  // de exemplos. Quando ela existir, é para lá que este botão passa a levar.
   const irParaServicos = () => {
     const alvo = document.getElementById('servicos');
     if (alvo) alvo.scrollIntoView({ behavior: semAnimacao ? 'auto' : 'smooth' });

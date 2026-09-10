@@ -209,18 +209,41 @@ function SetaBaixo({ altura = 44, cor = '#4FA3DC', ponta = 'ponta-clara' }) {
 
 /* Os números ganham peso sozinhos: Space Grotesk bold por cima do Inter do
    texto corrido. Sem isto o cartão lê-se plano. Apanha "47", "2" e também
-   "18 420 €", que é um número só. */
-const PARTIR = /(\d+(?:[\s ]\d{3})*(?:\s?€)?)/g;
-const SO_NUMERO = /^\d+(?:[\s ]\d{3})*(?:\s?€)?$/;
+   "18 420 €", que é um número só.
+
+   Onde o que leva peso não é um número solto mas uma expressão, uma data como
+   8/09 ou um número colado à unidade como "2 dias", marca-se no translations.js
+   entre asteriscos. É o mesmo tratamento, só que decidido por quem escreve o
+   texto em vez de adivinhado aqui: adivinhar obrigava esta função a conhecer as
+   palavras de cada língua, e são duas. */
+const REALCE = /\*([^*]+)\*/g;
+const PARTIR = /(\d+(?:[\s\u00a0]\d{3})*(?:\s?€)?)/g;
+const SO_NUMERO = /^\d+(?:[\s\u00a0]\d{3})*(?:\s?€)?$/;
+
+function Forte({ cor, children }) {
+  return <span className={`font-display font-bold ${cor}`}>{children}</span>;
+}
 
 function comNumeros(texto, corNumero) {
-  return texto.split(PARTIR).map((pedaco, i) =>
-    SO_NUMERO.test(pedaco) ? (
-      <span key={i} className={`font-display font-bold ${corNumero}`}>
+  // split com grupo de captura devolve o que está entre asteriscos nos índices
+  // ímpares. Esses saem realçados inteiros; no resto procuram-se os números.
+  return texto.split(REALCE).map((pedaco, i) =>
+    i % 2 === 1 ? (
+      <Forte key={i} cor={corNumero}>
         {pedaco}
-      </span>
+      </Forte>
     ) : (
-      <React.Fragment key={i}>{pedaco}</React.Fragment>
+      <React.Fragment key={i}>
+        {pedaco.split(PARTIR).map((parte, j) =>
+          SO_NUMERO.test(parte) ? (
+            <Forte key={j} cor={corNumero}>
+              {parte}
+            </Forte>
+          ) : (
+            <React.Fragment key={j}>{parte}</React.Fragment>
+          )
+        )}
+      </React.Fragment>
     )
   );
 }
@@ -251,6 +274,14 @@ function Cartao({ resumo }) {
                     {comNumeros(linha.destaque, 'text-azul-medio')}
                   </strong>
                 </>
+              )}
+              {/* Continua a mesma linha, mais pequena, em vez de abrir uma
+                  quinta: o cartão tem de ficar com uma linha por cada caixa
+                  do esquema. Lê-se como consequência do que está por cima. */}
+              {linha.nota && (
+                <span className="mt-1 block font-sans text-xs leading-snug text-texto">
+                  {comNumeros(linha.nota, 'text-azul-profundo')}
+                </span>
               )}
             </li>
           ))}

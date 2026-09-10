@@ -10,7 +10,7 @@ const translations = {
       title_line1: 'Deixe a sua empresa',
       title_line2_start: 'andar ',
       title_line2_highlight: 'sozinha',
-      subtitle: 'A informação que anda espalhada por quatro sítios junta-se num só, sem ninguém copiar nada.',
+      subtitle: 'A informação que anda espalhada junta-se num só sítio, sem ninguém copiar nada.',
       cta: 'Falar connosco',
       ctaSecundario: 'Ver exemplos',
       esquema: {
@@ -32,13 +32,18 @@ const translations = {
           // sozinhos, o componente encontra-os: não é preciso marcá-los aqui.
           linhas: [
             { texto: '47 faturas lançadas, 2 por rever' },
-            { texto: '3 artigos em rutura de stock' },
+            // A `nota` continua a linha em vez de abrir uma nova: o cartão tem
+            // de ficar com quatro linhas, uma por cada caixa do esquema.
+            {
+              texto: '3 artigos em rutura de stock',
+              nota: 'fornecedor alertado a *8/09*, sem resposta há *2 dias*',
+            },
             { texto: '18 420 € vendidos, 6 310 € por receber' },
             // O `destaque` é a única parte realçada do cartão, porque é a
             // única que pede acção a quem o lê
             { texto: '20 pedidos respondidos,', destaque: '3 à espera de si' },
           ],
-          rodape: 'sozinho, todas as segundas',
+          rodape: 'agende este resumo ao seu gosto',
         },
       },
     },
@@ -303,7 +308,7 @@ const translations = {
       title_line1: 'Let your business',
       title_line2_start: 'run ',
       title_line2_highlight: 'itself',
-      subtitle: 'The information scattered across four places comes together in one, without anyone copying anything.',
+      subtitle: 'Information that lives in scattered places comes together in one, without anyone copying anything.',
       cta: 'Talk to us',
       ctaSecundario: 'See examples',
       esquema: {
@@ -321,11 +326,14 @@ const translations = {
           entrega: 'arrives by email at 7:30',
           linhas: [
             { texto: '47 invoices posted, 2 to review' },
-            { texto: '3 items out of stock' },
+            {
+              texto: '3 items out of stock',
+              nota: 'supplier alerted on *8/09*, no reply for *2 days*',
+            },
             { texto: '18 420 € sold, 6 310 € outstanding' },
             { texto: '20 requests answered,', destaque: '3 waiting on you' },
           ],
-          rodape: 'on its own, every Monday',
+          rodape: 'schedule this summary to suit you',
         },
       },
     },
