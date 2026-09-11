@@ -66,9 +66,9 @@ function Bloco({ bloco, par }) {
 /**
  * Tira de ferramentas.
  *
- * Por agora só nomes. Cada entrada aceita `logo` no translations.js e passa a
- * imagem sem a tira mudar de forma: o nome fica como texto alternativo, que é
- * o que um leitor de ecrã precisa de ouvir de qualquer maneira.
+ * Cada entrada com `logo` no translations.js sai como imagem, a cinzento; a
+ * que não tiver sai como nome escrito, com a mesma folga à volta. O nome fica
+ * sempre como texto alternativo, que é o que um leitor de ecrã precisa de ouvir.
  */
 function Tira({ tira }) {
   return (

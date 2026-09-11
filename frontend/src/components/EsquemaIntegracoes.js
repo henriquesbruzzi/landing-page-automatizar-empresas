@@ -105,102 +105,11 @@ function IconeBalao() {
   );
 }
 
-function IconePapel() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
-      <path d="M6 3h8l4 4v14H6z" {...tracos} />
-      <path d="M14 3v4h4M9 12h6M9 16h4" {...tracos} />
-    </svg>
-  );
-}
-
-function IconeFormulario() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
-      <rect x="4" y="3.5" width="16" height="17" rx="2" {...tracos} />
-      <path d="M8 8.5h8M8 12.5h8M8 16.5h4" {...tracos} />
-    </svg>
-  );
-}
-
-function IconePortal() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
-      <rect x="3" y="4.5" width="18" height="15" rx="2" {...tracos} />
-      <path d="M3 9h18M6.5 6.75h.01M9 6.75h.01" {...tracos} />
-    </svg>
-  );
-}
-
-function IconeServidor() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
-      <rect x="3.5" y="4" width="17" height="6.5" rx="1.5" {...tracos} />
-      <rect x="3.5" y="13.5" width="17" height="6.5" rx="1.5" {...tracos} />
-      <path d="M7 7.25h.01M7 16.75h.01" {...tracos} />
-    </svg>
-  );
-}
-
-function IconeComputadores() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
-      <rect x="2.5" y="5" width="14" height="10" rx="1.5" {...tracos} />
-      <path d="M6.5 18.5h6M9.5 15v3.5" {...tracos} />
-      <rect x="17" y="10" width="4.5" height="9" rx="1.2" {...tracos} />
-    </svg>
-  );
-}
-
-function IconeNuvem() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
-      <path d="M7 18.5a4 4 0 0 1-.3-8A5.5 5.5 0 0 1 17.4 9.6 3.8 3.8 0 0 1 17 18.5z" {...tracos} />
-    </svg>
-  );
-}
-
-function IconeLoja() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
-      <path d="M4 9.5h16v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z" {...tracos} />
-      <path d="M4.5 9.5 6 4h12l1.5 5.5M9.5 13.5h5" {...tracos} />
-    </svg>
-  );
-}
-
-function IconeTransporte() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
-      <path d="M2.5 6.5h11v9h-11zM13.5 10h4l3 3v2.5h-7z" {...tracos} />
-      <path d="M7 18a1.6 1.6 0 1 0 0-3.2A1.6 1.6 0 0 0 7 18zM17.5 18a1.6 1.6 0 1 0 0-3.2 1.6 1.6 0 0 0 0 3.2z" {...tracos} />
-    </svg>
-  );
-}
-
-function IconeFaturacao() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-5 w-5 shrink-0 text-azul-medio" aria-hidden="true">
-      <path d="M5.5 3.5h13v17l-2.2-1.5-2.1 1.5-2.2-1.5L9.8 20.5 7.7 19l-2.2 1.5z" {...tracos} />
-      <path d="M9 8.5h6M9 12h6" {...tracos} />
-    </svg>
-  );
-}
-
 const SIMBOLOS = {
   email: IconeEnvelope,
   excel: IconeFolha,
   erp: IconeCaixa,
   whatsapp: IconeBalao,
-  papel: IconePapel,
-  formulario: IconeFormulario,
-  portal: IconePortal,
-  servidor: IconeServidor,
-  computadores: IconeComputadores,
-  nuvem: IconeNuvem,
-  loja: IconeLoja,
-  transporte: IconeTransporte,
-  faturacao: IconeFaturacao,
 };
 
 /* ------------------------------------------------------------------ peças */

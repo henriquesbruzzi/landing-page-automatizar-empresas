@@ -76,9 +76,18 @@ function VisualPapel({ arte }) {
   return (
     <div>
       <div className="flex flex-col items-center gap-4 lg:flex-row lg:items-center lg:gap-6">
-        <div className="w-40 shrink-0 lg:w-44">
-          <PilhaDePapeis etiqueta={arte.papelEtiqueta} />
-          <p className="mt-3 text-center font-sans text-xs text-suave">{arte.papelLegenda}</p>
+        {/* A legenda é uma frase inteira e não cabia na largura da pilha: partia
+            em três linhas com uma palavra sozinha na última. No telemóvel a
+            coluna alarga, porque nada fica ao lado dela; no ecrã largo fica
+            igual, para não roubar largura à tabela, e o texto equilibra as
+            linhas em vez de deixar uma órfã. */}
+        <div className="w-full max-w-[17rem] shrink-0 lg:w-44 lg:max-w-none">
+          <div className="mx-auto w-40 lg:w-full">
+            <PilhaDePapeis etiqueta={arte.papelEtiqueta} />
+          </div>
+          <p className="mt-3 text-center font-sans text-[13px] leading-snug text-texto [text-wrap:balance]">
+            {arte.papelLegenda}
+          </p>
         </div>
 
         <Seta />
@@ -148,10 +157,6 @@ function VisualConversa({ arte }) {
         <div className="mt-5 ml-6 rounded-2xl bg-azul-profundo px-5 py-4">
           <p className="font-sans text-[13px] leading-relaxed text-white">{arte.resposta}</p>
         </div>
-        {/* O selo é deliberado: mostra que a resposta espera por uma pessoa */}
-        <span className="mt-3 ml-6 inline-block rounded-full bg-[#E4EDF7] px-3 py-1 font-sans text-[11px] font-semibold text-azul-medio">
-          {arte.selo}
-        </span>
       </div>
 
       <div className="h-px w-full bg-linha lg:h-44 lg:w-px" aria-hidden="true" />
@@ -175,92 +180,93 @@ function VisualConversa({ arte }) {
   );
 }
 
-/* ------------------------------------------- 3. duas listas que discordam */
+/* ---------------------------------------- 3. um artigo, dois números */
 
 /**
- * Telemóvel: as duas colunas de fichas ficam lado a lado, porque a comparação
- * é toda a razão de o desenho existir e empilhá-las desfazia-a. Cabem: são
- * estreitas e as referências são curtas. O que desce é o cartão de resultado,
- * e a seta passa a apontar para baixo.
+ * Um artigo só, em grande, e a consequência em palavras.
+ *
+ * Já foram quatro artigos em duas colunas, e obrigavam quem lia a comparar
+ * número a número para descobrir onde estava a diferença. Ninguém faz isso a
+ * passar num site. Agora é um artigo, dois números que não batem certo, e a
+ * frase a dizer o que isso ia custar.
+ *
+ * Telemóvel: o painel do artigo fica em cima e o cartão de resultado desce,
+ * com a seta a apontar para baixo. Os dois números continuam lado a lado,
+ * porque a diferença entre eles é o desenho todo.
  */
 function VisualDiscordancia({ arte }) {
   return (
-    <div>
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-5">
-        <div className="min-w-0 flex-1">
-          <div className="mb-2 grid grid-cols-2 gap-2.5">
-            {arte.colunas.map((coluna) => (
-              <span
-                key={coluna}
-                className="font-sans text-[11px] font-semibold tracking-wide text-suave"
-              >
-                {coluna}
-              </span>
-            ))}
-          </div>
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-5">
+      <div className="min-w-0 flex-1">
+        <div className="rounded-lg border border-linha bg-white p-5 shadow-azul">
+          <p className="font-display text-lg font-bold text-azul-profundo">{arte.artigo}</p>
 
-          <div className="space-y-2">
-            {arte.artigos.map((artigo) => (
-              <div key={artigo.ref} className="grid grid-cols-2 gap-2.5">
-                {[artigo.esquerda, artigo.direita].map((quantidade, lado) => (
-                  <div
-                    key={lado}
-                    className={`flex items-center justify-between rounded-md border px-2.5 py-2 ${
-                      artigo.bate
-                        ? 'border-linha bg-white'
-                        : 'border-alerta-linha bg-alerta-fundo'
-                    }`}
-                  >
-                    <span className="truncate font-sans text-[12.5px] text-texto">{artigo.ref}</span>
-                    <span
-                      className={`ml-2 font-display text-[13px] font-bold ${
-                        artigo.bate ? 'text-azul-profundo' : 'text-alerta'
-                      }`}
-                    >
-                      {quantidade}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            ))}
+          {/* Duas linhas de grelha, rótulos em cima e números em baixo. O rótulo
+              da direita é mais comprido e pode passar à linha: assim os dois
+              números continuam alinhados um com o outro na mesma. */}
+          <div className="mt-4 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-end gap-x-3 gap-y-2">
+            <span className="font-sans text-[11px] font-semibold tracking-wide text-suave">
+              {arte.colunas[0]}
+            </span>
+            <span aria-hidden="true" />
+            <span className="font-sans text-[11px] font-semibold tracking-wide text-suave">
+              {arte.colunas[1]}
+            </span>
+
+            <p className="flex h-20 items-center justify-center rounded-md border border-alerta-linha bg-alerta-fundo font-display text-[44px] font-bold leading-none text-alerta">
+              {arte.numeros[0]}
+            </p>
+            {/* O sinal de diferente é desenho, não texto: diz o mesmo em
+                qualquer língua, e a descrição para leitor de ecrã já o conta. */}
+            <svg
+              viewBox="0 0 24 24"
+              className="h-7 w-7 self-center text-alerta"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path d="M4 9h16M4 15h16M16.5 3.5 7.5 20.5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+            </svg>
+            <p className="flex h-20 items-center justify-center rounded-md border border-alerta-linha bg-alerta-fundo font-display text-[44px] font-bold leading-none text-alerta">
+              {arte.numeros[1]}
+            </p>
           </div>
         </div>
 
-        <Seta />
-
-        <div className="shrink-0 overflow-hidden rounded-lg border border-linha bg-white shadow-azul lg:w-60">
-          <p className="bg-azul-profundo px-4 py-2.5 font-sans text-[11.5px] font-semibold text-white">
-            {arte.cartao.titulo}
-          </p>
-          <div className="px-4 py-3">
-            {arte.cartao.linhas.map((linha, i) => (
-              <div key={linha.texto} className={i > 0 ? 'mt-3 border-t border-linha pt-3' : ''}>
-                {linha.proprioBloco ? (
-                  <>
-                    <p className="font-display text-[20px] font-bold leading-none text-azul-profundo">
-                      {linha.numero}
-                    </p>
-                    <p className="mt-1 font-sans text-[12.5px] text-texto">{linha.texto}</p>
-                  </>
-                ) : (
-                  <p className="font-sans text-[12.5px] text-texto">
-                    <strong
-                      className={`mr-1.5 font-display text-[20px] font-bold ${
-                        linha.destaque ? 'text-azul-medio' : 'text-azul-profundo'
-                      }`}
-                    >
-                      {linha.numero}
-                    </strong>
-                    {linha.texto}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+        <p className="mt-4 font-sans text-[14px] leading-relaxed text-texto">{arte.consequencia}</p>
       </div>
 
-      <p className="mt-4 font-sans text-[12.5px] text-suave">{arte.rodape}</p>
+      <Seta />
+
+      <div className="shrink-0 overflow-hidden rounded-lg border border-linha bg-white shadow-azul lg:w-60">
+        <p className="bg-azul-profundo px-4 py-2.5 font-sans text-[11.5px] font-semibold text-white">
+          {arte.cartao.titulo}
+        </p>
+        <div className="px-4 py-3">
+          {arte.cartao.linhas.map((linha, i) => (
+            <div key={linha.texto} className={i > 0 ? 'mt-3 border-t border-linha pt-3' : ''}>
+              {linha.proprioBloco ? (
+                <>
+                  <p className="font-display text-[20px] font-bold leading-none text-azul-profundo">
+                    {linha.numero}
+                  </p>
+                  <p className="mt-1 font-sans text-[12.5px] text-texto">{linha.texto}</p>
+                </>
+              ) : (
+                <p className="font-sans text-[12.5px] text-texto">
+                  <strong
+                    className={`mr-1.5 font-display text-[20px] font-bold ${
+                      linha.destaque ? 'text-azul-medio' : 'text-azul-profundo'
+                    }`}
+                  >
+                    {linha.numero}
+                  </strong>
+                  {linha.texto}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

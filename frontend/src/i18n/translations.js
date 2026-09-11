@@ -51,7 +51,9 @@ const translations = {
     exemplos: {
       rotulo: 'EXEMPLOS',
       titulo: 'Isto é o que fazemos, em concreto',
-      subtitulo: 'Quatro situações que se repetem em quase todas as empresas. Cada uma mostra o que entra, o que se junta, e o que passa a chegar sozinho.',
+      // Uma frase só, de propósito. A anterior dava a entender que estava aqui
+      // tudo o que a Nexugal faz, e não está.
+      subtitulo: 'Alguns exemplos do que fazemos.',
       indiceTitulo: 'Saltar para',
       // Cada bloco tem o seu próprio desenho, moldado à história que conta. A
       // unidade vem da paleta, da letra e do estilo das caixas, não de serem
@@ -71,7 +73,7 @@ const translations = {
           arte: {
             descricao: 'Uma pilha de faturas em papel dá origem a uma tabela de dados já preenchida.',
             papelEtiqueta: 'FATURA',
-            papelLegenda: 'papel, PDF, foto',
+            papelLegenda: 'Não interessa como chega, em PDF, em papel ou numa foto.',
             colunas: ['FORNECEDOR', 'DOC', 'VALOR'],
             linhas: [
               { fornecedor: 'Malhas do Ave', doc: 'FT 1184', valor: '1 240,00' },
@@ -81,7 +83,8 @@ const translations = {
             // Duas linhas por preencher, desenhadas como barras: mostram que o
             // trabalho continua a andar depois de a imagem ficar parada.
             porPreencher: 2,
-            resumo: { total: '214', totalTexto: 'lançadas em setembro,', rever: '3', reverTexto: 'por rever' },
+            // "sozinhas" é o argumento todo: sem essa palavra o 214 não prova nada
+            resumo: { total: '214', totalTexto: 'faturas lançadas sozinhas em setembro,', rever: '3', reverTexto: 'precisaram de si' },
           },
         },
         {
@@ -92,11 +95,10 @@ const translations = {
           dor: 'As mesmas cinco perguntas todos os dias, e as encomendas anotadas num papel.',
           explicacao: 'O que chega por email, por WhatsApp e pelo formulário é lido, cruzado com a encomenda, e a resposta fica escrita à espera de um clique. Nada sai sem alguém aprovar.',
           arte: {
-            descricao: 'Uma pergunta de cliente e a resposta já escrita, à espera de aprovação, ao lado do que o dia rendeu.',
+            descricao: 'Uma pergunta de cliente e a resposta já escrita, ao lado do que o dia rendeu.',
             pergunta: 'Boa tarde, a minha encomenda 4471 ainda não chegou.',
             perguntaOrigem: 'cliente, WhatsApp, 14h02',
             resposta: 'Saiu do armazém ontem às 17h20, entrega prevista para amanhã, dia 10.',
-            selo: 'à espera de aprovação',
             contadores: [
               { numero: '34', legenda: 'mensagens tratadas hoje' },
               { numero: '0', legenda: 'chamadas atendidas', realce: true },
@@ -112,16 +114,13 @@ const translations = {
           dor: 'O stock do programa diz uma coisa e o armazém diz outra.',
           explicacao: 'O ERP, a loja e o portal da transportadora passam a falar entre si. As diferenças aparecem numa lista de manhã, em vez de aparecerem ao cliente na hora de entregar.',
           arte: {
-            descricao: 'Duas listas do mesmo stock, lado a lado, com duas linhas que não batem certo assinaladas.',
-            colunas: ['NO PROGRAMA', 'NA LOJA'],
-            // `bate` a falso é o que acende a cor de alerta, e é a única coisa
-            // que a acende neste bloco.
-            artigos: [
-              { ref: 'FIL-2240', esquerda: '84', direita: '84', bate: true },
-              { ref: 'COR-118', esquerda: '12', direita: '19', bate: false },
-              { ref: 'BAT-90A', esquerda: '7', direita: '7', bate: true },
-              { ref: 'JNT-04', esquerda: '40', direita: '36', bate: false },
-            ],
+            descricao: 'O mesmo artigo com dois números diferentes, um no programa e outro na loja e armazém, e o resultado da verificação da manhã.',
+            // Um artigo só, em grande. Quatro artigos obrigavam quem lia a
+            // comparar número a número para encontrar a diferença.
+            colunas: ['NO PROGRAMA', 'NA LOJA E ARMAZÉM'],
+            artigo: 'Correias',
+            numeros: ['12', '19'],
+            consequencia: 'Sete clientes iam comprar uma coisa que não existe.',
             cartao: {
               titulo: 'Hoje, 6h05',
               linhas: [
@@ -130,7 +129,6 @@ const translations = {
                 { numero: '3', texto: 'precisam de decisão', destaque: true },
               ],
             },
-            rodape: 'antes de o cliente dar por isso',
           },
         },
         {
@@ -158,24 +156,28 @@ const translations = {
         },
       ],
       convite: {
-        frase: 'Não viu o seu caso? A maior parte do que fazemos parece-se com isto.',
+        frase: 'Tem tarefas que se repetem todas as semanas e comem tempo a alguém? Conte-nos qual é. Muitas vezes há forma de ganhar esse tempo.',
         botao: 'Entre em contacto',
       },
       // A tira cresce quando houver capacidade real de integrar mais uma coisa,
       // não se enche à partida. Cada entrada leva `logo` quando o ficheiro
       // existir, e passa a imagem sem a tira ser refeita.
+      //
+      // O Moloni fica como nome. O ficheiro que chegou tem as letras a branco,
+      // é a versão para fundo escuro, e nesta tira branca só se via a flor.
+      // Quando houver a versão para fundo claro, é acrescentar o `logo`.
       tira: {
         texto: 'Fazemos integrações com',
         ferramentas: [
-          { id: 'gmail', nome: 'Gmail' },
-          { id: 'outlook', nome: 'Outlook' },
-          { id: 'excel', nome: 'Excel' },
-          { id: 'google-sheets', nome: 'Google Sheets' },
-          { id: 'primavera', nome: 'Cegid Primavera' },
+          { id: 'gmail', nome: 'Gmail', logo: '/logos/gmail.svg' },
+          { id: 'outlook', nome: 'Outlook', logo: '/logos/outlook.svg' },
+          { id: 'excel', nome: 'Excel', logo: '/logos/excel.svg' },
+          { id: 'google-sheets', nome: 'Google Sheets', logo: '/logos/google-sheets.svg' },
+          { id: 'primavera', nome: 'Cegid Primavera', logo: '/logos/cegid.svg' },
           { id: 'moloni', nome: 'Moloni' },
-          { id: 'invoicexpress', nome: 'InvoiceXpress' },
-          { id: 'shopify', nome: 'Shopify' },
-          { id: 'woocommerce', nome: 'WooCommerce' },
+          { id: 'invoicexpress', nome: 'InvoiceXpress', logo: '/logos/invoicexpress.png' },
+          { id: 'shopify', nome: 'Shopify', logo: '/logos/shopify.svg' },
+          { id: 'woocommerce', nome: 'WooCommerce', logo: '/logos/woocommerce.svg' },
         ],
       },
     },
@@ -459,7 +461,7 @@ const translations = {
     exemplos: {
       rotulo: 'EXAMPLES',
       titulo: 'This is what we do, in practice',
-      subtitulo: 'Four situations that come up in almost every company. Each one shows what goes in, what gets brought together, and what starts arriving on its own.',
+      subtitulo: 'Some examples of what we do.',
       indiceTitulo: 'Jump to',
       blocos: [
         {
@@ -472,7 +474,7 @@ const translations = {
           arte: {
             descricao: 'A stack of paper invoices turns into a table of data that is already filled in.',
             papelEtiqueta: 'INVOICE',
-            papelLegenda: 'paper, PDF, photo',
+            papelLegenda: 'It does not matter how it arrives, as a PDF, on paper or in a photo.',
             colunas: ['SUPPLIER', 'DOC', 'AMOUNT'],
             linhas: [
               { fornecedor: 'Malhas do Ave', doc: 'FT 1184', valor: '1 240,00' },
@@ -480,7 +482,7 @@ const translations = {
               { fornecedor: 'Fios e Cores', doc: 'FT 331', valor: '96,40' },
             ],
             porPreencher: 2,
-            resumo: { total: '214', totalTexto: 'entered in September,', rever: '3', reverTexto: 'to review' },
+            resumo: { total: '214', totalTexto: 'invoices entered on their own in September,', rever: '3', reverTexto: 'needed you' },
           },
         },
         {
@@ -491,11 +493,10 @@ const translations = {
           dor: 'The same five questions every day, and orders written down on a piece of paper.',
           explicacao: 'What arrives by email, by WhatsApp and through the form is read, matched against the order, and the reply is written and waiting for one click. Nothing goes out without someone approving it.',
           arte: {
-            descricao: 'A customer question and the reply already written, waiting for approval, next to what the day brought in.',
+            descricao: 'A customer question and the reply already written, next to what the day brought in.',
             pergunta: 'Good afternoon, my order 4471 still has not arrived.',
             perguntaOrigem: 'customer, WhatsApp, 14:02',
             resposta: 'It left the warehouse yesterday at 17:20, delivery expected tomorrow, the 10th.',
-            selo: 'waiting for approval',
             contadores: [
               { numero: '34', legenda: 'messages handled today' },
               { numero: '0', legenda: 'calls answered', realce: true },
@@ -511,14 +512,11 @@ const translations = {
           dor: 'The stock in the system says one thing and the warehouse says another.',
           explicacao: 'The ERP, the shop and the carrier portal start talking to each other. Differences show up on a list in the morning, instead of showing up to the customer at delivery time.',
           arte: {
-            descricao: 'Two lists of the same stock, side by side, with two lines that do not match flagged.',
-            colunas: ['IN THE SYSTEM', 'IN THE SHOP'],
-            artigos: [
-              { ref: 'FIL-2240', esquerda: '84', direita: '84', bate: true },
-              { ref: 'COR-118', esquerda: '12', direita: '19', bate: false },
-              { ref: 'BAT-90A', esquerda: '7', direita: '7', bate: true },
-              { ref: 'JNT-04', esquerda: '40', direita: '36', bate: false },
-            ],
+            descricao: 'The same product with two different numbers, one in the system and one in the shop and warehouse, and the result of the morning check.',
+            colunas: ['IN THE SYSTEM', 'IN THE SHOP AND WAREHOUSE'],
+            artigo: 'Belts',
+            numeros: ['12', '19'],
+            consequencia: 'Seven customers were about to buy something that does not exist.',
             cartao: {
               titulo: 'Today, 6:05',
               linhas: [
@@ -527,7 +525,6 @@ const translations = {
                 { numero: '3', texto: 'need a decision', destaque: true },
               ],
             },
-            rodape: 'before the customer notices',
           },
         },
         {
@@ -553,21 +550,21 @@ const translations = {
         },
       ],
       convite: {
-        frase: 'Not seeing your situation? Most of what we do looks like this.',
+        frase: 'Do you have tasks that repeat every week and eat up someone\'s time? Tell us which one. There is often a way to win that time back.',
         botao: 'Get in touch',
       },
       tira: {
         texto: 'We integrate with',
         ferramentas: [
-          { id: 'gmail', nome: 'Gmail' },
-          { id: 'outlook', nome: 'Outlook' },
-          { id: 'excel', nome: 'Excel' },
-          { id: 'google-sheets', nome: 'Google Sheets' },
-          { id: 'primavera', nome: 'Cegid Primavera' },
+          { id: 'gmail', nome: 'Gmail', logo: '/logos/gmail.svg' },
+          { id: 'outlook', nome: 'Outlook', logo: '/logos/outlook.svg' },
+          { id: 'excel', nome: 'Excel', logo: '/logos/excel.svg' },
+          { id: 'google-sheets', nome: 'Google Sheets', logo: '/logos/google-sheets.svg' },
+          { id: 'primavera', nome: 'Cegid Primavera', logo: '/logos/cegid.svg' },
           { id: 'moloni', nome: 'Moloni' },
-          { id: 'invoicexpress', nome: 'InvoiceXpress' },
-          { id: 'shopify', nome: 'Shopify' },
-          { id: 'woocommerce', nome: 'WooCommerce' },
+          { id: 'invoicexpress', nome: 'InvoiceXpress', logo: '/logos/invoicexpress.png' },
+          { id: 'shopify', nome: 'Shopify', logo: '/logos/shopify.svg' },
+          { id: 'woocommerce', nome: 'WooCommerce', logo: '/logos/woocommerce.svg' },
         ],
       },
     },
