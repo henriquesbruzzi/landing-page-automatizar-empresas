@@ -115,7 +115,7 @@ function App() {
           path="/sobre"
           element={
             <>
-              <SEO lang="pt" page="home" />
+              <SEO lang="pt" page="about" />
               <SobrePage />
             </>
           }
@@ -125,7 +125,7 @@ function App() {
           path="/us/about"
           element={
             <>
-              <SEO lang="en" page="home" />
+              <SEO lang="en" page="about" />
               <SobrePage />
             </>
           }
@@ -148,7 +148,7 @@ function App() {
           path="/privacidade"
           element={
             <>
-              <SEO lang="pt" page="home" />
+              <SEO lang="pt" page="privacy" />
               <PrivacyPolicyPage />
             </>
           }
@@ -159,7 +159,7 @@ function App() {
           path="/us/privacy"
           element={
             <>
-              <SEO lang="en" page="home" />
+              <SEO lang="en" page="privacy" />
               <PrivacyPolicyPage />
             </>
           }

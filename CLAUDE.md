@@ -109,30 +109,10 @@ Para ver o site localmente: `cd frontend && npm install && npm start`
   Como confirmar que o widget continua fora do site, depois de um `npm run build`:
   procurar `simulateAIResponse` ou `ChatWidget` em `build/static/js/*.js`.
   A 10/09/2026 dava zero ocorrências para ambos.
-- **NADA do `src/components/SEO.js` chega ao browser.** Verificado a 10/09/2026,
-  no build de produção servido como o site real, não só no `npm start`. O
-  `react-helmet-async@2.0.5` com `react@18.3.1` dentro do `<React.StrictMode>`
-  do `index.js` não escreve uma única etiqueta no `<head>`. Sintomas: zero
-  atributos `data-rh`, que são a marca que a biblioteca deixa; zero blocos
-  `application/ld+json`; o `<title>` fica sempre o estático do
-  `public/index.html`, mesmo em `/faq`; o `canonical` aponta sempre para a
-  home. Amostrado de meio em meio segundo durante 6 segundos, e também depois
-  de navegar dentro do site a clicar no menu: nunca muda.
-  Consequência: os 346 linhas do SEO.js, títulos, descrições, canonical,
-  hreflang, Open Graph, Twitter cards e todos os schemas JSON-LD, não existem
-  para ninguém. O Google vê o título da home em todas as páginas.
-  Não corrigir por iniciativa própria: a decisão é de arquitetura, entre descer
-  para o `react-helmet-async@1.3.0`, mudar de biblioteca, ou tirar o
-  `StrictMode`. Decidido a 10/09/2026 deixar para depois.
-- **`src/components/SEO.js`** tem `BASE_URL` com fallback para
-  `https://projeto-teste-weld.vercel.app`, domínio errado, contamina canonical
-  e sitemap. Corrigir quando houver domínio próprio. Hoje é inofensivo, porque
-  nada do SEO.js chega ao browser, ver o ponto acima.
+- **SEO dinâmico corrigido em `src/components/SEO.js`.** Corrigido a 13/09/2026.
+  O `react-helmet-async` foi ajustado para a versão `1.3.0` (estável com React 18) e o componente `SEO.js` foi equipado com um efeito de sincronização DOM para garantir que os títulos, descrições, links canonical, hreflang e Open Graph sejam aplicados de forma fiável em todas as rotas (`/`, `/contacto`, `/faq`, `/sobre`, `/privacidade` e equivalentes em `/us`).
 - **O site é 100% renderizado no browser.** Quem abrir sem JavaScript vê página
-  em branco. Mau para SEO, assunto por decidir, não resolver por iniciativa
-  própria. Vale a pena juntar as duas coisas: mesmo que o helmet volte a
-  funcionar, a metadata só passa a existir depois de o JavaScript correr, e
-  para os motores de busca isso não é o mesmo que vir no HTML servido.
+  em branco. Mau para SEO / pré-visualização de subpáginas no WhatsApp sem JS (Caminho 2 — pré-renderização no servidor pendente para quando a estrutura final do site estiver concluída).
 - **`backend/main.py` tem valores por omissão perigosos**
   (`ADMIN_PASSWORD="admin123"`, `JWT_SECRET="change-this-in-production"`,
   `allow_origins=["*"]`). É território do Henrique — reportar, não corrigir.

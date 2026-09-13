@@ -39,6 +39,22 @@ const seoData = {
       alternate: `${BASE_URL}/us/faq`,
       ogLocale: 'pt_PT',
     },
+    about: {
+      title: 'Sobre Nós, NEXUGAL | Consultoria Tecnológica e Transformação Digital',
+      description:
+        'Conheça a NEXUGAL: quem somos, a nossa visão e a nossa paixão por transformar empresas através da tecnologia, cibersegurança e inovação.',
+      canonical: `${BASE_URL}/sobre`,
+      alternate: `${BASE_URL}/us/about`,
+      ogLocale: 'pt_PT',
+    },
+    privacy: {
+      title: 'Política de Privacidade, NEXUGAL | Proteção de Dados e RGPD',
+      description:
+        'Política de Privacidade da NEXUGAL. Saiba como recolhemos, tratamos e protegemos os seus dados pessoais em conformidade com o RGPD.',
+      canonical: `${BASE_URL}/privacidade`,
+      alternate: `${BASE_URL}/us/privacy`,
+      ogLocale: 'pt_PT',
+    },
   },
   en: {
     home: {
@@ -63,6 +79,22 @@ const seoData = {
         'Answers to frequently asked questions about NEXUGAL services: web development, cybersecurity, cloud, AI, timelines, costs and support.',
       canonical: `${BASE_URL}/us/faq`,
       alternate: `${BASE_URL}/faq`,
+      ogLocale: 'en_US',
+    },
+    about: {
+      title: 'About Us, NEXUGAL | Technology Consulting & Digital Transformation',
+      description:
+        'Meet NEXUGAL: who we are, our vision and our passion for transforming businesses through technology, cybersecurity, and innovation.',
+      canonical: `${BASE_URL}/us/about`,
+      alternate: `${BASE_URL}/sobre`,
+      ogLocale: 'en_US',
+    },
+    privacy: {
+      title: 'Privacy Policy, NEXUGAL | Data Protection & GDPR',
+      description:
+        'NEXUGAL Privacy Policy. Learn how we collect, process and protect your personal data in compliance with GDPR.',
+      canonical: `${BASE_URL}/us/privacy`,
+      alternate: `${BASE_URL}/privacidade`,
       ogLocale: 'en_US',
     },
   },
@@ -176,6 +208,24 @@ function getBreadcrumbs(lang, page) {
       position: 2,
       name: 'FAQ',
       item: lang === 'pt' ? `${BASE_URL}/faq` : `${BASE_URL}/us/faq`,
+    });
+  }
+
+  if (page === 'about') {
+    items.push({
+      '@type': 'ListItem',
+      position: 2,
+      name: lang === 'pt' ? 'Sobre Nós' : 'About Us',
+      item: lang === 'pt' ? `${BASE_URL}/sobre` : `${BASE_URL}/us/about`,
+    });
+  }
+
+  if (page === 'privacy') {
+    items.push({
+      '@type': 'ListItem',
+      position: 2,
+      name: lang === 'pt' ? 'Privacidade' : 'Privacy',
+      item: lang === 'pt' ? `${BASE_URL}/privacidade` : `${BASE_URL}/us/privacy`,
     });
   }
 
@@ -297,6 +347,40 @@ function SEO({ lang = 'pt', page = 'home' }) {
     schemas.push(getFaqSchema(lang));
   }
 
+  // Efeito direto no DOM como garantia síncrona de atualização de título e metas
+  React.useEffect(() => {
+    document.title = data.title;
+    document.documentElement.lang = htmlLang;
+
+    const setMeta = (attr, attrValue, content) => {
+      let el = document.querySelector(`meta[${attr}="${attrValue}"]`);
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, attrValue);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', content);
+    };
+
+    const setLink = (rel, href) => {
+      let el = document.querySelector(`link[rel="${rel}"]`);
+      if (!el) {
+        el = document.createElement('link');
+        el.setAttribute('rel', rel);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('href', href);
+    };
+
+    setMeta('name', 'description', data.description);
+    setLink('canonical', data.canonical);
+    setMeta('property', 'og:title', data.title);
+    setMeta('property', 'og:description', data.description);
+    setMeta('property', 'og:url', data.canonical);
+    setMeta('name', 'twitter:title', data.title);
+    setMeta('name', 'twitter:description', data.description);
+  }, [data, htmlLang]);
+
   return (
     <Helmet>
       {/* Idioma do HTML */}
@@ -319,6 +403,8 @@ function SEO({ lang = 'pt', page = 'home' }) {
       <meta property="og:description" content={data.description} />
       <meta property="og:url" content={data.canonical} />
       <meta property="og:image" content={`${BASE_URL}/images/og-image.png`} />
+      <meta property="og:image:secure_url" content={`${BASE_URL}/images/og-image.png`} />
+      <meta property="og:image:type" content="image/png" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
       <meta property="og:image:alt" content="NEXUGAL, Codificando o Amanhã da sua Empresa" />
