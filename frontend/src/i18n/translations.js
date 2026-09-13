@@ -298,23 +298,17 @@ const translations = {
       subtitle: 'Quem somos',
       title: 'Sobre a ',
       titleHighlight: 'NEXUGAL',
-      description: 'A nossa equipa ajuda empresas a tirar do meio o trabalho manual que ninguém gosta de fazer e a pôr a informação a circular entre as pessoas e os sistemas. Sem projetos intermináveis, sem tecnologia a mais do que a necessária.',
+      description: 'Ajudamos empresas a tirar do meio o trabalho manual que ninguém gosta de fazer e a pôr a informação a circular entre as pessoas e os sistemas. Sem projetos intermináveis, sem tecnologia a mais do que a necessária.',
       founders: {
-        intro: 'Os nossos fundadores são licenciados em Engenharia e Gestão de Sistemas de Informação pela Universidade do Minho. É de lá que vem a forma como trabalhamos, a olhar ao mesmo tempo para o processo e para a tecnologia.',
+        intro: 'O nosso fundador é licenciado em Engenharia e Gestão de Sistemas de Informação pela Universidade do Minho. É de lá que vem a forma como trabalhamos, a olhar ao mesmo tempo para o processo e para a tecnologia.',
         photoAlt: 'Fotografia de ',
         linkedinLabel: 'LinkedIn de ',
         people: [
           {
             id: 'rui',
             name: 'Rui Machado',
-            role: 'Sócio fundador',
+            role: 'Fundador',
             description: 'Gere lojas de comércio eletrónico em vários países e foi aí que construiu as primeiras automações, das respostas a clientes à faturação e à expedição. Traz o método de quem já resolveu estes problemas na sua própria empresa, antes de os resolver nas dos outros.',
-          },
-          {
-            id: 'henrique',
-            name: 'Henrique Fernandes',
-            role: 'Sócio fundador',
-            description: 'Trabalhou como freelancer para mais de 80 clientes de vários setores, a construir software à medida e a automatizar processos. Traz o lado técnico da NEXUGAL, a parte de pegar num processo complicado e transformá-lo em algo simples de usar no dia a dia.',
           },
         ],
       },
@@ -685,23 +679,17 @@ const translations = {
       subtitle: 'Who we are',
       title: 'About ',
       titleHighlight: 'NEXUGAL',
-      description: 'Our team helps companies take out the manual work nobody enjoys doing and get information moving between people and systems. No endless projects, no more technology than the job needs.',
+      description: 'We help companies take out the manual work nobody enjoys doing and get information moving between people and systems. No endless projects, no more technology than the job needs.',
       founders: {
-        intro: 'Our founders hold degrees in Information Systems Engineering and Management from the University of Minho. That is where our way of working comes from, with an eye on the process and on the technology at the same time.',
+        intro: 'Our founder holds a degree in Information Systems Engineering and Management from the University of Minho. That is where our way of working comes from, with an eye on the process and on the technology at the same time.',
         photoAlt: 'Photo of ',
         linkedinLabel: 'LinkedIn profile of ',
         people: [
           {
             id: 'rui',
             name: 'Rui Machado',
-            role: 'Founding partner',
+            role: 'Founder',
             description: 'He runs e-commerce stores in several countries, and that is where he built his first automations, from customer replies to invoicing and shipping. He brings the method of someone who has already solved these problems in his own company, before solving them for others.',
-          },
-          {
-            id: 'henrique',
-            name: 'Henrique Fernandes',
-            role: 'Founding partner',
-            description: 'He worked as a freelancer for more than 80 clients across various sectors, building custom software and automating processes. He brings the technical side of NEXUGAL, the part about taking a complicated process and turning it into something simple to use day to day.',
           },
         ],
       },

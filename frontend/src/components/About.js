@@ -11,21 +11,18 @@ import Entrada from './Entrada';
 // LinkedIn não aparece no cartão.
 const LINKEDIN = {
   rui: '',
-  henrique: '',
 };
 
-// Fotografia de cada fundador. Caminho a contar da pasta public, por exemplo
-// '/images/rui.jpg'. Enquanto estiver vazio, aparece uma silhueta neutra.
+// Fotografia do fundador. Caminho a contar da pasta public.
 const FOTOS = {
-  rui: '',
-  henrique: '',
+  rui: '/images/rui.jpg',
 };
 
 // ---------------------------------------------------------------------------
 
 // Espera entre cartões da mesma fila, para entrarem em cadeia
 const ATRASO_ENTRE_CARTOES = 90;
-const CARTOES_POR_FILA = 2;
+const CARTOES_POR_FILA = 1;
 
 // Silhueta neutra, no lugar da fotografia que ainda não existe
 const silhueta = (
@@ -71,15 +68,15 @@ function About() {
           </p>
         </Entrada>
 
-        {/* De onde vem a forma de trabalhar dos dois */}
+        {/* De onde vem a forma de trabalhar */}
         <Entrada className="text-center mb-12">
           <p className="text-texto max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
             {fundadores.intro}
           </p>
         </Entrada>
 
-        {/* Fundadores */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        {/* Fundador */}
+        <div className="max-w-2xl mx-auto grid grid-cols-1 gap-6 md:gap-8">
           {fundadores.people.map((pessoa, index) => {
             const foto = FOTOS[pessoa.id];
             const linkedin = LINKEDIN[pessoa.id];
