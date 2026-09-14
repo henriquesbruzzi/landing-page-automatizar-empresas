@@ -175,13 +175,16 @@ comandos vão um por linha. Ver 7.5.
     guardado na etiqueta `arquivo/scraper-fix`. Ficou o recado para o Henrique:
     quando voltar a ligar a Vercel ao GitHub, pôr o ramo de produção em `main`.
   - A 14/09/2026 o nexugal.com mostra o ramo `rui/site-branco` (ver 7.0), numa
-    publicação de 13/09/2026 às 19h22, feita a partir de uma pasta local: o site
-    traz uma alteração que só foi commitada um minuto depois.
+    publicação feita a partir de uma pasta local: o site traz uma alteração do
+    Henrique que só foi commitada às 19h23 de 13/09, e uma cópia da página em
+    cache já a mostrava às 19h22.
   - **Por confirmar com o Henrique:** se a Vercel voltou a estar ligada ao
-    GitHub, e com que ramo de produção. Há um indício de que não: o `4e00f5f`
-    chegou ao GitHub depois da publicação de 13/09, e a 14/09 o site continuava
-    a indicar o `d3f292e`. Se estivesse ligada com produção no `rui/site-branco`,
-    esse push tinha publicado. Até haver confirmação, não assumir nada: publicar
+    GitHub, e com que ramo de produção. Há dois indícios de que não. O `4e00f5f`
+    chegou ao GitHub depois da publicação de 13/09, e o site continuou a indicar
+    o `d3f292e`. E a 14/09, depois do push do `e2abf3e` (o commit que instalou a
+    secção 7), o site ficou cinco minutos seguidos no mesmo ficheiro e no mesmo
+    commit. Se estivesse ligada com produção no `rui/site-branco`, esses pushes
+    tinham publicado. Até haver confirmação, não assumir nada: publicar
     é um passo à parte, e depois de cada push para o `rui/site-branco` ver se o
     site mudou de commit (como, logo abaixo). Se mudar, a Vercel está a publicar
     a cada push, e a partir daí o push para esse ramo pede confirmação expressa
@@ -194,7 +197,9 @@ comandos vão um por linha. Ver 7.5.
   feita numa pasta com git, também grava essas marcas. E numa publicação à mão
   o commit indicado pode não ser o conteúdo: a de 13/09 diz `d3f292e` e mostra
   o `4e00f5f` (7.0). Para ter a certeza, procurar também no ficheiro um texto
-  que só exista no commit que se quer confirmar.
+  que só exista no commit que se quer confirmar. O cabeçalho `Last-Modified` da
+  página muda de cópia para cópia em cache (a 14/09 viram-se 13/09 às 18h22 e
+  14/09 às 03h48, em GMT): serve de limite, não de hora exata da publicação.
 - **Railway:** corre o backend (`backend/Procfile` → `uvicorn main:app`) e a
   base de dados Postgres. Visto a 06/09/2026: todas as publicações do backend
   são `railway up` feitas à mão, nenhuma veio do GitHub; um merge no `main` não
@@ -250,9 +255,10 @@ O que se sabe sem rever o código:
   `main`. O Henrique corrigiu para `about` e `privacy`.
 - **O nexugal.com já mostra este ramo.** Verificado a 14/09/2026 no ficheiro
   `static/js/main.*.js` do site: traz `VERCEL_GIT_COMMIT_REF: "rui/site-branco"`
-  e o commit `d3f292e`, foi publicado a 13/09/2026 às 19h22 (hora de Lisboa) e
-  já contém o Sobre novo, que só entrou no git às 19h23, no `4e00f5f`. Na
-  prática, o que está online é o `4e00f5f`. **Os pendentes de 7.2 estão à vista
+  e o commit `d3f292e`, e já contém o Sobre novo, que só entrou no git às 19h23
+  de 13/09, no `4e00f5f`. Uma cópia da página em cache já o mostrava às 19h22
+  (hora de Lisboa). Na prática, o que está online é o `4e00f5f`. **Os pendentes
+  de 7.2 estão à vista
   de quem visita o site.**
 
 **Quem continuar tem de, primeiro:**
@@ -1176,10 +1182,11 @@ versões inglesas foram escritas pelo Claude e mostradas ao Rui.
 O nexugal.com mostra o `rui/site-branco` (7.0), e o `main` está atrás: **quem
 publicar a partir do `main` faz o site voltar ao fundo preto.** Uma publicação à
 mão (`vercel --prod`) leva o que estiver na pasta, incluindo o que ainda não foi
-commitado. Foi o que aconteceu a 13/09, deduzido pelas horas: o site foi
-publicado às 19h22 com o commit `d3f292e` e já com o texto e a fotografia do
-Sobre, que só foram commitados às 19h23, no `4e00f5f`. Ainda hoje o site diz ser
-`d3f292e` e mostra `4e00f5f`. Commitar antes de publicar. E a marca
+commitado. Foi o que aconteceu a 13/09: o site diz ter saído do commit
+`d3f292e`, mas já traz o texto e a fotografia do Sobre, que só foram commitados
+no `4e00f5f` (às 19h23; uma cópia da página em cache já os mostrava às 19h22).
+Ainda hoje o site diz ser `d3f292e` e mostra `4e00f5f`. Commitar antes de
+publicar. E a marca
 `VERCEL_GIT_COMMIT_REF` no site não prova que a Vercel esteja ligada ao GitHub
 (secção 6).
 
