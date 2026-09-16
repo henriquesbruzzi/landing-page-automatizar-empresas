@@ -145,12 +145,16 @@ comandos vão um por linha. Ver 7.5.
   A 10/09/2026 dava zero ocorrências para ambos.
 - **SEO dinâmico corrigido em `src/components/SEO.js`.** Corrigido a 13/09/2026.
   O `react-helmet-async` foi ajustado para a versão `1.3.0` (estável com React 18) e o componente `SEO.js` foi equipado com um efeito de sincronização DOM para garantir que os títulos, descrições, links canonical, hreflang e Open Graph sejam aplicados de forma fiável em todas as rotas (`/`, `/contacto`, `/faq`, `/sobre`, `/privacidade` e equivalentes em `/us`).
-- **O ponto de cima só se confirma em parte** (site público e leitura rápida do
-  código, a 14/09/2026): os títulos e o canonical de cada página já estão certos,
-  mas os blocos JSON-LD só apareceram numa de seis cargas, e os `hreflang` não
-  entram na sincronização. Detalhe em 7.2, ponto 5.
+- **O ponto de cima foi completado a 16/09/2026** (`18a2135`). Até aí ficavam
+  etiquetas repetidas e `hreflang` contraditórios: as fixas do
+  `public/index.html` conviviam com as que a biblioteca escrevia. Agora cada
+  etiqueta tem um só sítio que a escreve, explicado no topo do `SEO.js`.
+  Verificado nas dez páginas. A "falha intermitente" de 14/09 não era do site: a
+  biblioteca só escreve quando o browser desenha o ecrã, e o painel de
+  pré-visualização do Claude escondido não desenha (7.4). Detalhe em 7.2, ponto 5.
 - **O site é 100% renderizado no browser.** Quem abrir sem JavaScript vê página
   em branco. Mau para SEO / pré-visualização de subpáginas no WhatsApp sem JS (Caminho 2 — pré-renderização no servidor pendente para quando a estrutura final do site estiver concluída).
+  O que seria preciso para as pré-visualizações por página está em 7.2, ponto 11.
 - **`backend/main.py` tem valores por omissão perigosos**
   (`ADMIN_PASSWORD="admin123"`, `JWT_SECRET="change-this-in-production"`,
   `allow_origins=["*"]`). É território do Henrique — reportar, não corrigir.
@@ -212,7 +216,7 @@ comandos vão um por linha. Ver 7.5.
 
 ---
 
-## 7. Ponto de situação do ramo `rui/site-branco` (14/09/2026)
+## 7. Ponto de situação do ramo `rui/site-branco` (14/09/2026, atualizado a 16/09)
 
 Esta secção existe para uma sessão nova continuar o trabalho sem o Rui ter de
 explicar tudo outra vez. Está escrita para quem nunca viu o projeto. Onde uma
@@ -227,6 +231,11 @@ Os pedidos foram feitos pelo Rui numa só conversa com o Claude, de 09/09 a
 14/09/2026. Dois commits (`61423f6` e `b7fde65`, a paleta afinada e o hero
 novo) foram feitos noutra sessão de Claude entre dois pedidos dessa conversa, e
 o Rui aprovou o resultado ("O hero está construído e está bom").
+
+**A 15 e 16/09/2026**, numa conversa nova, o Rui pediu as correções urgentes
+(7.2, pontos 1, 2 e 3) e o texto que o Google e o WhatsApp veem (pontos 5 e 6).
+Entraram em `ba203b3` e `18a2135`, e estão descritos em 7.6, com o que ficou em
+aberto. Onde 7.1 a 7.5 foram escritos antes disso, está assinalado.
 
 ### 7.0 Antes de mais: o Henrique trabalhou neste ramo, e o site público já o mostra
 
@@ -276,7 +285,8 @@ O que se sabe sem rever o código:
    máquina ainda tinha a versão 2.0.5 (`npm ls react-helmet-async` dizia "invalid").
 6. Tratar como "por confirmar" tudo o que abaixo se diz sobre o SEO e sobre a
    página do Sobre. Onde a versão do Henrique contradisser este texto, vale a
-   dele, que é mais recente.
+   dele, que é mais recente. (Atualizado a 16/09: o SEO foi confirmado e revisto,
+   7.2, ponto 5, e o Sobre passou a auditoria de contraste, 7.6.)
 
 ### 7.1 O que foi feito, por ordem
 
@@ -581,17 +591,19 @@ por leitores de ecrã.
    cada duas palavras).
 3. **Stock e compras** (`discordancia`). Dor: "O stock do programa diz uma coisa
    e o armazém diz outra." Um artigo só, em grande: "Correias", com os rótulos
-   NO PROGRAMA e NA LOJA E ARMAZÉM, dois números grandes em caixas com a cor de
+   NO PROGRAMA e NA LOJA/ARMAZÉM (até 16/09, NA LOJA E ARMAZÉM), 19 e 12 (até
+   16/09, trocados), dois números grandes em caixas com a cor de
    alerta e um sinal de diferente desenhado entre eles; por baixo, "Sete clientes
    iam comprar uma coisa que não existe."; seta; cartão "Hoje, 6h05": 5 487
    referências verificadas, 9 corrigidas sozinhas, 3 precisam de decisão. **Já
    foram quatro artigos em duas colunas.** O Rui mandou refazer: "obriga a pessoa
    a comparar número a número para descobrir onde está a diferença. Ninguém faz
    isso a passar num site." A frase dos sete clientes substituiu "antes de o
-   cliente dar por isso". Abaixo de 1024px empilha: artigo, seta para baixo,
-   cartão. **Os dois números nunca empilham, em nenhuma largura**: a diferença
-   entre eles é o desenho todo (diz-o o comentário no código). **Tem dois
-   pendentes (7.2, pontos 1 e 2).**
+   cliente dar por isso". Abaixo de 1280px empilha (até 16/09, só abaixo de
+   1024px): artigo, seta para baixo, cartão. **Os dois números nunca empilham,
+   em nenhuma largura**: a diferença entre eles é o desenho todo (diz-o o
+   comentário no código). Os dois pendentes que tinha foram feitos a 16/09
+   (7.2, pontos 1 e 2).
 4. **Números do negócio** (`margem`). Dor: "Só se sabe se o mês correu bem
    quando o contabilista fecha as contas." Barras horizontais de margem por
    artigo, semana 37, com eixo no zero: Filtros 38%, Correias 31%, Baterias 22%,
@@ -715,16 +727,16 @@ caixa (`overflow-x-auto`). Funciona, é só desconfortável.
 
 ### 7.2 O que ficou pendente
 
-Por ordem de importância. **Nenhum destes pontos foi começado nesta sessão.** O
-ponto 5 foi mexido pelo Henrique a 13/09 e está a meio. Os pontos 1 e 2 estão à
-vista no site público.
+Por ordem de importância, como estava a 14/09. **Atualizado a 16/09:** os pontos
+1, 2 e 3 estão feitos, o 5 e o 6 feitos em parte, e os pontos 11 a 14 são novos.
+Nada disto está publicado: o site público continua no `d3f292e` (secção 6).
 
 **Antes de tudo, fora do frontend:** o período de experiência do Railway estava
 a acabar por volta de 19/09/2026 (secção 6). Se acabar, o formulário deixa de
 gravar contactos, sem aviso. Não é trabalho para esta pasta: lembrar o Rui para
 confirmar com o Henrique se já passou a plano pago.
 
-#### 1. O bloco do stock transborda entre 1024 e cerca de 1100px
+#### 1. O bloco do stock transborda entre 1024 e cerca de 1100px (FEITO a 16/09, `ba203b3`)
 
 **O problema**, medido a 11/09/2026 no bloco "Stock e compras":
 
@@ -734,76 +746,57 @@ confirmar com o Henrique se já passou a plano pago.
 | 1152px | 229px | 67px | 46px | 2 e 2 linhas | cabe |
 | 1279px | 302px | 104px | 46px | 1 e 2 linhas | cabe |
 
-A 380px e a partir de 1280px está bem.
-
 **A causa:** em `VisualDiscordancia` (`frontend/src/components/VisuaisExemplos.js`)
-o painel do artigo, a seta e o cartão ficam lado a lado a partir de `lg`
-(1024px), e o cartão tem largura fixa (`lg:w-60`, 240px), tudo dentro da coluna
-do desenho, que é só uma parte do bloco.
+o painel do artigo, a seta e o cartão ficavam lado a lado a partir de `lg`
+(1024px), com o cartão em largura fixa (240px), tudo dentro da coluna do desenho.
 
-**A correção que o Claude propôs a 11/09**, e que o Rui pediu para ficar
-registada com detalhe para ser feita sem mais perguntas: empilhar este desenho
-até `xl` (1280px) em vez de `lg`. É a mesma solução que o Claude escolheu para o
-esquema do hero a 10/09, dentro do critério que o Rui deu ("Se isso obrigar a
-usar a versão empilhada nessa faixa, usa"), e que o Rui manteve.
+**O que se fez:** o desenho empilha até `xl` (1280px), a mesma solução do esquema
+do hero. O componente `Seta` recebe agora o ponto de corte por parâmetro
+(`corte="lg"` por omissão, `corte="xl"` no stock) e escolhe entre pares de
+classes escritos por extenso (`CORTE_SETA`), porque o Tailwind só gera as classes
+que estão escritas literalmente. A versão antiga comparava texto e, com
+`'hidden xl:block'`, a seta para baixo nunca aparecia. O bloco 1 (`VisualPapel`)
+continua em `lg`.
 
-1. No contentor de `VisualDiscordancia`, trocar `lg:flex-row lg:items-center lg:gap-5`
-   por `xl:flex-row xl:items-center xl:gap-5`.
-2. No cartão, trocar `lg:w-60` por `xl:w-60`.
-3. Pôr a seta a mudar de direção também em `xl`. **Aqui há uma armadilha:** o
-   componente `Seta` recebe `classeLarga = 'hidden lg:block'` e decide a classe
-   da seta para baixo comparando o texto:
-   `classeLarga === 'hidden lg:block' ? 'lg:hidden' : 'hidden'`.
-   Se lhe passarem `'hidden xl:block'`, a seta para baixo recebe `'hidden'` e
-   **nunca aparece**. É preciso mudar o `Seta` para receber o ponto de corte e
-   escolher entre dois pares escritos por extenso, porque o Tailwind só gera as
-   classes que estão escritas literalmente no código: em `lg`, `'hidden lg:block'`
-   e `'lg:hidden'`; em `xl`, `'hidden xl:block'` e `'xl:hidden'`. O bloco 1
-   (`VisualPapel`) também usa o `Seta` e continua em `lg`.
-4. Atualizar os comentários: o de `VisualDiscordancia` passa a dizer que o
-   desenho empilha abaixo de 1280px (e não só no telemóvel), e o do `Seta` que o
-   ponto de corte vem por parâmetro.
+**Medido a 16/09**, no build de produção, com o número em texto (`Range`) contra
+a caixa:
 
-A grelha dos dois números não muda: fica lado a lado em todas as larguras.
+| Largura | Disposição | Caixa de cada número | "19" e "12" | Seta |
+|---|---|---|---|---|
+| 380px | empilhado | 119px | 47 e 46px, dentro | para baixo |
+| 1024px | empilhado | 195px | dentro | para baixo |
+| 1152px | empilhado | 232px | dentro | para baixo |
+| 1279px | empilhado | 268px | dentro | para baixo |
+| 1280px | lado a lado | 105px | dentro | para a direita |
+| 1920px | lado a lado | 105px | dentro | para a direita |
 
-O relatório de 11/09 dizia "É uma linha". Por causa do `Seta`, são mais sítios.
+Igual em inglês (caixas de 104px a partir de 1280). Sem scroll para o lado em
+nenhuma largura, e as setas do bloco 1 continuam a mudar em 1024px. **Ficou uma
+coisa por resolver no rótulo inglês**, em 7.6.
 
-**Como confirmar:** a 1024, 1152, 1279 e 1280px, medir no browser a largura do
-texto de cada número (com um `Range` sobre o conteúdo) contra a largura da
-caixa; ver que o cartão cabe; ver a seta a apontar para baixo abaixo de 1280px e
-para a direita a partir daí; e ver que o bloco 1 não mudou.
+#### 2. Os números do stock trocam de lado: 19 no programa, 12 na loja e armazém (FEITO a 16/09, `ba203b3`)
 
-#### 2. Os números do stock trocam de lado: 19 no programa, 12 na loja e armazém
-
-**Decidido pelo Rui a 14/09.** O porquê: o Claude assinalou a 11/09 que, com 12
-no programa e 19 na loja e armazém, a frase de baixo não bate certo. Se o
-armazém tem mesmo 19, as correias existem, e ninguém ia comprar uma coisa que
-não existe. Com 19 no programa e só 12 na loja e armazém, vende-se o que o
+O porquê: com 12 no programa e 19 na loja e armazém, a frase de baixo não batia
+certo. Se o armazém tem mesmo 19, as correias existem, e ninguém ia comprar uma
+coisa que não existe. Com 19 no programa e só 12 na prateleira, vende-se o que o
 programa diz haver e faltam sete: "Sete clientes iam comprar uma coisa que não
 existe."
 
-**Onde:** `frontend/src/i18n/translations.js`, bloco `id: 'exemplo-stock'`, campo
-`arte.numeros`: de `['12', '19']` para `['19', '12']`, **nas duas línguas**. Os
-rótulos (`colunas`) ficam pela mesma ordem, NO PROGRAMA e NA LOJA E ARMAZÉM (EN
-IN THE SYSTEM e IN THE SHOP AND WAREHOUSE). A frase não muda, e o componente
-também não.
+`arte.numeros` passou a `['19', '12']` nas duas línguas, com um comentário no
+bloco PT a explicar a ordem. No mesmo pedido o Rui mudou os rótulos: **NA
+LOJA/ARMAZÉM** (EN **IN THE SHOP/WAREHOUSE**), com barra e sem espaços. A frase
+não mudou.
 
-#### 3. O comentário desatualizado no cabeçalho do `EsquemaIntegracoes.js`
+#### 3. O comentário desatualizado no cabeçalho do `EsquemaIntegracoes.js` (FEITO a 16/09, `ba203b3`)
 
-No bloco de comentário do topo do ficheiro, três coisas já não são verdade:
-
-- "Serve o hero e os seis blocos da secção de exemplos." Desde 10/09 serve só o
-  hero; os exemplos usam o `VisuaisExemplos.js`.
-- "é o mesmo desenho com outro conteúdo, e não sete componentes parecidos."
-- "(ALTURA_CAIXA, ESPACO)": essas constantes já não existem. As medidas estão em
-  `LG` e em `FILA`.
-
-Corrigir só o texto do comentário. O Claude não lhe mexeu a 11/09 porque o Rui
-tinha dito para não tocar em mais nada do componente. **O resto fica como está,
-de propósito** (o Rui disse-o a 10/09 e a 11/09): dados por propriedade, linha
-de entrega opcional, número de origens como parâmetro e realce marcado à mão. As
-medidas de `FILA`, com o patamar para cinco origens, também ficam: foram pedidas
-pelo Rui a 10/09 para o dia em que houver mais origens.
+Dizia que o componente servia o hero e os seis blocos dos exemplos, que era "o
+mesmo desenho com outro conteúdo, e não sete componentes parecidos", e citava
+constantes que já não existem (`ALTURA_CAIXA`, `ESPACO`). Diz agora que serve só
+o hero e que as medidas estão em `LG` e `FILA`. Só o comentário mudou. **O resto
+do componente fica como está, de propósito** (o Rui disse-o a 10/09 e a 11/09):
+dados por propriedade, linha de entrega opcional, número de origens como
+parâmetro, realce marcado à mão, e as medidas de `FILA` com o patamar para cinco
+origens.
 
 #### 4. O Moloni está como texto na tira
 
@@ -839,91 +832,99 @@ Excel e o Outlook; do Outlook os dois ficheiros eram quase iguais e ficou o
 `outlook-icon.svg` (não o `microsoft-outlook-2013-logo.svg`). Ficaram de fora o
 `adobe-pdf-icon.svg` e o `whatsapp-3.svg`, que não estão na tira.
 
-#### 5. O SEO, que o Henrique foi tratar
+#### 5. O SEO (FEITO em parte a 16/09, `18a2135`)
 
-**O que se passava a 10/09/2026**, verificado no build de produção servido como o
-site real: com `react-helmet-async@2.0.5` e `react@18.3.1` dentro do
-`<React.StrictMode>`, nada do `SEO.js` chegava ao `<head>`. Zero atributos
-`data-rh` (a marca que a biblioteca deixa), zero blocos `application/ld+json`, o
-`<title>` sempre o estático do `public/index.html` mesmo em `/faq`, o canonical
-sempre a apontar para a página inicial, e nada mudava ao navegar pelo menu. O
-Google via o título da página inicial em todas as páginas. Nessa data o Rui
-decidiu não mexer: nem no `SEO.js`, nem na versão da biblioteca, nem no
-`StrictMode`.
+**A história, por ordem:**
 
-**O que o Henrique fez a 13/09** (`d3f292e` e a nota dele na secção 5): desceu a
-biblioteca para a versão 1.3.0, acrescentou um efeito que escreve diretamente no
-`<head>` e corrigiu as propriedades das rotas.
+- **10/09:** com `react-helmet-async@2.0.5`, nada do `SEO.js` chegava ao
+  `<head>` (zero `data-rh`, zero JSON-LD, título e canonical sempre os do
+  `public/index.html`). O Rui decidiu não mexer.
+- **13/09:** o Henrique (`d3f292e`) desceu a biblioteca para a 1.3.0, juntou um
+  efeito que escreve diretamente no `<head>` e corrigiu as rotas do Sobre e da
+  Privacidade, que usavam o SEO da página inicial.
+- **14/09:** no site público, título e canonical certos, mas JSON-LD só numa de
+  seis cargas. Parecia uma falha intermitente.
+- **15/09: não era falha do site.** A biblioteca só escreve as etiquetas quando o
+  browser desenha o ecrã seguinte (`requestAnimationFrame`, a opção `defer`, ligada
+  por omissão). O painel de pré-visualização do Claude, escondido, não desenha
+  nada, e a biblioteca nunca escrevia. A única carga boa de 14/09 foi quase de
+  certeza com o painel à vista. O diagnóstico de 10/09 pode ter tido a mesma
+  causa: não foi testado, e a descida para a 1.3.0 não faz mal. Com o desenho
+  simulado, tudo funcionava, mas com **etiquetas repetidas**: dois canonical,
+  duas descrições, dois `og:title`, os três `hreflang` fixos do `index.html` (a
+  dizer sempre `/` e `/us`, mesmo na FAQ) ao lado dos certos, e `og:locale` pt_PT
+  ao lado de en_US nas páginas em inglês.
+- **16/09:** o Rui pediu que nenhuma página ficasse com informação
+  contraditória, sem perder as pré-visualizações do WhatsApp. Feito assim.
 
-**O que se vê no site público a 14/09/2026**, abrindo cada página diretamente
-pelo endereço, no painel de pré-visualização do Claude e sem rever o código:
+**Cada etiqueta tem agora um só sítio que a escreve** (está também no topo do
+`SEO.js`):
 
-- título e canonical certos em `/`, `/faq`, `/us/faq` e `/sobre`, e o
-  `<html lang>` certo (pt-PT, en-US);
-- blocos JSON-LD e etiquetas `data-rh` só numa de seis cargas: na primeira, em
-  `/faq`, com o `FAQPage` e as sete perguntas. Nas outras cinco (`/us/faq` duas
-  vezes, `/faq` outra vez, `/sobre` e `/`), zero. E nessa primeira carga havia
-  **dois** `<link rel="canonical">`;
-- antes de o JavaScript correr, o separador mostra o título estático do
-  `public/index.html` (com travessão, ver ponto 6).
+| Quem escreve | O quê | Porquê |
+|---|---|---|
+| `public/index.html` | título, descrição, `keywords`, `robots`, todas as `og:` e `twitter:`, com os valores da página inicial em PT | é o único sítio que o WhatsApp e as redes sociais leem |
+| o efeito (`useEffect` no `SEO.js`) | reescreve essas mesmas: título, `lang`, descrição, `og:title`, `og:description`, `og:url`, `og:locale`, `og:locale:alternate`, `og:image:alt`, `twitter:title`, `twitter:description`, `twitter:image:alt`; e **cria** o canonical | não depende de o browser desenhar o ecrã |
+| a biblioteca (`Helmet`) | só os três `hreflang` e os blocos JSON-LD | não existem no `index.html`, por isso não repetem |
 
-O que o código mostra (lido a 14/09, sem testar): o efeito que o Henrique
-acrescentou ao `SEO.js` escreve só o título, o `lang` do `<html>`, a descrição,
-o canonical, `og:title`, `og:description`, `og:url`, `twitter:title` e
-`twitter:description`. Os `hreflang`, o JSON-LD, `og:image` e `og:locale`
-continuam a depender da biblioteca. Quando ela falha, ficam os `hreflang`
-estáticos do `public/index.html`, que apontam sempre para `/` e `/us`, ao
-contrário do que diz a nota do Henrique na secção 5. Os dois canonical também se
-explicam: o efeito reescreve o canonical estático e a biblioteca, quando
-funciona, acrescenta o seu. Falta confirmar num browser verdadeiro.
+O que saiu, e porquê:
+
+- **Do `index.html`: o canonical e os três `hreflang`.** O ficheiro é o mesmo
+  para todas as páginas, e lá só podiam estar errados: diziam à FAQ que era a
+  página inicial. O Google desaconselha pôr um canonical no HTML e trocá-lo
+  depois por JavaScript; aceita-o injetado quando o HTML não traz nenhum. Os
+  `hreflang` continuam também declarados no `sitemap.xml`.
+- **Da biblioteca: tudo o que o `index.html` já tem**, incluindo as cópias de
+  `og:image:secure_url` e `og:image:type` que o Henrique tinha acrescentado ao
+  `Helmet`. As dele no `index.html` ficaram.
+- O `x-default` apontava sempre para `/`. Passou a apontar para a versão
+  portuguesa de cada página (na FAQ, `/faq`): o Google só aceita o `x-default`
+  se a página para onde aponta apontar de volta.
+- O `og:url` fixo do `index.html` ficou em `/`: sem JavaScript todas as páginas
+  mostram a pré-visualização da página inicial, e o `og:url` diz o mesmo.
+
+**Verificado a 16/09**, no build de produção, com o desenho simulado (ver abaixo),
+abrindo pelo endereço as dez páginas (`/`, `/us`, `/faq`, `/us/faq`, `/contacto`,
+`/us/contact`, `/sobre`, `/us/about`, `/privacidade`, `/us/privacy`) e navegando
+pelo menu de `/` para `/faq` e de volta: um só canonical, certo; nenhum `name` nem
+`property` repetido; `hreflang` pt, en e x-default certos; `og:locale` certo em
+cada língua; JSON-LD em todas; `FAQPage` com as sete perguntas em PT e EN.
 
 **Como verificar:**
 
-1. `npm install` (a versão da biblioteca mudou) e `npm run build`.
-2. Servir a pasta `build` como o site real, por exemplo `npx serve -s build`. O
-   `npm start` não serve para isto: é outro modo de funcionamento.
-3. Abrir `/faq` **diretamente pelo endereço**, não pelo menu, e na consola do
-   browser ver:
-   - `document.title` é o da FAQ, e não o do `public/index.html`;
-   - `document.querySelectorAll('link[rel="canonical"]')` tem **um** elemento, a
-     apontar para a FAQ;
-   - `document.querySelectorAll('script[type="application/ld+json"]').length` é
-     maior que zero, e há um bloco `FAQPage` com as mesmas sete perguntas da página.
-4. **Repetir várias vezes a mesma página**: a falha de 14/09 era intermitente.
-   Depois repetir em `/us/faq`, `/sobre`, `/contacto` e `/`, e navegando pelo menu.
+1. `npm install` e `CI=true npm run build`.
+2. Servir a pasta `build` (configuração `nexugal-build` do `.claude/launch.json`).
+   O `npm start` não serve para isto.
+3. **Se o painel estiver escondido**, a biblioteca não escreve nada. Depois do
+   build e antes de abrir as páginas, pôr no início do `<head>` do
+   `build/index.html` (a pasta `build` é descartável e não vai para o git):
+   `<script>if(document.hidden){window.requestAnimationFrame=function(c){return setTimeout(function(){c(performance.now())},16)};window.cancelAnimationFrame=function(i){clearTimeout(i)}}</script>`.
+   **Voltar a fazer o build no fim**, para a pasta não ficar com isto.
+4. Abrir cada página pelo endereço e contar: `link[rel=canonical]` (um),
+   `link[rel=alternate]` (três), `meta[name]` e `meta[property]` sem nomes
+   repetidos, `script[type="application/ld+json"]` (quatro, cinco na página
+   inicial e na FAQ).
 
-**O que fazer com o resultado:** reportar ao Rui, com o que se viu em cada
-página e em cada carga. Não mexer no `SEO.js`, na versão da biblioteca nem no
-`StrictMode` sem o Rui decidir: o assunto está com o Henrique.
+**O que continua por fazer:** as pré-visualizações por página (ponto 11). E o
+conteúdo dos títulos e descrições das outras páginas não foi revisto (ponto 14).
 
-**E mesmo com a correção a funcionar a 100%**, estas etiquetas só existem depois
-de o JavaScript correr, porque o site é todo desenhado no browser. As
-pré-visualizações de ligações (WhatsApp, redes sociais) não correm JavaScript e
-veem sempre as etiquetas do `public/index.html`, em todas as páginas; para os
-motores de busca também não é o mesmo que vir no HTML servido. Foi o Rui que
-pediu, a 10/09, para isto ficar escrito. A nota do Henrique na secção 5 chama
-"Caminho 2" à pré-renderização no servidor, que ficou para quando a estrutura do
-site estiver fechada; não há registo do que sejam os outros caminhos.
+#### 6. Travessões e português do Brasil no `public/index.html` (FEITO em parte a 16/09, `18a2135`)
 
-#### 6. Travessões e português do Brasil no `public/index.html` (e no `SEO.js`)
+Feito: o título, a descrição e as etiquetas `og:` e `twitter:` do `index.html`
+foram substituídas pelas novas (sem travessões), e "Codificando o Amanhã da sua
+Empresa" saiu dos três sítios onde estava. Os dois comentários com travessão do
+`index.html` também saíram. Hoje o `index.html` não tem nenhum travessão.
 
-A limpeza de 10/09 tratou do texto visível em `frontend/src/` e não apanhou o
-`public/index.html`, que já tinha estes problemas no `main`:
+Ficou por fazer, não discutido com o Rui:
 
-- travessões no `<title>` estático, na `meta description`, em `og:title`,
-  `twitter:title`, `og:image:alt` e `twitter:image:alt` (e mais dois dentro de
-  comentários HTML);
-- "Codificando o Amanhã da sua Empresa", nos dois `alt` da imagem de partilha
-  do `public/index.html` e também na `og:image:alt` do `src/components/SEO.js`:
-  "Codificando" é português do Brasil. São três sítios.
+- `frontend/public/manifest.json`: `"name": "NEXUGAL — Consultoria Tecnológica"`
+  (travessão) e `"lang": "pt-BR"`;
+- o texto do `<noscript>` do `index.html`, "Você precisa habilitar JavaScript
+  para executar este app.", português do Brasil, que é o que vê quem abre o site
+  sem JavaScript.
 
-Importa porque o `<title>` estático aparece no separador antes de o JavaScript
-correr, e porque as pré-visualizações de ligações (WhatsApp, redes sociais) não
-correm JavaScript e leem estas etiquetas. Não foi discutido com o Rui. Tirar os
-travessões é mecânico (vírgula no lugar), mas trocar "Codificando o Amanhã da
-sua Empresa" obriga a escrever uma frase nova: propor a frase ao Rui e esperar
-que a aprove. Não mexer nas etiquetas que o Henrique acrescentou a 13/09
-(`og:image:secure_url`, `og:image:type`) sem falar com ele.
+Não mexer nas etiquetas que o Henrique acrescentou a 13/09
+(`og:image:secure_url`, `og:image:type`) sem falar com ele. Há um problema com
+elas no ponto 13.
 
 #### 7. Dívida de contraste conhecida: o azul-claro
 
@@ -951,7 +952,9 @@ scroll (7.4). Por isso nunca foram vistos a funcionar de verdade:
 - o botão flutuante, com os seus estados todos. A 10/09 o Claude pediu ao Rui
   para o confirmar com os próprios olhos; não ficou registado se o fez;
 - o scroll suave do "Ver exemplos" e do índice dos exemplos;
-- o SEO (ponto 5).
+- o SEO (ponto 5). A 16/09 verificou-se no painel com o desenho do ecrã
+  simulado, que é o que um browser visível faz sozinho. Falta vê-lo num browser
+  verdadeiro, depois de publicado.
 
 Como testar, em 7.5.
 
@@ -976,6 +979,110 @@ Como testar, em 7.5.
 Pull Request do `rui/site-branco` para o `main`, revisto pelo Henrique.
 **Atenção:** enquanto isso não acontecer, o `main` está atrás do site público.
 Publicar a partir do `main` faria o site voltar ao fundo preto.
+
+#### 11. As pré-visualizações por página (WhatsApp, redes sociais, e quem abre sem JavaScript)
+
+**Registado a pedido do Rui a 16/09. Não é para resolver sem ele decidir.**
+
+**O problema:** o servidor devolve o mesmo `index.html` para todos os endereços,
+e só o JavaScript sabe em que página se está. O WhatsApp, o LinkedIn, o Facebook
+e afins não correm JavaScript: partilhar `/faq`, `/sobre` ou `/us/contact` mostra
+sempre o título, a descrição e a imagem da página inicial em português. E quem
+abre sem JavaScript vê a página em branco.
+
+**O que seria preciso**, do mais pequeno para o maior:
+
+1. **Um HTML por página, gerado no fim do build.** Depois do `npm run build`, um
+   script copia o `build/index.html` para `build/faq/index.html`,
+   `build/us/faq/index.html` e assim por diante, trocando em cada cópia o título,
+   a descrição, as `og:` e `twitter:`, e acrescentando o canonical e os
+   `hreflang` dessa página. A Vercel serve os ficheiros que existem antes de
+   aplicar a regra que manda tudo para o `index.html`, e o React arranca igual.
+   Resolve as pré-visualizações, não resolve a página em branco sem JavaScript.
+   Obriga a:
+   - pôr os títulos e descrições num ficheiro só, lido pelo `SEO.js` e pelo
+     script (hoje estão no `SEO.js` e, os da página inicial, repetidos à mão no
+     `index.html`);
+   - acrescentar o script ao `buildCommand` do `vercel.json` da raiz;
+   - confirmar como a Vercel trata `/faq` contra `/faq/` (opção `trailingSlash`);
+   - com isso feito, o canonical e os `hreflang` podem voltar ao HTML de cada
+     página, e o efeito do `SEO.js` deixa de ter de os criar.
+2. **Pré-renderização com um browser no build** (tipo `react-snap`): guarda o HTML
+   de cada página já desenhado, texto incluído. Resolve também a página em branco.
+   Mais pesado, precisa de um Chromium no build da Vercel, e estas ferramentas dão-se
+   mal com o Create React App 5 e o React 18.
+3. **Mudar para uma ferramenta que gera as páginas no servidor ou no build**
+   (Next.js, ou Vite com pré-renderização). É provavelmente o "Caminho 2" da nota
+   do Henrique na secção 5. É a solução completa e a maior mudança.
+
+Qualquer das três toca no build e no `vercel.json`: falar com o Henrique antes.
+Uma imagem de partilha diferente por página é um passo à parte, e só faz sentido
+depois de uma destas.
+
+#### 12. A morada em Braga: pergunta em aberto ao Rui (16/09)
+
+O Rui decidiu a 16/09 que o site **não declara limite geográfico nenhum**: "Apaga
+'serve Portugal e Brasil' e qualquer outra afirmação de onde a Nexugal trabalha,
+nos dados estruturados e onde mais apareça. Não substituas por outra frase, nem
+por Braga, nem por Portugal."
+
+Saiu (`18a2135`): o `areaServed` (Portugal e Brasil) do JSON-LD; "em Braga,
+Portugal" das descrições do `SEO.js` (página inicial e contacto, PT e EN), do
+`index.html` (`description`, `og:description`, `twitter:description`,
+`keywords`) e do `manifest.json`; e as quatro etiquetas de geolocalização do
+`index.html` (`geo.region`, `geo.placename`, `geo.position`, `ICBM`), que só
+existiam para "SEO local".
+
+**Não saiu, porque é a morada da empresa e não uma afirmação de onde trabalha.
+Ficou para o Rui decidir:**
+
+- `SEO.js`: a morada no JSON-LD (`Organization` e `ProfessionalService`:
+  `addressLocality` e `addressRegion` Braga, `addressCountry` PT) e as
+  coordenadas (`geo`, 41.5518 e -8.4229). Nota: o Google pede morada num
+  `ProfessionalService`; sem ela, esse bloco deixa de servir para resultados
+  locais.
+- `translations.js`, rodapé: `footer.contact.address` "Braga, Portugal" (PT e EN)
+  e `footer.location` "Portugal", na frase "Feito com tecnologia de ponta em
+  Portugal 🇵🇹".
+- `PrivacyPolicyPage.js`: "Braga, Portugal" em "Responsável pelo Tratamento".
+  É a identificação de quem trata os dados, que o RGPD exige.
+- `backend/main.py`: os emails de prospeção dizem "consultoria tecnológica
+  sediada em Braga". Território do Henrique.
+- `AdminLeadsPage.js`: Braga como região de pesquisa do scraper. Página interna,
+  não é afirmação nenhuma.
+
+#### 13. A imagem de partilha está desatualizada e mal descrita
+
+`frontend/public/images/og-image.png`, que é a imagem das pré-visualizações do
+WhatsApp e das redes sociais:
+
+- é o desenho antigo: fundo preto, néon ciano, "Consultoria Tecnológica" e
+  "Desenvolvimento Web · Cibersegurança · Cloud · IA · Dados";
+- **é um JPEG com nome `.png`**, de 1024 × 1024px; as etiquetas dizem
+  `image/png` e 1200 × 630px (`og:image:type`, do Henrique, e
+  `og:image:width` e `og:image:height`). Algumas redes recortam ou ignoram uma
+  imagem que não bate com o que as etiquetas dizem.
+
+Não discutido com o Rui. Precisa de uma imagem nova, de 1200 × 630px, no estilo
+branco, e de acertar as etiquetas com o Henrique.
+
+#### 14. Restos de texto antigo no cabeçalho, fora do que foi pedido a 16/09
+
+Nada disto foi discutido com o Rui:
+
+- **Títulos e descrições das outras páginas** no `SEO.js` ainda falam de
+  "Consultoria Tecnológica" e, na FAQ, de "cloud"; a do contacto promete que "a
+  nossa equipa responde em 24 horas"; a do Sobre (do Henrique) fala de "paixão por
+  transformar empresas através da tecnologia, cibersegurança e inovação". A página
+  inicial passou a "Nexugal", e as outras não acompanharam.
+- **`keywords`** do `index.html`: ainda a lista dos serviços antigos, com inglês
+  ("IT consulting, web development, cybersecurity"). O Google ignora esta etiqueta.
+- **O JSON-LD de serviços** (`serviceSchema`) só existe em português e aparece
+  também em `/us`. E "Proteção completa dos seus dados" é o tipo de promessa
+  absoluta que o Rui tirou da FAQ; a 16/09 só se corrigiu o vocabulário, por
+  instrução dele.
+- **O `sitemap.xml` não tem `/sobre` nem `/us/about`**, e só a página inicial
+  declara `x-default`.
 
 ### 7.3 Decisões que valem para o futuro
 
@@ -1049,7 +1156,7 @@ maneira dele: "Se aparecer em mais algum sítio, está a mentir."
 Todo o texto vem do `translations.js`, em português e em inglês, com
 comprimentos diferentes. Texto dentro de um SVG tem coordenadas fixas: não quebra
 linha, transborda a caixa sem avisar quando a versão inglesa é mais comprida
-("NA LOJA E ARMAZÉM" passa a "IN THE SHOP AND WAREHOUSE", "NO PROGRAMA" a "IN THE
+("NA LOJA/ARMAZÉM" passa a "IN THE SHOP/WAREHOUSE", "NO PROGRAMA" a "IN THE
 SYSTEM"), ignora o tamanho de letra que a pessoa escolheu no browser, é mal lido
 por leitores de ecrã, e a 380px parte-se.
 
@@ -1131,8 +1238,18 @@ por iniciativa própria; se incomodarem, é decisão do Rui.
 - **A bandeira dos Estados Unidos no cabeçalho fica como está** (troca de língua).
 - **O "suporte técnico contínuo 24/7" da FAQ fica**, e o resto da FAQ, para lá das
   quatro correções, não se toca.
-- **A FAQ não declara limite geográfico nenhum.** A decisão é sobre a FAQ: a
-  morada em Braga, noutros sítios do site, não foi discutida.
+- **A FAQ não declara limite geográfico nenhum.** A 16/09 a decisão alargou-se
+  ao site todo: nenhuma afirmação de onde a Nexugal trabalha, "nem Braga, nem
+  Portugal", e nada no lugar do que sai. A morada da empresa ficou em aberto
+  (7.2, ponto 12).
+- **Página inicial, para o Google e o WhatsApp (16/09):** título "Nexugal",
+  descrição "Reformulação de operações com gestão implementada", e "Menos tarefas
+  repetidas. Mais tempo para o que importa." no texto alternativo da imagem de
+  partilha, no lugar de "Codificando o Amanhã".
+- **Os seis serviços do JSON-LD ficam** (16/09), mesmo sem cartões na página, e
+  o "24/7" também.
+- **Rótulos do stock (16/09):** NO PROGRAMA 19, NA LOJA/ARMAZÉM 12 (EN IN THE
+  SYSTEM, IN THE SHOP/WAREHOUSE).
 - **A linha órfã do "Como trabalhamos" no telemóvel fica como está.**
 - **Botões:** o do fecho dos exemplos diz "Entre em contacto"; o do hero e o
   flutuante dizem "Falar connosco". (O do convite final diz "Iniciar Conversa" e
@@ -1192,11 +1309,23 @@ publicar. E a marca
 
 #### O SEO.js e o react-helmet-async
 
-A história está em 7.2, ponto 5. A lição, seja qual for o estado da correção:
-**o SEO só se verifica no build de produção, abrindo cada página pelo endereço, e
-repetindo a mesma página várias vezes**. Nunca no `npm start`, nunca só
-navegando pelo menu, nunca com uma carga só: a 14/09 a mesma página deu
-resultados diferentes de uma carga para a outra.
+A história está em 7.2, ponto 5. As lições:
+
+- **O SEO só se verifica no build de produção, abrindo cada página pelo
+  endereço.** Nunca no `npm start`, nunca só navegando pelo menu.
+- **A biblioteca só escreve quando o browser desenha o ecrã.** Num separador
+  escondido, ou no painel do Claude escondido, não escreve nada: os `hreflang` e
+  o JSON-LD não aparecem, e parece uma avaria intermitente. Antes de concluir que
+  está partido, ver `document.hidden` (7.2, ponto 5, tem o remendo para testar).
+- **Cada etiqueta do cabeçalho tem um só sítio que a escreve** (tabela em 7.2,
+  ponto 5, e no topo do `SEO.js`). Pôr a mesma etiqueta em dois sítios volta a
+  repeti-la, sem erro nenhum à vista. Em particular: **não voltar a pôr canonical
+  nem `hreflang` no `public/index.html`**, que é o mesmo ficheiro para todas as
+  páginas.
+- **O título e a descrição da página inicial estão escritos duas vezes**: no
+  `SEO.js` e, à mão, no `public/index.html`, que é o que o WhatsApp lê. O mesmo
+  para o texto alternativo da imagem, em português. Mudar um obriga a mudar o
+  outro.
 
 #### A FAQ esteve escrita em dois sítios
 
@@ -1233,7 +1362,14 @@ novo com `<defs>` (marker, gradient, mask, clipPath, filter) tem de ter ids
 - **`getComputedStyle(elemento).opacity` deu valores falsos**, e as capturas de
   ecrã com a página descida vêm às vezes em branco ou deslocadas.
 - **Com o painel escondido, `innerWidth` é 0**: medições e auditorias não dão
-  nada que se aproveite (visto a 14/09).
+  nada que se aproveite (visto a 14/09). **Mas com uma largura emulada**
+  (`resize_window` com largura e altura) a largura é a pedida, mesmo escondido, e
+  as medições e a auditoria valem (confirmado a 15 e 16/09).
+- **Escondido, não desenha o ecrã**: `requestAnimationFrame` nunca dispara, e
+  tudo o que espera por ele fica parado. É o caso da biblioteca do SEO (7.4, "O
+  SEO.js e o react-helmet-async").
+- **As capturas de ecrã escondido vêm deslocadas**, mesmo com a página no topo e
+  as secções de cima escondidas (16/09). Medir em vez de capturar.
 - O `.claude/launch.json` (fora do git) tem duas configurações: `nexugal-frontend`
   (`npm start`, porta 3000, ou outra se estiver ocupada) e `nexugal-build` (serve
   a pasta `frontend/build` na porta 4173, com `npx serve -s`).
@@ -1346,9 +1482,10 @@ Nesta sessão usou-se `npx cross-env CI=true ...`, que também funciona, mas o
 
 Histórico: de 10/09 a 11/09 os builds correram com `CI=false` e passaram, o
 último no `cfdd340`. A 14/09/2026 passou com `CI=true`, mas ainda no `cfdd340`,
-antes do `git pull` que trouxe os commits do Henrique. **No `4e00f5f` nunca se
-correu um build aqui**, e a pasta `node_modules` desta máquina ainda tem a versão
-2.0.5 do `react-helmet-async`: antes de confiar num build, correr `npm install`.
+antes do `git pull` que trouxe os commits do Henrique. A 15/09, depois de
+`npm install` (a pasta `node_modules` desta máquina passou à 1.3.0 do
+`react-helmet-async`), passou com `CI=true` no `b734589`, que tem o código do
+`4e00f5f`; a 16/09 passou outra vez no `18a2135`.
 
 #### Correr o site em local, no PowerShell do Windows
 
@@ -1444,10 +1581,11 @@ lote, nas páginas principais a 380px e a 1280 ou 1440px, em PT e EN; depois dos
 exemplos, na página inicial a 380, 1024, 1280 e 1920px (e em inglês a 380 e
 1280px), e em `/us`, `/sobre` e `/us/about`; a 11/09, no `cfdd340`, na página
 inicial a 380, 1024, 1280 e 1920px (149 textos). O `/us` só foi visto a 1920px.
-**Depois das alterações do Henrique não há nenhuma auditoria válida:** a 14/09
-correu-se no site público, em `/` e em `/sobre`, mas com a janela escondida
-(`largura: 0`), por isso não conta. O Sobre novo, com fotografia, continua por
-auditar.
+A 14/09 correu-se no site público, em `/` e em `/sobre`, mas com a janela
+escondida (`largura: 0`), por isso não conta. A 16/09, no `18a2135`, já com as
+alterações do Henrique e com largura emulada: as dez páginas a 380 e a 1280px, e
+a página inicial também a 1024 e a 1920px (147 textos na página inicial, 11 no
+Sobre com fotografia).
 
 Páginas a correr: `/`, `/us`, `/faq`, `/us/faq`, `/contacto`, `/us/contact`,
 `/privacidade`, `/us/privacy`, `/sobre`, `/us/about`.
@@ -1471,7 +1609,8 @@ Para testar no Chrome: F12, ícone do telemóvel, escrever a largura.
   tem de dar `false`.
 - **Travessões:** no Git Bash, `grep -c "—" frontend/src/i18n/translations.js`
   tem de dar 0, e `grep -rn "—" frontend/src` só pode mostrar comentários. O
-  `frontend/public/index.html` ainda tem (7.2, ponto 6).
+  `frontend/public/index.html` já não tem (16/09); o `manifest.json` ainda tem um
+  (7.2, ponto 6).
 - **Botão flutuante, num browser verdadeiro:** na consola,
   `localStorage.removeItem('nexugal_cookie_consent')` e recarregar. Com o aviso de
   cookies no ecrã, o botão nunca aparece. Responder ao aviso, descer para lá do
@@ -1483,3 +1622,63 @@ Para testar no Chrome: F12, ícone do telemóvel, escrever a largura.
 - **Os dois idiomas:** tudo o que se verifica em `/` verifica-se em `/us`.
 - **Chatbot fora do site:** secção 5.
 - **O que está online:** secção 6.
+
+### 7.6 O lote de 15 e 16/09/2026: correções urgentes e o texto que o Google e o WhatsApp veem
+
+Numa conversa nova, o Rui pediu primeiro um ponto de situação sem mexer em
+código (o que o Henrique alterou, colisões, estado do SEO, pendentes), e só
+depois o trabalho. Commits: `ba203b3` (stock e comentário) e `18a2135` (SEO e
+textos). **Não publicado.** Antes do push de 16/09 o site público estava no
+`d3f292e` (`main.8e11bf0a.js`).
+
+**Colisões com o trabalho do Henrique: nenhuma.** Os ficheiros das correções
+não tinham sido tocados por ele, a correção das rotas do Sobre e da Privacidade
+corrige um erro deste ramo, e os textos dele não têm travessões. O `About.js`, a
+página do Sobre e os textos do Sobre ficaram como ele os deixou, por ordem do Rui.
+O Sobre com fotografia passou a auditoria de contraste (380 e 1280px, PT e EN).
+
+**O que se fez:**
+
+- Stock: 7.2, pontos 1 e 2. Comentário do `EsquemaIntegracoes.js`: ponto 3.
+- SEO sem etiquetas repetidas: ponto 5. Travessões e "Codificando": ponto 6.
+- Página inicial: título **"Nexugal"** e descrição **"Reformulação de operações
+  com gestão implementada"**, ditados pelo Rui. EN: "Nexugal" e "Operations
+  redesign with management put in place" (escrito pelo Claude, para o Rui rever).
+- Texto alternativo da imagem de partilha: **"Menos tarefas repetidas. Mais tempo
+  para o que importa."** (Rui). EN: "Fewer repetitive tasks. More time for what
+  matters." (Claude). Já não é fixo em português: segue a língua da página.
+- Âmbito geográfico: ponto 12.
+- Os seis serviços do JSON-LD ficam, por decisão do Rui ("continuam a ser o que a
+  Nexugal faz"). Só o vocabulário: "monitoramento" passou a "monitorização",
+  "alta performance" a "alto desempenho", "dashboards" a "painéis", "Soluções
+  Cloud" a "Soluções na Nuvem" (e "soluções cloud" na descrição da
+  `Organization`), "Suporte & Manutenção" a "Suporte e Manutenção", e a lista
+  `serviceType`, que estava em inglês, passou aos mesmos seis nomes em
+  português. **O "24/7" fica**, decisão do Rui. "Web" e "responsivas" ficaram.
+
+**Em aberto, à espera do Rui:**
+
+1. **O rótulo inglês do stock sai da sua coluna a partir de 1280px.** Em
+   "IN THE SHOP/WAREHOUSE" o browser não parte a linha na barra, e
+   "SHOP/WAREHOUSE" fica 6px mais largo do que a coluna (e a caixa do número por
+   baixo, de 104px). Fica dentro do cartão, 15px antes da borda, mas
+   desalinhado. Em português, "NA LOJA/ARMAZÉM" cabe (parte em "NA" e
+   "LOJA/ARMAZÉM"). Duas saídas, medidas no browser a 1280px, e ambas cabem:
+   - um ponto de quebra invisível depois da barra, no `translations.js`
+     (`'IN THE SHOP/​WAREHOUSE'`): lê-se igual e parte em "IN THE SHOP/" e
+     "WAREHOUSE";
+   - espaços à volta da barra, "IN THE SHOP / WAREHOUSE": parte em "IN THE SHOP /"
+     e "WAREHOUSE", mas muda o texto que o Rui escreveu.
+2. **A morada em Braga** (ponto 12).
+
+**Verificação, a 16/09:**
+
+- `CI=true npm run build`: `Compiled successfully.`, e as classes `xl:` novas
+  existem no CSS gerado.
+- Teste de contraste do hero: 18 testes a passar, as duas linhas `DIVIDA` de
+  sempre.
+- Auditoria de contraste de todo o texto: zero falhas em `/`, `/us`, `/faq`,
+  `/us/faq`, `/contacto`, `/us/contact`, `/privacidade`, `/us/privacy`, `/sobre` e
+  `/us/about`, a 380 e a 1280px, e em `/` também a 1024 e 1920px.
+- Stock e SEO: medições em 7.2, pontos 1 e 5.
+- Chatbot fora do site: zero ocorrências de `simulateAIResponse` e `ChatWidget`.
