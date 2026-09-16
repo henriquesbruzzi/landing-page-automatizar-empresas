@@ -3,9 +3,10 @@ import React, { useId } from 'react';
 /**
  * Esquema de integrações.
  *
- * Serve o hero e os seis blocos da secção de exemplos. Recebe os dados por
- * `esquema` e não os vai buscar a lado nenhum: é o mesmo desenho com outro
- * conteúdo, e não sete componentes parecidos.
+ * Serve só o hero. Os quatro blocos da secção de exemplos têm cada um o seu
+ * desenho, em VisuaisExemplos.js: o leque de setas a convergir no N é a
+ * assinatura da primeira dobra e não se repete mais abaixo. Recebe os dados por
+ * `esquema` e não os vai buscar a lado nenhum.
  *
  * Lê-se como uma frase, da esquerda para a direita: isto tudo entra, junta-se
  * aqui, e sai isto.
@@ -16,8 +17,8 @@ import React, { useId } from 'react';
  * de SVG não faz nada disso.
  *
  * O SVG guarda só o que é desenho: as setas. As curvas usam as MESMAS medidas
- * das caixas (ALTURA_CAIXA, ESPACO), por isso caem sempre no meio de cada uma.
- * Se as medidas mudarem, as setas acompanham sozinhas.
+ * das caixas (LG, e FILA na versão empilhada), por isso caem sempre no meio de
+ * cada uma. Se as medidas mudarem, as setas acompanham sozinhas.
  */
 
 // Geometria da coluna de origens. O SVG das setas depende destes números.

@@ -117,9 +117,13 @@ const translations = {
             descricao: 'O mesmo artigo com dois números diferentes, um no programa e outro na loja e armazém, e o resultado da verificação da manhã.',
             // Um artigo só, em grande. Quatro artigos obrigavam quem lia a
             // comparar número a número para encontrar a diferença.
-            colunas: ['NO PROGRAMA', 'NA LOJA E ARMAZÉM'],
+            //
+            // A ordem dos números é a da frase de baixo: o programa promete 19,
+            // na prateleira há 12, e faltam sete. Ao contrário, as correias
+            // existiam todas e a frase não tinha pé. O mesmo no bloco EN.
+            colunas: ['NO PROGRAMA', 'NA LOJA/ARMAZÉM'],
             artigo: 'Correias',
-            numeros: ['12', '19'],
+            numeros: ['19', '12'],
             consequencia: 'Sete clientes iam comprar uma coisa que não existe.',
             cartao: {
               titulo: 'Hoje, 6h05',
@@ -507,9 +511,9 @@ const translations = {
           explicacao: 'The ERP, the shop and the carrier portal start talking to each other. Differences show up on a list in the morning, instead of showing up to the customer at delivery time.',
           arte: {
             descricao: 'The same product with two different numbers, one in the system and one in the shop and warehouse, and the result of the morning check.',
-            colunas: ['IN THE SYSTEM', 'IN THE SHOP AND WAREHOUSE'],
+            colunas: ['IN THE SYSTEM', 'IN THE SHOP/WAREHOUSE'],
             artigo: 'Belts',
-            numeros: ['12', '19'],
+            numeros: ['19', '12'],
             consequencia: 'Seven customers were about to buy something that does not exist.',
             cartao: {
               titulo: 'Today, 6:05',

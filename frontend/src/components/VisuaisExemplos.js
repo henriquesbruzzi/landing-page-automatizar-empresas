@@ -18,12 +18,27 @@ import React from 'react';
 
 /* ------------------------------------------------------------------ setas */
 
-/** Seta que muda de direção: para a direita em ecrã largo, para baixo abaixo disso. */
-function Seta({ classeLarga = 'hidden lg:block' }) {
+/**
+ * Classes da seta por ponto de corte, escritas por extenso. O Tailwind só gera
+ * as classes que encontra escritas literalmente no código: montar 'xl:' com
+ * 'hidden' não dá erro nenhum, simplesmente não há CSS.
+ */
+const CORTE_SETA = {
+  lg: { direita: 'hidden lg:block', baixo: 'lg:hidden' },
+  xl: { direita: 'hidden xl:block', baixo: 'xl:hidden' },
+};
+
+/**
+ * Seta que muda de direção: para a direita a partir do ponto de corte, para
+ * baixo abaixo dele. O ponto de corte vem por parâmetro, porque cada desenho
+ * deixa de empilhar numa largura diferente.
+ */
+function Seta({ corte = 'lg' }) {
+  const classes = CORTE_SETA[corte];
   return (
     <>
       <svg
-        className={`${classeLarga} h-4 w-12 shrink-0 text-azul-medio`}
+        className={`${classes.direita} h-4 w-12 shrink-0 text-azul-medio`}
         viewBox="0 0 48 16"
         fill="none"
         aria-hidden="true"
@@ -32,7 +47,7 @@ function Seta({ classeLarga = 'hidden lg:block' }) {
         <path d="M36 2.5 44 8l-8 5.5z" fill="currentColor" />
       </svg>
       <svg
-        className={`${classeLarga === 'hidden lg:block' ? 'lg:hidden' : 'hidden'} mx-auto h-10 w-4 shrink-0 text-azul-medio`}
+        className={`${classes.baixo} mx-auto h-10 w-4 shrink-0 text-azul-medio`}
         viewBox="0 0 16 40"
         fill="none"
         aria-hidden="true"
@@ -190,13 +205,17 @@ function VisualConversa({ arte }) {
  * passar num site. Agora é um artigo, dois números que não batem certo, e a
  * frase a dizer o que isso ia custar.
  *
- * Telemóvel: o painel do artigo fica em cima e o cartão de resultado desce,
- * com a seta a apontar para baixo. Os dois números continuam lado a lado,
- * porque a diferença entre eles é o desenho todo.
+ * Abaixo de 1280px (e não só no telemóvel): o painel do artigo fica em cima e o
+ * cartão de resultado desce, com a seta a apontar para baixo. Lado a lado, entre
+ * 1024 e cerca de 1100px, o cartão de largura fixa deixava o painel tão estreito
+ * que os números saíam das caixas. É a mesma solução do esquema do hero.
+ *
+ * Os dois números continuam lado a lado em todas as larguras, porque a
+ * diferença entre eles é o desenho todo.
  */
 function VisualDiscordancia({ arte }) {
   return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-5">
+    <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:gap-5">
       <div className="min-w-0 flex-1">
         <div className="rounded-lg border border-linha bg-white p-5 shadow-azul">
           <p className="font-display text-lg font-bold text-azul-profundo">{arte.artigo}</p>
@@ -235,9 +254,9 @@ function VisualDiscordancia({ arte }) {
         <p className="mt-4 font-sans text-[14px] leading-relaxed text-texto">{arte.consequencia}</p>
       </div>
 
-      <Seta />
+      <Seta corte="xl" />
 
-      <div className="shrink-0 overflow-hidden rounded-lg border border-linha bg-white shadow-azul lg:w-60">
+      <div className="shrink-0 overflow-hidden rounded-lg border border-linha bg-white shadow-azul xl:w-60">
         <p className="bg-azul-profundo px-4 py-2.5 font-sans text-[11.5px] font-semibold text-white">
           {arte.cartao.titulo}
         </p>
