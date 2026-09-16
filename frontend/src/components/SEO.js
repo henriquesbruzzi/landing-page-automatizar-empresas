@@ -3,11 +3,26 @@ import { Helmet } from 'react-helmet-async';
 import translations from '../i18n/translations';
 
 /**
- * Componente SEO reutilizável — gere meta tags dinâmicas + JSON-LD
+ * Componente SEO reutilizável: etiquetas do cabeçalho por página, mais JSON-LD.
  *
  * Props:
  *  - lang: 'pt' | 'en'
- *  - page: 'home' | 'contact' | 'faq'
+ *  - page: 'home' | 'contact' | 'faq' | 'about' | 'privacy'
+ *
+ * Cada etiqueta tem UM só sítio que a escreve. Quando havia dois (o
+ * public/index.html e a biblioteca), cada página ficava com dois canonical, duas
+ * descrições e hreflang a dizer coisas diferentes.
+ *
+ * - public/index.html: título, descrição e etiquetas de partilha (og:, twitter:)
+ *   da página inicial em português. Ficam lá porque o WhatsApp e as redes sociais
+ *   não correm JavaScript e só leem esse ficheiro. Não tem canonical nem hreflang:
+ *   o ficheiro é o mesmo para todas as páginas, e lá só podiam estar errados.
+ * - O efeito, mais abaixo: reescreve essas mesmas etiquetas com os valores da
+ *   página em que se está, e cria o canonical.
+ * - A biblioteca (Helmet): só os hreflang e o JSON-LD, que não existem no
+ *   public/index.html.
+ *
+ * Uma etiqueta nova entra num destes três sítios, e só num.
  */
 
 const BASE_URL = process.env.REACT_APP_SITE_URL || 'https://www.nexugal.com';
@@ -15,10 +30,12 @@ const BASE_URL = process.env.REACT_APP_SITE_URL || 'https://www.nexugal.com';
 // Dados SEO por idioma e página
 const seoData = {
   pt: {
+    // O título e a descrição da página inicial estão também escritos à mão no
+    // public/index.html, que é o que o WhatsApp e as redes sociais leem. Mudar
+    // aqui obriga a mudar lá.
     home: {
-      title: 'NEXUGAL, Consultoria Tecnológica | Desenvolvimento Web, Cibersegurança & Cloud',
-      description:
-        'NEXUGAL, consultoria tecnológica em Braga, Portugal. Especialistas em desenvolvimento web, cibersegurança, soluções cloud, inteligência artificial e análise de dados. Transformação digital para a sua empresa.',
+      title: 'Nexugal',
+      description: 'Reformulação de operações com gestão implementada',
       canonical: `${BASE_URL}/`,
       alternate: `${BASE_URL}/us`,
       ogLocale: 'pt_PT',
@@ -26,7 +43,7 @@ const seoData = {
     contact: {
       title: 'Contacto, NEXUGAL | Fale Connosco',
       description:
-        'Entre em contacto com a NEXUGAL. Preencha o formulário e a nossa equipa responde em 24 horas. Consultoria tecnológica em Braga, Portugal.',
+        'Entre em contacto com a NEXUGAL. Preencha o formulário e a nossa equipa responde em 24 horas.',
       canonical: `${BASE_URL}/contacto`,
       alternate: `${BASE_URL}/us/contact`,
       ogLocale: 'pt_PT',
@@ -58,9 +75,8 @@ const seoData = {
   },
   en: {
     home: {
-      title: 'NEXUGAL, Technology Consulting | Web Development, Cybersecurity & Cloud',
-      description:
-        'NEXUGAL, technology consultancy in Braga, Portugal. Experts in web development, cybersecurity, cloud solutions, artificial intelligence and data analytics. Digital transformation for your business.',
+      title: 'Nexugal',
+      description: 'Operations redesign with management put in place',
       canonical: `${BASE_URL}/us`,
       alternate: `${BASE_URL}/`,
       ogLocale: 'en_US',
@@ -68,7 +84,7 @@ const seoData = {
     contact: {
       title: 'Contact, NEXUGAL | Get in Touch',
       description:
-        'Get in touch with NEXUGAL. Fill out the form and our team will respond within 24 hours. Technology consultancy in Braga, Portugal.',
+        'Get in touch with NEXUGAL. Fill out the form and our team will respond within 24 hours.',
       canonical: `${BASE_URL}/us/contact`,
       alternate: `${BASE_URL}/contacto`,
       ogLocale: 'en_US',
@@ -100,6 +116,13 @@ const seoData = {
   },
 };
 
+// Texto alternativo da imagem de partilha. A versão portuguesa está também
+// escrita à mão no public/index.html (og:image:alt e twitter:image:alt).
+const ALT_IMAGEM = {
+  pt: 'Menos tarefas repetidas. Mais tempo para o que importa.',
+  en: 'Fewer repetitive tasks. More time for what matters.',
+};
+
 // Schema.org JSON-LD — Organization
 const organizationSchema = {
   '@context': 'https://schema.org',
@@ -108,7 +131,7 @@ const organizationSchema = {
   url: BASE_URL,
   logo: `${BASE_URL}/icons/favicon.png`,
   description:
-    'Consultoria tecnológica especializada em desenvolvimento web, cibersegurança, soluções cloud, inteligência artificial e análise de dados.',
+    'Consultoria tecnológica especializada em desenvolvimento web, cibersegurança, soluções na nuvem, inteligência artificial e análise de dados.',
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Braga',
@@ -168,17 +191,15 @@ const localBusinessSchema = {
     opens: '09:00',
     closes: '18:00',
   },
-  areaServed: [
-    { '@type': 'Country', name: 'Portugal' },
-    { '@type': 'Country', name: 'Brazil' },
-  ],
+  // Sem areaServed, de propósito: a Nexugal não declara limite geográfico
+  // nenhum. Não voltar a pôr países nem regiões.
   serviceType: [
-    'Web Development',
-    'Cybersecurity',
-    'Cloud Solutions',
-    'AI Consulting',
-    'Data Analytics',
-    'IT Support & Maintenance',
+    'Desenvolvimento Web',
+    'Cibersegurança',
+    'Soluções na Nuvem',
+    'Consultoria em IA',
+    'Análise de Dados',
+    'Suporte e Manutenção',
   ],
 };
 
@@ -249,7 +270,7 @@ const serviceSchema = {
         '@type': 'Service',
         name: 'Desenvolvimento Web',
         description:
-          'Aplicações web modernas, responsivas e de alta performance com as tecnologias mais recentes do mercado.',
+          'Aplicações web modernas, responsivas e de alto desempenho com as tecnologias mais recentes do mercado.',
         provider: { '@type': 'Organization', name: 'NEXUGAL' },
       },
     },
@@ -260,7 +281,7 @@ const serviceSchema = {
         '@type': 'Service',
         name: 'Cibersegurança',
         description:
-          'Proteção completa dos seus dados e infraestrutura com auditorias, monitoramento e estratégias avançadas de segurança.',
+          'Proteção completa dos seus dados e infraestrutura com auditorias, monitorização e estratégias avançadas de segurança.',
         provider: { '@type': 'Organization', name: 'NEXUGAL' },
       },
     },
@@ -269,7 +290,7 @@ const serviceSchema = {
       position: 3,
       item: {
         '@type': 'Service',
-        name: 'Soluções Cloud',
+        name: 'Soluções na Nuvem',
         description:
           'Migração, gestão e otimização de infraestrutura em nuvem para máxima escalabilidade e disponibilidade.',
         provider: { '@type': 'Organization', name: 'NEXUGAL' },
@@ -293,7 +314,7 @@ const serviceSchema = {
         '@type': 'Service',
         name: 'Análise de Dados',
         description:
-          'Transforme dados em decisões estratégicas com dashboards inteligentes e relatórios personalizados.',
+          'Transforme dados em decisões estratégicas com painéis inteligentes e relatórios personalizados.',
         provider: { '@type': 'Organization', name: 'NEXUGAL' },
       },
     },
@@ -302,7 +323,7 @@ const serviceSchema = {
       position: 6,
       item: {
         '@type': 'Service',
-        name: 'Suporte & Manutenção',
+        name: 'Suporte e Manutenção',
         description:
           'Suporte técnico contínuo 24/7 e manutenção proativa para manter os seus sistemas sempre operacionais.',
         provider: { '@type': 'Organization', name: 'NEXUGAL' },
@@ -347,7 +368,14 @@ function SEO({ lang = 'pt', page = 'home' }) {
     schemas.push(getFaqSchema(lang));
   }
 
-  // Efeito direto no DOM como garantia síncrona de atualização de título e metas
+  // A versão portuguesa de cada página é a de omissão (x-default). Apontava
+  // sempre para a página inicial, mesmo na FAQ, e o Google só aceita o x-default
+  // se a página para onde aponta também apontar de volta.
+  const versaoPortuguesa = lang === 'pt' ? data.canonical : data.alternate;
+
+  // Efeito direto no DOM. Não depende da biblioteca, que só escreve quando o
+  // browser desenha o ecrã seguinte (num separador escondido, nunca). Reescreve
+  // as etiquetas que já vêm no public/index.html e cria o canonical.
   React.useEffect(() => {
     document.title = data.title;
     document.documentElement.lang = htmlLang;
@@ -377,47 +405,23 @@ function SEO({ lang = 'pt', page = 'home' }) {
     setMeta('property', 'og:title', data.title);
     setMeta('property', 'og:description', data.description);
     setMeta('property', 'og:url', data.canonical);
+    setMeta('property', 'og:locale', data.ogLocale);
+    setMeta('property', 'og:locale:alternate', lang === 'pt' ? 'en_US' : 'pt_PT');
+    setMeta('property', 'og:image:alt', ALT_IMAGEM[lang] || ALT_IMAGEM.pt);
     setMeta('name', 'twitter:title', data.title);
     setMeta('name', 'twitter:description', data.description);
-  }, [data, htmlLang]);
+    setMeta('name', 'twitter:image:alt', ALT_IMAGEM[lang] || ALT_IMAGEM.pt);
+  }, [data, htmlLang, lang]);
 
+  // A biblioteca fica só com o que não existe no public/index.html. Tudo o que
+  // lá existe (título, descrição, og:, twitter:, robots) é do efeito acima: se
+  // a biblioteca também o escrevesse, ficava repetido.
   return (
     <Helmet>
-      {/* Idioma do HTML */}
-      <html lang={htmlLang} />
-
-      {/* Título e Description */}
-      <title>{data.title}</title>
-      <meta name="description" content={data.description} />
-
-      {/* Canonical & Hreflang */}
-      <link rel="canonical" href={data.canonical} />
+      {/* Hreflang */}
       <link rel="alternate" hreflang={lang} href={data.canonical} />
       <link rel="alternate" hreflang={altLang} href={data.alternate} />
-      <link rel="alternate" hreflang="x-default" href={`${BASE_URL}/`} />
-
-      {/* Open Graph */}
-      <meta property="og:type" content="website" />
-      <meta property="og:site_name" content="NEXUGAL" />
-      <meta property="og:title" content={data.title} />
-      <meta property="og:description" content={data.description} />
-      <meta property="og:url" content={data.canonical} />
-      <meta property="og:image" content={`${BASE_URL}/images/og-image.png`} />
-      <meta property="og:image:secure_url" content={`${BASE_URL}/images/og-image.png`} />
-      <meta property="og:image:type" content="image/png" />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content="NEXUGAL, Codificando o Amanhã da sua Empresa" />
-      <meta property="og:locale" content={data.ogLocale} />
-
-      {/* Twitter Card */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={data.title} />
-      <meta name="twitter:description" content={data.description} />
-      <meta name="twitter:image" content={`${BASE_URL}/images/og-image.png`} />
-
-      {/* Robots */}
-      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      <link rel="alternate" hreflang="x-default" href={versaoPortuguesa} />
 
       {/* JSON-LD Structured Data */}
       {schemas.map((schema, index) => (
