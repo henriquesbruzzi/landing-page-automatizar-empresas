@@ -55,7 +55,7 @@ function PrivacyPolicyPage() {
               {pt ? 'Responsável pelo Tratamento' : 'Data Controller'}
             </h2>
             <div className="pl-8 border-l border-linha space-y-2">
-              <p><strong className="text-azul-profundo">NEXUGAL</strong></p>
+              <p><strong className="text-azul-profundo">Nexugal</strong></p>
               <p>Braga, Portugal</p>
               <p>
                 {pt ? 'Contacto: ' : 'Contact: '}
@@ -256,7 +256,7 @@ function PrivacyPolicyPage() {
         {/* Rodapé da página */}
         <div className="mt-16 pt-8 border-t border-linha text-center">
           <p className="text-texto text-xs tracking-[0.1em]">
-            © {new Date().getFullYear()} NEXUGAL · geral@nexugal.com
+            © {new Date().getFullYear()} Nexugal · geral@nexugal.com
           </p>
         </div>
       </main>

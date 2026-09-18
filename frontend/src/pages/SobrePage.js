@@ -30,7 +30,7 @@ function SobrePage() {
             <a
               href={lang === 'pt' ? '/' : '/us'}
               className="font-orbitron text-lg font-bold tracking-[0.2em] text-azul-medio transition-colors duration-300 hover:text-azul-profundo"
-              aria-label="NEXUGAL, ir para a página principal"
+              aria-label="Nexugal, ir para a página principal"
             >
               NEXUGAL
             </a>
@@ -43,7 +43,7 @@ function SobrePage() {
 
         <footer className="pb-8">
           <p className="text-center text-xs tracking-[0.15em] text-texto">
-            © {new Date().getFullYear()} NEXUGAL
+            © {new Date().getFullYear()} Nexugal
           </p>
         </footer>
       </main>

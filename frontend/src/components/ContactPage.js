@@ -367,7 +367,7 @@ function ContactPage() {
         {/* Footer */}
         <footer className="pb-8">
           <p className="text-center text-texto text-xs tracking-[0.15em]">
-            © {new Date().getFullYear()} NEXUGAL
+            © {new Date().getFullYear()} Nexugal
           </p>
         </footer>
       </main>

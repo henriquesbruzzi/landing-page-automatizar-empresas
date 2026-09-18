@@ -280,7 +280,7 @@ const translations = {
           'Notícia ou imprensa',
           'Recomendação de amigo ou colega',
           'Já era cliente',
-          'Contacto direto da NEXUGAL',
+          'Contacto direto da Nexugal',
           // "Outro" tem de ficar sempre em último: o formulário identifica-o
           // pela última posição da lista para abrir a caixa de texto.
           'Outro',
@@ -296,12 +296,12 @@ const translations = {
         success: 'Mensagem enviada com sucesso! Entraremos em contacto em breve.',
       },
       back: 'Voltar ao início',
-      logo: 'NEXUGAL, ir para a página inicial',
+      logo: 'Nexugal, ir para a página inicial',
     },
     about: {
       subtitle: 'Quem somos',
       title: 'Sobre a ',
-      titleHighlight: 'NEXUGAL',
+      titleHighlight: 'Nexugal',
       description: 'Ajudamos empresas a tirar do meio o trabalho manual que ninguém gosta de fazer e a pôr a informação a circular entre as pessoas e os sistemas. Sem projetos intermináveis, sem tecnologia a mais do que a necessária.',
       founders: {
         intro: 'O nosso fundador é licenciado em Engenharia e Gestão de Sistemas de Informação pela Universidade do Minho. É de lá que vem a forma como trabalhamos, a olhar ao mesmo tempo para o processo e para a tecnologia.',
@@ -325,7 +325,7 @@ const translations = {
       back: '← Voltar ao início',
       items: [
         {
-          question: 'Que tipo de serviços a NEXUGAL oferece?',
+          question: 'Que tipo de serviços a Nexugal oferece?',
           answer: 'Oferecemos uma gama completa de serviços tecnológicos: desenvolvimento web (sites, aplicações e plataformas), cibersegurança (auditorias, monitorização e proteção de dados), soluções cloud (migração e gestão), consultoria em inteligência artificial, análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7.',
         },
         {
@@ -333,11 +333,11 @@ const translations = {
           answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 2 a 4 semanas, enquanto uma aplicação web mais complexa pode levar entre 2 a 6 meses. Na fase de diagnóstico, dizemos o que fica pronto em cada etapa e quando.',
         },
         {
-          question: 'Como funciona o processo de trabalho da NEXUGAL?',
+          question: 'Como funciona o processo de trabalho da Nexugal?',
           answer: 'O nosso processo tem quatro etapas. Diagnóstico, percebemos como o trabalho corre hoje, ao pormenor, e daí sai um relatório com o que pode mudar e o que isso traz à empresa. Planeamento, dizemos o que vamos fazer, quanto custa e em quanto tempo, antes de começarmos. Desenvolvimento, fazemos por partes e vai vendo a funcionar antes de estar tudo pronto, para se corrigir cedo o que for preciso. Acompanhamento, fica a funcionar e nós ficamos por perto, com alguém a quem ligar quando for preciso.',
         },
         {
-          question: 'A NEXUGAL trabalha com empresas de que dimensão?',
+          question: 'A Nexugal trabalha com empresas de que dimensão?',
           answer: 'Trabalhamos com empresas de todas as dimensões, desde startups e PMEs até grandes corporações. As nossas soluções são personalizadas para se adaptarem às necessidades e ao orçamento de cada cliente.',
         },
         {
@@ -401,7 +401,7 @@ const translations = {
       social: {
         title: 'Redes Sociais',
       },
-      copyright: '© {year} NEXUGAL. Todos os direitos reservados.',
+      copyright: '© {year} Nexugal. Todos os direitos reservados.',
     },
     chatbot: {
       welcome: 'Olá! 👋 Sou o assistente virtual da NEXUGAL. Como posso ajudar hoje?',
@@ -663,7 +663,7 @@ const translations = {
           'News Article or Press Coverage',
           'Friend or Colleague Recommendation',
           'Already a client',
-          'Direct contact from NEXUGAL',
+          'Direct contact from Nexugal',
           // "Other" must stay last: the form identifies it by the list's final
           // position in order to open the free-text box.
           'Other',
@@ -679,12 +679,12 @@ const translations = {
         success: 'Message sent successfully! We will get in touch soon.',
       },
       back: 'Back to home',
-      logo: 'NEXUGAL, go to the home page',
+      logo: 'Nexugal, go to the home page',
     },
     about: {
       subtitle: 'Who we are',
       title: 'About ',
-      titleHighlight: 'NEXUGAL',
+      titleHighlight: 'Nexugal',
       description: 'We help companies take out the manual work nobody enjoys doing and get information moving between people and systems. No endless projects, no more technology than the job needs.',
       founders: {
         intro: 'Our founder holds a degree in Information Systems Engineering and Management from the University of Minho. That is where our way of working comes from, with an eye on the process and on the technology at the same time.',
@@ -708,7 +708,7 @@ const translations = {
       back: '← Back to home',
       items: [
         {
-          question: 'What type of services does NEXUGAL offer?',
+          question: 'What type of services does Nexugal offer?',
           answer: 'We offer a complete range of technology services: web development (websites, applications and platforms), cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management), artificial intelligence consulting, data analytics with customized dashboards, and continuous 24/7 technical support.',
         },
         {
@@ -716,11 +716,11 @@ const translations = {
           answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 2 to 4 weeks, while a more complex web application can take between 2 to 6 months. During the discovery phase, we tell you what is ready at each stage and when.',
         },
         {
-          question: 'How does NEXUGAL\'s work process function?',
+          question: 'How does Nexugal\'s work process function?',
           answer: 'Our process has four stages. Discovery, we look in detail at how the work runs today, and from that comes a report with what can change and what that brings to the company. Planning, we tell you what we will do, what it costs and how long it takes, before we start. Development, we build it in parts and you see it working before everything is finished, so whatever needs correcting is caught early. Ongoing support, it keeps running and we stay close by, with someone to call when you need it.',
         },
         {
-          question: 'What size companies does NEXUGAL work with?',
+          question: 'What size companies does Nexugal work with?',
           answer: 'We work with companies of all sizes, from startups and SMEs to large corporations. Our solutions are customized to adapt to each client\'s needs and budget.',
         },
         {
@@ -784,7 +784,7 @@ const translations = {
       social: {
         title: 'Social Media',
       },
-      copyright: '© {year} NEXUGAL. All rights reserved.',
+      copyright: '© {year} Nexugal. All rights reserved.',
     },
     chatbot: {
       welcome: 'Hello! 👋 I\'m NEXUGAL\'s virtual assistant. How can I help you today?',

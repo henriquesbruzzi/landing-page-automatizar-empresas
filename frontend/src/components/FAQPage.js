@@ -48,7 +48,7 @@ function FAQPage() {
             <a
               href={lang === 'pt' ? '/' : '/us'}
               className="font-orbitron text-azul-medio text-lg font-bold tracking-[0.2em] hover:text-azul-profundo transition-colors duration-300"
-              aria-label="NEXUGAL, ir para a página principal"
+              aria-label="Nexugal, ir para a página principal"
             >
               NEXUGAL
             </a>
@@ -159,7 +159,7 @@ function FAQPage() {
         {/* Footer */}
         <footer className="pb-8">
           <p className="text-center text-texto text-xs tracking-[0.15em]">
-            © {new Date().getFullYear()} NEXUGAL
+            © {new Date().getFullYear()} Nexugal
           </p>
         </footer>
       </main>

@@ -53,7 +53,7 @@ function Header() {
           <a
             href={lang === 'pt' ? '/' : '/us'}
             className="font-orbitron text-azul-medio text-lg md:text-xl font-bold tracking-[0.2em] hover:text-azul-profundo transition-colors duration-300 relative z-50"
-            aria-label="NEXUGAL, ir para a página principal"
+            aria-label="Nexugal, ir para a página principal"
           >
             NEXUGAL
           </a>
