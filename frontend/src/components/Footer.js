@@ -218,13 +218,6 @@ function Footer() {
               </a>
             ))}
           </div>
-          <p className="text-texto text-xs tracking-[0.1em]">
-            {f.madeWith}{' '}
-            <span className="text-azul-medio font-semibold">
-              {f.location}
-            </span>
-            {' '}🇵🇹
-          </p>
         </div>
       </div>
     </footer>

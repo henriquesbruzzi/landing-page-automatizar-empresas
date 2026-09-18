@@ -402,8 +402,6 @@ const translations = {
         title: 'Redes Sociais',
       },
       copyright: '© {year} NEXUGAL. Todos os direitos reservados.',
-      madeWith: 'Feito com tecnologia de ponta em',
-      location: 'Portugal',
     },
     chatbot: {
       welcome: 'Olá! 👋 Sou o assistente virtual da NEXUGAL. Como posso ajudar hoje?',
@@ -511,7 +509,11 @@ const translations = {
           explicacao: 'The ERP, the shop and the carrier portal start talking to each other. Differences show up on a list in the morning, instead of showing up to the customer at delivery time.',
           arte: {
             descricao: 'The same product with two different numbers, one in the system and one in the shop and warehouse, and the result of the morning check.',
-            colunas: ['IN THE SYSTEM', 'IN THE SHOP/WAREHOUSE'],
+            // O \u200B é um ponto de quebra invisível: lê-se "IN THE
+            // SHOP/WAREHOUSE", mas a linha pode partir depois da barra. Sem
+            // ele, o browser não parte ali, e a partir de 1280px
+            // "SHOP/WAREHOUSE" saía 6px da coluna do número.
+            colunas: ['IN THE SYSTEM', 'IN THE SHOP/\u200BWAREHOUSE'],
             artigo: 'Belts',
             numeros: ['19', '12'],
             consequencia: 'Seven customers were about to buy something that does not exist.',
@@ -783,8 +785,6 @@ const translations = {
         title: 'Social Media',
       },
       copyright: '© {year} NEXUGAL. All rights reserved.',
-      madeWith: 'Made with cutting-edge technology in',
-      location: 'Portugal',
     },
     chatbot: {
       welcome: 'Hello! 👋 I\'m NEXUGAL\'s virtual assistant. How can I help you today?',
