@@ -241,8 +241,9 @@ Entraram em `ba203b3` e `18a2135`, e estão descritos em 7.6, com o que ficou em
 aberto. **A 18/09**, na mesma conversa, o Rui respondeu ao que ficou em aberto e
 pediu mais quatro coisas e a imagem de partilha nova: `bb60c3e` e `dab9c1d`,
 descritos em 7.7. Mais tarde no mesmo dia, o fecho do lote (marca em "Nexugal",
-`manifest.json`, foto órfã): `2ed76ff`, em 7.8. Onde 7.1 a 7.5 foram escritos
-antes disso, está assinalado.
+`manifest.json`, foto órfã): `2ed76ff`, em 7.8; e a marca no texto das
+páginas: `e442e27`, em 7.9. Onde 7.1 a 7.5 foram escritos antes disso, está
+assinalado.
 
 ### 7.0 Antes de mais: o Henrique trabalhou neste ramo, e o site público já o mostra
 
@@ -1295,8 +1296,10 @@ por iniciativa própria; se incomodarem, é decisão do Rui.
   desenho. Num separador do browser e num resultado do Google, maiúsculas
   leem-se como se estivéssemos a gritar." Aplicado a tudo o que o Google, o
   separador e as partilhas mostram (títulos, descrições, nome do site, nomes nos
-  dados estruturados, `manifest.json`). O texto visível das páginas ainda tem
-  "NEXUGAL" em vários sítios: pergunta em aberto (7.8).
+  dados estruturados, `manifest.json`), e depois, no mesmo dia, ao texto das
+  páginas (7.9). Hoje "NEXUGAL" só existe no logótipo, e no admin, no chatbot
+  desligado e no backend, que ficaram de fora (7.9). Texto novo com a marca
+  escreve-a "Nexugal".
 - **A linha órfã do "Como trabalhamos" no telemóvel fica como está.**
 - **Botões:** o do fecho dos exemplos diz "Entre em contacto"; o do hero e o
   flutuante dizem "Falar connosco". (O do convite final diz "Iniciar Conversa" e
@@ -1503,6 +1506,13 @@ Não apagar sem o Rui decidir.
   `og:image:width`, `og:image:height`) têm de bater certo com o ficheiro: a
   antiga dizia PNG de 1200 × 630 e era um JPEG de 1024 × 1024. Confirmar com
   `file` no Git Bash.
+- **As opções de "Como soube de nós" são também dados.** O texto da opção
+  escolhida, na língua do formulário, vai para o backend no campo `service`, fica
+  guardado na base de dados, aparece na tabela do admin e sai no email de cada
+  contacto (7.9). Mudar o texto de uma opção muda o que chega a quem recebe os
+  emails, e os contactos antigos ficam com o texto antigo. O backend aceita
+  qualquer texto (até 120 caracteres), não há lista fechada. E "Outro" tem de
+  ficar em último (comentário no `translations.js`).
 - **A lista de dados da política de privacidade tem de acompanhar o formulário.**
   Um campo novo, ou um campo que passe a obrigatório, obriga a mudar os dois.
 - **Fins de linha no Windows:** o Git deste computador tem `core.autocrlf=true`
@@ -1848,8 +1858,9 @@ zero "NEXUGAL" no cabeçalho, **exceto nas duas páginas da FAQ**. O HTML servid
 Auditoria de contraste: zero falhas nas dez páginas a 380 e a 1280px, e na
 página inicial também a 1024 e a 1920px. Teste de contraste: 18 a passar.
 
-**Em aberto, à espera do Rui: o "NEXUGAL" no texto visível das páginas.** Não
-é título nem descrição, por isso não se mexeu. O que ficou, fora do logótipo:
+**Ficou em aberto, e o Rui resolveu no mesmo dia (7.9): o "NEXUGAL" no texto
+visível das páginas.** Não era título nem descrição, por isso não se mexeu
+aqui. O que havia, fora do logótipo:
 
 - **Perguntas da FAQ**, três em PT e três em EN ("Que tipo de serviços a NEXUGAL
   oferece?" e afins). Como o JSON-LD da FAQ lê o `translations.js`, são também
@@ -1875,3 +1886,77 @@ Ficam de fora de qualquer pergunta: o logótipo em si (cabeçalho, rodapé, casc
 das páginas, política de privacidade, admin), o admin (página interna), o
 chatbot desligado (secção 5), os emails do backend (do Henrique) e o comentário
 do `robots.txt`, que ninguém vê.
+
+### 7.9 A marca no texto das páginas (18/09)
+
+Commit `e442e27`. **Não publicado.** Pedido do Rui: "NEXUGAL" passa a "Nexugal"
+em todo o texto das páginas; "O logótipo em si, que é um desenho, fica em
+maiúsculas espaçadas."
+
+**22 ocorrências mudadas**, só a grafia da marca, nem mais uma palavra:
+
+| O quê | Onde | Quantas |
+|---|---|---|
+| Três perguntas da FAQ, PT e EN | `translations.js` (`faq.items`) | 6 |
+| Título "Sobre a Nexugal" / "About Nexugal" | `translations.js` (`about.titleHighlight`) | 2 |
+| Copyright do rodapé da página inicial, PT e EN | `translations.js` (`footer.copyright`) | 2 |
+| Copyright dos rodapés pequenos | `ContactPage.js`, `FAQPage.js`, `SobrePage.js`, `PrivacyPolicyPage.js` | 4 |
+| "Responsável pelo Tratamento: Nexugal" | `PrivacyPolicyPage.js` | 1 |
+| Opção "Contacto direto da Nexugal" / "Direct contact from Nexugal" | `translations.js` (`contact.form.sourceOptions`) | 2 |
+| Descrições para leitores de ecrã dos logótipos clicáveis | `Header.js`, `FAQPage.js`, `SobrePage.js`, e `translations.js` (`contact.logo`, PT e EN) | 5 |
+
+A FAQ e o título do Sobre são **exceções deliberadas do Rui** às regras de não
+tocar nesses textos: "muda só a forma como a marca está escrita, não muda uma
+palavra do que as perguntas dizem". Na página do Sobre mudaram também o
+copyright e a descrição do logótipo, porque os pontos do copyright e dos
+logótipos eram "em todas as páginas". O Rui confirmou que "Nexugal" é o nome da
+empresa e que a grafia não é imposta pelo registo, por isso mudou também na
+política de privacidade.
+
+**A opção do formulário e os emails do backend** (lido em `backend/main.py`,
+função `send_lead_email_notification`, sem mexer): o texto da opção escolhida vai
+no campo `service` e aparece em dois sítios do email de cada contacto novo, que
+vai para o endereço em `NOTIFICATION_EMAIL` (por omissão
+`nexugal.geral@gmail.com`):
+
+- no assunto: `🚀 Novo Lead NEXUGAL: {nome} ({opção})`, por exemplo
+  "🚀 Novo Lead NEXUGAL: João Silva (Contacto direto da Nexugal)";
+- no corpo, no campo "Como soube de nós" (o rótulo sai em maiúsculas pelo estilo
+  do email; o valor sai como está).
+
+Quem escolher a opção em inglês envia "Direct contact from Nexugal". Fica também
+guardado na base de dados (coluna `service`) e aparece na tabela do admin: os
+contactos antigos ficam com "NEXUGAL", os novos com "Nexugal". O backend não
+valida o valor contra nenhuma lista, por isso a mudança não parte o formulário.
+
+**O que sobra em maiúsculas, fora do logótipo** (verificado com uma procura em
+todo o `frontend/src` e `frontend/public`, e página a página no build):
+
+- **no que um visitante vê: nada.** Nas dez páginas, zero "NEXUGAL" no texto,
+  nas descrições para leitores de ecrã e no cabeçalho;
+- **logótipo** (fica): cabeçalho, rodapé (`footer.brand.name`), casca do
+  contacto, da FAQ, do Sobre e da política de privacidade;
+- **fora do que se vê**, não mexido, não pedido:
+  - o chatbot desligado (`src/chatbot/` e o bloco `chatbot:` do
+    `translations.js`), que nenhum visitante vê (secção 5);
+  - a página de admin, interna: o logótipo, dois textos de exemplo de campos e o
+    assunto por omissão do email de teste, "Teste NEXUGAL", que sai pelo backend;
+  - o comentário da primeira linha do `robots.txt`, que tem também um travessão;
+  - o backend (do Henrique): o assunto e o rodapé do email de contactos e os
+    emails de prospeção.
+
+**Duas coisas que se viram pelo caminho, sem mexer:**
+
+- As descrições para leitores de ecrã do `Header.js`, do `FAQPage.js` e do
+  `SobrePage.js` estão escritas em português no próprio componente, por isso em
+  `/us` um leitor de ecrã lê "Nexugal, ir para a página principal". A do
+  contacto vem do `translations.js` e já muda de língua.
+- O logótipo do rodapé da página inicial é clicável e não tem descrição para
+  leitores de ecrã: o leitor lê o próprio desenho, "NEXUGAL", e alguns soletram.
+
+**Verificação:** build com `CI=true` passa; teste de contraste com 18 a passar;
+auditoria de contraste com zero falhas nas dez páginas a 380 e a 1280px, e na
+página inicial também a 1024 e a 1920px; e, página a página no build, os textos
+novos no ecrã (as seis perguntas, os dois títulos do Sobre, os copyrights, o
+responsável pelo tratamento, a opção na lista aberta do formulário em PT e EN) e
+o JSON-LD da FAQ já com "Nexugal".
