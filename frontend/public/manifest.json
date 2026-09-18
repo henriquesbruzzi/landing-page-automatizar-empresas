@@ -1,6 +1,6 @@
 {
   "short_name": "NEXUGAL",
-  "name": "NEXUGAL — Consultoria Tecnológica",
+  "name": "NEXUGAL, Consultoria Tecnológica",
   "description": "Consultoria tecnológica. Desenvolvimento web, cibersegurança, soluções cloud, IA e análise de dados.",
   "icons": [
     {
@@ -20,7 +20,7 @@
   "display": "standalone",
   "theme_color": "#0F2E5C",
   "background_color": "#FFFFFF",
-  "lang": "pt-BR",
+  "lang": "pt-PT",
   "orientation": "portrait-primary",
   "categories": ["business", "technology"]
 }

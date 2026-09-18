@@ -41,7 +41,7 @@ const seoData = {
       ogLocale: 'pt_PT',
     },
     contact: {
-      title: 'Contacto, NEXUGAL | Fale Connosco',
+      title: 'Contacto, Nexugal | Fale Connosco',
       description:
         'Entre em contacto com a NEXUGAL. Preencha o formulário e a nossa equipa responde em 24 horas.',
       canonical: `${BASE_URL}/contacto`,
@@ -49,7 +49,7 @@ const seoData = {
       ogLocale: 'pt_PT',
     },
     faq: {
-      title: 'FAQ, NEXUGAL | Perguntas Frequentes sobre Consultoria Tecnológica',
+      title: 'FAQ, Nexugal | Perguntas frequentes sobre automação de processos',
       description:
         'Respostas às perguntas mais frequentes sobre os serviços da NEXUGAL: desenvolvimento web, cibersegurança, cloud, IA, prazos, custos e suporte.',
       canonical: `${BASE_URL}/faq`,
@@ -57,7 +57,7 @@ const seoData = {
       ogLocale: 'pt_PT',
     },
     about: {
-      title: 'Sobre Nós, NEXUGAL | Consultoria Tecnológica e Transformação Digital',
+      title: 'Sobre nós, Nexugal | Sistemas que falam entre si',
       description:
         'Conheça a NEXUGAL: quem somos, a nossa visão e a nossa paixão por transformar empresas através da tecnologia, cibersegurança e inovação.',
       canonical: `${BASE_URL}/sobre`,
@@ -65,7 +65,7 @@ const seoData = {
       ogLocale: 'pt_PT',
     },
     privacy: {
-      title: 'Política de Privacidade, NEXUGAL | Proteção de Dados e RGPD',
+      title: 'Política de Privacidade, Nexugal | Proteção de Dados e RGPD',
       description:
         'Política de Privacidade da NEXUGAL. Saiba como recolhemos, tratamos e protegemos os seus dados pessoais em conformidade com o RGPD.',
       canonical: `${BASE_URL}/privacidade`,
@@ -82,7 +82,7 @@ const seoData = {
       ogLocale: 'en_US',
     },
     contact: {
-      title: 'Contact, NEXUGAL | Get in Touch',
+      title: 'Contact, Nexugal | Get in Touch',
       description:
         'Get in touch with NEXUGAL. Fill out the form and our team will respond within 24 hours.',
       canonical: `${BASE_URL}/us/contact`,
@@ -90,7 +90,7 @@ const seoData = {
       ogLocale: 'en_US',
     },
     faq: {
-      title: 'FAQ, NEXUGAL | Frequently Asked Questions about Technology Consulting',
+      title: 'FAQ, Nexugal | Frequently asked questions about process automation',
       description:
         'Answers to frequently asked questions about NEXUGAL services: web development, cybersecurity, cloud, AI, timelines, costs and support.',
       canonical: `${BASE_URL}/us/faq`,
@@ -98,7 +98,7 @@ const seoData = {
       ogLocale: 'en_US',
     },
     about: {
-      title: 'About Us, NEXUGAL | Technology Consulting & Digital Transformation',
+      title: 'About us, Nexugal | Systems that talk to each other',
       description:
         'Meet NEXUGAL: who we are, our vision and our passion for transforming businesses through technology, cybersecurity, and innovation.',
       canonical: `${BASE_URL}/us/about`,
@@ -106,7 +106,7 @@ const seoData = {
       ogLocale: 'en_US',
     },
     privacy: {
-      title: 'Privacy Policy, NEXUGAL | Data Protection & GDPR',
+      title: 'Privacy Policy, Nexugal | Data Protection & GDPR',
       description:
         'NEXUGAL Privacy Policy. Learn how we collect, process and protect your personal data in compliance with GDPR.',
       canonical: `${BASE_URL}/us/privacy`,

@@ -58,6 +58,24 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- Sobre PT -->
+  <url>
+    <loc>https://www.nexugal.com/sobre</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.nexugal.com/sobre" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nexugal.com/us/about" />
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- About EN -->
+  <url>
+    <loc>https://www.nexugal.com/us/about</loc>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://www.nexugal.com/sobre" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://www.nexugal.com/us/about" />
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
   <!-- Privacidade PT -->
   <url>
     <loc>https://www.nexugal.com/privacidade</loc>
