@@ -56,8 +56,8 @@ está na secção 7.
   fotografia do Sobre, `images/nexugal-partilha.png` a imagem das
   pré-visualizações do WhatsApp e das redes, desde 18/09), vídeo (ainda por trás
   do contacto e da FAQ), ícones, `logos/` (tira de ferramentas), sitemap.xml,
-  robots.txt. `images/foto principal.png` (5 MB) não é usada por nada desde
-  10/09 (7.7)
+  robots.txt. A `images/foto principal.png` (o hero antigo, 5 MB) foi apagada a
+  18/09 (7.8)
 - `tailwind.config.js`: cores e tipografia. As cores estão repetidas em
   `src/index.css` (ver 7.1)
 
@@ -240,7 +240,9 @@ o Rui aprovou o resultado ("O hero está construído e está bom").
 Entraram em `ba203b3` e `18a2135`, e estão descritos em 7.6, com o que ficou em
 aberto. **A 18/09**, na mesma conversa, o Rui respondeu ao que ficou em aberto e
 pediu mais quatro coisas e a imagem de partilha nova: `bb60c3e` e `dab9c1d`,
-descritos em 7.7. Onde 7.1 a 7.5 foram escritos antes disso, está assinalado.
+descritos em 7.7. Mais tarde no mesmo dia, o fecho do lote (marca em "Nexugal",
+`manifest.json`, foto órfã): `2ed76ff`, em 7.8. Onde 7.1 a 7.5 foram escritos
+antes disso, está assinalado.
 
 ### 7.0 Antes de mais: o Henrique trabalhou neste ramo, e o site público já o mostra
 
@@ -1093,8 +1095,10 @@ branco, e de acertar as etiquetas com o Henrique.
 
 #### 14. Restos de texto antigo no cabeçalho, fora do que foi pedido a 16/09 (FEITO em parte a 18/09)
 
-A 18/09 o Rui pediu os títulos (tabela em 7.7) e o Sobre no sitemap; estão
-feitos. O resto continua como estava, não discutido com ele:
+A 18/09 o Rui pediu os títulos (tabela em 7.7), o Sobre no sitemap, a marca em
+"Nexugal" em todos os títulos e descrições, e o `manifest.json` novo (7.8);
+estão feitos. O resto continua como estava, não discutido com ele (o ponto do
+`manifest.json`, mais abaixo, ficou resolvido no `2ed76ff`):
 
 - **As descrições das outras páginas** no `SEO.js` (o Rui pediu só os títulos):
   a da FAQ ainda fala de "desenvolvimento web, cibersegurança, cloud, IA"; a do
@@ -1286,6 +1290,13 @@ por iniciativa própria; se incomodarem, é decisão do Rui.
   só ganha onde partir.
 - **Imagem de partilha (18/09):** `images/nexugal-partilha.png`, feita pelo Rui.
   Uma imagem nova entra com nome novo (7.4).
+- **A marca escreve-se "Nexugal"; "NEXUGAL" só no logótipo** (18/09). Nas
+  palavras do Rui: "O logótipo escreve-se em maiúsculas espaçadas porque é um
+  desenho. Num separador do browser e num resultado do Google, maiúsculas
+  leem-se como se estivéssemos a gritar." Aplicado a tudo o que o Google, o
+  separador e as partilhas mostram (títulos, descrições, nome do site, nomes nos
+  dados estruturados, `manifest.json`). O texto visível das páginas ainda tem
+  "NEXUGAL" em vários sítios: pergunta em aberto (7.8).
 - **A linha órfã do "Como trabalhamos" no telemóvel fica como está.**
 - **Botões:** o do fecho dos exemplos diz "Entre em contacto"; o do hero e o
   flutuante dizem "Falar connosco". (O do convite final diz "Iniciar Conversa" e
@@ -1786,7 +1797,8 @@ agora o código às claras (7.4). Depois de mexer nesse rótulo, confirmar que n
 **Ficheiro órfão que já vinha de trás:** `frontend/public/images/foto principal.png`,
 5 MB, 2720 × 1568px, a imagem do hero antigo. Não é usada por nada desde o
 `b7fde65` (10/09), mas vai no build e é publicada. A troca da imagem de partilha
-não deixou nenhum órfão. Perguntado ao Rui a 18/09 se sai.
+não deixou nenhum órfão. Perguntado ao Rui a 18/09 se sai: saiu no mesmo dia
+(7.8).
 
 **Verificação, a 18/09:**
 
@@ -1802,3 +1814,64 @@ não deixou nenhum órfão. Perguntado ao Rui a 18/09 se sai.
 - Rodapé, em PT e EN, a 380 e a 1280px: a frase saiu, "Braga, Portugal" ficou,
   a última linha ficou com o copyright à esquerda e as ligações legais à direita,
   e não há scroll para o lado.
+
+### 7.8 O fecho do lote de 18/09: a marca, o manifest e a foto órfã
+
+Commit `2ed76ff`. **Não publicado.**
+
+**O que se fez:**
+
+- **Foto órfã:** `frontend/public/images/foto principal.png` apagada, a pedido
+  do Rui ("Não a guardo em lado nenhum"). Antes, confirmado que não havia
+  nenhuma referência no código nem na configuração (só no `CLAUDE.md`); depois,
+  o build passa e a pasta `build/images` já não a tem.
+- **Marca em "Nexugal"** (decisão em 7.3) em tudo o que aparece no separador, no
+  Google e nas partilhas: as oito descrições do `SEO.js` (incluindo a do Sobre,
+  que é do Henrique: mudou só a marca), os nomes nos dados estruturados
+  (`Organization`, `WebSite`, `ProfessionalService`, os seis `provider` e
+  "Serviços Nexugal"), e no `index.html` o `og:site_name`, o `author` e as
+  `keywords`. Os títulos já estavam (7.7).
+- **`manifest.json`:** `name` e `short_name` "Nexugal", `description`
+  "Reformulação de operações com gestão implementada", `lang` pt-PT. Saiu a
+  lista de serviços antigos. O formato não obriga a ter nada no lugar: a
+  descrição é opcional, e passou a ser a da página inicial, como o Rui pediu. O
+  `short_name` (o nome por baixo do ícone, se alguém instalar o site) também era
+  "NEXUGAL" e passou a "Nexugal", para bater com o `name`. `categories`
+  ("business", "technology") ficou: são categorias de loja de aplicações, não
+  serviços.
+
+**Verificado no build de produção, com o desenho simulado (7.2, ponto 5), nas
+dez páginas:** título, descrição, `og:site_name`, `og:title` e os nomes nos dados
+estruturados todos com "Nexugal"; um só canonical; nenhuma etiqueta repetida; e
+zero "NEXUGAL" no cabeçalho, **exceto nas duas páginas da FAQ**. O HTML servido
+(o que o WhatsApp lê) não tem nenhum. O `manifest.json` servido é JSON válido.
+Auditoria de contraste: zero falhas nas dez páginas a 380 e a 1280px, e na
+página inicial também a 1024 e a 1920px. Teste de contraste: 18 a passar.
+
+**Em aberto, à espera do Rui: o "NEXUGAL" no texto visível das páginas.** Não
+é título nem descrição, por isso não se mexeu. O que ficou, fora do logótipo:
+
+- **Perguntas da FAQ**, três em PT e três em EN ("Que tipo de serviços a NEXUGAL
+  oferece?" e afins). Como o JSON-LD da FAQ lê o `translations.js`, são também
+  elas que levam "NEXUGAL" para o cabeçalho das duas páginas da FAQ. A FAQ tem a
+  regra do Rui de 10/09 ("nem mais uma" correção sem ele pedir).
+- **Título da página do Sobre**, "Sobre a NEXUGAL" (`about.titleHighlight`, em
+  azul-vivo, PT e EN): texto do Sobre, que o Rui mandou não tocar.
+- **Copyright**: no rodapé da página inicial (`footer.copyright`, PT e EN) e nos
+  rodapés pequenos do contacto, da FAQ, do Sobre e da política de privacidade
+  (escritos nos próprios componentes; o do Sobre está na `SobrePage.js`, página
+  do Sobre).
+- **Política de privacidade**, "Responsável pelo Tratamento: NEXUGAL". Pode ser
+  o nome legal da empresa: confirmar antes de mudar.
+- **Formulário de contacto**, opção "Contacto direto da NEXUGAL" (EN "Direct
+  contact from NEXUGAL") em "Como soube de nós". É também o valor que o
+  formulário envia ao backend e que chega nos emails de lead: mudar o texto muda
+  o que o Henrique recebe.
+- **Textos para leitores de ecrã**: "NEXUGAL, ir para a página inicial" nos
+  logótipos clicáveis (`Header.js`, `FAQPage.js`, `SobrePage.js` e
+  `translations.js`). Em maiúsculas, alguns leitores soletram letra a letra.
+
+Ficam de fora de qualquer pergunta: o logótipo em si (cabeçalho, rodapé, casca
+das páginas, política de privacidade, admin), o admin (página interna), o
+chatbot desligado (secção 5), os emails do backend (do Henrique) e o comentário
+do `robots.txt`, que ninguém vê.
