@@ -43,7 +43,7 @@ const seoData = {
     contact: {
       title: 'Contacto, Nexugal | Fale Connosco',
       description:
-        'Entre em contacto com a NEXUGAL. Preencha o formulário e a nossa equipa responde em 24 horas.',
+        'Entre em contacto com a Nexugal. Preencha o formulário e a nossa equipa responde em 24 horas.',
       canonical: `${BASE_URL}/contacto`,
       alternate: `${BASE_URL}/us/contact`,
       ogLocale: 'pt_PT',
@@ -51,7 +51,7 @@ const seoData = {
     faq: {
       title: 'FAQ, Nexugal | Perguntas frequentes sobre automação de processos',
       description:
-        'Respostas às perguntas mais frequentes sobre os serviços da NEXUGAL: desenvolvimento web, cibersegurança, cloud, IA, prazos, custos e suporte.',
+        'Respostas às perguntas mais frequentes sobre os serviços da Nexugal: desenvolvimento web, cibersegurança, cloud, IA, prazos, custos e suporte.',
       canonical: `${BASE_URL}/faq`,
       alternate: `${BASE_URL}/us/faq`,
       ogLocale: 'pt_PT',
@@ -59,7 +59,7 @@ const seoData = {
     about: {
       title: 'Sobre nós, Nexugal | Sistemas que falam entre si',
       description:
-        'Conheça a NEXUGAL: quem somos, a nossa visão e a nossa paixão por transformar empresas através da tecnologia, cibersegurança e inovação.',
+        'Conheça a Nexugal: quem somos, a nossa visão e a nossa paixão por transformar empresas através da tecnologia, cibersegurança e inovação.',
       canonical: `${BASE_URL}/sobre`,
       alternate: `${BASE_URL}/us/about`,
       ogLocale: 'pt_PT',
@@ -67,7 +67,7 @@ const seoData = {
     privacy: {
       title: 'Política de Privacidade, Nexugal | Proteção de Dados e RGPD',
       description:
-        'Política de Privacidade da NEXUGAL. Saiba como recolhemos, tratamos e protegemos os seus dados pessoais em conformidade com o RGPD.',
+        'Política de Privacidade da Nexugal. Saiba como recolhemos, tratamos e protegemos os seus dados pessoais em conformidade com o RGPD.',
       canonical: `${BASE_URL}/privacidade`,
       alternate: `${BASE_URL}/us/privacy`,
       ogLocale: 'pt_PT',
@@ -84,7 +84,7 @@ const seoData = {
     contact: {
       title: 'Contact, Nexugal | Get in Touch',
       description:
-        'Get in touch with NEXUGAL. Fill out the form and our team will respond within 24 hours.',
+        'Get in touch with Nexugal. Fill out the form and our team will respond within 24 hours.',
       canonical: `${BASE_URL}/us/contact`,
       alternate: `${BASE_URL}/contacto`,
       ogLocale: 'en_US',
@@ -92,7 +92,7 @@ const seoData = {
     faq: {
       title: 'FAQ, Nexugal | Frequently asked questions about process automation',
       description:
-        'Answers to frequently asked questions about NEXUGAL services: web development, cybersecurity, cloud, AI, timelines, costs and support.',
+        'Answers to frequently asked questions about Nexugal services: web development, cybersecurity, cloud, AI, timelines, costs and support.',
       canonical: `${BASE_URL}/us/faq`,
       alternate: `${BASE_URL}/faq`,
       ogLocale: 'en_US',
@@ -100,7 +100,7 @@ const seoData = {
     about: {
       title: 'About us, Nexugal | Systems that talk to each other',
       description:
-        'Meet NEXUGAL: who we are, our vision and our passion for transforming businesses through technology, cybersecurity, and innovation.',
+        'Meet Nexugal: who we are, our vision and our passion for transforming businesses through technology, cybersecurity, and innovation.',
       canonical: `${BASE_URL}/us/about`,
       alternate: `${BASE_URL}/sobre`,
       ogLocale: 'en_US',
@@ -108,7 +108,7 @@ const seoData = {
     privacy: {
       title: 'Privacy Policy, Nexugal | Data Protection & GDPR',
       description:
-        'NEXUGAL Privacy Policy. Learn how we collect, process and protect your personal data in compliance with GDPR.',
+        'Nexugal Privacy Policy. Learn how we collect, process and protect your personal data in compliance with GDPR.',
       canonical: `${BASE_URL}/us/privacy`,
       alternate: `${BASE_URL}/privacidade`,
       ogLocale: 'en_US',
@@ -127,7 +127,7 @@ const ALT_IMAGEM = {
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: 'NEXUGAL',
+  name: 'Nexugal',
   url: BASE_URL,
   logo: `${BASE_URL}/icons/favicon.png`,
   description:
@@ -154,7 +154,7 @@ const organizationSchema = {
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: 'NEXUGAL',
+  name: 'Nexugal',
   url: BASE_URL,
   inLanguage: ['pt-PT', 'en-US'],
   potentialAction: {
@@ -168,7 +168,7 @@ const websiteSchema = {
 const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
-  name: 'NEXUGAL',
+  name: 'Nexugal',
   image: `${BASE_URL}/icons/favicon.png`,
   url: BASE_URL,
   telephone: '+351912423912',
@@ -261,7 +261,7 @@ function getBreadcrumbs(lang, page) {
 const serviceSchema = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'Serviços NEXUGAL',
+  name: 'Serviços Nexugal',
   itemListElement: [
     {
       '@type': 'ListItem',
@@ -271,7 +271,7 @@ const serviceSchema = {
         name: 'Desenvolvimento Web',
         description:
           'Aplicações web modernas, responsivas e de alto desempenho com as tecnologias mais recentes do mercado.',
-        provider: { '@type': 'Organization', name: 'NEXUGAL' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -282,7 +282,7 @@ const serviceSchema = {
         name: 'Cibersegurança',
         description:
           'Proteção completa dos seus dados e infraestrutura com auditorias, monitorização e estratégias avançadas de segurança.',
-        provider: { '@type': 'Organization', name: 'NEXUGAL' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -293,7 +293,7 @@ const serviceSchema = {
         name: 'Soluções na Nuvem',
         description:
           'Migração, gestão e otimização de infraestrutura em nuvem para máxima escalabilidade e disponibilidade.',
-        provider: { '@type': 'Organization', name: 'NEXUGAL' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -304,7 +304,7 @@ const serviceSchema = {
         name: 'Consultoria em IA',
         description:
           'Integração de inteligência artificial e automação nos seus processos para aumentar a eficiência operacional.',
-        provider: { '@type': 'Organization', name: 'NEXUGAL' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -315,7 +315,7 @@ const serviceSchema = {
         name: 'Análise de Dados',
         description:
           'Transforme dados em decisões estratégicas com painéis inteligentes e relatórios personalizados.',
-        provider: { '@type': 'Organization', name: 'NEXUGAL' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -326,7 +326,7 @@ const serviceSchema = {
         name: 'Suporte e Manutenção',
         description:
           'Suporte técnico contínuo 24/7 e manutenção proativa para manter os seus sistemas sempre operacionais.',
-        provider: { '@type': 'Organization', name: 'NEXUGAL' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
   ],
