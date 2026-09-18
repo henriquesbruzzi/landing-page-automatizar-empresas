@@ -53,8 +53,8 @@ está na secção 7.
   Para mudar palavras no site, é quase sempre este ficheiro, não os componentes.
   As exceções estão em 7.4.
 - `public/`: imagens (`images/nexugal-n.png` é o N do hero, `images/rui.jpg` a
-  fotografia do Sobre, `images/nexugal-partilha.png` a imagem das
-  pré-visualizações do WhatsApp e das redes, desde 18/09), vídeo (ainda por trás
+  fotografia do Sobre, `images/nexugal-partilha-2.png` a imagem das
+  pré-visualizações do WhatsApp e das redes, desde 18/09, 7.10), vídeo (ainda por trás
   do contacto e da FAQ), ícones, `logos/` (tira de ferramentas), sitemap.xml,
   robots.txt. A `images/foto principal.png` (o hero antigo, 5 MB) foi apagada a
   18/09 (7.8)
@@ -196,6 +196,13 @@ comandos vão um por linha. Ver 7.5.
     site mudou de commit (como, logo abaixo). Se mudar, a Vercel está a publicar
     a cada push, e a partir daí o push para esse ramo pede confirmação expressa
     do Rui.
+  - **A 18/09/2026 o Rui publicou à mão o `2af828b`** (o fim do lote de 18/09,
+    7.9). Durante os 6 minutos a seguir ao push desse commit o site continuou
+    no `d3f292e`; mais tarde o site passou a indicar `2af828b`
+    (`main.8c01c5da.js`), e a imagem de partilha servida traz `Last-Modified`
+    de 18/09 às 18h09 GMT (19h09 em Lisboa). O Rui disse "publico eu". Desde
+    então o site público mostra tudo até ao `2af828b`; o que vier depois não
+    está publicado até ele publicar outra vez.
 
   Para confirmar o que está mesmo online: descarregar o `static/js/main.*.js`
   do site e procurar lá dentro `REACT_APP_VERCEL_GIT_COMMIT_SHA` e
@@ -242,8 +249,9 @@ aberto. **A 18/09**, na mesma conversa, o Rui respondeu ao que ficou em aberto e
 pediu mais quatro coisas e a imagem de partilha nova: `bb60c3e` e `dab9c1d`,
 descritos em 7.7. Mais tarde no mesmo dia, o fecho do lote (marca em "Nexugal",
 `manifest.json`, foto órfã): `2ed76ff`, em 7.8; e a marca no texto das
-páginas: `e442e27`, em 7.9. Onde 7.1 a 7.5 foram escritos antes disso, está
-assinalado.
+páginas: `e442e27`, em 7.9. O Rui publicou nessa noite (secção 6) e mandou uma
+imagem de partilha nova para o corte do WhatsApp: `1c83972`, em 7.10. Onde 7.1
+a 7.5 foram escritos antes disso, está assinalado.
 
 ### 7.0 Antes de mais: o Henrique trabalhou neste ramo, e o site público já o mostra
 
@@ -738,8 +746,9 @@ caixa (`overflow-x-auto`). Funciona, é só desconfortável.
 Por ordem de importância, como estava a 14/09. **Atualizado a 16/09:** os pontos
 1, 2 e 3 estão feitos, o 5 e o 6 feitos em parte, e os pontos 11 a 14 são novos.
 **Atualizado a 18/09:** o 6, o 12 e o 13 estão fechados e o 14 feito em parte
-(7.7). Nada disto está publicado: o site público continua no `d3f292e`
-(secção 6).
+(7.7). O Rui publicou o `2af828b` ao fim do dia 18/09 (secção 6): o que está
+feito até aí já está no site público; a imagem de partilha nova (7.10) ainda
+não.
 
 **Antes de tudo, fora do frontend:** o período de experiência do Railway estava
 a acabar por volta de 19/09/2026 (secção 6). Se acabar, o formulário deixa de
@@ -1289,8 +1298,11 @@ por iniciativa própria; se incomodarem, é decisão do Rui.
   SYSTEM, IN THE SHOP/WAREHOUSE). O inglês leva um ponto de quebra invisível
   depois da barra (18/09, escolha do Rui entre três saídas): o texto não muda,
   só ganha onde partir.
-- **Imagem de partilha (18/09):** `images/nexugal-partilha.png`, feita pelo Rui.
-  Uma imagem nova entra com nome novo (7.4).
+- **Imagem de partilha (18/09):** `images/nexugal-partilha-2.png`, feita pelo
+  Rui, com o logótipo e o nome no quadrado central, porque o WhatsApp corta a
+  imagem a quadrado (7.10). **Uma imagem nova entra com nome novo** (7.4): o Rui
+  confirmou-o a 18/09, quando a segunda versão chegou com o mesmo nome da
+  primeira, já publicada.
 - **A marca escreve-se "Nexugal"; "NEXUGAL" só no logótipo** (18/09). Nas
   palavras do Rui: "O logótipo escreve-se em maiúsculas espaçadas porque é um
   desenho. Num separador do browser e num resultado do Google, maiúsculas
@@ -1960,3 +1972,41 @@ página inicial também a 1024 e a 1920px; e, página a página no build, os tex
 novos no ecrã (as seis perguntas, os dois títulos do Sobre, os copyrights, o
 responsável pelo tratamento, a opção na lista aberta do formulário em PT e EN) e
 o JSON-LD da FAQ já com "Nexugal".
+
+### 7.10 A imagem de partilha para o corte do WhatsApp (18/09, à noite)
+
+Commit `1c83972`. **Não publicado** (o site público está no `2af828b`, secção 6).
+
+**O problema, visto pelo Rui depois de publicar:** o WhatsApp corta a imagem de
+partilha a quadrado e ficava só o miolo da primeira versão, com metade do N de
+um lado e metade da forma azul do outro.
+
+**A imagem nova**, feita pelo Rui (`nexugal-partilha.png`, na pasta `site` dele):
+N e "NEXUGAL" por baixo, ao centro, e duas formas azuis nos cantos (em cima à
+direita e em baixo à esquerda). PNG verdadeiro de 1200 × 630px, 105 KB. Medido
+no ficheiro: o logótipo e o nome ocupam x 422 a 778 e y 128 a 472, dentro do
+quadrado central (x 285 a 915). A forma de baixo à esquerda acaba em x 242 e
+fica toda de fora; a de cima à direita começa em x 887 e **ainda entra no
+quadrado**, uma lasca de até 28px junto à borda direita, do topo até y 210. O
+Rui viu a medida e disse que serve assim.
+
+**Entrou com nome novo, `images/nexugal-partilha-2.png`**, e a versão anterior
+saiu. O Rui mandou-a com o mesmo nome da anterior, que já estava publicada e já
+tinha sido lida pelo WhatsApp; perguntou-se, e ele escolheu o nome novo (regra
+em 7.4). As três etiquetas (`og:image`, `og:image:secure_url`, `twitter:image`)
+apontam para ela; tipo e medidas (`image/png`, 1200 × 630) continuam a bater
+certo com o ficheiro.
+
+**Verificado:** build com `CI=true`; o HTML servido em `/` e `/faq` traz as três
+etiquetas com o nome novo; a imagem servida é `image/png` de 105 199 bytes, igual
+byte a byte ao ficheiro do Rui; o endereço anterior já não devolve imagem; e não
+há referência ao nome anterior em lado nenhum do repositório nem do build, fora
+deste ficheiro. Auditoria de contraste na página inicial, PT e EN, a 380 e a
+1280px: zero falhas (as páginas não mudaram por dentro).
+
+**Depois de publicar:** o WhatsApp também guarda a pré-visualização de cada
+ligação durante algum tempo. Mensagens já enviadas ficam com a imagem antiga;
+numa ligação nova, se ainda aparecer a antiga, experimentar com
+`https://www.nexugal.com/?v=2`, que o WhatsApp trata como endereço novo. Para o
+Facebook e o LinkedIn há ferramentas que mandam ler outra vez a página (Sharing
+Debugger e Post Inspector).
