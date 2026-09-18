@@ -53,8 +53,11 @@ está na secção 7.
   Para mudar palavras no site, é quase sempre este ficheiro, não os componentes.
   As exceções estão em 7.4.
 - `public/`: imagens (`images/nexugal-n.png` é o N do hero, `images/rui.jpg` a
-  fotografia do Sobre), vídeo (ainda por trás do contacto e da FAQ), ícones,
-  `logos/` (tira de ferramentas), sitemap.xml, robots.txt
+  fotografia do Sobre, `images/nexugal-partilha.png` a imagem das
+  pré-visualizações do WhatsApp e das redes, desde 18/09), vídeo (ainda por trás
+  do contacto e da FAQ), ícones, `logos/` (tira de ferramentas), sitemap.xml,
+  robots.txt. `images/foto principal.png` (5 MB) não é usada por nada desde
+  10/09 (7.7)
 - `tailwind.config.js`: cores e tipografia. As cores estão repetidas em
   `src/index.css` (ver 7.1)
 
@@ -216,7 +219,7 @@ comandos vão um por linha. Ver 7.5.
 
 ---
 
-## 7. Ponto de situação do ramo `rui/site-branco` (14/09/2026, atualizado a 16/09)
+## 7. Ponto de situação do ramo `rui/site-branco` (14/09/2026, atualizado a 18/09)
 
 Esta secção existe para uma sessão nova continuar o trabalho sem o Rui ter de
 explicar tudo outra vez. Está escrita para quem nunca viu o projeto. Onde uma
@@ -235,7 +238,9 @@ o Rui aprovou o resultado ("O hero está construído e está bom").
 **A 15 e 16/09/2026**, numa conversa nova, o Rui pediu as correções urgentes
 (7.2, pontos 1, 2 e 3) e o texto que o Google e o WhatsApp veem (pontos 5 e 6).
 Entraram em `ba203b3` e `18a2135`, e estão descritos em 7.6, com o que ficou em
-aberto. Onde 7.1 a 7.5 foram escritos antes disso, está assinalado.
+aberto. **A 18/09**, na mesma conversa, o Rui respondeu ao que ficou em aberto e
+pediu mais quatro coisas e a imagem de partilha nova: `bb60c3e` e `dab9c1d`,
+descritos em 7.7. Onde 7.1 a 7.5 foram escritos antes disso, está assinalado.
 
 ### 7.0 Antes de mais: o Henrique trabalhou neste ramo, e o site público já o mostra
 
@@ -729,7 +734,9 @@ caixa (`overflow-x-auto`). Funciona, é só desconfortável.
 
 Por ordem de importância, como estava a 14/09. **Atualizado a 16/09:** os pontos
 1, 2 e 3 estão feitos, o 5 e o 6 feitos em parte, e os pontos 11 a 14 são novos.
-Nada disto está publicado: o site público continua no `d3f292e` (secção 6).
+**Atualizado a 18/09:** o 6, o 12 e o 13 estão fechados e o 14 feito em parte
+(7.7). Nada disto está publicado: o site público continua no `d3f292e`
+(secção 6).
 
 **Antes de tudo, fora do frontend:** o período de experiência do Railway estava
 a acabar por volta de 19/09/2026 (secção 6). Se acabar, o formulário deixa de
@@ -907,24 +914,22 @@ cada língua; JSON-LD em todas; `FAQPage` com as sete perguntas em PT e EN.
 **O que continua por fazer:** as pré-visualizações por página (ponto 11). E o
 conteúdo dos títulos e descrições das outras páginas não foi revisto (ponto 14).
 
-#### 6. Travessões e português do Brasil no `public/index.html` (FEITO em parte a 16/09, `18a2135`)
+#### 6. Travessões e português do Brasil no `public/index.html` (FEITO a 16/09, `18a2135`, e a 18/09, `dab9c1d`)
 
 Feito: o título, a descrição e as etiquetas `og:` e `twitter:` do `index.html`
 foram substituídas pelas novas (sem travessões), e "Codificando o Amanhã da sua
 Empresa" saiu dos três sítios onde estava. Os dois comentários com travessão do
 `index.html` também saíram. Hoje o `index.html` não tem nenhum travessão.
 
-Ficou por fazer, não discutido com o Rui:
+A 18/09, a pedido do Rui: o `manifest.json` ficou sem travessão
+(`"name": "NEXUGAL, Consultoria Tecnológica"`) e com `"lang": "pt-PT"` (estava
+`pt-BR`); e o `<noscript>` passou de "Você precisa habilitar JavaScript para
+executar este app." a "É preciso ativar o JavaScript para ver este site.", com
+"You need to enable JavaScript to view this site." ao lado: o ficheiro é o mesmo
+nas duas línguas e, sem JavaScript, não há forma de saber qual se pediu.
 
-- `frontend/public/manifest.json`: `"name": "NEXUGAL — Consultoria Tecnológica"`
-  (travessão) e `"lang": "pt-BR"`;
-- o texto do `<noscript>` do `index.html`, "Você precisa habilitar JavaScript
-  para executar este app.", português do Brasil, que é o que vê quem abre o site
-  sem JavaScript.
-
-Não mexer nas etiquetas que o Henrique acrescentou a 13/09
-(`og:image:secure_url`, `og:image:type`) sem falar com ele. Há um problema com
-elas no ponto 13.
+O `name` e a `description` do `manifest.json` ainda falam de "Consultoria
+Tecnológica" e dos serviços antigos (ponto 14).
 
 #### 7. Dívida de contraste conhecida: o azul-claro
 
@@ -1019,7 +1024,17 @@ Qualquer das três toca no build e no `vercel.json`: falar com o Henrique antes.
 Uma imagem de partilha diferente por página é um passo à parte, e só faz sentido
 depois de uma destas.
 
-#### 12. A morada em Braga: pergunta em aberto ao Rui (16/09)
+#### 12. A morada em Braga (DECIDIDO a 18/09: fica)
+
+**A decisão do Rui, a 18/09:** a morada fica onde está, em todos os sítios. "A
+morada diz onde a empresa está, não onde trabalha, e há sítios onde é
+obrigatória." Não se apaga dos dados estruturados, nem da política de
+privacidade, nem dos emails do backend. **A única coisa que saiu** (`bb60c3e`)
+foi a frase do rodapé "Feito com tecnologia de ponta em Portugal 🇵🇹", em PT e
+EN, sem nada no lugar (as chaves `footer.madeWith` e `footer.location` saíram do
+`translations.js`). O "Braga, Portugal" do rodapé fica.
+
+O que estava escrito a 16/09, antes da decisão:
 
 O Rui decidiu a 16/09 que o site **não declara limite geográfico nenhum**: "Apaga
 'serve Portugal e Brasil' e qualquer outra afirmação de onde a Nexugal trabalha,
@@ -1051,10 +1066,20 @@ Ficou para o Rui decidir:**
 - `AdminLeadsPage.js`: Braga como região de pesquisa do scraper. Página interna,
   não é afirmação nenhuma.
 
-#### 13. A imagem de partilha está desatualizada e mal descrita
+#### 13. A imagem de partilha está desatualizada e mal descrita (FEITO a 18/09, `dab9c1d`)
 
-`frontend/public/images/og-image.png`, que é a imagem das pré-visualizações do
-WhatsApp e das redes sociais:
+**Resolvido a 18/09:** o Rui mandou uma imagem nova (`nexugal-partilha-B-so-N.png`,
+na pasta `site` dele: o N da Nexugal à esquerda e um círculo azul a sair pela
+direita, em fundo branco). Entrou como
+`frontend/public/images/nexugal-partilha.png`, PNG verdadeiro de 1200 × 630px e
+110 KB, igual byte a byte ao original, e o `og-image.png` saiu do repositório.
+As três etiquetas que apontavam para a antiga (`og:image`,
+`og:image:secure_url`, `twitter:image`) apontam para a nova, e o tipo e as
+medidas declarados (`image/png`, 1200 × 630) passaram a bater certo com o
+ficheiro. **Nome novo de propósito:** o WhatsApp e as redes guardam a imagem
+pelo endereço, e com o mesmo nome continuariam a mostrar a antiga.
+
+Como estava antes, `frontend/public/images/og-image.png`:
 
 - é o desenho antigo: fundo preto, néon ciano, "Consultoria Tecnológica" e
   "Desenvolvimento Web · Cibersegurança · Cloud · IA · Dados";
@@ -1066,23 +1091,28 @@ WhatsApp e das redes sociais:
 Não discutido com o Rui. Precisa de uma imagem nova, de 1200 × 630px, no estilo
 branco, e de acertar as etiquetas com o Henrique.
 
-#### 14. Restos de texto antigo no cabeçalho, fora do que foi pedido a 16/09
+#### 14. Restos de texto antigo no cabeçalho, fora do que foi pedido a 16/09 (FEITO em parte a 18/09)
 
-Nada disto foi discutido com o Rui:
+A 18/09 o Rui pediu os títulos (tabela em 7.7) e o Sobre no sitemap; estão
+feitos. O resto continua como estava, não discutido com ele:
 
-- **Títulos e descrições das outras páginas** no `SEO.js` ainda falam de
-  "Consultoria Tecnológica" e, na FAQ, de "cloud"; a do contacto promete que "a
-  nossa equipa responde em 24 horas"; a do Sobre (do Henrique) fala de "paixão por
-  transformar empresas através da tecnologia, cibersegurança e inovação". A página
-  inicial passou a "Nexugal", e as outras não acompanharam.
+- **As descrições das outras páginas** no `SEO.js` (o Rui pediu só os títulos):
+  a da FAQ ainda fala de "desenvolvimento web, cibersegurança, cloud, IA"; a do
+  contacto promete que "a nossa equipa responde em 24 horas"; a do Sobre (do
+  Henrique) fala de "paixão por transformar empresas através da tecnologia,
+  cibersegurança e inovação".
+- **O `name` e a `description` do `manifest.json`** ainda dizem "Consultoria
+  Tecnológica" e listam os serviços antigos (a 18/09 o Rui pediu só o travessão
+  e a língua). É o nome que aparece se alguém instalar o site como aplicação.
 - **`keywords`** do `index.html`: ainda a lista dos serviços antigos, com inglês
   ("IT consulting, web development, cybersecurity"). O Google ignora esta etiqueta.
 - **O JSON-LD de serviços** (`serviceSchema`) só existe em português e aparece
   também em `/us`. E "Proteção completa dos seus dados" é o tipo de promessa
   absoluta que o Rui tirou da FAQ; a 16/09 só se corrigiu o vocabulário, por
   instrução dele.
-- **O `sitemap.xml` não tem `/sobre` nem `/us/about`**, e só a página inicial
-  declara `x-default`.
+- **O `sitemap.xml`** ganhou `/sobre` e `/us/about` a 18/09 e tem agora as dez
+  páginas públicas. Só a página inicial declara `x-default` no sitemap (as
+  páginas declaram-no todas, desde 16/09); não é contradição, é só incompleto.
 
 ### 7.3 Decisões que valem para o futuro
 
@@ -1240,8 +1270,10 @@ por iniciativa própria; se incomodarem, é decisão do Rui.
   quatro correções, não se toca.
 - **A FAQ não declara limite geográfico nenhum.** A 16/09 a decisão alargou-se
   ao site todo: nenhuma afirmação de onde a Nexugal trabalha, "nem Braga, nem
-  Portugal", e nada no lugar do que sai. A morada da empresa ficou em aberto
-  (7.2, ponto 12).
+  Portugal", e nada no lugar do que sai. **A morada da empresa fica** (18/09): nos
+  dados estruturados, no rodapé, na política de privacidade e nos emails do
+  backend. Saiu só a frase "Feito com tecnologia de ponta em Portugal" (7.2,
+  ponto 12).
 - **Página inicial, para o Google e o WhatsApp (16/09):** título "Nexugal",
   descrição "Reformulação de operações com gestão implementada", e "Menos tarefas
   repetidas. Mais tempo para o que importa." no texto alternativo da imagem de
@@ -1249,7 +1281,11 @@ por iniciativa própria; se incomodarem, é decisão do Rui.
 - **Os seis serviços do JSON-LD ficam** (16/09), mesmo sem cartões na página, e
   o "24/7" também.
 - **Rótulos do stock (16/09):** NO PROGRAMA 19, NA LOJA/ARMAZÉM 12 (EN IN THE
-  SYSTEM, IN THE SHOP/WAREHOUSE).
+  SYSTEM, IN THE SHOP/WAREHOUSE). O inglês leva um ponto de quebra invisível
+  depois da barra (18/09, escolha do Rui entre três saídas): o texto não muda,
+  só ganha onde partir.
+- **Imagem de partilha (18/09):** `images/nexugal-partilha.png`, feita pelo Rui.
+  Uma imagem nova entra com nome novo (7.4).
 - **A linha órfã do "Como trabalhamos" no telemóvel fica como está.**
 - **Botões:** o do fecho dos exemplos diz "Entre em contacto"; o do hero e o
   flutuante dizem "Falar connosco". (O do convite final diz "Iniciar Conversa" e
@@ -1446,6 +1482,16 @@ Não apagar sem o Rui decidir.
   Antes de mudar uma frase, procurar onde ela está.
 - **Apóstrofos no inglês.** O `translations.js` usa plicas simples: "someone's"
   tem de ir como `someone\'s`, senão o build parte.
+- **O `\u200B` no rótulo inglês do stock** (`'IN THE SHOP/\u200BWAREHOUSE'`) é
+  um ponto de quebra invisível, escrito como código para se ver no ficheiro. Não
+  é lixo: sem ele, "SHOP/WAREHOUSE" não parte na barra e sai da coluna do número
+  a partir de 1280px (7.7). Há um comentário por cima.
+- **A imagem de partilha muda com nome novo, nunca por cima da antiga.** O
+  WhatsApp, o Facebook e o LinkedIn guardam a imagem pelo endereço durante dias
+  ou semanas. E o tipo e as medidas nas etiquetas (`og:image:type`,
+  `og:image:width`, `og:image:height`) têm de bater certo com o ficheiro: a
+  antiga dizia PNG de 1200 × 630 e era um JPEG de 1024 × 1024. Confirmar com
+  `file` no Git Bash.
 - **A lista de dados da política de privacidade tem de acompanhar o formulário.**
   Um campo novo, ou um campo que passe a obrigatório, obriga a mudar os dois.
 - **Fins de linha no Windows:** o Git deste computador tem `core.autocrlf=true`
@@ -1585,7 +1631,8 @@ A 14/09 correu-se no site público, em `/` e em `/sobre`, mas com a janela
 escondida (`largura: 0`), por isso não conta. A 16/09, no `18a2135`, já com as
 alterações do Henrique e com largura emulada: as dez páginas a 380 e a 1280px, e
 a página inicial também a 1024 e a 1920px (147 textos na página inicial, 11 no
-Sobre com fotografia).
+Sobre com fotografia). A 18/09, no `dab9c1d`, as mesmas páginas e larguras (145
+textos na página inicial: saíram os dois da frase do rodapé).
 
 Páginas a correr: `/`, `/us`, `/faq`, `/us/faq`, `/contacto`, `/us/contact`,
 `/privacidade`, `/us/privacy`, `/sobre`, `/us/about`.
@@ -1609,8 +1656,7 @@ Para testar no Chrome: F12, ícone do telemóvel, escrever a largura.
   tem de dar `false`.
 - **Travessões:** no Git Bash, `grep -c "—" frontend/src/i18n/translations.js`
   tem de dar 0, e `grep -rn "—" frontend/src` só pode mostrar comentários. O
-  `frontend/public/index.html` já não tem (16/09); o `manifest.json` ainda tem um
-  (7.2, ponto 6).
+  `frontend/public/index.html` já não tem (16/09), nem o `manifest.json` (18/09).
 - **Botão flutuante, num browser verdadeiro:** na consola,
   `localStorage.removeItem('nexugal_cookie_consent')` e recarregar. Com o aviso de
   cookies no ecrã, o botão nunca aparece. Responder ao aviso, descer para lá do
@@ -1656,7 +1702,7 @@ O Sobre com fotografia passou a auditoria de contraste (380 e 1280px, PT e EN).
   `serviceType`, que estava em inglês, passou aos mesmos seis nomes em
   português. **O "24/7" fica**, decisão do Rui. "Web" e "responsivas" ficaram.
 
-**Em aberto, à espera do Rui:**
+**Em aberto a 16/09, e resolvido a 18/09 (7.7):**
 
 1. **O rótulo inglês do stock sai da sua coluna a partir de 1280px.** Em
    "IN THE SHOP/WAREHOUSE" o browser não parte a linha na barra, e
@@ -1665,11 +1711,13 @@ O Sobre com fotografia passou a auditoria de contraste (380 e 1280px, PT e EN).
    desalinhado. Em português, "NA LOJA/ARMAZÉM" cabe (parte em "NA" e
    "LOJA/ARMAZÉM"). Duas saídas, medidas no browser a 1280px, e ambas cabem:
    - um ponto de quebra invisível depois da barra, no `translations.js`
-     (`'IN THE SHOP/​WAREHOUSE'`): lê-se igual e parte em "IN THE SHOP/" e
+     (`'IN THE SHOP/\u200BWAREHOUSE'`): lê-se igual e parte em "IN THE SHOP/" e
      "WAREHOUSE";
    - espaços à volta da barra, "IN THE SHOP / WAREHOUSE": parte em "IN THE SHOP /"
      e "WAREHOUSE", mas muda o texto que o Rui escreveu.
-2. **A morada em Braga** (ponto 12).
+
+   O Rui escolheu a primeira.
+2. **A morada em Braga** (ponto 12). O Rui decidiu que fica.
 
 **Verificação, a 16/09:**
 
@@ -1682,3 +1730,75 @@ O Sobre com fotografia passou a auditoria de contraste (380 e 1280px, PT e EN).
   `/us/about`, a 380 e a 1280px, e em `/` também a 1024 e 1920px.
 - Stock e SEO: medições em 7.2, pontos 1 e 5.
 - Chatbot fora do site: zero ocorrências de `simulateAIResponse` e `ChatWidget`.
+
+### 7.7 O lote de 18/09/2026: o que ficou em aberto, títulos, sitemap e a imagem de partilha
+
+Commits: `bb60c3e` (rótulo inglês do stock e rodapé) e `dab9c1d` (imagem de
+partilha, títulos, sitemap, `manifest.json` e `<noscript>`). **Não publicado.**
+
+**As respostas do Rui ao que ficou em aberto a 16/09:**
+
+- **Rótulo inglês do stock:** o ponto de quebra invisível (7.6). Medido no build
+  de produção: a 1280 e a 1920px o rótulo parte em "IN THE SHOP/" e "WAREHOUSE"
+  e fica dentro da coluna, alinhado à esquerda com a caixa do número por baixo e
+  27px antes da borda direita dela. A 380px parte igual; a 1024 e a 1152px cabe
+  numa linha. Os números continuam dentro das caixas em todas as larguras.
+- **Morada em Braga:** fica (7.2, ponto 12). Saiu só a frase do rodapé.
+
+**Armadilha apanhada neste lote:** o ponto de quebra ficou primeiro gravado como o
+próprio carácter invisível, e não como o código visível. Funcionava igual, mas
+no ficheiro não se via nada, e qualquer pessoa o podia apagar sem dar por isso.
+As ferramentas de edição do Claude transformam o código escrito num pedido de
+edição no carácter invisível. Foi reescrito por script, e o ficheiro mostra
+agora o código às claras (7.4). Depois de mexer nesse rótulo, confirmar que no
+`translations.js` se lê a barra invertida seguida de `u200B`.
+
+**O que se fez:**
+
+- `manifest.json` e `<noscript>`: 7.2, ponto 6.
+- Imagem de partilha: 7.2, ponto 13.
+- `sitemap.xml`: entraram `/sobre` (prioridade 0.7) e `/us/about` (0.6), com
+  os `hreflang` pt e en, como as outras subpáginas. Comparado com as rotas do
+  `App.js`: estão as dez páginas públicas; o admin fica de fora e está bloqueado
+  no `robots.txt`. O XML é válido.
+- Títulos das outras páginas, pedidos pelo Rui "com a linguagem nova do site:
+  automação de processos, trabalho repetido, sistemas que falam entre si", e
+  mostrados a ele para rever:
+
+| Página | Antes | Depois |
+|---|---|---|
+| Contacto | Contacto, NEXUGAL \| Fale Connosco | Contacto, Nexugal \| Fale Connosco |
+| FAQ | FAQ, NEXUGAL \| Perguntas Frequentes sobre Consultoria Tecnológica | FAQ, Nexugal \| Perguntas frequentes sobre automação de processos |
+| Sobre | Sobre Nós, NEXUGAL \| Consultoria Tecnológica e Transformação Digital | Sobre nós, Nexugal \| Sistemas que falam entre si |
+| Privacidade | Política de Privacidade, NEXUGAL \| Proteção de Dados e RGPD | Política de Privacidade, Nexugal \| Proteção de Dados e RGPD |
+| Contact | Contact, NEXUGAL \| Get in Touch | Contact, Nexugal \| Get in Touch |
+| FAQ (EN) | FAQ, NEXUGAL \| Frequently Asked Questions about Technology Consulting | FAQ, Nexugal \| Frequently asked questions about process automation |
+| About | About Us, NEXUGAL \| Technology Consulting & Digital Transformation | About us, Nexugal \| Systems that talk to each other |
+| Privacy | Privacy Policy, NEXUGAL \| Data Protection & GDPR | Privacy Policy, Nexugal \| Data Protection & GDPR |
+
+  Só a FAQ e o Sobre diziam "Consultoria Tecnológica". Nos quatro de contacto e
+  privacidade mudou só a marca, de "NEXUGAL" para "Nexugal", como no título da
+  página inicial que o Rui ditou a 16/09 (escolha do Claude, para os separadores
+  não ficarem com a marca escrita de duas maneiras). O título do Sobre vive no
+  `SEO.js`, não na página: a página do Sobre e os textos dela, e a descrição do
+  Sobre no `SEO.js` (do Henrique), não foram tocados.
+
+**Ficheiro órfão que já vinha de trás:** `frontend/public/images/foto principal.png`,
+5 MB, 2720 × 1568px, a imagem do hero antigo. Não é usada por nada desde o
+`b7fde65` (10/09), mas vai no build e é publicada. A troca da imagem de partilha
+não deixou nenhum órfão. Perguntado ao Rui a 18/09 se sai.
+
+**Verificação, a 18/09:**
+
+- `CI=true npm run build`: `Compiled successfully.`
+- Teste de contraste do hero: 18 testes a passar.
+- Auditoria de contraste de todo o texto: zero falhas nas dez páginas a 380 e a
+  1280px, e na página inicial também a 1024 e a 1920px.
+- HTML servido (o que o WhatsApp lê): `og:image`, `og:image:secure_url` e
+  `twitter:image` apontam para `nexugal-partilha.png`, servida como `image/png`
+  com 109 815 bytes; o endereço antigo já não devolve imagem nenhuma; e não há
+  referências ao `og-image.png` no repositório, fora deste ficheiro.
+- Os oito títulos novos aparecem no separador e no `og:title` de cada página.
+- Rodapé, em PT e EN, a 380 e a 1280px: a frase saiu, "Braga, Portugal" ficou,
+  a última linha ficou com o copyright à esquerda e as ligações legais à direita,
+  e não há scroll para o lado.
