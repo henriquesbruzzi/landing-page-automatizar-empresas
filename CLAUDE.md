@@ -218,6 +218,31 @@ comandos vão um por linha. Ver 7.5.
     portanto, uma segunda publicação na noite de 18/09, já com a imagem de
     partilha de 7.10. O trabalho de 21/09 (ramo `rui/velocidade`, 7.11) **não
     está publicado**.
+  - **A 22/09/2026, às 00h36 (Lisboa), o Rui publicou o `rui/velocidade`**
+    (`77cbc5b`, 7.11) com `vercel --prod` na pasta principal: deployment
+    `dpl_69aSnq8BqaLMBNyHZjBpccgJNnNQ`, "Aliased https://www.nexugal.com". Desde
+    então **o site público serve o `rui/velocidade`** (`main.d629c167.js`, com
+    `VERCEL_GIT_COMMIT_REF: "rui/velocidade"`). **O `rui/site-branco` ficou no
+    `04e4f0a`: publicar a partir dele tira do site o trabalho de 21/09.** Juntar os
+    dois ramos ficou por fazer (7.11).
+  - O que se aprendeu nessa publicação:
+    - **A Vercel não está ligada ao GitHub** (22/09): no fim da publicação a
+      própria ferramenta sugere "Automatically deploy changes on every push by
+      connecting Git: vercel git connect". Um push não publica nada.
+    - A conta com sessão iniciada neste computador é a `nexugalgeral-6777`,
+      **dona** (`OWNER`) da equipa NEXUGAL da Vercel, que está no plano `hobby`.
+      Foi ela que fez todas as publicações do projeto.
+    - A primeira tentativa deu "Error: Not authorized" e a segunda, igual, passou.
+      Foi um erro passageiro da Vercel. Se voltar a acontecer, repetir; com
+      `vercel --prod --debug` vê-se a resposta completa.
+    - A publicação sai marcada "suja" (`gitDirty`) por causa da pasta `.claude/`,
+      que não está no git nem é ignorada; vai no envio, mas não é servida (o site
+      sai de `frontend/build`).
+    - **O Claude não consegue publicar a partir desta app:** o sistema de
+      permissões do Claude Code bloqueia o `vercel --prod` e o push para o
+      `rui/site-branco` como "Production Deploy". Quem publica é o Rui, na pasta
+      principal (nunca dentro de `frontend/`, onde a Vercel oferece criar um
+      projeto novo).
 
   Para confirmar o que está mesmo online: descarregar o `static/js/main.*.js`
   do site e procurar lá dentro `REACT_APP_VERCEL_GIT_COMMIT_SHA` e
@@ -236,6 +261,18 @@ comandos vão um por linha. Ver 7.5.
   ("Limited Trial") a acabar por volta de **19/09/2026**. Se acabar, o site
   continua a abrir, mas o formulário deixa de gravar contactos, sem aviso.
   Confirmar com o Henrique se já passou a plano pago.
+  **Visto a 21/09/2026 às 23h38 GMT (00h38 de 22/09 em Lisboa): o backend está em
+  baixo.** O endereço que o site usa,
+  `https://carefree-unity-production-49b1.up.railway.app`, responde 404
+  "Application not found" em todos os caminhos (`/`, `/api/health`, `/docs`,
+  `/api/leads`), com o cabeçalho `x-railway-fallback: true`: a aplicação já não
+  existe nesse endereço. O pedido de verificação que o browser faz antes de enviar
+  o formulário também leva 404, sem autorização de origem, por isso o visitante vê
+  "Failed to fetch" (em inglês, mesmo na página portuguesa) e **o contacto
+  perde-se**. Não vem da publicação de 22/09: a versão anterior do site usava o
+  mesmo endereço. É território do Henrique; o Rui foi avisado. Quando o backend
+  voltar, se o endereço mudar, é preciso mudar o `REACT_APP_API_URL` na Vercel e o
+  `connect-src` do CSP no `vercel.json` da raiz, e publicar outra vez.
 - **GitHub:** repo público, na conta pessoal do Henrique. O Rui é collaborator.
   Ramos a 14/09/2026: `main` e `rui/site-branco`. A 21/09 entrou o
   `rui/velocidade`, feito a partir do `rui/site-branco` (7.11).
@@ -775,7 +812,9 @@ não.
 **Antes de tudo, fora do frontend:** o período de experiência do Railway estava
 a acabar por volta de 19/09/2026 (secção 6). Se acabar, o formulário deixa de
 gravar contactos, sem aviso. Não é trabalho para esta pasta: lembrar o Rui para
-confirmar com o Henrique se já passou a plano pago.
+confirmar com o Henrique se já passou a plano pago. **A 22/09 confirmou-se que
+aconteceu:** o backend responde "Application not found" e o formulário não grava
+nada (secção 6, Railway). O Rui foi avisado para falar com o Henrique.
 
 #### 1. O bloco do stock transborda entre 1024 e cerca de 1100px (FEITO a 16/09, `ba203b3`)
 
@@ -1380,7 +1419,13 @@ versões inglesas foram escritas pelo Claude e mostradas ao Rui.
 
 #### O site público já é este ramo, e publica-se à mão
 
-O nexugal.com mostra o `rui/site-branco` (7.0), e o `main` está atrás: **quem
+**Atualizado a 22/09: o nexugal.com mostra o `rui/velocidade`** (secção 6), que
+tem tudo o que o `rui/site-branco` tem e mais o trabalho de 21/09 (7.11). Quem
+publicar a partir do `rui/site-branco` tira ao site as melhorias de velocidade;
+quem publicar a partir do `main`, faz o site voltar ao fundo preto. Antes de
+publicar, confirmar em que ramo está a pasta (`git branch --show-current`).
+
+Até 21/09: o nexugal.com mostrava o `rui/site-branco` (7.0), e o `main` estava atrás: **quem
 publicar a partir do `main` faz o site voltar ao fundo preto.** Uma publicação à
 mão (`vercel --prod`) leva o que estiver na pasta, incluindo o que ainda não foi
 commitado. Foi o que aconteceu a 13/09: o site diz ter saído do commit
@@ -2056,8 +2101,8 @@ Debugger e Post Inspector).
 ### 7.11 A velocidade (21/09/2026, ramo `rui/velocidade`)
 
 Commit `0c1292d`, no ramo `rui/velocidade`, feito a partir do `rui/site-branco`
-no `04e4f0a`. **Não publicado.** Publicar é à mão e pede o OK expresso do Rui
-(secção 6).
+no `04e4f0a`. **Publicado pelo Rui a 22/09/2026, às 00h36** (secção 6); os
+resultados depois de publicar estão no fim desta secção.
 
 **O pedido:** o Rui achava o site lento, "principalmente antes de aceitar as
 cookies". Primeiro mediu-se, sem mexer em nada. Depois o Rui aprovou as mudanças
@@ -2220,13 +2265,68 @@ vezes mais lento, mediana de 3 medições:
   e a fotografia do Sobre (reduzidos, iguais a olho) e o alisamento das letras de
   alguns textos que perderam a animação.
 
+#### Depois de publicar (22/09)
+
+Verificado no site público, logo a seguir: o HTML e o `main.d629c167.js` são os
+novos (`77cbc5b`); as letras vêm de `static/media/`; os três ficheiros à parte,
+as imagens novas e o `manifest.json` respondem; nenhuma Google Fonts; o
+`main.js.map` continua fechado (403); e o formulário continua apontado ao
+endereço do Railway, sem `localhost:8000` (mas o backend está em baixo, secção 6).
+
+**PageSpeed da Google, na página inicial:**
+
+| | Antes (21/09) | Depois (22/09) |
+|---|---|---|
+| Telemóvel: nota | 75 e 76 | **99** |
+| Telemóvel: primeira imagem (FCP) / página composta (LCP) | 2,7 s / 5,1 s | 1,2 s / 2,0 s |
+| Telemóvel: Speed Index / TBT / CLS | 4,4 s / 0 ms / 0,005 | 2,4 s / 10 ms / 0,005 |
+| Computador: nota | 99 | **94** (três análises iguais) |
+| Computador: FCP / LCP / CLS | | 0,2 s / 0,4 s / **0,155** |
+
+**O `velocidade.py` do Rui no site público** (`nexugal-telemovel-20260922-0048.json` e
+`nexugal-desktop-20260922-0050.json`, comparados sozinhos com os de 21/09):
+
+| Telemóvel, 4G lenta | 21/09 | 22/09 |
+|---|---|---|
+| Página inicial: página composta (LCP) | 5,0 s | 2,8 s |
+| Página inicial: descarregado | 1,90 MB | 248 KB |
+| Contacto, FAQ e Sobre: página composta | 2,2–2,3 s | 2,1–2,2 s |
+| Contacto, FAQ e Sobre: descarregado | 1,42–1,47 MB | 209–222 KB |
+
+No computador, tudo "bom": página inicial 0,7 s (era 0,8), as outras 0,3–0,4 s.
+O "Other 24 KB" que sobra na página inicial é o ícone do separador (3 KB) e o do
+Android, que o Chrome vai buscar ao `manifest.json` (21 KB).
+
+**O salto no computador (CLS 0,155), novo com esta versão.** A Google diz que
+quem salta é a secção de exemplos inteira (0,154), e que a causa é a letra Inter
+("Fonte da Web", `inter-latin…woff2`). A página desenha-se primeiro com a letra
+do sistema e troca quando a Inter chega; na máquina Linux do PageSpeed a letra do
+sistema tem outras medidas, o texto do hero parte as linhas de outra maneira, o
+hero muda de altura e empurra os exemplos. Antes não acontecia porque as letras
+vinham dos servidores da Google, que no teste da própria Google chegam antes da
+primeira imagem. No Windows o efeito é pequeno: medido em local, perfil de
+computador, 0,023 na versão nova contra 0,003 na antiga (o que salta é o aviso
+de cookies, que agora já está no ecrã quando as letras chegam). No telemóvel não
+se nota (0,005), porque a secção empurrada fica abaixo do ecrã.
+
+**Correção proposta, não feita (espera pelo Rui, obriga a publicar outra vez):**
+pedir a Inter e a Space Grotesk logo no `<head>` (`<link rel="preload" as="font"
+type="font/woff2" crossorigin>`), para já estarem cá quando a página se desenha.
+Cuidados: o pré-carregamento precisa de endereços fixos, e as letras em
+`src/fonts` saem com nome com hash. Saída provável: passá-las para `public/fonts`,
+com nome fixo. Por confirmar com um build: se o Create React App 5 aceita um
+`url('/fonts/...')` no `index.css` ou se tenta resolvê-lo e falha; nesse caso,
+declarar os `@font-face` no próprio `index.html`. E no telemóvel em
+rede lenta os 70 KB de letras disputam a rede com o JavaScript: medir se a
+primeira imagem piora e, se piorar, usar `fetchpriority="low"`. Confirmar no
+PageSpeed depois de publicar.
+
 #### O que fica por fazer
 
-- **Publicar**, quando o Rui disser, e medir outra vez o site público com o
-  `velocidade.py` e o PageSpeed. Antes de publicar, o Rui vê a versão no `npm
-  start` do ramo `rui/velocidade`.
-- **Juntar ao `rui/site-branco`** (ou publicar a partir deste ramo, que tem tudo
-  o que o `rui/site-branco` tem). O `main` continua atrás dos dois (7.2, ponto 10).
+- **Juntar ao `rui/site-branco`** (o site já serve o `rui/velocidade`, secção 6).
+  A app do Claude Code bloqueou o push para o `rui/site-branco`: fazê-lo com o
+  Rui, ou fica para o Henrique. O `main` continua atrás dos dois (7.2, ponto 10).
+- **O salto no computador**, acima: correção proposta, à espera do Rui.
 - **Pré-renderização** (7.2, ponto 11): é o que falta para a primeira imagem
   baixar dos ~2,5 s. Falar com o Henrique.
 - **Cache**, no `vercel.json` da raiz (falar com o Henrique): o JavaScript e o
