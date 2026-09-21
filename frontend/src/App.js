@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './i18n/LanguageContext';
 import SEO from './components/SEO';
@@ -10,12 +10,22 @@ import CallToAction from './components/CallToAction';
 import Footer from './components/Footer';
 import ContactPage from './components/ContactPage';
 import FAQPage from './components/FAQPage';
-import AdminLoginPage from './pages/AdminLoginPage';
-import AdminLeadsPage from './pages/AdminLeadsPage';
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import SobrePage from './pages/SobrePage';
 import CookieBanner from './components/CookieBanner';
 import BotaoContactoFlutuante from './components/BotaoContactoFlutuante';
+
+// Páginas que quase nenhum visitante abre vêm num ficheiro à parte, que só
+// descarrega quando alguém as pede. Até 21/09/2026 iam no ficheiro principal, e
+// quem abria a página inicial descarregava também a administração (11% do
+// código). O resto do site continua no ficheiro principal, para abrir de imediato.
+const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage'));
+const AdminLeadsPage = lazy(() => import('./pages/AdminLeadsPage'));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
+
+// Enquanto o ficheiro da página chega, fica o branco da página.
+function APedido({ children }) {
+  return <Suspense fallback={null}>{children}</Suspense>;
+}
 
 // A autenticação é gerida pelo cookie HttpOnly no servidor.
 // O AdminLeadsPage redireciona automaticamente para login em caso de 401.
@@ -109,7 +119,6 @@ function App() {
           }
         />
 
-        {/* Admin — Login */}
         {/* PT, quem somos */}
         <Route
           path="/sobre"
@@ -131,14 +140,24 @@ function App() {
           }
         />
 
-        <Route path="/admin/login" element={<AdminLoginPage />} />
+        {/* Admin — Login */}
+        <Route
+          path="/admin/login"
+          element={
+            <APedido>
+              <AdminLoginPage />
+            </APedido>
+          }
+        />
 
         {/* Admin — Leads (restrito) */}
         <Route
           path="/admin/leads"
           element={
             <RequireAdminAuth>
-              <AdminLeadsPage />
+              <APedido>
+                <AdminLeadsPage />
+              </APedido>
             </RequireAdminAuth>
           }
         />
@@ -149,7 +168,9 @@ function App() {
           element={
             <>
               <SEO lang="pt" page="privacy" />
-              <PrivacyPolicyPage />
+              <APedido>
+                <PrivacyPolicyPage />
+              </APedido>
             </>
           }
         />
@@ -160,7 +181,9 @@ function App() {
           element={
             <>
               <SEO lang="en" page="privacy" />
-              <PrivacyPolicyPage />
+              <APedido>
+                <PrivacyPolicyPage />
+              </APedido>
             </>
           }
         />

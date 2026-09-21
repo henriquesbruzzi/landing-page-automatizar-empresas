@@ -15,7 +15,7 @@ const LINKEDIN = {
 
 // Fotografia do fundador. Caminho a contar da pasta public.
 const FOTOS = {
-  rui: '/images/rui.jpg',
+  rui: '/images/rui-240.jpg',
 };
 
 // ---------------------------------------------------------------------------

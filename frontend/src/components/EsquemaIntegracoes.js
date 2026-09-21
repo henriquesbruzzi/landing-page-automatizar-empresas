@@ -137,7 +137,7 @@ function Nucleo({ tamanho }) {
       {/* O logótipo é azul: o círculo fica branco para ele se ler. Um círculo
           cheio de azul, como na maqueta, engolia o N. */}
       <img
-        src="/images/nexugal-n.png"
+        src="/images/nexugal-n-132.png"
         alt=""
         aria-hidden="true"
         className="object-contain"

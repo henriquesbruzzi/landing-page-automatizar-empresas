@@ -3,13 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { useTypewriter } from '../hooks/useTypewriter';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
-import { classesEntrada, atrasoEntrada } from '../utils/entrada';
 import EsquemaIntegracoes from './EsquemaIntegracoes';
 
-// Entrada faseada, em ms, a contar do momento em que o título fica escrito
-const ATRASO_SUBTITULO = 0;
-const ATRASO_BOTOES = 150;
-const ATRASO_ESQUEMA = 280;
+// Só o título se escreve. O subtítulo, os botões e o esquema aparecem logo:
+// até 21/09/2026 esperavam que o título acabasse de se escrever (1,3 s, mais
+// num telemóvel lento), e a Google só dava a página por composta depois disso.
+// A entrada antiga (fade com subida) está em utils/entrada.js, sem uso.
 
 /**
  * Mancha azul do canto superior direito.
@@ -47,7 +46,7 @@ function Hero() {
     [t.hero.title_line1, t.hero.title_line2_start, t.hero.title_line2_highlight]
   );
 
-  const { displayedText, showCursor, isTypingDone } = useTypewriter(fullText, lang);
+  const { displayedText, showCursor } = useTypewriter(fullText, lang);
 
   const line2StartFull = t.hero.title_line2_start;
 
@@ -64,9 +63,6 @@ function Hero() {
     displayedLine2Start = line2StartFull;
     displayedHighlight = displayedLine2Full.substring(line2StartFull.length);
   }
-
-  const entrada = classesEntrada(isTypingDone, semAnimacao);
-  const atraso = (ms) => atrasoEntrada(ms, isTypingDone, semAnimacao);
 
   const irParaExemplos = () => {
     const alvo = document.getElementById('exemplos');
@@ -109,17 +105,11 @@ function Hero() {
               </span>
             </h1>
 
-            <p
-              className={`mt-6 max-w-md text-sm leading-relaxed text-texto md:text-base ${entrada}`}
-              style={atraso(ATRASO_SUBTITULO)}
-            >
+            <p className="mt-6 max-w-md text-sm leading-relaxed text-texto md:text-base">
               {t.hero.subtitle}
             </p>
 
-            <div
-              className={`mt-9 flex flex-wrap items-center justify-center gap-6 lg:justify-start ${entrada}`}
-              style={atraso(ATRASO_BOTOES)}
-            >
+            <div className="mt-9 flex flex-wrap items-center justify-center gap-6 lg:justify-start">
               {/* Cheio de propósito. Vazado, perdia a atenção para o botão do
                   aviso de cookies, que é o oposto do que se quer. */}
               <button
@@ -140,7 +130,7 @@ function Hero() {
           </div>
 
           {/* ---------------- direita: esquema de integrações ------------------ */}
-          <div className={entrada} style={atraso(ATRASO_ESQUEMA)}>
+          <div>
             <EsquemaIntegracoes esquema={t.hero.esquema} />
           </div>
         </div>

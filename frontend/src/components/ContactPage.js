@@ -120,19 +120,8 @@ function ContactPage() {
 
   return (
     <div className="relative min-h-screen bg-white overflow-hidden">
-      {/* Vídeo de fundo */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0 opacity-25"
-      >
-        <source src="/videos/landingpage.mp4" type="video/mp4" />
-      </video>
-
-      {/* Overlay gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/90 to-white z-[1]"></div>
+      {/* Havia aqui um vídeo de fundo (1,7 MB), do tempo do site preto, com um
+          véu branco a 90-95% por cima: via-se a 2%. Saiu a 21/09/2026. */}
 
       {/* Conteúdo */}
       <main className="relative z-10 min-h-screen flex flex-col">

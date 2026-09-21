@@ -129,7 +129,7 @@ const organizationSchema = {
   '@type': 'Organization',
   name: 'Nexugal',
   url: BASE_URL,
-  logo: `${BASE_URL}/icons/favicon.png`,
+  logo: `${BASE_URL}/icons/icon-512.png`,
   description:
     'Consultoria tecnológica especializada em desenvolvimento web, cibersegurança, soluções na nuvem, inteligência artificial e análise de dados.',
   address: {
@@ -169,7 +169,7 @@ const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
   name: 'Nexugal',
-  image: `${BASE_URL}/icons/favicon.png`,
+  image: `${BASE_URL}/icons/icon-512.png`,
   url: BASE_URL,
   telephone: '+351912423912',
   email: 'geral@nexugal.com',

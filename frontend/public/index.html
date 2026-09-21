@@ -31,9 +31,11 @@
     <meta name="theme-color" content="#FFFFFF" />
     <meta name="msapplication-TileColor" content="#0F2E5C" />
 
-    <!-- Favicon -->
-    <link rel="icon" href="/icons/favicon.png" type="image/png" />
-    <link rel="apple-touch-icon" href="/icons/favicon.png" />
+    <!-- Ícone do site: um ficheiro por uso, todos gerados do mesmo N. Até
+         21/09/2026 era um só, de 1305 por 1205 e 623 KB, para tudo. O 48 é o
+         tamanho mínimo que a Google aceita para o mostrar nos resultados. -->
+    <link rel="icon" href="/icons/favicon-48.png" type="image/png" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
 
     <!-- Manifest PWA -->
     <link rel="manifest" href="/manifest.json" />
@@ -64,19 +66,9 @@
     <meta name="twitter:image" content="https://www.nexugal.com/images/nexugal-partilha-2.png" />
     <meta name="twitter:image:alt" content="Menos tarefas repetidas. Mais tempo para o que importa." />
 
-    <!-- Preconnect para performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-
-    <!-- Letras do site, num pedido só e apenas com os pesos usados:
-         Space Grotesk nos títulos, Inter no texto corrido, Orbitron só no
-         logótipo. display=swap mostra o texto de imediato com a letra do
-         sistema e troca assim que a definitiva chega. -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@700&family=Space+Grotesk:wght@400;600;700&display=swap"
-    />
+    <!-- As letras do site vêm do próprio site (src/fonts, declaradas no
+         index.css). Até 21/09/2026 vinham da Google Fonts por aqui, e a página
+         não se desenhava enquanto a folha de estilo da Google não chegasse. -->
   </head>
   <body>
     <!-- Este ficheiro é o mesmo em português e em inglês, e sem JavaScript não

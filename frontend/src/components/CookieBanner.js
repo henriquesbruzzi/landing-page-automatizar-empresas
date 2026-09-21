@@ -1,22 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
-import { CHAVE_CONSENTIMENTO, anunciarAviso } from '../utils/avisoCookies';
+import { CHAVE_CONSENTIMENTO, anunciarAviso, consentimentoDado } from '../utils/avisoCookies';
 
 function CookieBanner() {
   const { lang, t } = useLanguage();
   const cb = t.cookieBanner;
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const stored = localStorage.getItem(CHAVE_CONSENTIMENTO);
-    if (!stored) {
-      // Pequeno atraso para não aparecer durante a animação de entrada da página
-      const timer = setTimeout(() => setVisible(true), 1200);
-      return () => clearTimeout(timer);
-    }
-    return undefined;
-  }, []);
+  // Aparece logo, com o resto da página, sem esperar nem deslizar. Até
+  // 21/09/2026 esperava 1,2 s e entrava a deslizar meio segundo: no telemóvel
+  // é o maior bloco do ecrã, e a Google só dava a página por composta (LCP)
+  // quando ele acabava de entrar, aos 4,1 s em 4G lenta.
+  const [visible, setVisible] = useState(() => !consentimentoDado());
 
   // Quem partilha o canto de baixo precisa de saber que este aviso está lá
   useEffect(() => {
@@ -25,7 +19,12 @@ function CookieBanner() {
   }, [visible]);
 
   const accept = (type) => {
-    localStorage.setItem(CHAVE_CONSENTIMENTO, type);
+    try {
+      localStorage.setItem(CHAVE_CONSENTIMENTO, type);
+    } catch (erro) {
+      // Armazenamento bloqueado (navegação privada, cookies desligados):
+      // não fica guardado, mas o aviso fecha na mesma.
+    }
     setVisible(false);
   };
 
@@ -38,17 +37,14 @@ function CookieBanner() {
       role="dialog"
       aria-modal="true"
       aria-label={cb.title}
-      className="fixed bottom-0 left-0 right-0 z-[9999] p-4 md:p-6 animate-slide-up"
-      style={{ animation: 'slideUpBanner 0.5s cubic-bezier(0.16, 1, 0.3, 1) both' }}
+      className="fixed bottom-0 left-0 right-0 z-[9999] p-4 md:p-6"
     >
-      <style>{`
-        @keyframes slideUpBanner {
-          from { transform: translateY(110%); opacity: 0; }
-          to   { transform: translateY(0);    opacity: 1; }
-        }
-      `}</style>
-
-      <div className="max-w-4xl mx-auto bg-white border border-linha rounded-2xl p-6 md:p-8 shadow-azul-lg backdrop-blur-md">
+      {/* Sem desfoque por trás (backdrop-blur): o fundo é branco sólido e o
+          desfoque não se via, mas custava ~50 ms à primeira imagem da página.
+          O relative faz o que o desfoque fazia sem se dar por isso: segura o
+          fio decorativo do topo dentro do cartão. Sem ele, o fio salta para o
+          topo da faixa de fora e atravessa o ecrã todo. */}
+      <div className="relative max-w-4xl mx-auto bg-white border border-linha rounded-2xl p-6 md:p-8 shadow-azul-lg">
         {/* Glow decorativo */}
         <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-azul-claro to-transparent rounded-t-2xl" />
 

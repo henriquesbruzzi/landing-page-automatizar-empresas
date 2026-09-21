@@ -34,7 +34,7 @@ function Header() {
 
   // Se estiver em PT, mostra bandeira dos EUA para trocar para EN
   // Se estiver em EN, mostra bandeira de Portugal para trocar para PT
-  const flagIcon = lang === 'pt' ? '/icons/united-states.png' : '/icons/portugal.png';
+  const flagIcon = lang === 'pt' ? '/icons/united-states-120.png' : '/icons/portugal-120.png';
   const flagAlt = lang === 'pt' ? 'Switch to English' : 'Mudar para Português';
 
   return (
