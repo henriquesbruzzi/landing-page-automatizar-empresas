@@ -42,22 +42,31 @@ está na secção 7.
     `FAQPage`, `Dropdown` (lista de escolha do formulário de contacto)
   - `SEO` (título, descrição, canonical e JSON-LD de cada página), `Entrada`
     (invólucro que hoje não anima nada, ver 7.4)
-- `src/pages/`: `SobrePage`, `PrivacyPolicyPage`, `AdminLoginPage`, `AdminLeadsPage`
+- `src/pages/`: `SobrePage`, `PrivacyPolicyPage`, `AdminLoginPage`, `AdminLeadsPage`.
+  Desde 21/09 (no ramo `rui/velocidade`) a política de privacidade e as duas do
+  admin vêm em ficheiros à parte, só quando são abertas (7.11)
 - `src/hooks/`: `useTypewriter` (o título do hero a escrever-se),
   `usePrefersReducedMotion`, `useRevealOnScroll` (sem uso, ver 7.4)
 - `src/utils/`: `avisoCookies.js` (liga o aviso de cookies ao botão flutuante),
-  `entrada.js` (classes da entrada animada do hero), `contraste.test.js`
-  (teste de contraste, ver 7.5)
+  `entrada.js` (a entrada animada que o hero usava; sem uso desde 21/09, 7.11),
+  `contraste.test.js` (teste de contraste, ver 7.5)
+- `src/fonts/`: as três letras do site (Inter, Space Grotesk, Orbitron), desde
+  21/09 alojadas no próprio site e declaradas no `index.css` (7.11)
 - `src/chatbot/`: código de um widget de chat, **desligado** (ver secção 5)
 - `src/i18n/translations.js`: **quase todo o texto do site em PT e EN vive aqui**.
   Para mudar palavras no site, é quase sempre este ficheiro, não os componentes.
   As exceções estão em 7.4.
-- `public/`: imagens (`images/nexugal-n.png` é o N do hero, `images/rui.jpg` a
-  fotografia do Sobre, `images/nexugal-partilha-2.png` a imagem das
-  pré-visualizações do WhatsApp e das redes, desde 18/09, 7.10), vídeo (ainda por trás
-  do contacto e da FAQ), ícones, `logos/` (tira de ferramentas), sitemap.xml,
-  robots.txt. A `images/foto principal.png` (o hero antigo, 5 MB) foi apagada a
-  18/09 (7.8)
+- `public/`: imagens (`images/nexugal-partilha-2.png` a imagem das
+  pré-visualizações do WhatsApp e das redes, desde 18/09, 7.10), ícones, `logos/`
+  (tira de ferramentas), sitemap.xml, robots.txt. A `images/foto principal.png`
+  (o hero antigo, 5 MB) foi apagada a 18/09 (7.8). **No ramo `rui/velocidade`
+  (21/09, 7.11)** as imagens passaram ao tamanho a que aparecem, com nomes novos:
+  o N do hero é `images/nexugal-n-132.png` (era `nexugal-n.png`, 1001 px e 464 KB),
+  a fotografia do Sobre `images/rui-240.jpg`, o ícone do site `icons/favicon-48.png`,
+  `icons/apple-touch-icon.png`, `icons/icon-192.png` e `icons/icon-512.png` (era um
+  só `favicon.png` de 623 KB), as bandeiras `icons/portugal-120.png` e
+  `icons/united-states-120.png`; e saiu o vídeo `videos/landingpage.mp4`, que
+  estava por trás do contacto e da FAQ
 - `tailwind.config.js`: cores e tipografia. As cores estão repetidas em
   `src/index.css` (ver 7.1)
 
@@ -203,6 +212,12 @@ comandos vão um por linha. Ver 7.5.
     de 18/09 às 18h09 GMT (19h09 em Lisboa). O Rui disse "publico eu". Desde
     então o site público mostra tudo até ao `2af828b`; o que vier depois não
     está publicado até ele publicar outra vez.
+  - **Visto a 21/09/2026: o site serve o `04e4f0a`** (`main.21018ade.js`, o
+    último commit do `rui/site-branco`, com `nexugal-partilha-2.png`), com
+    `Last-Modified` do HTML de 18/09 às 18h33 GMT (19h33 em Lisboa). Houve,
+    portanto, uma segunda publicação na noite de 18/09, já com a imagem de
+    partilha de 7.10. O trabalho de 21/09 (ramo `rui/velocidade`, 7.11) **não
+    está publicado**.
 
   Para confirmar o que está mesmo online: descarregar o `static/js/main.*.js`
   do site e procurar lá dentro `REACT_APP_VERCEL_GIT_COMMIT_SHA` e
@@ -222,11 +237,12 @@ comandos vão um por linha. Ver 7.5.
   continua a abrir, mas o formulário deixa de gravar contactos, sem aviso.
   Confirmar com o Henrique se já passou a plano pago.
 - **GitHub:** repo público, na conta pessoal do Henrique. O Rui é collaborator.
-  Ramos a 14/09/2026: `main` e `rui/site-branco`.
+  Ramos a 14/09/2026: `main` e `rui/site-branco`. A 21/09 entrou o
+  `rui/velocidade`, feito a partir do `rui/site-branco` (7.11).
 
 ---
 
-## 7. Ponto de situação do ramo `rui/site-branco` (14/09/2026, atualizado a 18/09)
+## 7. Ponto de situação do ramo `rui/site-branco` (14/09/2026, atualizado a 18/09 e a 21/09)
 
 Esta secção existe para uma sessão nova continuar o trabalho sem o Rui ter de
 explicar tudo outra vez. Está escrita para quem nunca viu o projeto. Onde uma
@@ -252,6 +268,12 @@ descritos em 7.7. Mais tarde no mesmo dia, o fecho do lote (marca em "Nexugal",
 páginas: `e442e27`, em 7.9. O Rui publicou nessa noite (secção 6) e mandou uma
 imagem de partilha nova para o corte do WhatsApp: `1c83972`, em 7.10. Onde 7.1
 a 7.5 foram escritos antes disso, está assinalado.
+
+**A 21/09/2026**, numa conversa nova, o Rui pediu para medir a velocidade do
+site e depois aprovou as melhorias: estão num ramo novo, `rui/velocidade`, feito
+a partir deste, e descritas em 7.11. O que lá mudou (o vídeo do contacto e da
+FAQ, a entrada do hero, o aviso de cookies, as imagens, as letras) torna velho
+o que 7.1 a 7.10 dizem sobre essas peças: vale 7.11.
 
 ### 7.0 Antes de mais: o Henrique trabalhou neste ramo, e o site público já o mostra
 
@@ -1463,6 +1485,10 @@ Não apagar sem o Rui decidir.
 - `src/components/Entrada.js`: é usado, mas não anima nada, só devolve um `div`.
   Ficou para as secções não terem de ser todas remexidas se a entrada animada
   voltar, e por isso aceita e ignora a propriedade `atraso`.
+- `src/utils/entrada.js` (ramo `rui/velocidade`, 21/09): a entrada com fade que
+  o hero usava para o subtítulo, os botões e o esquema, à espera do título. Saiu
+  do hero porque atrasava a página composta 1,5 s num telemóvel (7.11). Se uma
+  entrada animada voltar ao topo da página, não a pôr à espera de nada.
 - No `EsquemaIntegracoes.js`: as medidas `FILA.de5` (só entram com mais de quatro
   origens, e o hero tem quatro), a linha de entrega opcional, o número de origens
   variável e o realce marcado à mão. Genéricos de propósito (7.3).
@@ -1537,6 +1563,21 @@ Não apagar sem o Rui decidir.
 - **`npm ls react-helmet-async` a dizer "invalid"** quer dizer que a pasta
   `node_modules` não acompanha o `package.json`: correr `npm install` antes de
   confiar num build.
+- **Tirar um desfoque, um filtro ou uma animação pode mudar o sítio de outros
+  elementos.** Um `backdrop-filter`, um `filter` ou um `transform` (mesmo o
+  `translate-y-0` do Tailwind) fazem do elemento a referência dos filhos com
+  `absolute`. A 21/09, tirar o `backdrop-blur-md` do aviso de cookies fez o fio
+  decorativo do topo do cartão saltar para fora e atravessar o ecrã todo;
+  resolveu-se com `relative` no cartão (7.11). Depois de tirar um destes, comparar
+  capturas antes e depois.
+- **Imagens no tamanho em que aparecem.** Até 21/09 o site mandava um ícone de
+  623 KB e um N de 464 KB para espaços de 16 a 44 píxeis (7.11). Uma imagem nova
+  entra já reduzida: o dobro ou o triplo do tamanho em que aparece chega.
+- **As letras vêm do próprio site** (`src/fonts`, `index.css`) desde 21/09. Não
+  voltar a pôr a folha da Google Fonts no `index.html`: bloqueava o desenho da
+  página. Hoje há Inter 400, 500 e 600, Space Grotesk 400, 600 e 700 e Orbitron
+  700: usar outro peso obriga a ir buscar à Google Fonts o ficheiro que o tem e a
+  declará-lo no `@font-face` (7.11).
 
 ### 7.5 Como verificar
 
@@ -1975,7 +2016,8 @@ o JSON-LD da FAQ já com "Nexugal".
 
 ### 7.10 A imagem de partilha para o corte do WhatsApp (18/09, à noite)
 
-Commit `1c83972`. **Não publicado** (o site público está no `2af828b`, secção 6).
+Commit `1c83972`. Escrito como "não publicado", mas **foi publicado na noite de
+18/09**: a 21/09 o site servia o `04e4f0a`, com esta imagem (secção 6).
 
 **O problema, visto pelo Rui depois de publicar:** o WhatsApp corta a imagem de
 partilha a quadrado e ficava só o miolo da primeira versão, com metade do N de
@@ -2010,3 +2052,186 @@ numa ligação nova, se ainda aparecer a antiga, experimentar com
 `https://www.nexugal.com/?v=2`, que o WhatsApp trata como endereço novo. Para o
 Facebook e o LinkedIn há ferramentas que mandam ler outra vez a página (Sharing
 Debugger e Post Inspector).
+
+### 7.11 A velocidade (21/09/2026, ramo `rui/velocidade`)
+
+Commit `0c1292d`, no ramo `rui/velocidade`, feito a partir do `rui/site-branco`
+no `04e4f0a`. **Não publicado.** Publicar é à mão e pede o OK expresso do Rui
+(secção 6).
+
+**O pedido:** o Rui achava o site lento, "principalmente antes de aceitar as
+cookies". Primeiro mediu-se, sem mexer em nada. Depois o Rui aprovou as mudanças
+abaixo: "Faz todas as mudanças", menos uma que tinha sido proposta, a de trocar o
+ícone do separador pelo N azul do site. O ícone continua a ser o N néon de
+sempre, só mais leve.
+
+#### Como se mediu (para repetir e comparar)
+
+- **Site público:** o `velocidade.py` do Rui, na pasta
+  `...\sofia mykonos\Claude - automatizações\1.tradução das lojas\script\` (feito
+  para as lojas Shopify dele; a parte do browser serve para qualquer site). Abre o
+  Chrome sem janela como telemóvel em 4G lenta com o processador 4 vezes mais
+  lento, o cenário do PageSpeed da Google, e grava
+  `velocidade/nexugal-<perfil>-<data>.json`. A medição de base é
+  `nexugal-telemovel-20260921-1616.json` e `nexugal-desktop-20260921-1618.json`.
+  No Git Bash:
+  `MSYS_NO_PATHCONV=1 python -u velocidade.py --url https://www.nexugal.com --paginas "/,/contacto,/faq,/sobre" --vezes 3`
+  (sem o `MSYS_NO_PATHCONV=1`, o `/` passa a `C:/Program Files/Git/` e mede a
+  página errada; acrescentar `--desktop` para o computador). Depois de publicar,
+  correr o mesmo: compara sozinho com a medição anterior.
+- **Nota oficial do PageSpeed:** não há chave da API neste computador, e a API sem
+  chave responde 429 (quota esgotada). A nota tirou-se da página pública,
+  pagespeed.web.dev, aberta num Chrome sem janela. O painel do browser do Claude,
+  escondido, fica parado em "A executar a análise".
+- **Antes e depois sem publicar:** os dois builds servidos no computador, o novo
+  na porta 4173 (`nexugal-build`) e uma cópia do antigo na 4174 (`nexugal-antes`,
+  no `.claude/launch.json`, que não vai para o git), medidos com o mesmo
+  telemóvel simulado.
+- O Chrome desta máquina é da mesma versão do que o PageSpeed usava a 21/09 (153).
+- Para simular sem mexer no site: a preferência "menos movimento" do sistema põe
+  o hero todo de uma vez (título incluído), e guardar um valor na chave
+  `nexugal_cookie_consent` do `localStorage` faz de conta que o visitante já
+  respondeu ao aviso.
+
+#### O que se encontrou, no site público (`04e4f0a`)
+
+- **PageSpeed:** telemóvel 75 e 76 (duas análises), computador 99; acessibilidade
+  98, boas práticas e SEO 100. Sem dados de visitantes reais (pouco tráfego).
+- **Telemóvel, página inicial:** primeira imagem (FCP) aos 2,6–2,8 s, página
+  composta (LCP) aos 4,1–5,1 s, o que a Google classifica como "mau" (acima de
+  4 s). Contacto, FAQ e Sobre: 2,2 s. Computador: 0,4–0,8 s em tudo. Nada a
+  bloquear o toque (TBT 0 no PageSpeed) e nada a saltar (CLS 0,005).
+- **As causas, por peso:**
+  1. **Dois atrasos de propósito na página inicial.** O subtítulo, os botões e o
+     esquema do hero só apareciam depois de o título acabar de se escrever. O
+     aviso de cookies esperava 1,2 s e entrava a deslizar meio segundo, e no
+     telemóvel é o maior bloco do ecrã, por isso a Google só dava a página por
+     composta quando ele acabava de entrar. Cada atraso, sozinho, segurava a
+     página composta cerca de 1,5 s: tirar só um não mexia no número. Simulado
+     sem os dois: 2,75 s.
+  2. **Imagens muito maiores do que o espaço onde aparecem.** O `favicon.png`
+     tinha 1305 × 1205 e 623 KB, e servia para tudo: separador, iPhone,
+     Android e logótipo do JSON-LD. O `nexugal-n.png` tinha 1001 × 983 e 464 KB,
+     mostrado a 38–44 px. As bandeiras tinham 512 px e 25 KB, mostradas a 32–40
+     px. O `rui.jpg` tinha 600 px, para um círculo de 80. Em 4G lenta, o N só
+     aparecia aos 10,7 s e a página só acabava de carregar aos 12,6 s. Para o
+     PageSpeed pesam mais do que parece: o N é pedido antes da página ficar
+     composta, e a simulação dele conta-o.
+  3. **As letras vinham da Google Fonts.** A página não se desenhava enquanto a
+     folha de estilo da Google não chegasse, de outro servidor. O PageSpeed
+     estimava até 1,4 s de ganho em rede móvel.
+  4. **Um só ficheiro de JavaScript com todas as páginas**, incluindo o admin (11%
+     do código). O PageSpeed contava 44 KB dos 108 KB por usar ao abrir.
+  5. **O vídeo do contacto e da FAQ** (`landingpage.mp4`, 1,7 MB, 8 segundos em
+     repetição, o fundo do hero do site preto) via-se a cerca de 2%: comparando
+     capturas com e sem ele, a diferença média era de 3,6 em 255 níveis de cor.
+- **Testado e descartado:** o scroll com o aviso de cookies no ecrã é tão fluido
+  como sem ele.
+
+#### O que se fez
+
+- **Vídeo:** saiu do `ContactPage.js` e do `FAQPage.js`, com o véu branco que só
+  lá estava para o esconder. `public/videos/landingpage.mp4` apagado (fica no
+  histórico do git). Decisão do Rui: "Tira o vídeo."
+- **Hero (`Hero.js`):** o título continua a escrever-se; o subtítulo, os botões e
+  o esquema aparecem logo, sem espera nem animação. O Rui pediu para ver esta
+  versão antes de a dar por boa.
+- **Aviso de cookies (`CookieBanner.js`):** aparece logo, na primeira imagem da
+  página, sem espera nem deslize (também pedido para ver). A escrita da resposta
+  no `localStorage` ficou dentro de `try/catch`: com o armazenamento bloqueado, o
+  aviso fecha na mesma. Saiu o `backdrop-blur-md` do cartão, que não se via
+  (fundo branco sólido) e custava ~50 ms à primeira imagem, e entrou `relative`
+  no lugar dele (armadilha em 7.4).
+- **Imagens**, geradas dos mesmos originais, no tamanho em que aparecem com
+  margem para ecrãs 3x, e com nomes novos (regra de 7.4):
+
+  | Ficheiro novo | Tamanho | Peso | Era |
+  |---|---|---|---|
+  | `images/nexugal-n-132.png` | 132 × 130 | 16 KB | `nexugal-n.png`, 464 KB |
+  | `icons/favicon-48.png` (separador) | 48 × 48 | 3 KB | `favicon.png`, 623 KB |
+  | `icons/apple-touch-icon.png` (iPhone) | 180 × 180 | 19 KB | o mesmo |
+  | `icons/icon-192.png` e `icons/icon-512.png` (`manifest.json`, e o de 512 no JSON-LD) | 192 e 512 | 21 e 113 KB | o mesmo |
+  | `icons/portugal-120.png`, `icons/united-states-120.png` | 120 × 120 | 9 KB cada | 512 px, 25 KB cada |
+  | `images/rui-240.jpg` | 240 × 356 | 13 KB | `rui.jpg`, 64 KB |
+
+  O ícone foi posto ao centro de um quadrado transparente, sem o deformar (o
+  original não era quadrado). Os originais saíram do `public/` e ficam no
+  histórico do git.
+- **Letras:** os mesmos três ficheiros que a Google servia (conjunto "latin", 76
+  KB, iguais byte a byte) em `src/fonts/`, com as regras `@font-face` da Google
+  copiadas para o `index.css`, só com o endereço trocado. Saíram do `index.html`
+  a folha da Google, os dois `preconnect` e o `dns-prefetch`. Os caracteres fora
+  do conjunto "latin" (setas, símbolos e emojis, quase todos no admin) não
+  existem em nenhum conjunto destas letras e já vinham da letra do sistema. As
+  três letras são de licença livre (SIL Open Font License 1.1).
+- **Código em partes (`App.js`):** `PrivacyPolicyPage`, `AdminLoginPage` e
+  `AdminLeadsPage` com `React.lazy`, dentro de um `Suspense` (`APedido`). O `SEO`
+  da política continua no ficheiro principal. O resto do site ficou no principal
+  de propósito, para abrir de imediato (sobretudo o contacto). O comentário
+  "Admin — Login", que estava por cima da rota do Sobre, passou para o sítio
+  certo.
+
+#### Resultados
+
+Os dois builds servidos no computador, telemóvel em 4G lenta com o processador 4
+vezes mais lento, mediana de 3 medições:
+
+| | Antes | Depois |
+|---|---|---|
+| Página inicial, visitante novo: página composta (LCP) | 4,0–4,7 s | 2,7 s |
+| Página inicial, já respondeu ao aviso: página composta | 4,7 s | 2,6 s |
+| Página inicial: acaba de carregar | 12,5 s | 3,9 s |
+| Página inicial: descarregado | 1,9 MB | 0,25 MB |
+| Contacto e FAQ: acaba de carregar / descarregado | 18,9 s / 3,1 MB | 3,0 s / 0,2 MB |
+| Sobre: acaba de carregar / descarregado | 10,0 s / 1,5 MB | 3,0 s / 0,2 MB |
+| JavaScript principal, comprimido | 106 KB | 96 KB |
+
+- A página composta passou a coincidir com a primeira imagem, em todas as
+  páginas. No telemóvel, o elemento que a marca passou a ser o subtítulo do hero
+  ou o texto do aviso de cookies.
+- **A primeira imagem (FCP) não desceu:** fica nos 2,5–2,7 s, o tempo de chegar e
+  correr o JavaScript. Na primeira visita à página inicial até chega ~0,15 s mais
+  tarde (2,68 contra 2,51 s), porque já traz o aviso de cookies. Mas chega
+  completa, em vez de mostrar só o cabeçalho e o início do título. O que baixaria
+  a primeira imagem é a pré-renderização (7.2, ponto 11).
+- O ganho das letras não aparece nestas medições: o simulador atrasa cada pedido
+  mas não imita o tempo de abrir uma ligação a outro servidor, que era o custo
+  da Google Fonts. Vê-se no PageSpeed, depois de publicar.
+- Estimativa, por confirmar depois de publicar: a nota do PageSpeed no telemóvel
+  deve passar de 75 para perto de 90.
+- Há um vídeo do carregamento lado a lado, antes e depois, que se mandou ao Rui
+  (não está no repositório).
+
+#### Verificado
+
+- Build com `CI=true`: `Compiled successfully.` Teste de contraste: 18 de 18,
+  com as duas linhas `DIVIDA` de sempre.
+- Auditoria de contraste de 7.5: zero falhas nas dez páginas a 380 e a 1280 px,
+  e na página inicial também a 1024 e a 1920 px (146 textos na página inicial).
+  Sem scroll para o lado. As três letras carregam do próprio site.
+- No build: nenhuma referência à Google Fonts nem às imagens antigas; chatbot
+  fora (`simulateAIResponse` e `ChatWidget` com zero ocorrências); as letras em
+  `static/media/` com nome com hash.
+- As páginas em partes abrem: política em PT e EN, com o título certo, e a
+  entrada e o painel do admin (no computador o painel só dá erro de rede, por não
+  haver backend a correr).
+- Capturas das páginas inteiras, antes e depois, a 380 e a 1280 px: iguais,
+  exceto o fundo do contacto e da FAQ (saiu a névoa do vídeo), o N, as bandeiras
+  e a fotografia do Sobre (reduzidos, iguais a olho) e o alisamento das letras de
+  alguns textos que perderam a animação.
+
+#### O que fica por fazer
+
+- **Publicar**, quando o Rui disser, e medir outra vez o site público com o
+  `velocidade.py` e o PageSpeed. Antes de publicar, o Rui vê a versão no `npm
+  start` do ramo `rui/velocidade`.
+- **Juntar ao `rui/site-branco`** (ou publicar a partir deste ramo, que tem tudo
+  o que o `rui/site-branco` tem). O `main` continua atrás dos dois (7.2, ponto 10).
+- **Pré-renderização** (7.2, ponto 11): é o que falta para a primeira imagem
+  baixar dos ~2,5 s. Falar com o Henrique.
+- **Cache**, no `vercel.json` da raiz (falar com o Henrique): o JavaScript e o
+  CSS têm `s-maxage` (só a Vercel guarda; o browser volta a perguntar em cada
+  visita) e as imagens `max-age=0`. Um cabeçalho de cache longo para `/static/`,
+  cujos nomes levam hash, aceleraria as visitas seguintes.
+- **O CSP do `vercel.json`** ainda autoriza `fonts.googleapis.com` e
+  `fonts.gstatic.com`. Já não é preciso, mas não faz mal; arrumar com o Henrique.
