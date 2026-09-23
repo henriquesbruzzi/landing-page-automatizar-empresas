@@ -74,6 +74,13 @@ function ContactPage() {
     setSubmitError('');
     setErroOrigem('');
 
+    let mensagemFinal = mensagem;
+    if (!mensagemFinal) {
+      mensagemFinal = `${f.messageAutoPrefix}${origem}.`;
+    } else if (mensagemFinal.length < 5) {
+      mensagemFinal = `${f.messageAutoPrefix}${origem}. ${mensagemFinal}`;
+    }
+
     try {
       const response = await fetch(`${API_BASE_URL}/api/leads`, {
         method: 'POST',
@@ -89,9 +96,7 @@ function ContactPage() {
           // Desde que o campo passou a ser "Como soube de nós?", é a origem
           // do contacto que vai nessa coluna.
           service: origem,
-          // O backend exige mensagem. Quando o visitante não escreve nada,
-          // segue uma linha automática, para o pedido não ser recusado.
-          message: mensagem || `${f.messageAutoPrefix}${origem}.`,
+          message: mensagemFinal,
           language: lang,
         }),
       });
@@ -99,7 +104,19 @@ function ContactPage() {
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        throw new Error(data.detail || (lang === 'pt' ? 'Falha ao enviar formulário.' : 'Failed to send form.'));
+        let errorMsg = lang === 'pt' ? 'Falha ao enviar formulário.' : 'Failed to send form.';
+        if (typeof data.detail === 'string') {
+          errorMsg = data.detail;
+        } else if (Array.isArray(data.detail)) {
+          errorMsg = data.detail.map((err) => {
+            if (typeof err === 'string') return err;
+            if (err.msg) return err.msg;
+            return JSON.stringify(err);
+          }).join(' ');
+        } else if (typeof data.detail === 'object' && data.detail !== null) {
+          errorMsg = JSON.stringify(data.detail);
+        }
+        throw new Error(errorMsg);
       }
 
       setIsSending(false);
@@ -228,7 +245,7 @@ function ContactPage() {
                       placeholder={f.phonePlaceholder}
                       inputMode="tel"
                       autoComplete="tel"
-                      pattern="[+0-9 ().-]+"
+                      pattern="[0-9+\s().-]+"
                       title={f.phoneHint}
                       maxLength={40}
                       required
