@@ -225,6 +225,18 @@ comandos vão um por linha. Ver 7.5.
     `VERCEL_GIT_COMMIT_REF: "rui/velocidade"`). **O `rui/site-branco` ficou no
     `04e4f0a`: publicar a partir dele tira do site o trabalho de 21/09.** Juntar os
     dois ramos ficou por fazer (7.11).
+  - **A 24/09/2026 o Rui publicou o `rui/formulario-erros`** (`aa99001`, 7.12),
+    outra vez com `vercel --prod` na pasta principal. Desde então **o site público
+    serve o `rui/formulario-erros`** (`main.69c904a1.js`, com
+    `VERCEL_GIT_COMMIT_REF: "rui/formulario-erros"`). Esse ramo saiu do
+    `rui/velocidade` no `dd8315c`, por isso leva também todo o trabalho de 21/09.
+    **Ficam três ramos por juntar** (`rui/site-branco`, `rui/velocidade` e este),
+    e o `main` continua atrás de todos.
+    Duas coisas que se repetiram, e são de esperar: a primeira tentativa deu
+    "Error: Not authorized" e a segunda, igual, passou; e a publicação tem de ser
+    feita na pasta do repositório. À primeira o comando correu em `C:\Users\ruipe`
+    e a Vercel perguntou se era mesmo para publicar a pasta pessoal ("You are
+    deploying your home directory"). A resposta é não.
   - O que se aprendeu nessa publicação:
     - **A Vercel não está ligada ao GitHub** (22/09): no fim da publicação a
       própria ferramenta sugere "Automatically deploy changes on every push by
@@ -2423,6 +2435,18 @@ com o que o site publicado envia, é o mesmo JSON, campo a campo.
 - Auditoria de contraste de 7.5, com o aviso vermelho no ecrã: zero falhas em
   `/contacto` e `/us/contact`, a 380 e a 1280px, sem scroll para o lado.
 
-**Por fazer:** publicar (a Vercel não publica sozinha, secção 6) e, depois disso,
-enviar um contacto a sério pelo formulário, que é o único passo que não se testa a
-partir do computador, por causa da autorização de origem (secção 6, Railway).
+**Publicado no mesmo dia** (secção 6), e verificado no site público:
+
+- O site serve o `aa99001` (`main.69c904a1.js`), a apontar ao Railway. As frases
+  novas estão no ficheiro, em PT e EN, e as três ocorrências de "object Object"
+  que lá restam são do próprio React e da mensagem deste commit, que a Vercel
+  grava nas variáveis do build.
+- **O caso que o Rui viu, refeito no site real:** mensagem de 3 letras dá "A
+  mensagem é facultativa, mas escrita tem de ter pelo menos 5 caracteres.", e
+  **não sai pedido nenhum** para o backend.
+- **Envio a sério pelo formulário do site**, o passo que não se testa a partir do
+  computador: `200`, `{"success":true,"id":12}` e a mensagem de sucesso no ecrã.
+
+**Leads de teste para o Henrique apagar: ids 9, 10, 11 e 12**, com os nomes "Teste
+Nexugal", "Teste" e "Teste Claude, apagar". Os emails correspondentes foram para a
+caixa da Nexugal.
