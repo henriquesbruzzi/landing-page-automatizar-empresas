@@ -294,6 +294,18 @@ const translations = {
         submit: 'Enviar Mensagem',
         sending: 'A enviar...',
         success: 'Mensagem enviada com sucesso! Entraremos em contacto em breve.',
+        // Avisos de recusa. Os quatro primeiros correspondem aos campos que o
+        // backend valida, e são escolhidos pelo campo que ele aponta na
+        // resposta. Os dois últimos cobrem uma recusa sem campo identificado e
+        // uma falha de rede. Sem eles, o visitante via "[object Object]" ou
+        // "Failed to fetch", que não dizem nada a ninguém.
+        nameError: 'Escreva o seu nome, com pelo menos 2 letras.',
+        emailError: 'Confirme o email: parece estar incompleto.',
+        phoneError: 'Confirme o número de telefone.',
+        companyError: 'Confirme o nome da empresa.',
+        messageError: 'A mensagem é facultativa, mas escrita tem de ter pelo menos 5 caracteres.',
+        sendError: 'Não foi possível enviar a mensagem. Tente outra vez dentro de momentos.',
+        networkError: 'Não foi possível falar com o servidor. Verifique a ligação à internet e tente outra vez.',
       },
       back: 'Voltar ao início',
       logo: 'Nexugal, ir para a página inicial',
@@ -677,6 +689,13 @@ const translations = {
         submit: 'Send Message',
         sending: 'Sending...',
         success: 'Message sent successfully! We will get in touch soon.',
+        nameError: 'Please enter your name, with at least 2 letters.',
+        emailError: 'Please check your email address: it looks incomplete.',
+        phoneError: 'Please check the phone number.',
+        companyError: 'Please check the company name.',
+        messageError: 'The message is optional, but if you write one it needs at least 5 characters.',
+        sendError: 'We could not send your message. Please try again in a moment.',
+        networkError: 'We could not reach the server. Please check your internet connection and try again.',
       },
       back: 'Back to home',
       logo: 'Nexugal, go to the home page',

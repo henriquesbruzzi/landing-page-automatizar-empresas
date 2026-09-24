@@ -273,6 +273,15 @@ comandos vão um por linha. Ver 7.5.
   mesmo endereço. É território do Henrique; o Rui foi avisado. Quando o backend
   voltar, se o endereço mudar, é preciso mudar o `REACT_APP_API_URL` na Vercel e o
   `connect-src` do CSP no `vercel.json` da raiz, e publicar outra vez.
+  **Resolvido a 24/09/2026:** o `/api/health` responde
+  `{"status":"ok","app":"NEXUGAL API","db":"postgres"}`, o endereço é o mesmo de
+  sempre e não foi preciso mudar nada na Vercel nem no CSP. O `POST /api/leads`
+  grava e devolve `{"success":true,"id":N}`. **A autorização de origem em
+  produção é mais apertada do que a lista escrita no `main.py`:** o Henrique
+  definiu a variável `ALLOWED_ORIGINS` (ou `FRONTEND_URL`) só com os domínios do
+  site, e um pedido vindo de `http://localhost:3000` leva 400 no pedido de
+  verificação. Quer dizer que **o formulário não se testa contra o backend real a
+  partir do computador**: ou se publica, ou se testa com o envio simulado (7.12).
 - **GitHub:** repo público, na conta pessoal do Henrique. O Rui é collaborator.
   Ramos a 14/09/2026: `main` e `rui/site-branco`. A 21/09 entrou o
   `rui/velocidade`, feito a partir do `rui/site-branco` (7.11).
@@ -2335,3 +2344,85 @@ PageSpeed depois de publicar.
   cujos nomes levam hash, aceleraria as visitas seguintes.
 - **O CSP do `vercel.json`** ainda autoriza `fonts.googleapis.com` e
   `fonts.gstatic.com`. Já não é preciso, mas não faz mal; arrumar com o Henrique.
+
+### 7.12 O formulário que dizia "[object Object]" (24/09/2026)
+
+O Rui: "o Railway está resolvido, mas eu não consigo preencher o formulário do
+site". Perguntado o que aparecia no ecrã, respondeu: **"[object Object]"**.
+
+**A causa, em duas metades.**
+
+Primeira, do lado do backend: o `LeadIn` do `main.py` exige **nome com pelo menos
+2 caracteres e mensagem com pelo menos 5**. O formulário não impunha nenhum dos
+dois. A mensagem é facultativa e, quando fica vazia, segue uma linha automática
+que passa à folga, mas **quem escrevesse uma mensagem curta ("ola", "sim", um
+número) levava com uma recusa 422**. O mesmo com um nome de uma letra.
+
+Segunda, do lado do frontend, e é esta que escondia a primeira. O `ContactPage.js`
+fazia `throw new Error(data.detail || ...)`, e nessas recusas o `detail` do
+FastAPI não é uma frase: é a **lista** de erros de validação, um objeto por campo.
+Passar uma lista ao `new Error` dá a mensagem `"[object Object]"`, que foi
+exatamente o que o Rui viu. O mesmo caminho mostrava "Failed to fetch", em inglês
+e na página portuguesa, quando o servidor estava em baixo (era o que a secção 6
+registava a 22/09).
+
+Ou seja: o formulário recusava o contacto e não dizia o que estava mal. Quem
+tentasse não tinha maneira de adivinhar, e o contacto perdia-se.
+
+**O que se fez** (só `ContactPage.js` e `translations.js`):
+
+- **`erroLegivel(data, f)`**, no topo do `ContactPage.js`: aceita o `detail` como
+  frase ou como lista, procura em cada item o campo recusado (o último elemento
+  do `loc`) e devolve a frase que lhe corresponde no `translations.js`, na língua
+  da página. Campos recusados ao mesmo tempo saem numa frase só, sem repetições.
+  Se o campo não for nenhum dos conhecidos, fica o aviso geral.
+- **Sete textos novos** em `contact.form`, PT e EN: `nameError`, `emailError`,
+  `phoneError`, `companyError`, `messageError`, `sendError` (recusa sem campo
+  identificado) e `networkError` (servidor inalcançável, no lugar do
+  "Failed to fetch").
+- **A recusa deixou de ser uma exceção.** O `catch` passou a apanhar só o que é
+  mesmo falha de rede, e mostra o `networkError`. O `response.json()` ficou dentro
+  do seu próprio `try`: uma resposta que não seja JSON (uma página de erro 502)
+  deixou de rebentar ali.
+- **Validação antes de o pedido sair**, com os mesmos mínimos do backend: nome com
+  menos de 2 caracteres e mensagem escrita com menos de 5 são apanhados no
+  `handleSubmit`, depois do `trim`. No HTML, `minLength={2}` no nome e
+  `minLength={5}` na mensagem (o `minLength` só morde num campo que foi escrito,
+  por isso deixá-la vazia continua a passar). Assim o visitante é avisado no
+  próprio campo e o 422 deixa de acontecer em uso normal.
+- **O `pattern` do telefone estava morto.** Era `[+0-9 ().-]+`, e o browser compila
+  o `pattern` como expressão regular em modo `v`, onde `(`, `)` e `-` soltos dentro
+  dos parênteses retos são erro de sintaxe. Um `pattern` que não compila é
+  **ignorado em silêncio**: o campo aceitava "tlm 912345678" e
+  "912345678/253123456". Passou a `[+0-9 \(\)\.\-]+`, que compila. Aceita os
+  formatos de sempre (`912345678`, `+351 912 345 678`, `+351-912-345-678`,
+  `(351) 912.345.678`) e recusa letras e barras. **Vale para qualquer `pattern`
+  novo:** escapar os parênteses e o traço, e confirmar no browser que recusa
+  mesmo, porque um `pattern` inválido não dá erro nenhum à vista.
+
+**O que se manteve igual, de propósito:** o corpo do pedido. Comparado byte a byte
+com o que o site publicado envia, é o mesmo JSON, campo a campo.
+
+**Verificado:**
+
+- Backend: `/api/health` a 200, e o pedido de verificação de origem a autorizar
+  `https://www.nexugal.com` e `https://nexugal.com` (o `nexugal.com` responde 308
+  para o `www`). O site publicado aponta ao Railway, sem `localhost:8000`.
+- **Envio real ao backend**, autorizado pelo Rui, direto da origem do site: três
+  leads gravados, **ids 9, 10 e 11**, com nome "Teste Nexugal" e "Teste"
+  (**para o Henrique apagar**). Foi o que confirmou que a recusa era de validação
+  e não do servidor: mensagem de 3 caracteres e nome de 1 letra deram 422, e os
+  restantes deram `{"success":true}`.
+- `CI=true npm run build`: `Compiled successfully.` Teste de contraste: 18 de 18.
+- No build servido, com o envio simulado (substituir o `window.fetch` e devolver a
+  resposta que se quer): mensagem de 3 letras, mensagem só com espaços, nome de 1
+  letra, 422 num campo, 422 em dois campos ao mesmo tempo, resposta em HTML e
+  falha de rede. **Todos mostram uma frase legível, em PT e em EN, e nenhum
+  mostra "[object Object]".** O caminho de sucesso continua a acabar na mensagem
+  de sucesso, e o botão destrava depois de um erro.
+- Auditoria de contraste de 7.5, com o aviso vermelho no ecrã: zero falhas em
+  `/contacto` e `/us/contact`, a 380 e a 1280px, sem scroll para o lado.
+
+**Por fazer:** publicar (a Vercel não publica sozinha, secção 6) e, depois disso,
+enviar um contacto a sério pelo formulário, que é o único passo que não se testa a
+partir do computador, por causa da autorização de origem (secção 6, Railway).

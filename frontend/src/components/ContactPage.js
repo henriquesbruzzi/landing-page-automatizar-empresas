@@ -5,6 +5,46 @@ import Dropdown from './Dropdown';
 
 const API_BASE_URL = (process.env.REACT_APP_API_URL || 'http://localhost:8000').replace(/\/$/, '');
 
+// O backend recusa um pedido inválido com um campo `detail`, que tanto pode ser
+// uma frase como a lista de erros do FastAPI: cada item traz o campo recusado
+// em `loc` e a razão em `msg`, sempre em inglês.
+//
+// Até 24/09/2026 essa lista era entregue ao `new Error` tal e qual, e o
+// visitante via "[object Object]" no ecrã. Aqui procura-se o campo recusado e
+// devolve-se a frase que lhe corresponde no translations.js, na língua da
+// página. Se o campo não for nenhum dos conhecidos, fica o aviso geral.
+function erroLegivel(data, f) {
+  const detalhe = data && data.detail;
+
+  if (typeof detalhe === 'string' && detalhe.trim()) {
+    return detalhe.trim();
+  }
+
+  if (Array.isArray(detalhe)) {
+    const porCampo = {
+      name: f.nameError,
+      email: f.emailError,
+      phone: f.phoneError,
+      company: f.companyError,
+      service: f.sourceError,
+      message: f.messageError,
+    };
+
+    const frases = detalhe
+      .map((item) => {
+        const loc = item && item.loc;
+        return Array.isArray(loc) ? porCampo[loc[loc.length - 1]] : undefined;
+      })
+      .filter((frase, i, todas) => frase && todas.indexOf(frase) === i);
+
+    if (frases.length) {
+      return frases.join(' ');
+    }
+  }
+
+  return f.sendError;
+}
+
 function ContactPage() {
   const { lang, t } = useLanguage();
   const navigate = useNavigate();
@@ -57,9 +97,20 @@ function ContactPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const nome = formData.name.trim();
     const mensagem = formData.message.trim();
 
-    // Validação também no envio, não apenas no que se vê no ecrã
+    setSubmitError('');
+
+    // Validação também no envio, não apenas no que se vê no ecrã.
+    // O nome e a mensagem têm mínimos que o backend recusa (2 e 5 caracteres):
+    // são apanhados aqui para o visitante saber logo o que falta, na língua da
+    // página, em vez de esperar pela recusa do servidor.
+    if (nome.length < 2) {
+      setSubmitError(f.nameError);
+      return;
+    }
+
     if (!formData.source) {
       setErroOrigem(f.sourceError);
       return;
@@ -70,8 +121,13 @@ function ContactPage() {
       return;
     }
 
+    // A mensagem é facultativa, mas escrita tem de ter pelo menos 5 caracteres
+    if (mensagem && mensagem.length < 5) {
+      setSubmitError(f.messageError);
+      return;
+    }
+
     setIsSending(true);
-    setSubmitError('');
     setErroOrigem('');
 
     try {
@@ -81,7 +137,7 @@ function ContactPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: formData.name.trim(),
+          name: nome,
           email: formData.email,
           phone: formData.phone,
           company: formData.company,
@@ -96,18 +152,30 @@ function ContactPage() {
         }),
       });
 
-      const data = await response.json();
+      // Uma resposta que não seja JSON (o servidor em baixo devolve uma página
+      // de erro) não pode rebentar aqui: trata-se como recusa sem detalhe.
+      let data = null;
+      try {
+        data = await response.json();
+      } catch (semJson) {
+        data = null;
+      }
 
-      if (!response.ok || !data.success) {
-        throw new Error(data.detail || (lang === 'pt' ? 'Falha ao enviar formulário.' : 'Failed to send form.'));
+      if (!response.ok || !data || !data.success) {
+        setIsSending(false);
+        setSubmitError(erroLegivel(data, f));
+        return;
       }
 
       setIsSending(false);
       setIsSent(true);
       setFormData({ name: '', email: '', phone: '', company: '', source: '', sourceOther: '', message: '' });
     } catch (error) {
+      // Aqui só chegam as falhas de rede: sem internet, servidor inalcançável ou
+      // pedido barrado antes de sair. A mensagem do browser ("Failed to fetch")
+      // vem sempre em inglês e não diz nada a ninguém, por isso não se mostra.
       setIsSending(false);
-      setSubmitError(error.message || (lang === 'pt' ? 'Erro inesperado.' : 'Unexpected error.'));
+      setSubmitError(f.networkError);
     }
   };
 
@@ -188,6 +256,7 @@ function ContactPage() {
                       onChange={handleChange}
                       placeholder={f.namePlaceholder}
                       autoComplete="name"
+                      minLength={2}
                       maxLength={120}
                       required
                       className={inputClasses}
@@ -219,7 +288,14 @@ function ContactPage() {
                     {/* Telefone de qualquer país: aceita o sinal +, espaços,
                         parênteses, pontos e traços, e não prende o número a
                         um número certo de dígitos. O limite de 40 caracteres
-                        é o mesmo que o backend já aceita. */}
+                        é o mesmo que o backend já aceita.
+
+                        Os parênteses e o traço vão escapados de propósito: o
+                        browser compila este pattern como uma expressão regular
+                        moderna (modo "v"), onde "(", ")" e "-" soltos dentro
+                        dos parênteses retos são erro. Um pattern que não
+                        compila é ignorado em silêncio, e até 24/09/2026 era o
+                        que acontecia: o campo aceitava letras e barras. */}
                     <input
                       type="tel"
                       name="phone"
@@ -228,7 +304,7 @@ function ContactPage() {
                       placeholder={f.phonePlaceholder}
                       inputMode="tel"
                       autoComplete="tel"
-                      pattern="[+0-9 ().-]+"
+                      pattern="[+0-9 \(\)\.\-]+"
                       title={f.phoneHint}
                       maxLength={40}
                       required
@@ -303,6 +379,10 @@ function ContactPage() {
                     value={formData.message}
                     onChange={handleChange}
                     placeholder={f.messagePlaceholder}
+                    // Facultativa, mas o backend recusa menos de 5 caracteres.
+                    // O `minLength` só morde num campo que foi escrito, por
+                    // isso deixá-lo vazio continua a passar.
+                    minLength={5}
                     rows={5}
                     className={`${inputClasses} resize-none`}
                   />
