@@ -45,6 +45,75 @@ function erroLegivel(data, f) {
   return f.sendError;
 }
 
+// Um endereço tem de ter um @ e um domínio com terminação. O `type="email"` do
+// browser não chega: aceita "rui@exemplo", que não existe em lado nenhum.
+const EMAIL_VALIDO = /^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/;
+
+// Os domínios que aparecem quase sempre, em Portugal e fora dele. **Não é uma
+// lista fechada de endereços aceites:** serve só para reconhecer uma gralha e
+// sugerir a correção. Um domínio que não esteja aqui passa na mesma.
+const DOMINIOS_COMUNS = [
+  'gmail.com', 'hotmail.com', 'outlook.com', 'outlook.pt', 'live.com',
+  'yahoo.com', 'yahoo.es', 'icloud.com', 'me.com', 'aol.com', 'gmx.com',
+  'mail.com', 'protonmail.com', 'proton.me',
+  'sapo.pt', 'iol.pt', 'clix.pt', 'netcabo.pt', 'meo.pt', 'nos.pt', 'vodafone.pt',
+  'hotmail.pt', 'gmail.pt',
+];
+
+// Quantas letras é preciso trocar, juntar ou tirar para chegar de uma palavra à
+// outra. Uma gralha fica a uma ou duas; um domínio diferente fica muito mais
+// longe. É o que separa "gmail.con" de "nexugal.com".
+function distancia(a, b) {
+  const linha = Array.from({ length: b.length + 1 }, (uu, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    let anterior = linha[0];
+    linha[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const guardado = linha[j];
+      linha[j] = a[i - 1] === b[j - 1]
+        ? anterior
+        : 1 + Math.min(anterior, linha[j], linha[j - 1]);
+      anterior = guardado;
+    }
+  }
+  return linha[b.length];
+}
+
+// Devolve o endereço corrigido quando o domínio escrito é quase um dos comuns,
+// ou vazio quando não há nada a sugerir. Nunca recusa nada: só sugere.
+function sugerirEmail(email) {
+  const partes = String(email).trim().toLowerCase().split('@');
+  if (partes.length !== 2 || !partes[0] || !partes[1]) {
+    return '';
+  }
+
+  const dominio = partes[1];
+  if (DOMINIOS_COMUNS.includes(dominio)) {
+    return '';
+  }
+
+  let melhor = '';
+  let menor = Infinity;
+  DOMINIOS_COMUNS.forEach((candidato) => {
+    const d = distancia(dominio, candidato);
+    if (d < menor) {
+      menor = d;
+      melhor = candidato;
+    }
+  });
+
+  // Nos domínios curtos uma só letra de diferença já pode ser outro domínio a
+  // sério (sapo.pt e nos.pt são ambos reais), por isso aperta-se o critério.
+  const limite = dominio.length <= 8 ? 1 : 2;
+  return menor <= limite ? `${partes[0]}@${melhor}` : '';
+}
+
+// Um número português tem nove dígitos. O máximo internacional são quinze
+// (norma E.164), contando o indicativo do país.
+const MINIMO_DIGITOS = 9;
+const MAXIMO_DIGITOS = 15;
+const contarDigitos = (valor) => String(valor).replace(/\D/g, '').length;
+
 function ContactPage() {
   const { lang, t } = useLanguage();
   const navigate = useNavigate();
@@ -64,6 +133,7 @@ function ContactPage() {
   const [isSent, setIsSent] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [erroOrigem, setErroOrigem] = useState('');
+  const [sugestaoEmail, setSugestaoEmail] = useState('');
 
   // A última opção da lista é sempre o "Outro". Quando é essa, abre-se um
   // campo de texto para o visitante escrever a origem pelas próprias palavras.
@@ -82,6 +152,22 @@ function ContactPage() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Enquanto a pessoa escreve o email, a sugestão antiga deixa de valer
+    if (e.target.name === 'email') {
+      setSugestaoEmail('');
+    }
+  };
+
+  // A gralha só se procura quando a pessoa sai do campo. A meio da escrita
+  // qualquer endereço parece errado, e sugerir aí é ruído.
+  const verificarEmail = () => {
+    setSugestaoEmail(sugerirEmail(formData.email));
+  };
+
+  const aceitarSugestaoEmail = () => {
+    setFormData((dados) => ({ ...dados, email: sugestaoEmail }));
+    setSugestaoEmail('');
+    setSubmitError('');
   };
 
   const escolherOrigem = (valor) => {
@@ -111,6 +197,20 @@ function ContactPage() {
       return;
     }
 
+    const email = formData.email.trim();
+    if (!EMAIL_VALIDO.test(email)) {
+      setSubmitError(f.emailError);
+      return;
+    }
+
+    // Conta os dígitos e ignora o resto: assim "+351 912 345 678" e
+    // "912345678" valem o mesmo, e um número cortado a meio não passa.
+    const digitos = contarDigitos(formData.phone);
+    if (digitos < MINIMO_DIGITOS || digitos > MAXIMO_DIGITOS) {
+      setSubmitError(f.phoneDigitsError);
+      return;
+    }
+
     if (!formData.source) {
       setErroOrigem(f.sourceError);
       return;
@@ -121,14 +221,20 @@ function ContactPage() {
       return;
     }
 
-    // A mensagem é facultativa, mas escrita tem de ter pelo menos 5 caracteres
-    if (mensagem && mensagem.length < 5) {
-      setSubmitError(f.messageError);
-      return;
-    }
-
     setIsSending(true);
     setErroOrigem('');
+
+    // O backend exige uma mensagem com pelo menos 5 caracteres, mas no site ela
+    // é facultativa. Em vez de travar quem escreve pouco ("ola", "sim"), a
+    // linha automática vai à frente e o que a pessoa escreveu segue atrás:
+    // assim nenhum contacto se perde por causa do tamanho da mensagem.
+    // (Solução do Henrique, 23/09/2026. Decisão do Rui a 24/09.)
+    let mensagemFinal = mensagem;
+    if (!mensagemFinal) {
+      mensagemFinal = `${f.messageAutoPrefix}${origem}.`;
+    } else if (mensagemFinal.length < 5) {
+      mensagemFinal = `${f.messageAutoPrefix}${origem}. ${mensagemFinal}`;
+    }
 
     try {
       const response = await fetch(`${API_BASE_URL}/api/leads`, {
@@ -138,16 +244,14 @@ function ContactPage() {
         },
         body: JSON.stringify({
           name: nome,
-          email: formData.email,
+          email,
           phone: formData.phone,
           company: formData.company,
           // O backend guarda isto na coluna `service` (é dele, não se mexe).
           // Desde que o campo passou a ser "Como soube de nós?", é a origem
           // do contacto que vai nessa coluna.
           service: origem,
-          // O backend exige mensagem. Quando o visitante não escreve nada,
-          // segue uma linha automática, para o pedido não ser recusado.
-          message: mensagem || `${f.messageAutoPrefix}${origem}.`,
+          message: mensagemFinal,
           language: lang,
         }),
       });
@@ -169,6 +273,7 @@ function ContactPage() {
 
       setIsSending(false);
       setIsSent(true);
+      setSugestaoEmail('');
       setFormData({ name: '', email: '', phone: '', company: '', source: '', sourceOther: '', message: '' });
     } catch (error) {
       // Aqui só chegam as falhas de rede: sem internet, servidor inalcançável ou
@@ -271,11 +376,25 @@ function ContactPage() {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
+                      onBlur={verificarEmail}
                       placeholder={f.emailPlaceholder}
                       autoComplete="email"
                       required
                       className={inputClasses}
                     />
+                    {sugestaoEmail && (
+                      <p className="text-suave text-xs mt-2 leading-relaxed">
+                        {f.emailSuggestion.split('{email}')[0]}
+                        <button
+                          type="button"
+                          onClick={aceitarSugestaoEmail}
+                          className="text-azul-medio font-semibold underline underline-offset-2 hover:text-azul-profundo transition-colors duration-300"
+                        >
+                          {sugestaoEmail}
+                        </button>
+                        {f.emailSuggestion.split('{email}')[1]}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -379,10 +498,6 @@ function ContactPage() {
                     value={formData.message}
                     onChange={handleChange}
                     placeholder={f.messagePlaceholder}
-                    // Facultativa, mas o backend recusa menos de 5 caracteres.
-                    // O `minLength` só morde num campo que foi escrito, por
-                    // isso deixá-lo vazio continua a passar.
-                    minLength={5}
                     rows={5}
                     className={`${inputClasses} resize-none`}
                   />

@@ -2450,3 +2450,81 @@ com o que o site publicado envia, é o mesmo JSON, campo a campo.
 **Leads de teste para o Henrique apagar: ids 9, 10, 11 e 12**, com os nomes "Teste
 Nexugal", "Teste" e "Teste Claude, apagar". Os emails correspondentes foram para a
 caixa da Nexugal.
+
+### 7.13 A junção com o trabalho do Henrique, e a verificação do email e do telefone (24/09/2026)
+
+**O Henrique tinha corrigido o mesmo problema, e ninguém deu por isso.** A 23/09 às
+22h29 fez o `636595c` no `rui/velocidade`, "correcao da expressao regular do
+telefone e tratamento de erros do formulario de contacto". O trabalho de 7.12
+começou no dia seguinte **sem `git pull`**, e por isso repetiu-o. A regra da
+secção 4 existe por causa disto: **`git fetch origin` e `git pull` antes de
+começar, mesmo quando a pasta parece estar em dia.** A pasta estava no `dd8315c`
+e o GitHub já ia no `636595c`.
+
+O que ele fez, e o que ficou de cada um depois da junção (`git merge`, dois
+conflitos no `ContactPage.js`, resolvidos à mão):
+
+| | Henrique (23/09) | 7.12 (24/09) | Ficou |
+|---|---|---|---|
+| Mensagem curta | aceita e junta à linha automática | bloqueia e pede 5 caracteres | **a dele** |
+| Erro do backend | junta os `msg` do FastAPI, em inglês, e `JSON.stringify` no pior caso | frase nossa por campo, PT e EN | a de 7.12 |
+| Telefone | `[0-9+\s().-]+` | `[+0-9 \(\)\.\-]+` | a de 7.12 |
+| Sem rede, resposta não-JSON | não tratados | tratados | a de 7.12 |
+
+**A solução dele para a mensagem é melhor e passou a ser a do site**, por decisão
+do Rui: quem escreve "ola" não é travado, a linha automática vai à frente e o que a
+pessoa escreveu segue atrás ("Pedido de contacto. Soube de nós através de:
+Pesquisa online. ola"). Nenhum contacto se perde por causa do tamanho da mensagem.
+Saíram com ela a validação prévia da mensagem e o `minLength={5}` do textarea. O
+`messageError` ficou no `translations.js`, porque o `erroLegivel` ainda o usa se o
+backend recusar a mensagem por outro motivo.
+
+**A correção do telefone dele não funcionava**, e é um erro fácil de repetir: o
+`[0-9+\s().-]+` continua a não compilar em modo `v` pelo mesmo motivo que o
+original (os parênteses e o traço por escapar), e o campo continuava a aceitar
+"abcdefghi". Confirmado no browser, lado a lado com o outro.
+
+#### O que o Rui pediu a seguir: apanhar os enganos no email e no telefone
+
+Três decisões dele, a 24/09, todas sobre o formulário não perder contactos por
+causa de uma gralha.
+
+**Telefone: contam-se os dígitos, de qualquer país.** Entre 9 (um número
+português) e 15 (o máximo da norma E.164, com indicativo). Tudo o que não é
+dígito é ignorado na conta, por isso "+351 912 345 678" e "912345678" valem o
+mesmo. O `pattern` continua a recusar letras e barras; a contagem apanha o que
+ele não apanha, que é o número cortado a meio. Aviso novo: `phoneDigitsError`.
+**Não se apertou aos nove dígitos portugueses**, por decisão do Rui: o campo foi
+feito para qualquer país e assim fica.
+
+**Email: recusa-se o que não é endereço, e sugere-se a correção das gralhas.**
+
+- O `type="email"` do browser aceita `rui@exemplo`, sem terminação. O
+  `EMAIL_VALIDO` exige um domínio com ponto e sem pontos seguidos. Quem falhar
+  leva o `emailError`, que já existia.
+- **A sugestão não recusa nada.** Quando a pessoa sai do campo, compara-se o
+  domínio escrito com os de `DOMINIOS_COMUNS` e mede-se quantas letras é preciso
+  trocar para lá chegar (distância de edição, a função `distancia`). Uma ou duas é
+  gralha; mais do que isso é outro domínio, e não se diz nada. Aparece então
+  "Quis dizer rui@gmail.com?", com o endereço clicável que corrige o campo.
+- **Os `DOMINIOS_COMUNS` não são uma lista de endereços aceites**, e há um
+  comentário no código a dizê-lo. Um domínio de empresa entra na mesma. Medido:
+  `gmail.con`, `gmial.com`, `hotmal.com`, `hotmail.co`, `outlok.com`, `yaho.com`
+  e `sapo.ot` dão a sugestão certa; `nexugal.com`, `uminho.pt`,
+  `empresa-qualquer.pt`, `nos.pt`, `meo.pt` e `sapo.pt` não dizem nada.
+- **O critério aperta nos domínios curtos** (uma letra em vez de duas): `nos.pt` e
+  `meo.pt` são ambos reais e ficam a uma letra de distância um do outro. Sem isso,
+  quem tem `meo.pt` era convidado a "corrigir" para `nos.pt`.
+
+**Armadilha, para quem testar isto por script:** o `onBlur` do React não ouve o
+evento `blur`, ouve o `focusout`. Um `dispatchEvent(new Event('blur'))` não faz
+nada e a sugestão nunca aparece, sem erro nenhum à vista. Com
+`new FocusEvent('focusout', { bubbles: true })` funciona.
+
+**Verificado:** `CI=true npm run build` com `Compiled successfully.`; teste de
+contraste 18 de 18; auditoria de contraste de 7.5 com a sugestão no ecrã e com o
+aviso do telefone no ecrã, em `/contacto` e `/us/contact`, a 380 e a 1280px, zero
+falhas e sem scroll para o lado. Casos medidos no build: mensagem de 3 letras
+(passa e vai completada), email sem terminação (recusado), telefone com 4 dígitos
+e com 20 (recusados), telefone inglês `+44 20 7946 0958` (passa), e o clique na
+sugestão a corrigir o campo.

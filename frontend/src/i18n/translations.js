@@ -302,6 +302,9 @@ const translations = {
         nameError: 'Escreva o seu nome, com pelo menos 2 letras.',
         emailError: 'Confirme o email: parece estar incompleto.',
         phoneError: 'Confirme o número de telefone.',
+        // O "{email}" é trocado pelo endereço corrigido, que fica clicável
+        emailSuggestion: 'Quis dizer {email}?',
+        phoneDigitsError: 'O número não parece certo. Escreva os 9 dígitos, ou o número completo com o indicativo do país.',
         companyError: 'Confirme o nome da empresa.',
         messageError: 'A mensagem é facultativa, mas escrita tem de ter pelo menos 5 caracteres.',
         sendError: 'Não foi possível enviar a mensagem. Tente outra vez dentro de momentos.',
@@ -692,6 +695,8 @@ const translations = {
         nameError: 'Please enter your name, with at least 2 letters.',
         emailError: 'Please check your email address: it looks incomplete.',
         phoneError: 'Please check the phone number.',
+        emailSuggestion: 'Did you mean {email}?',
+        phoneDigitsError: 'The number does not look right. Please enter the 9 digits, or the full number with the country code.',
         companyError: 'Please check the company name.',
         messageError: 'The message is optional, but if you write one it needs at least 5 characters.',
         sendError: 'We could not send your message. Please try again in a moment.',
