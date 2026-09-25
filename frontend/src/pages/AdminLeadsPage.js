@@ -400,18 +400,18 @@ function AdminLeadsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white px-4 py-8 md:px-10 lg:px-16 font-sans">
+    <div className="min-h-screen bg-white text-texto px-4 py-8 md:px-10 lg:px-16 font-sans">
       <div className="max-w-7xl mx-auto">
         {/* Top Header */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8 border-b border-white/10 pb-6">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8 border-b border-linha pb-6">
           <div>
             <div className="flex items-center gap-3">
-              <span className="font-mono text-cyan-neon font-bold text-xl tracking-[0.2em]">NEXUGAL</span>
-              <span className="bg-cyan-neon/10 border border-cyan-neon/30 text-cyan-neon text-xs px-2.5 py-0.5 rounded-full font-mono uppercase">
+              <span className="font-mono text-azul-medio font-bold text-xl tracking-[0.2em]">NEXUGAL</span>
+              <span className="bg-azul-vivo/10 border border-azul-claro text-azul-medio text-xs px-2.5 py-0.5 rounded-full font-mono uppercase">
                 Painel Admin
               </span>
             </div>
-            <p className="text-gray-400 text-xs mt-1">
+            <p className="text-texto text-xs mt-1">
               Gestão de Leads Inbound e Automação de Prospecção B2B
             </p>
           </div>
@@ -419,7 +419,7 @@ function AdminLeadsPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={logout}
-              className="border border-white/20 hover:border-red-500/50 hover:text-red-400 rounded-full px-5 py-2 text-xs tracking-[0.12em] transition-all duration-300"
+              className="border border-linha hover:border-red-300 hover:text-red-600 rounded-full px-5 py-2 text-xs tracking-[0.12em] transition-all duration-300"
             >
               Sair da Sessão
             </button>
@@ -427,13 +427,13 @@ function AdminLeadsPage() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex border-b border-white/10 mb-8">
+        <div className="flex border-b border-linha mb-8">
           <button
             onClick={() => setActiveTab('leads')}
             className={`px-6 py-3 text-sm font-semibold tracking-wider transition-all duration-200 border-b-2 flex items-center gap-2 ${
               activeTab === 'leads'
-                ? 'border-cyan-neon text-cyan-neon bg-cyan-neon/[0.04]'
-                : 'border-transparent text-gray-400 hover:text-white'
+                ? 'border-azul-medio text-azul-medio bg-azul-vivo/[0.04]'
+                : 'border-transparent text-texto hover:text-azul-profundo'
             }`}
           >
             <span>📥</span> Leads do Website ({leads.length})
@@ -442,8 +442,8 @@ function AdminLeadsPage() {
             onClick={() => setActiveTab('scraper')}
             className={`px-6 py-3 text-sm font-semibold tracking-wider transition-all duration-200 border-b-2 flex items-center gap-2 ${
               activeTab === 'scraper'
-                ? 'border-cyan-neon text-cyan-neon bg-cyan-neon/[0.04]'
-                : 'border-transparent text-gray-400 hover:text-white'
+                ? 'border-azul-medio text-azul-medio bg-azul-vivo/[0.04]'
+                : 'border-transparent text-texto hover:text-azul-profundo'
             }`}
           >
             <span>🔍</span> Web Scraper & Prospecção B2B ({prospects.length})
@@ -453,13 +453,13 @@ function AdminLeadsPage() {
         {/* TAB 1: LEADS DO WEBSITE */}
         {activeTab === 'leads' && (
           <div>
-            {isLoadingLeads && <p className="text-gray-400 text-sm">A carregar leads do formulário...</p>}
-            {leadsError && <p className="text-red-400 text-sm mb-4">{leadsError}</p>}
+            {isLoadingLeads && <p className="text-texto text-sm">A carregar leads do formulário...</p>}
+            {leadsError && <p className="text-red-600 text-sm mb-4">{leadsError}</p>}
 
             {!isLoadingLeads && !leadsError && (
-              <div className="overflow-x-auto border border-white/10 rounded-2xl bg-[#0a0a0a]">
+              <div className="overflow-x-auto border border-linha rounded-2xl bg-white">
                 <table className="w-full min-w-[900px] text-left text-sm">
-                  <thead className="bg-white/[0.04] text-gray-400 uppercase text-[11px] tracking-wider border-b border-white/10">
+                  <thead className="bg-neve text-texto uppercase text-[11px] tracking-wider border-b border-linha">
                     <tr>
                       <th className="px-4 py-3.5">Data</th>
                       <th className="px-4 py-3.5">Nome</th>
@@ -471,28 +471,28 @@ function AdminLeadsPage() {
                       <th className="px-4 py-3.5">Mensagem</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody className="divide-y divide-linha">
                     {leads.length === 0 && (
                       <tr>
-                        <td className="px-4 py-8 text-center text-gray-500" colSpan={8}>
+                        <td className="px-4 py-8 text-center text-texto" colSpan={8}>
                           Nenhum lead recebido pelo website até ao momento.
                         </td>
                       </tr>
                     )}
                     {leads.map((lead) => (
-                      <tr key={lead.id} className="hover:bg-white/[0.02] transition-colors align-top">
-                        <td className="px-4 py-4 text-gray-400 text-xs whitespace-nowrap">{formatDate(lead.created_at)}</td>
-                        <td className="px-4 py-4 font-medium text-white">{lead.name}</td>
+                      <tr key={lead.id} className="hover:bg-neve transition-colors align-top">
+                        <td className="px-4 py-4 text-texto text-xs whitespace-nowrap">{formatDate(lead.created_at)}</td>
+                        <td className="px-4 py-4 font-medium text-azul-profundo">{lead.name}</td>
                         <td className="px-4 py-4">
-                          <a className="text-cyan-neon hover:underline" href={`mailto:${lead.email}`}>
+                          <a className="text-azul-medio hover:underline" href={`mailto:${lead.email}`}>
                             {lead.email}
                           </a>
                         </td>
-                        <td className="px-4 py-4 text-gray-300">{lead.phone || '-'}</td>
-                        <td className="px-4 py-4 text-gray-300">{lead.company || '-'}</td>
-                        <td className="px-4 py-4 text-cyan-neon/90 text-xs font-mono">{lead.service || '-'}</td>
-                        <td className="px-4 py-4 uppercase text-xs text-gray-400">{lead.language || '-'}</td>
-                        <td className="px-4 py-4 text-gray-300 text-xs max-w-[320px] whitespace-pre-wrap">{lead.message}</td>
+                        <td className="px-4 py-4 text-texto">{lead.phone || '-'}</td>
+                        <td className="px-4 py-4 text-texto">{lead.company || '-'}</td>
+                        <td className="px-4 py-4 text-azul-medio text-xs font-mono">{lead.service || '-'}</td>
+                        <td className="px-4 py-4 uppercase text-xs text-texto">{lead.language || '-'}</td>
+                        <td className="px-4 py-4 text-texto text-xs max-w-[320px] whitespace-pre-wrap">{lead.message}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -506,15 +506,15 @@ function AdminLeadsPage() {
         {activeTab === 'scraper' && (
           <div className="space-y-8">
             {/* Painel de Upload CSV / Excel */}
-            <div className="bg-[#0e1117] border border-white/10 rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden">
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-neon/[0.02] blur-3xl pointer-events-none rounded-full" />
+            <div className="bg-white border border-linha rounded-2xl p-6 md:p-8 shadow-azul relative overflow-hidden">
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-azul-vivo/[0.02] blur-3xl pointer-events-none rounded-full" />
 
               <div className="mb-6">
-                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                <h2 className="text-lg font-bold text-azul-profundo flex items-center gap-2">
                   <span>📂</span> Importar Prospects via CSV / Excel
                 </h2>
-                <p className="text-gray-400 text-xs mt-1">
-                  Faça upload de um ficheiro <span className="text-cyan-neon font-semibold">.csv</span> ou <span className="text-cyan-neon font-semibold">.xlsx</span> com a lista de empresas. O sistema detecta automaticamente as colunas (nome, email, telefone, empresa, website, região, categoria). Máximo: <span className="text-white font-medium">500 linhas · 5 MB</span>.
+                <p className="text-texto text-xs mt-1">
+                  Faça upload de um ficheiro <span className="text-azul-medio font-semibold">.csv</span> ou <span className="text-azul-medio font-semibold">.xlsx</span> com a lista de empresas. O sistema detecta automaticamente as colunas (nome, email, telefone, empresa, website, região, categoria). Máximo: <span className="text-azul-profundo font-medium">500 linhas · 5 MB</span>.
                 </p>
               </div>
 
@@ -527,10 +527,10 @@ function AdminLeadsPage() {
                   onClick={() => fileInputRef.current?.click()}
                   className={`relative border-2 border-dashed rounded-2xl p-8 text-center cursor-pointer transition-all duration-300 mb-5 ${
                     isDragging
-                      ? 'border-cyan-neon bg-cyan-neon/10 scale-[1.01]'
+                      ? 'border-azul-medio bg-azul-vivo/10 scale-[1.01]'
                       : uploadFile
-                      ? 'border-green-500/50 bg-green-500/[0.04]'
-                      : 'border-white/15 hover:border-cyan-neon/50 hover:bg-white/[0.02]'
+                      ? 'border-green-300 bg-green-50'
+                      : 'border-linha hover:border-azul-claro hover:bg-neve'
                   }`}
                 >
                   <input
@@ -546,28 +546,28 @@ function AdminLeadsPage() {
 
                   {uploadFile ? (
                     <div className="flex flex-col items-center gap-2">
-                      <div className="w-12 h-12 rounded-xl bg-green-500/15 border border-green-500/30 flex items-center justify-center text-2xl">
+                      <div className="w-12 h-12 rounded-xl bg-green-50 border border-green-300 flex items-center justify-center text-2xl">
                         {uploadFile.name.endsWith('.xlsx') || uploadFile.name.endsWith('.xls') ? '📊' : '📄'}
                       </div>
-                      <p className="text-white font-semibold text-sm">{uploadFile.name}</p>
-                      <p className="text-gray-400 text-xs">{(uploadFile.size / 1024).toFixed(1)} KB</p>
+                      <p className="text-azul-profundo font-semibold text-sm">{uploadFile.name}</p>
+                      <p className="text-texto text-xs">{(uploadFile.size / 1024).toFixed(1)} KB</p>
                       <button
                         type="button"
                         onClick={(e) => { e.stopPropagation(); setUploadFile(null); setUploadMsg(''); setUploadErrors([]); if (fileInputRef.current) fileInputRef.current.value = ''; }}
-                        className="text-red-400/70 hover:text-red-400 text-xs underline mt-1"
+                        className="text-red-500 hover:text-red-600 text-xs underline mt-1"
                       >
                         Remover ficheiro
                       </button>
                     </div>
                   ) : (
                     <div className="flex flex-col items-center gap-2 pointer-events-none">
-                      <div className="w-12 h-12 rounded-xl bg-cyan-neon/10 border border-cyan-neon/20 flex items-center justify-center text-2xl">
+                      <div className="w-12 h-12 rounded-xl bg-azul-vivo/10 border border-azul-claro flex items-center justify-center text-2xl">
                         {isDragging ? '⬇️' : '☁️'}
                       </div>
-                      <p className="text-white font-medium text-sm">
+                      <p className="text-azul-profundo font-medium text-sm">
                         {isDragging ? 'Largue o ficheiro aqui' : 'Arraste o ficheiro ou clique para selecionar'}
                       </p>
-                      <p className="text-gray-500 text-xs">Suporta .CSV e .XLSX · máx. 500 linhas · 5 MB</p>
+                      <p className="text-texto text-xs">Suporta .CSV e .XLSX · máx. 500 linhas · 5 MB</p>
                     </div>
                   )}
                 </div>
@@ -575,13 +575,13 @@ function AdminLeadsPage() {
                 {/* Opções de Prioridade e Tipo de Cliente */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-azul-medio mb-2">
                       Prioridade a Atribuir
                     </label>
                     <select
                       value={uploadPriority}
                       onChange={(e) => setUploadPriority(e.target.value)}
-                      className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                      className="w-full bg-white border border-linha rounded-xl px-4 py-2.5 text-sm text-azul-profundo focus:border-azul-medio focus:outline-none"
                     >
                       <option value="alta">🔴 Alta Prioridade</option>
                       <option value="media">🟡 Média Prioridade</option>
@@ -589,13 +589,13 @@ function AdminLeadsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-azul-medio mb-2">
                       Tipo de Cliente
                     </label>
                     <select
                       value={uploadClientType}
                       onChange={(e) => setUploadClientType(e.target.value)}
-                      className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                      className="w-full bg-white border border-linha rounded-xl px-4 py-2.5 text-sm text-azul-profundo focus:border-azul-medio focus:outline-none"
                     >
                       <option value="PMEs">PMEs (Pequenas e Médias)</option>
                       <option value="Micro-empresas">Micro-empresas & Locais</option>
@@ -605,8 +605,8 @@ function AdminLeadsPage() {
                 </div>
 
                 {/* Legenda de colunas aceites */}
-                <div className="bg-black/40 border border-white/[0.07] rounded-xl px-4 py-3 mb-5">
-                  <p className="text-gray-400 text-xs font-semibold uppercase tracking-wider mb-2">Colunas reconhecidas automaticamente:</p>
+                <div className="bg-neve border border-linha rounded-xl px-4 py-3 mb-5">
+                  <p className="text-texto text-xs font-semibold uppercase tracking-wider mb-2">Colunas reconhecidas automaticamente:</p>
                   <div className="flex flex-wrap gap-2">
                     {[
                       { label: 'email / e-mail / mail', required: true },
@@ -622,25 +622,25 @@ function AdminLeadsPage() {
                         key={col.label}
                         className={`px-2.5 py-1 rounded-full text-[10px] font-mono ${
                           col.required
-                            ? 'bg-cyan-neon/15 text-cyan-neon border border-cyan-neon/30'
-                            : 'bg-white/[0.05] text-gray-400 border border-white/10'
+                            ? 'bg-azul-vivo/15 text-azul-medio border border-azul-claro'
+                            : 'bg-neve text-texto border border-linha'
                         }`}
                       >
                         {col.required ? '* ' : ''}{col.label}
                       </span>
                     ))}
                   </div>
-                  <p className="text-gray-500 text-[10px] mt-2">* Campo obrigatório</p>
+                  <p className="text-texto text-[10px] mt-2">* Campo obrigatório</p>
                 </div>
 
                 <button
                   type="submit"
                   disabled={!uploadFile || isUploading}
-                  className="w-full sm:w-auto bg-cyan-neon text-black font-semibold text-xs tracking-widest uppercase px-8 py-3.5 rounded-full hover:bg-white hover:shadow-[0_0_20px_rgba(0,209,255,0.4)] transition-all duration-300 disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto bg-azul-medio text-white font-semibold text-xs tracking-widest uppercase px-8 py-3.5 rounded-full hover:bg-white hover:shadow-[0_0_20px_rgba(0,209,255,0.4)] transition-all duration-300 disabled:opacity-40 disabled:pointer-events-none flex items-center justify-center gap-2"
                 >
                   {isUploading ? (
                     <>
-                      <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                      <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                       A Importar Prospects...
                     </>
                   ) : (
@@ -650,16 +650,16 @@ function AdminLeadsPage() {
 
                 {/* Resultado do Upload */}
                 {uploadMsg && (
-                  <div className={`mt-4 p-4 rounded-xl text-xs font-medium ${uploadMsg.startsWith('✓') ? 'bg-cyan-neon/10 text-cyan-neon border border-cyan-neon/30' : 'bg-red-500/10 text-red-400 border border-red-500/30'}`}>
+                  <div className={`mt-4 p-4 rounded-xl text-xs font-medium ${uploadMsg.startsWith('✓') ? 'bg-azul-vivo/10 text-azul-medio border border-azul-claro' : 'bg-red-50 text-red-600 border border-red-300'}`}>
                     {uploadMsg}
                   </div>
                 )}
                 {uploadErrors.length > 0 && (
-                  <div className="mt-3 p-4 rounded-xl bg-yellow-500/[0.07] border border-yellow-500/20">
-                    <p className="text-yellow-400 text-xs font-semibold mb-2">⚠️ Avisos de importação ({uploadErrors.length}):</p>
+                  <div className="mt-3 p-4 rounded-xl bg-amber-50 border border-yellow-300">
+                    <p className="text-amber-700 text-xs font-semibold mb-2">⚠️ Avisos de importação ({uploadErrors.length}):</p>
                     <ul className="list-disc list-inside space-y-1">
                       {uploadErrors.map((err, i) => (
-                        <li key={i} className="text-yellow-400/80 text-[11px] font-mono">{err}</li>
+                        <li key={i} className="text-amber-600 text-[11px] font-mono">{err}</li>
                       ))}
                     </ul>
                   </div>
@@ -668,15 +668,15 @@ function AdminLeadsPage() {
             </div>
 
             {/* Painel de Envio Automático por Categoria */}
-            <div className="bg-[#0e1117] border border-white/10 rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden">
+            <div className="bg-white border border-linha rounded-2xl p-6 md:p-8 shadow-azul relative overflow-hidden">
               <div className="absolute top-0 right-0 w-72 h-72 bg-purple-500/[0.03] blur-3xl pointer-events-none rounded-full" />
 
               <div className="mb-6">
-                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                <h2 className="text-lg font-bold text-azul-profundo flex items-center gap-2">
                   <span>📧</span> Envio Automático por Categoria
                 </h2>
-                <p className="text-gray-400 text-xs mt-1">
-                  Selecione uma categoria e o sistema preenche automaticamente um e-mail personalizado para esse setor. Pode editar antes de enviar. Substitui <span className="font-mono text-cyan-neon text-[11px]">{"{"}{"{"}name{"}"}{"}"}</span> e <span className="font-mono text-cyan-neon text-[11px]">{"{"}{"{"}company{"}"}{"}"}</span> automaticamente com os dados de cada empresa.
+                <p className="text-texto text-xs mt-1">
+                  Selecione uma categoria e o sistema preenche automaticamente um e-mail personalizado para esse setor. Pode editar antes de enviar. Substitui <span className="font-mono text-azul-medio text-[11px]">{"{"}{"{"}name{"}"}{"}"}</span> e <span className="font-mono text-azul-medio text-[11px]">{"{"}{"{"}company{"}"}{"}"}</span> automaticamente com os dados de cada empresa.
                 </p>
               </div>
 
@@ -684,11 +684,11 @@ function AdminLeadsPage() {
                 {/* Linha 1: Categoria + Filtros */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div className="sm:col-span-1">
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">Categoria *</label>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-azul-medio mb-2">Categoria *</label>
                     <select
                       value={categoryOutreachCat}
                       onChange={(e) => handleCategoryChange(e.target.value)}
-                      className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                      className="w-full bg-white border border-linha rounded-xl px-4 py-2.5 text-sm text-azul-profundo focus:border-azul-medio focus:outline-none"
                     >
                       <option value="">-- Selecione uma categoria --</option>
                       {Object.keys(categoryTemplates).map((cat) => (
@@ -697,11 +697,11 @@ function AdminLeadsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">Filtrar por Prioridade</label>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-azul-medio mb-2">Filtrar por Prioridade</label>
                     <select
                       value={categoryOutreachPriority}
                       onChange={(e) => setCategoryOutreachPriority(e.target.value)}
-                      className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                      className="w-full bg-white border border-linha rounded-xl px-4 py-2.5 text-sm text-azul-profundo focus:border-azul-medio focus:outline-none"
                     >
                       <option value="">Todas as prioridades</option>
                       <option value="alta">🔴 Alta Prioridade</option>
@@ -710,11 +710,11 @@ function AdminLeadsPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">Filtrar por Estado</label>
+                    <label className="block text-xs font-semibold uppercase tracking-wider text-azul-medio mb-2">Filtrar por Estado</label>
                     <select
                       value={categoryOutreachStatus}
                       onChange={(e) => setCategoryOutreachStatus(e.target.value)}
-                      className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                      className="w-full bg-white border border-linha rounded-xl px-4 py-2.5 text-sm text-azul-profundo focus:border-azul-medio focus:outline-none"
                     >
                       <option value="novo">🆕 Apenas Novos</option>
                       <option value="contactado">📩 Já Contactados</option>
@@ -725,24 +725,24 @@ function AdminLeadsPage() {
 
                 {/* Assunto */}
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">Assunto do E-mail</label>
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-azul-medio mb-2">Assunto do E-mail</label>
                   <input
                     type="text"
                     value={categoryOutreachSubject}
                     onChange={(e) => setCategoryOutreachSubject(e.target.value)}
-                    placeholder="Ex: Digitalização & Automação para a {company} — NEXUGAL"
+                    placeholder="Ex: Digitalização & Automação para a {company}, NEXUGAL"
                     maxLength={200}
-                    className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:border-cyan-neon focus:outline-none"
+                    className="w-full bg-white border border-linha rounded-xl px-4 py-2.5 text-sm text-azul-profundo placeholder-texto focus:border-azul-medio focus:outline-none"
                   />
-                  <p className="text-gray-500 text-[10px] mt-1">Use <span className="font-mono text-cyan-neon/70">{'{name}'}</span> e <span className="font-mono text-cyan-neon/70">{'{company}'}</span> para personalização automática.</p>
+                  <p className="text-texto text-[10px] mt-1">Use <span className="font-mono text-azul-claro">{'{name}'}</span> e <span className="font-mono text-azul-claro">{'{company}'}</span> para personalização automática.</p>
                 </div>
 
                 {/* Corpo do Email */}
                 <div>
                   <div className="flex items-center justify-between mb-2">
-                    <label className="text-xs font-semibold uppercase tracking-wider text-cyan-neon">Corpo do E-mail</label>
+                    <label className="text-xs font-semibold uppercase tracking-wider text-azul-medio">Corpo do E-mail</label>
                     {categoryOutreachMessage && (
-                      <span className="text-gray-500 text-[10px]">{categoryOutreachMessage.length}/5000 caracteres</span>
+                      <span className="text-texto text-[10px]">{categoryOutreachMessage.length}/5000 caracteres</span>
                     )}
                   </div>
                   <textarea
@@ -751,7 +751,7 @@ function AdminLeadsPage() {
                     rows={12}
                     maxLength={5000}
                     placeholder="O template da categoria aparece aqui automaticamente ao selecionar uma categoria acima..."
-                    className="w-full bg-black border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:border-cyan-neon focus:outline-none font-mono leading-relaxed resize-y"
+                    className="w-full bg-white border border-linha rounded-xl px-4 py-3 text-sm text-azul-profundo placeholder-texto focus:border-azul-medio focus:outline-none font-mono leading-relaxed resize-y"
                   />
                 </div>
 
@@ -776,7 +776,7 @@ function AdminLeadsPage() {
                     <div className="flex gap-2 flex-shrink-0">
                       <button
                         onClick={() => setShowCategoryConfirm(false)}
-                        className="px-4 py-2 text-xs rounded-full border border-white/20 text-gray-400 hover:text-white transition-colors"
+                        className="px-4 py-2 text-xs rounded-full border border-linha text-texto hover:text-azul-profundo transition-colors"
                       >
                         Cancelar
                       </button>
@@ -797,18 +797,18 @@ function AdminLeadsPage() {
 
                 {/* Resultado */}
                 {categoryOutreachMsg && (
-                  <div className={`p-4 rounded-xl text-xs font-medium ${categoryOutreachMsg.startsWith('✓') ? 'bg-cyan-neon/10 text-cyan-neon border border-cyan-neon/30' : 'bg-red-500/10 text-red-400 border border-red-500/30'}`}>
+                  <div className={`p-4 rounded-xl text-xs font-medium ${categoryOutreachMsg.startsWith('✓') ? 'bg-azul-vivo/10 text-azul-medio border border-azul-claro' : 'bg-red-50 text-red-600 border border-red-300'}`}>
                     {categoryOutreachMsg}
                   </div>
                 )}
 
                 {/* --- TESTE DE E-MAIL --- */}
-                <div className="border-t border-white/[0.08] pt-5 mt-2">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-orange-400 mb-3 flex items-center gap-1.5">
+                <div className="border-t border-linha pt-5 mt-2">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-orange-700 mb-3 flex items-center gap-1.5">
                     <span>⚗️</span> Testar E-mail Antes de Enviar
                   </p>
-                  <p className="text-gray-500 text-[11px] mb-4">
-                    Envia uma cópia do e-mail acima (assunto + mensagem) para um endereço à tua escolha, com um banner de <strong className="text-orange-300">"TESTE"</strong> no topo. Ideal para verificar a formatação antes do envio em massa.
+                  <p className="text-texto text-[11px] mb-4">
+                    Envia uma cópia do e-mail acima (assunto + mensagem) para um endereço à tua escolha, com um banner de <strong className="text-orange-700">"TESTE"</strong> no topo. Ideal para verificar a formatação antes do envio em massa.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3">
                     <input
@@ -816,7 +816,7 @@ function AdminLeadsPage() {
                       value={testEmailTo}
                       onChange={(e) => { setTestEmailTo(e.target.value); setTestEmailMsg(''); }}
                       placeholder="teu@email.com"
-                      className="flex-1 bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-600 focus:border-orange-400 focus:outline-none"
+                      className="flex-1 bg-white border border-linha rounded-xl px-4 py-2.5 text-sm text-azul-profundo placeholder-texto focus:border-orange-300 focus:outline-none"
                     />
                     <button
                       type="button"
@@ -844,7 +844,7 @@ function AdminLeadsPage() {
                           setIsSendingTest(false);
                         }
                       }}
-                      className="bg-orange-500/90 text-white font-semibold text-xs tracking-wider uppercase px-6 py-2.5 rounded-xl hover:bg-orange-400 transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none flex items-center gap-2 flex-shrink-0"
+                      className="bg-orange-600 text-white font-semibold text-xs tracking-wider uppercase px-6 py-2.5 rounded-xl hover:bg-orange-600 transition-all duration-200 disabled:opacity-40 disabled:pointer-events-none flex items-center gap-2 flex-shrink-0"
                     >
                       {isSendingTest ? (
                         <><span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" /> A enviar...</>
@@ -854,7 +854,7 @@ function AdminLeadsPage() {
                     </button>
                   </div>
                   {testEmailMsg && (
-                    <p className={`mt-3 text-xs font-medium ${testEmailMsg.startsWith('✓') ? 'text-green-400' : 'text-red-400'}`}>
+                    <p className={`mt-3 text-xs font-medium ${testEmailMsg.startsWith('✓') ? 'text-green-700' : 'text-red-600'}`}>
                       {testEmailMsg}
                     </p>
                   )}
@@ -863,14 +863,14 @@ function AdminLeadsPage() {
             </div>
 
             {/* Painel de Controlo do Scraper */}
-            <div className="bg-[#0e1117] border border-white/10 rounded-2xl p-6 md:p-8 shadow-xl relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-80 h-80 bg-cyan-neon/[0.03] blur-3xl pointer-events-none rounded-full" />
+            <div className="bg-white border border-linha rounded-2xl p-6 md:p-8 shadow-azul relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-80 h-80 bg-azul-vivo/[0.03] blur-3xl pointer-events-none rounded-full" />
               
               <div className="mb-6">
-                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                <h2 className="text-lg font-bold text-azul-profundo flex items-center gap-2">
                   <span>⚡</span> Gerador de Leads & Web Scraper B2B
                 </h2>
-                <p className="text-gray-400 text-xs mt-1">
+                <p className="text-texto text-xs mt-1">
                   Selecione os parâmetros do seu mercado-alvo em Portugal para recolher e prospectar empresas automaticamente.
                 </p>
               </div>
@@ -878,13 +878,13 @@ function AdminLeadsPage() {
               <form onSubmit={handleRunScraper} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 {/* Região */}
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-azul-medio mb-2">
                     Região / Cidade
                   </label>
                   <select
                     value={searchRegion}
                     onChange={(e) => setSearchRegion(e.target.value)}
-                    className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                    className="w-full bg-white border border-linha rounded-xl px-4 py-2.5 text-sm text-azul-profundo focus:border-azul-medio focus:outline-none"
                   >
                     {REGIOES.map((r) => (
                       <option key={r} value={r}>{r}</option>
@@ -894,13 +894,13 @@ function AdminLeadsPage() {
 
                 {/* Categoria */}
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-azul-medio mb-2">
                     Categoria de Negócio
                   </label>
                   <select
                     value={searchCategory}
                     onChange={(e) => setSearchCategory(e.target.value)}
-                    className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                    className="w-full bg-white border border-linha rounded-xl px-4 py-2.5 text-sm text-azul-profundo focus:border-azul-medio focus:outline-none"
                   >
                     {CATEGORIAS.map((c) => (
                       <option key={c} value={c}>{c}</option>
@@ -910,13 +910,13 @@ function AdminLeadsPage() {
 
                 {/* Tipo de Cliente */}
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-azul-medio mb-2">
                     Tipo de Cliente
                   </label>
                   <select
                     value={searchClientType}
                     onChange={(e) => setSearchClientType(e.target.value)}
-                    className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                    className="w-full bg-white border border-linha rounded-xl px-4 py-2.5 text-sm text-azul-profundo focus:border-azul-medio focus:outline-none"
                   >
                     <option value="PMEs">PMEs (Pequenas e Médias)</option>
                     <option value="Micro-empresas">Micro-empresas & Locais</option>
@@ -926,13 +926,13 @@ function AdminLeadsPage() {
 
                 {/* Prioridade */}
                 <div>
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-cyan-neon mb-2">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-azul-medio mb-2">
                     Prioridade
                   </label>
                   <select
                     value={searchPriority}
                     onChange={(e) => setSearchPriority(e.target.value)}
-                    className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                    className="w-full bg-white border border-linha rounded-xl px-4 py-2.5 text-sm text-azul-profundo focus:border-azul-medio focus:outline-none"
                   >
                     <option value="alta">🔴 Alta Prioridade</option>
                     <option value="media">🟡 Média Prioridade</option>
@@ -945,11 +945,11 @@ function AdminLeadsPage() {
                   <button
                     type="submit"
                     disabled={isScraping}
-                    className="w-full sm:w-auto bg-cyan-neon text-black font-semibold text-xs tracking-widest uppercase px-8 py-3.5 rounded-full hover:bg-white hover:shadow-[0_0_20px_rgba(0,209,255,0.4)] transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto bg-azul-medio text-white font-semibold text-xs tracking-widest uppercase px-8 py-3.5 rounded-full hover:bg-white hover:shadow-[0_0_20px_rgba(0,209,255,0.4)] transition-all duration-300 disabled:opacity-50 flex items-center justify-center gap-2"
                   >
                     {isScraping ? (
                       <>
-                        <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                        <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                         A Pesquisar & Raspando Leads...
                       </>
                     ) : (
@@ -962,21 +962,21 @@ function AdminLeadsPage() {
               </form>
 
               {scrapingMsg && (
-                <div className={`p-4 rounded-xl text-xs font-medium ${scrapingMsg.startsWith('✓') ? 'bg-cyan-neon/10 text-cyan-neon border border-cyan-neon/30' : 'bg-red-500/10 text-red-400 border border-red-500/30'}`}>
+                <div className={`p-4 rounded-xl text-xs font-medium ${scrapingMsg.startsWith('✓') ? 'bg-azul-vivo/10 text-azul-medio border border-azul-claro' : 'bg-red-50 text-red-600 border border-red-300'}`}>
                   {scrapingMsg}
                 </div>
               )}
             </div>
 
             {/* Barra de Filtros & Ações da Tabela */}
-            <div className="bg-[#0e1117] border border-white/10 rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="bg-white border border-linha rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                <span className="text-xs uppercase font-semibold tracking-wider text-gray-400">Filtros:</span>
+                <span className="text-xs uppercase font-semibold tracking-wider text-texto">Filtros:</span>
                 
                 <select
                   value={filterRegion}
                   onChange={(e) => setFilterRegion(e.target.value)}
-                  className="bg-black text-xs text-white border border-white/15 rounded-lg px-3 py-1.5 focus:border-cyan-neon focus:outline-none"
+                  className="bg-white text-xs text-azul-profundo border border-linha rounded-lg px-3 py-1.5 focus:border-azul-medio focus:outline-none"
                 >
                   <option value="">Todas as Regiões</option>
                   {REGIOES.map((r) => (
@@ -987,7 +987,7 @@ function AdminLeadsPage() {
                 <select
                   value={filterCategory}
                   onChange={(e) => setFilterCategory(e.target.value)}
-                  className="bg-black text-xs text-white border border-white/15 rounded-lg px-3 py-1.5 focus:border-cyan-neon focus:outline-none"
+                  className="bg-white text-xs text-azul-profundo border border-linha rounded-lg px-3 py-1.5 focus:border-azul-medio focus:outline-none"
                 >
                   <option value="">Todas as Categorias</option>
                   {CATEGORIAS.map((c) => (
@@ -998,7 +998,7 @@ function AdminLeadsPage() {
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="bg-black text-xs text-white border border-white/15 rounded-lg px-3 py-1.5 focus:border-cyan-neon focus:outline-none"
+                  className="bg-white text-xs text-azul-profundo border border-linha rounded-lg px-3 py-1.5 focus:border-azul-medio focus:outline-none"
                 >
                   <option value="">Todos os Estados</option>
                   <option value="novo">Novo</option>
@@ -1010,7 +1010,7 @@ function AdminLeadsPage() {
                 <select
                   value={filterPriority}
                   onChange={(e) => setFilterPriority(e.target.value)}
-                  className="bg-black text-xs text-white border border-white/15 rounded-lg px-3 py-1.5 focus:border-cyan-neon focus:outline-none"
+                  className="bg-white text-xs text-azul-profundo border border-linha rounded-lg px-3 py-1.5 focus:border-azul-medio focus:outline-none"
                 >
                   <option value="">Todas as Prioridades</option>
                   <option value="alta">Alta</option>
@@ -1023,27 +1023,27 @@ function AdminLeadsPage() {
               <button
                 onClick={() => setShowOutreachModal(true)}
                 disabled={selectedProspectIds.length === 0}
-                className="w-full md:w-auto bg-cyan-neon/15 border border-cyan-neon text-cyan-neon text-xs font-semibold uppercase tracking-wider px-5 py-2 rounded-full hover:bg-cyan-neon hover:text-black transition-all duration-300 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-2"
+                className="w-full md:w-auto bg-white border border-azul-medio text-azul-medio text-xs font-semibold uppercase tracking-wider px-5 py-2 rounded-full hover:bg-azul-medio hover:text-white transition-all duration-300 disabled:opacity-30 disabled:pointer-events-none flex items-center justify-center gap-2"
               >
                 <span>✉️</span> Enviar E-mail de Prospecção ({selectedProspectIds.length})
               </button>
             </div>
 
             {/* Tabela de Prospects */}
-            {isLoadingProspects && <p className="text-gray-400 text-sm">A carregar lista de prospects...</p>}
-            {prospectsError && <p className="text-red-400 text-sm">{prospectsError}</p>}
+            {isLoadingProspects && <p className="text-texto text-sm">A carregar lista de prospects...</p>}
+            {prospectsError && <p className="text-red-600 text-sm">{prospectsError}</p>}
 
             {!isLoadingProspects && !prospectsError && (
-              <div className="overflow-x-auto border border-white/10 rounded-2xl bg-[#0a0a0a]">
+              <div className="overflow-x-auto border border-linha rounded-2xl bg-white">
                 <table className="w-full min-w-[1000px] text-left text-sm">
-                  <thead className="bg-white/[0.04] text-gray-400 uppercase text-[11px] tracking-wider border-b border-white/10">
+                  <thead className="bg-neve text-texto uppercase text-[11px] tracking-wider border-b border-linha">
                     <tr>
                       <th className="px-4 py-3.5 w-10">
                         <input
                           type="checkbox"
                           checked={prospects.length > 0 && selectedProspectIds.length === prospects.length}
                           onChange={toggleSelectAll}
-                          className="rounded border-white/20 text-cyan-neon focus:ring-0 cursor-pointer"
+                          className="rounded border-linha text-azul-medio focus:ring-0 cursor-pointer"
                         />
                       </th>
                       <th className="px-4 py-3.5">Empresa / Nome</th>
@@ -1056,10 +1056,10 @@ function AdminLeadsPage() {
                       <th className="px-4 py-3.5">Ações</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-white/5">
+                  <tbody className="divide-y divide-linha">
                     {prospects.length === 0 && (
                       <tr>
-                        <td className="px-4 py-8 text-center text-gray-500" colSpan={9}>
+                        <td className="px-4 py-8 text-center text-texto" colSpan={9}>
                           Nenhum prospect captado com os filtros atuais.
                         </td>
                       </tr>
@@ -1067,38 +1067,38 @@ function AdminLeadsPage() {
                     {prospects.map((p) => {
                       const isSelected = selectedProspectIds.includes(p.id);
                       return (
-                        <tr key={p.id} className={`hover:bg-white/[0.02] transition-colors ${isSelected ? 'bg-cyan-neon/[0.03]' : ''}`}>
+                        <tr key={p.id} className={`hover:bg-neve transition-colors ${isSelected ? 'bg-azul-vivo/[0.03]' : ''}`}>
                           <td className="px-4 py-4">
                             <input
                               type="checkbox"
                               checked={isSelected}
                               onChange={() => toggleSelectProspect(p.id)}
-                              className="rounded border-white/20 text-cyan-neon focus:ring-0 cursor-pointer"
+                              className="rounded border-linha text-azul-medio focus:ring-0 cursor-pointer"
                             />
                           </td>
                           <td className="px-4 py-4">
-                            <div className="font-semibold text-white">{p.company || p.name}</div>
+                            <div className="font-semibold text-azul-profundo">{p.company || p.name}</div>
                             {p.website && (
-                              <a href={p.website} target="_blank" rel="noreferrer" className="text-gray-400 text-xs hover:text-cyan-neon">
+                              <a href={p.website} target="_blank" rel="noreferrer" className="text-texto text-xs hover:text-azul-medio">
                                 {p.website.replace(/^https?:\/\//, '')}
                               </a>
                             )}
                           </td>
                           <td className="px-4 py-4">
-                            <a href={`mailto:${p.email}`} className="text-cyan-neon hover:underline text-xs">
+                            <a href={`mailto:${p.email}`} className="text-azul-medio hover:underline text-xs">
                               {p.email}
                             </a>
                           </td>
-                          <td className="px-4 py-4 text-gray-300 text-xs">{p.phone || '-'}</td>
-                          <td className="px-4 py-4 text-gray-300 text-xs">{p.region}</td>
-                          <td className="px-4 py-4 text-gray-300 text-xs">{p.category}</td>
+                          <td className="px-4 py-4 text-texto text-xs">{p.phone || '-'}</td>
+                          <td className="px-4 py-4 text-texto text-xs">{p.region}</td>
+                          <td className="px-4 py-4 text-texto text-xs">{p.category}</td>
                           <td className="px-4 py-4 text-xs">
                             <span className={`px-2.5 py-1 rounded-full font-semibold uppercase tracking-wider text-[10px] ${
                               p.priority === 'alta'
-                                ? 'bg-red-500/15 text-red-400 border border-red-500/30'
+                                ? 'bg-red-50 text-red-600 border border-red-300'
                                 : p.priority === 'media'
-                                ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/30'
-                                : 'bg-gray-500/15 text-gray-400 border border-gray-500/30'
+                                ? 'bg-amber-50 text-amber-700 border border-yellow-300'
+                                : 'bg-neve text-texto border border-linha'
                             }`}>
                               {p.priority}
                             </span>
@@ -1107,13 +1107,13 @@ function AdminLeadsPage() {
                             <select
                               value={p.status}
                               onChange={(e) => handleUpdateProspect(p.id, { status: e.target.value })}
-                              className={`bg-black border rounded-lg px-2.5 py-1 text-xs focus:outline-none ${
+                              className={`bg-white border rounded-lg px-2.5 py-1 text-xs focus:outline-none ${
                                 p.status === 'contactado'
-                                  ? 'border-green-500/40 text-green-400'
+                                  ? 'border-green-300 text-green-700'
                                   : p.status === 'convertido'
-                                  ? 'border-cyan-neon/40 text-cyan-neon'
+                                  ? 'border-azul-claro text-azul-medio'
                                   : p.status === 'ignorado'
-                                  ? 'border-gray-500/40 text-gray-400'
+                                  ? 'border-linha text-texto'
                                   : 'border-blue-500/40 text-blue-400'
                               }`}
                             >
@@ -1129,7 +1129,7 @@ function AdminLeadsPage() {
                                 setSelectedProspectIds([p.id]);
                                 setShowOutreachModal(true);
                               }}
-                              className="text-cyan-neon hover:underline font-medium"
+                              className="text-azul-medio hover:underline font-medium"
                             >
                               Enviar E-mail
                             </button>
@@ -1144,18 +1144,18 @@ function AdminLeadsPage() {
 
             {/* Modal de Envio de E-mail de Prospecção */}
             {showOutreachModal && (
-              <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-                <div className="bg-[#12161f] border border-white/15 rounded-2xl p-6 md:p-8 max-w-xl w-full shadow-2xl relative">
-                  <h3 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
+              <div className="fixed inset-0 z-[9999] bg-azul-profundo/30 backdrop-blur-sm flex items-center justify-center p-4">
+                <div className="bg-white border border-linha rounded-2xl p-6 md:p-8 max-w-xl w-full shadow-2xl relative">
+                  <h3 className="text-lg font-bold text-azul-profundo mb-2 flex items-center gap-2">
                     <span>✉️</span> Prospecção por E-mail (Resend)
                   </h3>
-                  <p className="text-gray-400 text-xs mb-6">
-                    A enviar para <strong className="text-cyan-neon">{selectedProspectIds.length}</strong> prospect(s) selecionado(s).
+                  <p className="text-texto text-xs mb-6">
+                    A enviar para <strong className="text-azul-medio">{selectedProspectIds.length}</strong> prospect(s) selecionado(s).
                   </p>
 
                   <div className="space-y-4 mb-6">
                     <div>
-                      <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">
+                      <label className="block text-xs font-semibold text-texto uppercase tracking-wider mb-2">
                         Assunto do E-mail (Opcional - Deixe em branco para assunto padrão)
                       </label>
                       <input
@@ -1163,12 +1163,12 @@ function AdminLeadsPage() {
                         placeholder="Ex: Automação tecnológica & desenvolvimento web para o seu negócio"
                         value={outreachSubject}
                         onChange={(e) => setOutreachSubject(e.target.value)}
-                        className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none"
+                        className="w-full bg-white border border-linha rounded-xl px-4 py-2.5 text-sm text-azul-profundo focus:border-azul-medio focus:outline-none"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">
+                      <label className="block text-xs font-semibold text-texto uppercase tracking-wider mb-2">
                         Mensagem Personalizada (Opcional - Deixe em branco para proposta padrão)
                       </label>
                       <textarea
@@ -1176,13 +1176,13 @@ function AdminLeadsPage() {
                         placeholder="Escreva uma mensagem de apresentação personalizada ou deixe em branco para usar o modelo oficial da NEXUGAL."
                         value={outreachMessage}
                         onChange={(e) => setOutreachMessage(e.target.value)}
-                        className="w-full bg-black border border-white/15 rounded-xl px-4 py-2.5 text-sm text-white focus:border-cyan-neon focus:outline-none font-mono text-xs leading-relaxed"
+                        className="w-full bg-white border border-linha rounded-xl px-4 py-2.5 text-sm text-azul-profundo focus:border-azul-medio focus:outline-none font-mono text-xs leading-relaxed"
                       />
                     </div>
                   </div>
 
                   {outreachStatusMsg && (
-                    <div className="mb-4 text-xs font-medium text-cyan-neon bg-cyan-neon/10 p-3 rounded-xl border border-cyan-neon/30">
+                    <div className="mb-4 text-xs font-medium text-azul-medio bg-azul-vivo/10 p-3 rounded-xl border border-azul-claro">
                       {outreachStatusMsg}
                     </div>
                   )}
@@ -1190,18 +1190,18 @@ function AdminLeadsPage() {
                   <div className="flex items-center justify-end gap-3">
                     <button
                       onClick={() => setShowOutreachModal(false)}
-                      className="px-5 py-2.5 text-xs text-gray-400 hover:text-white transition-colors"
+                      className="px-5 py-2.5 text-xs text-texto hover:text-azul-profundo transition-colors"
                     >
                       Cancelar
                     </button>
                     <button
                       onClick={handleSendOutreach}
                       disabled={isSendingOutreach}
-                      className="bg-cyan-neon text-black font-semibold text-xs uppercase tracking-wider px-6 py-2.5 rounded-full hover:bg-white transition-all disabled:opacity-50 flex items-center gap-2"
+                      className="bg-azul-medio text-white font-semibold text-xs uppercase tracking-wider px-6 py-2.5 rounded-full hover:bg-azul-profundo transition-all disabled:opacity-50 flex items-center gap-2"
                     >
                       {isSendingOutreach ? (
                         <>
-                          <span className="w-3.5 h-3.5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+                          <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                           A Enviar...
                         </>
                       ) : (

@@ -124,14 +124,14 @@ function Dropdown({ value, options, placeholder, onChange, campoClasses, labelId
         onClick={() => (aberta ? fechar() : abrir())}
         onKeyDown={aoTeclado}
         className={`${campoClasses} flex items-center justify-between gap-3 text-left cursor-pointer ${
-          aberta ? 'border-cyan-neon shadow-[0_0_20px_rgba(0,209,255,0.25)]' : ''
-        } ${erro ? 'ring-1 ring-red-400/70' : ''}`}
+          aberta ? 'border-azul-medio shadow-azul' : ''
+        } ${erro ? 'ring-1 ring-red-500' : ''}`}
       >
-        <span className={value ? 'text-white' : 'text-gray-400'}>
+        <span className={value ? 'text-azul-profundo' : 'text-suave'}>
           {value || placeholder}
         </span>
         <svg
-          className={`w-5 h-5 shrink-0 text-cyan-neon transition-transform duration-300 ${aberta ? 'rotate-180' : ''}`}
+          className={`w-5 h-5 shrink-0 text-azul-medio transition-transform duration-300 ${aberta ? 'rotate-180' : ''}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -147,10 +147,9 @@ function Dropdown({ value, options, placeholder, onChange, campoClasses, labelId
           id={idLista}
           role="listbox"
           aria-labelledby={labelId}
-          // Fundo opaco de propósito: o vídeo de fundo passa por trás e a lista
-          // tem de se ler. #0f0f0f é o tom que bg-white/[0.06] dá sobre preto,
-          // o mesmo dos outros campos.
-          className="absolute left-0 right-0 top-full mt-2 z-30 max-h-[26rem] overflow-y-auto rounded-xl border border-white/20 bg-[#0f0f0f] shadow-[0_20px_45px_rgba(0,0,0,0.75)] py-1"
+          // Fundo opaco de propósito: o vídeo de fundo passa por trás e a
+          // lista tem de se ler. Branco, com a sombra a levantá-la da página.
+          className="absolute left-0 right-0 top-full mt-2 z-30 max-h-[26rem] overflow-y-auto rounded-xl border border-linha bg-white shadow-azul-lg py-1"
         >
           {options.map((opcao, i) => (
             <li
@@ -164,13 +163,13 @@ function Dropdown({ value, options, placeholder, onChange, campoClasses, labelId
               onMouseDown={(evento) => evento.preventDefault()}
               onClick={() => escolher(i)}
               className={`px-5 py-3 text-sm tracking-wide leading-snug cursor-pointer transition-colors duration-150 ${
-                i > 0 ? 'border-t border-white/10' : ''
+                i > 0 ? 'border-t border-linha' : ''
               } ${
                 i === ativo
-                  ? 'bg-cyan-neon/20 text-white'
+                  ? 'bg-azul-vivo/10 text-azul-profundo'
                   : opcao === value
-                    ? 'text-cyan-neon'
-                    : 'text-gray-200'
+                    ? 'text-azul-medio'
+                    : 'text-texto'
               }`}
             >
               {opcao}

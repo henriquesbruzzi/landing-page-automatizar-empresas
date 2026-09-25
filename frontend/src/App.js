@@ -1,20 +1,31 @@
-import React, { useState } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './i18n/LanguageContext';
 import SEO from './components/SEO';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import Services from './components/Services';
+import Exemplos from './components/Exemplos';
 import Process from './components/Process';
-import About from './components/About';
 import CallToAction from './components/CallToAction';
 import Footer from './components/Footer';
 import ContactPage from './components/ContactPage';
 import FAQPage from './components/FAQPage';
-import AdminLoginPage from './pages/AdminLoginPage';
-import AdminLeadsPage from './pages/AdminLeadsPage';
-import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import SobrePage from './pages/SobrePage';
 import CookieBanner from './components/CookieBanner';
+import BotaoContactoFlutuante from './components/BotaoContactoFlutuante';
+
+// Páginas que quase nenhum visitante abre vêm num ficheiro à parte, que só
+// descarrega quando alguém as pede. Até 21/09/2026 iam no ficheiro principal, e
+// quem abria a página inicial descarregava também a administração (11% do
+// código). O resto do site continua no ficheiro principal, para abrir de imediato.
+const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage'));
+const AdminLeadsPage = lazy(() => import('./pages/AdminLeadsPage'));
+const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
+
+// Enquanto o ficheiro da página chega, fica o branco da página.
+function APedido({ children }) {
+  return <Suspense fallback={null}>{children}</Suspense>;
+}
 
 // A autenticação é gerida pelo cookie HttpOnly no servidor.
 // O AdminLeadsPage redireciona automaticamente para login em caso de 401.
@@ -23,56 +34,25 @@ function RequireAdminAuth({ children }) {
 }
 
 function Layout({ lang }) {
-  const [videoLoaded, setVideoLoaded] = useState(false);
-
   return (
     <>
       <SEO lang={lang} page="home" />
-      <div className="relative bg-black overflow-hidden">
-        {/* Vídeo de fundo em loop — apenas no Hero */}
-        <div className="relative min-h-screen">
-          {/* Imagem estática — aparece até o vídeo carregar */}
-          <img
-            src="/images/foto principal.png"
-            alt="NEXUGAL — Consultoria tecnológica, escritório moderno com equipa de desenvolvimento"
-            className={`absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-1000 ${
-              videoLoaded ? 'opacity-0' : 'opacity-100'
-            }`}
-            loading="eager"
-            width="1920"
-            height="1080"
-          />
+      <div className="relative bg-white overflow-hidden">
+        {/* O hero era um vídeo escuro com um véu branco a 95% por cima, para o
+            texto azul se ler. Saíram os dois: o hero traz agora o seu próprio
+            fundo, e o desenho do esquema é que conta a história. */}
+        <Header />
+        <main>
+          <Hero />
+        </main>
 
-          {/* Vídeo de fundo */}
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            onCanPlayThrough={() => setVideoLoaded(true)}
-            className={`absolute inset-0 w-full h-full object-cover z-0 transition-opacity duration-1000 ${
-              videoLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
-            aria-hidden="true"
-          >
-            <source src="/videos/landingpage.mp4" type="video/mp4" />
-          </video>
-
-          <div className="relative z-10">
-            <Header />
-            <main>
-              <Hero />
-            </main>
-          </div>
-        </div>
-
-        {/* Secções com fundo sólido preto */}
-        <Services />
+        {/* Secções seguintes */}
+        <Exemplos />
         <Process />
-        <About />
         <CallToAction />
         <Footer />
         <CookieBanner />
+        <BotaoContactoFlutuante />
       </div>
     </>
   );
@@ -139,15 +119,45 @@ function App() {
           }
         />
 
+        {/* PT, quem somos */}
+        <Route
+          path="/sobre"
+          element={
+            <>
+              <SEO lang="pt" page="about" />
+              <SobrePage />
+            </>
+          }
+        />
+        {/* EN, about */}
+        <Route
+          path="/us/about"
+          element={
+            <>
+              <SEO lang="en" page="about" />
+              <SobrePage />
+            </>
+          }
+        />
+
         {/* Admin — Login */}
-        <Route path="/admin/login" element={<AdminLoginPage />} />
+        <Route
+          path="/admin/login"
+          element={
+            <APedido>
+              <AdminLoginPage />
+            </APedido>
+          }
+        />
 
         {/* Admin — Leads (restrito) */}
         <Route
           path="/admin/leads"
           element={
             <RequireAdminAuth>
-              <AdminLeadsPage />
+              <APedido>
+                <AdminLeadsPage />
+              </APedido>
             </RequireAdminAuth>
           }
         />
@@ -157,8 +167,10 @@ function App() {
           path="/privacidade"
           element={
             <>
-              <SEO lang="pt" page="home" />
-              <PrivacyPolicyPage />
+              <SEO lang="pt" page="privacy" />
+              <APedido>
+                <PrivacyPolicyPage />
+              </APedido>
             </>
           }
         />
@@ -168,8 +180,10 @@ function App() {
           path="/us/privacy"
           element={
             <>
-              <SEO lang="en" page="home" />
-              <PrivacyPolicyPage />
+              <SEO lang="en" page="privacy" />
+              <APedido>
+                <PrivacyPolicyPage />
+              </APedido>
             </>
           }
         />

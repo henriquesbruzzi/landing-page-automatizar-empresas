@@ -40,39 +40,39 @@ function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center px-6">
-      <div className="w-full max-w-md border border-white/10 rounded-2xl bg-white/[0.03] p-8">
+    <div className="min-h-screen bg-white text-texto flex items-center justify-center px-6">
+      <div className="w-full max-w-md border border-linha rounded-2xl bg-neve p-8">
         <h1 className="font-display text-2xl tracking-[0.08em] mb-2">Admin Leads</h1>
-        <p className="text-white/50 text-sm mb-8">Acesso restrito com autenticação segura por cookie.</p>
+        <p className="text-texto text-sm mb-8">Acesso restrito com autenticação segura por cookie.</p>
 
         <form onSubmit={onSubmit} className="space-y-5">
           <div>
-            <label className="block text-xs tracking-[0.12em] text-white/60 mb-2">Usuário</label>
+            <label className="block text-xs tracking-[0.12em] text-texto mb-2">Usuário</label>
             <input
               value={username}
               onChange={(event) => setUsername(event.target.value)}
               required
-              className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-neon/60"
+              className="w-full bg-neve border border-linha rounded-xl px-4 py-3 text-azul-profundo focus:outline-none focus:border-azul-claro"
             />
           </div>
 
           <div>
-            <label className="block text-xs tracking-[0.12em] text-white/60 mb-2">Senha</label>
+            <label className="block text-xs tracking-[0.12em] text-texto mb-2">Senha</label>
             <input
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
               required
-              className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-neon/60"
+              className="w-full bg-neve border border-linha rounded-xl px-4 py-3 text-azul-profundo focus:outline-none focus:border-azul-claro"
             />
           </div>
 
-          {error && <p className="text-red-400 text-sm">{error}</p>}
+          {error && <p className="text-red-600 text-sm">{error}</p>}
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full border border-cyan-neon rounded-full py-3 text-sm tracking-[0.12em] bg-cyan-neon/10 hover:bg-cyan-neon/20 transition-colors disabled:opacity-50"
+            className="w-full border border-azul-medio rounded-full py-3 text-sm tracking-[0.12em] bg-azul-vivo/10 hover:bg-azul-vivo/20 transition-colors disabled:opacity-50"
           >
             {isLoading ? 'Entrando...' : 'Entrar'}
           </button>

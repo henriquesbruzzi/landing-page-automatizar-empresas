@@ -1,12 +1,28 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import translations from '../i18n/translations';
 
 /**
- * Componente SEO reutilizável — gere meta tags dinâmicas + JSON-LD
+ * Componente SEO reutilizável: etiquetas do cabeçalho por página, mais JSON-LD.
  *
  * Props:
  *  - lang: 'pt' | 'en'
- *  - page: 'home' | 'contact' | 'faq'
+ *  - page: 'home' | 'contact' | 'faq' | 'about' | 'privacy'
+ *
+ * Cada etiqueta tem UM só sítio que a escreve. Quando havia dois (o
+ * public/index.html e a biblioteca), cada página ficava com dois canonical, duas
+ * descrições e hreflang a dizer coisas diferentes.
+ *
+ * - public/index.html: título, descrição e etiquetas de partilha (og:, twitter:)
+ *   da página inicial em português. Ficam lá porque o WhatsApp e as redes sociais
+ *   não correm JavaScript e só leem esse ficheiro. Não tem canonical nem hreflang:
+ *   o ficheiro é o mesmo para todas as páginas, e lá só podiam estar errados.
+ * - O efeito, mais abaixo: reescreve essas mesmas etiquetas com os valores da
+ *   página em que se está, e cria o canonical.
+ * - A biblioteca (Helmet): só os hreflang e o JSON-LD, que não existem no
+ *   public/index.html.
+ *
+ * Uma etiqueta nova entra num destes três sítios, e só num.
  */
 
 const BASE_URL = process.env.REACT_APP_SITE_URL || 'https://www.nexugal.com';
@@ -14,68 +30,108 @@ const BASE_URL = process.env.REACT_APP_SITE_URL || 'https://www.nexugal.com';
 // Dados SEO por idioma e página
 const seoData = {
   pt: {
+    // O título e a descrição da página inicial estão também escritos à mão no
+    // public/index.html, que é o que o WhatsApp e as redes sociais leem. Mudar
+    // aqui obriga a mudar lá.
     home: {
-      title: 'NEXUGAL — Consultoria Tecnológica | Desenvolvimento Web, Cibersegurança & Cloud',
-      description:
-        'NEXUGAL — Consultoria tecnológica em Braga, Portugal. Especialistas em desenvolvimento web, cibersegurança, soluções cloud, inteligência artificial e análise de dados. Transformação digital para a sua empresa.',
+      title: 'Nexugal',
+      description: 'Reformulação de operações com gestão implementada',
       canonical: `${BASE_URL}/`,
       alternate: `${BASE_URL}/us`,
       ogLocale: 'pt_PT',
     },
     contact: {
-      title: 'Contacto — NEXUGAL | Fale Connosco',
+      title: 'Contacto, Nexugal | Fale Connosco',
       description:
-        'Entre em contacto com a NEXUGAL. Preencha o formulário e a nossa equipa responde em 24 horas. Consultoria tecnológica em Braga, Portugal.',
+        'Entre em contacto com a Nexugal. Preencha o formulário e a nossa equipa responde em 24 horas.',
       canonical: `${BASE_URL}/contacto`,
       alternate: `${BASE_URL}/us/contact`,
       ogLocale: 'pt_PT',
     },
     faq: {
-      title: 'FAQ — NEXUGAL | Perguntas Frequentes sobre Consultoria Tecnológica',
+      title: 'FAQ, Nexugal | Perguntas frequentes sobre automação de processos',
       description:
-        'Respostas às perguntas mais frequentes sobre os serviços da NEXUGAL: desenvolvimento web, cibersegurança, cloud, IA, prazos, custos e suporte.',
+        'Respostas às perguntas mais frequentes sobre os serviços da Nexugal: desenvolvimento web, cibersegurança, cloud, IA, prazos, custos e suporte.',
       canonical: `${BASE_URL}/faq`,
       alternate: `${BASE_URL}/us/faq`,
+      ogLocale: 'pt_PT',
+    },
+    about: {
+      title: 'Sobre nós, Nexugal | Sistemas que falam entre si',
+      description:
+        'Conheça a Nexugal: quem somos, a nossa visão e a nossa paixão por transformar empresas através da tecnologia, cibersegurança e inovação.',
+      canonical: `${BASE_URL}/sobre`,
+      alternate: `${BASE_URL}/us/about`,
+      ogLocale: 'pt_PT',
+    },
+    privacy: {
+      title: 'Política de Privacidade, Nexugal | Proteção de Dados e RGPD',
+      description:
+        'Política de Privacidade da Nexugal. Saiba como recolhemos, tratamos e protegemos os seus dados pessoais em conformidade com o RGPD.',
+      canonical: `${BASE_URL}/privacidade`,
+      alternate: `${BASE_URL}/us/privacy`,
       ogLocale: 'pt_PT',
     },
   },
   en: {
     home: {
-      title: 'NEXUGAL — Technology Consulting | Web Development, Cybersecurity & Cloud',
-      description:
-        'NEXUGAL — Technology consultancy in Braga, Portugal. Experts in web development, cybersecurity, cloud solutions, artificial intelligence and data analytics. Digital transformation for your business.',
+      title: 'Nexugal',
+      description: 'Operations redesign with management put in place',
       canonical: `${BASE_URL}/us`,
       alternate: `${BASE_URL}/`,
       ogLocale: 'en_US',
     },
     contact: {
-      title: 'Contact — NEXUGAL | Get in Touch',
+      title: 'Contact, Nexugal | Get in Touch',
       description:
-        'Get in touch with NEXUGAL. Fill out the form and our team will respond within 24 hours. Technology consultancy in Braga, Portugal.',
+        'Get in touch with Nexugal. Fill out the form and our team will respond within 24 hours.',
       canonical: `${BASE_URL}/us/contact`,
       alternate: `${BASE_URL}/contacto`,
       ogLocale: 'en_US',
     },
     faq: {
-      title: 'FAQ — NEXUGAL | Frequently Asked Questions about Technology Consulting',
+      title: 'FAQ, Nexugal | Frequently asked questions about process automation',
       description:
-        'Answers to frequently asked questions about NEXUGAL services: web development, cybersecurity, cloud, AI, timelines, costs and support.',
+        'Answers to frequently asked questions about Nexugal services: web development, cybersecurity, cloud, AI, timelines, costs and support.',
       canonical: `${BASE_URL}/us/faq`,
       alternate: `${BASE_URL}/faq`,
       ogLocale: 'en_US',
     },
+    about: {
+      title: 'About us, Nexugal | Systems that talk to each other',
+      description:
+        'Meet Nexugal: who we are, our vision and our passion for transforming businesses through technology, cybersecurity, and innovation.',
+      canonical: `${BASE_URL}/us/about`,
+      alternate: `${BASE_URL}/sobre`,
+      ogLocale: 'en_US',
+    },
+    privacy: {
+      title: 'Privacy Policy, Nexugal | Data Protection & GDPR',
+      description:
+        'Nexugal Privacy Policy. Learn how we collect, process and protect your personal data in compliance with GDPR.',
+      canonical: `${BASE_URL}/us/privacy`,
+      alternate: `${BASE_URL}/privacidade`,
+      ogLocale: 'en_US',
+    },
   },
+};
+
+// Texto alternativo da imagem de partilha. A versão portuguesa está também
+// escrita à mão no public/index.html (og:image:alt e twitter:image:alt).
+const ALT_IMAGEM = {
+  pt: 'Menos tarefas repetidas. Mais tempo para o que importa.',
+  en: 'Fewer repetitive tasks. More time for what matters.',
 };
 
 // Schema.org JSON-LD — Organization
 const organizationSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: 'NEXUGAL',
+  name: 'Nexugal',
   url: BASE_URL,
-  logo: `${BASE_URL}/icons/favicon.png`,
+  logo: `${BASE_URL}/icons/icon-512.png`,
   description:
-    'Consultoria tecnológica especializada em desenvolvimento web, cibersegurança, soluções cloud, inteligência artificial e análise de dados.',
+    'Consultoria tecnológica especializada em desenvolvimento web, cibersegurança, soluções na nuvem, inteligência artificial e análise de dados.',
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Braga',
@@ -88,9 +144,13 @@ const organizationSchema = {
     contactType: 'customer service',
     availableLanguage: ['Portuguese', 'English'],
   },
+  founder: {
+    '@type': 'Person',
+    name: 'Rui Machado',
+    sameAs: ['https://www.linkedin.com/in/rui-machado-8330812a9/'],
+  },
   sameAs: [
     'https://www.linkedin.com/company/nexugal',
-    'https://www.instagram.com/nexugal',
   ],
 };
 
@@ -98,7 +158,7 @@ const organizationSchema = {
 const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: 'NEXUGAL',
+  name: 'Nexugal',
   url: BASE_URL,
   inLanguage: ['pt-PT', 'en-US'],
   potentialAction: {
@@ -112,8 +172,8 @@ const websiteSchema = {
 const localBusinessSchema = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
-  name: 'NEXUGAL',
-  image: `${BASE_URL}/icons/favicon.png`,
+  name: 'Nexugal',
+  image: `${BASE_URL}/icons/icon-512.png`,
   url: BASE_URL,
   telephone: '+351912423912',
   email: 'geral@nexugal.com',
@@ -135,17 +195,15 @@ const localBusinessSchema = {
     opens: '09:00',
     closes: '18:00',
   },
-  areaServed: [
-    { '@type': 'Country', name: 'Portugal' },
-    { '@type': 'Country', name: 'Brazil' },
-  ],
+  // Sem areaServed, de propósito: a Nexugal não declara limite geográfico
+  // nenhum. Não voltar a pôr países nem regiões.
   serviceType: [
-    'Web Development',
-    'Cybersecurity',
-    'Cloud Solutions',
-    'AI Consulting',
-    'Data Analytics',
-    'IT Support & Maintenance',
+    'Desenvolvimento Web',
+    'Cibersegurança',
+    'Soluções na Nuvem',
+    'Consultoria em IA',
+    'Análise de Dados',
+    'Suporte e Manutenção',
   ],
 };
 
@@ -178,6 +236,24 @@ function getBreadcrumbs(lang, page) {
     });
   }
 
+  if (page === 'about') {
+    items.push({
+      '@type': 'ListItem',
+      position: 2,
+      name: lang === 'pt' ? 'Sobre Nós' : 'About Us',
+      item: lang === 'pt' ? `${BASE_URL}/sobre` : `${BASE_URL}/us/about`,
+    });
+  }
+
+  if (page === 'privacy') {
+    items.push({
+      '@type': 'ListItem',
+      position: 2,
+      name: lang === 'pt' ? 'Privacidade' : 'Privacy',
+      item: lang === 'pt' ? `${BASE_URL}/privacidade` : `${BASE_URL}/us/privacy`,
+    });
+  }
+
   return {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -189,7 +265,7 @@ function getBreadcrumbs(lang, page) {
 const serviceSchema = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
-  name: 'Serviços NEXUGAL',
+  name: 'Serviços Nexugal',
   itemListElement: [
     {
       '@type': 'ListItem',
@@ -198,8 +274,8 @@ const serviceSchema = {
         '@type': 'Service',
         name: 'Desenvolvimento Web',
         description:
-          'Aplicações web modernas, responsivas e de alta performance com as tecnologias mais recentes do mercado.',
-        provider: { '@type': 'Organization', name: 'NEXUGAL' },
+          'Aplicações web modernas, responsivas e de alto desempenho com as tecnologias mais recentes do mercado.',
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -209,8 +285,8 @@ const serviceSchema = {
         '@type': 'Service',
         name: 'Cibersegurança',
         description:
-          'Proteção completa dos seus dados e infraestrutura com auditorias, monitoramento e estratégias avançadas de segurança.',
-        provider: { '@type': 'Organization', name: 'NEXUGAL' },
+          'Proteção completa dos seus dados e infraestrutura com auditorias, monitorização e estratégias avançadas de segurança.',
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -218,10 +294,10 @@ const serviceSchema = {
       position: 3,
       item: {
         '@type': 'Service',
-        name: 'Soluções Cloud',
+        name: 'Soluções na Nuvem',
         description:
           'Migração, gestão e otimização de infraestrutura em nuvem para máxima escalabilidade e disponibilidade.',
-        provider: { '@type': 'Organization', name: 'NEXUGAL' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -232,7 +308,7 @@ const serviceSchema = {
         name: 'Consultoria em IA',
         description:
           'Integração de inteligência artificial e automação nos seus processos para aumentar a eficiência operacional.',
-        provider: { '@type': 'Organization', name: 'NEXUGAL' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -242,8 +318,8 @@ const serviceSchema = {
         '@type': 'Service',
         name: 'Análise de Dados',
         description:
-          'Transforme dados em decisões estratégicas com dashboards inteligentes e relatórios personalizados.',
-        provider: { '@type': 'Organization', name: 'NEXUGAL' },
+          'Transforme dados em decisões estratégicas com painéis inteligentes e relatórios personalizados.',
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
     {
@@ -251,89 +327,22 @@ const serviceSchema = {
       position: 6,
       item: {
         '@type': 'Service',
-        name: 'Suporte & Manutenção',
+        name: 'Suporte e Manutenção',
         description:
           'Suporte técnico contínuo 24/7 e manutenção proativa para manter os seus sistemas sempre operacionais.',
-        provider: { '@type': 'Organization', name: 'NEXUGAL' },
+        provider: { '@type': 'Organization', name: 'Nexugal' },
       },
     },
   ],
 };
 
-// Schema.org JSON-LD — FAQPage (rich results no Google)
+// Schema.org JSON-LD, FAQPage (rich results no Google)
+//
+// As perguntas vêm do translations.js, que é onde vive o texto do site. Já
+// estiveram escritas aqui outra vez, à mão, e as duas cópias afastaram-se: o
+// ecrã dizia uma coisa e o Google era informado de outra. Uma fonte só.
 function getFaqSchema(lang) {
-  const faqItems = {
-    pt: [
-      {
-        question: 'Que tipo de serviços a NEXUGAL oferece?',
-        answer: 'Oferecemos uma gama completa de serviços tecnológicos: desenvolvimento web (sites, aplicações e plataformas), cibersegurança (auditorias, monitoramento e proteção de dados), soluções cloud (migração e gestão), consultoria em inteligência artificial, análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7.',
-      },
-      {
-        question: 'Quanto tempo demora um projeto de desenvolvimento web?',
-        answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 2 a 4 semanas, enquanto uma aplicação web mais complexa pode levar entre 2 a 6 meses. Na fase de diagnóstico, definimos um roadmap claro com prazos detalhados para cada etapa.',
-      },
-      {
-        question: 'Como funciona o processo de trabalho da NEXUGAL?',
-        answer: 'O nosso processo segue 5 etapas: (1) Diagnóstico — mapeamos as necessidades do seu negócio; (2) Estratégia — desenhamos a arquitetura e o plano técnico; (3) Execução — desenvolvimento ágil com entregas contínuas; (4) Deploy — lançamento com zero downtime; (5) Evolução — suporte contínuo e otimização constante.',
-      },
-      {
-        question: 'A NEXUGAL trabalha com empresas de que dimensão?',
-        answer: 'Trabalhamos com empresas de todas as dimensões, desde startups e PMEs até grandes corporações. As nossas soluções são personalizadas para se adaptarem às necessidades e ao orçamento de cada cliente.',
-      },
-      {
-        question: 'Oferecem suporte após a entrega do projeto?',
-        answer: 'Sim! Oferecemos suporte técnico contínuo 24/7 e manutenção proativa. Após a entrega, acompanhamos o desempenho da solução, realizamos atualizações de segurança e garantimos que tudo funciona na perfeição.',
-      },
-      {
-        question: 'Qual é o custo dos vossos serviços?',
-        answer: 'Cada projeto é único, por isso o custo depende dos requisitos específicos, da complexidade e do prazo desejado. Oferecemos uma consulta gratuita e sem compromisso onde apresentamos um orçamento personalizado e transparente.',
-      },
-      {
-        question: 'A consulta inicial é gratuita?',
-        answer: 'Sim, a primeira consulta é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. Pode agendar através do nosso formulário de contacto.',
-      },
-      {
-        question: 'Em que regiões a NEXUGAL opera?',
-        answer: 'Estamos sediados em Braga, Portugal, mas trabalhamos com clientes em todo o território português e também no Brasil. Como muitos dos nossos serviços são prestados remotamente, podemos atender clientes em qualquer parte do mundo.',
-      },
-    ],
-    en: [
-      {
-        question: 'What type of services does NEXUGAL offer?',
-        answer: 'We offer a complete range of technology services: web development (websites, applications and platforms), cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management), artificial intelligence consulting, data analytics with customized dashboards, and continuous 24/7 technical support.',
-      },
-      {
-        question: 'How long does a web development project take?',
-        answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 2 to 4 weeks, while a more complex web application can take between 2 to 6 months. During the discovery phase, we define a clear roadmap with detailed deadlines for each stage.',
-      },
-      {
-        question: "How does NEXUGAL's work process function?",
-        answer: 'Our process follows 5 stages: (1) Discovery — we map your business needs; (2) Strategy — we design the architecture and technical plan; (3) Execution — agile development with continuous deliveries; (4) Deploy — launch with zero downtime; (5) Evolution — continuous support and constant optimization.',
-      },
-      {
-        question: 'What size companies does NEXUGAL work with?',
-        answer: "We work with companies of all sizes, from startups and SMEs to large corporations. Our solutions are customized to adapt to each client's needs and budget.",
-      },
-      {
-        question: 'Do you offer support after project delivery?',
-        answer: "Yes! We offer continuous 24/7 technical support and proactive maintenance. After delivery, we monitor the solution's performance, carry out security updates and ensure everything works perfectly.",
-      },
-      {
-        question: 'What is the cost of your services?',
-        answer: 'Each project is unique, so the cost depends on the specific requirements, complexity and desired timeline. We offer a free, no-obligation consultation where we present a personalized and transparent quote.',
-      },
-      {
-        question: 'Is the initial consultation free?',
-        answer: 'Yes, the first consultation is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. You can schedule it through our contact form.',
-      },
-      {
-        question: 'In which regions does NEXUGAL operate?',
-        answer: 'We are based in Braga, Portugal, but we work with clients across the entire Portuguese territory and also in Brazil. Since many of our services are provided remotely, we can serve clients anywhere in the world.',
-      },
-    ],
-  };
-
-  const items = faqItems[lang] || faqItems.pt;
+  const items = (translations[lang] || translations.pt).faq.items;
 
   return {
     '@context': 'https://schema.org',
@@ -363,41 +372,60 @@ function SEO({ lang = 'pt', page = 'home' }) {
     schemas.push(getFaqSchema(lang));
   }
 
+  // A versão portuguesa de cada página é a de omissão (x-default). Apontava
+  // sempre para a página inicial, mesmo na FAQ, e o Google só aceita o x-default
+  // se a página para onde aponta também apontar de volta.
+  const versaoPortuguesa = lang === 'pt' ? data.canonical : data.alternate;
+
+  // Efeito direto no DOM. Não depende da biblioteca, que só escreve quando o
+  // browser desenha o ecrã seguinte (num separador escondido, nunca). Reescreve
+  // as etiquetas que já vêm no public/index.html e cria o canonical.
+  React.useEffect(() => {
+    document.title = data.title;
+    document.documentElement.lang = htmlLang;
+
+    const setMeta = (attr, attrValue, content) => {
+      let el = document.querySelector(`meta[${attr}="${attrValue}"]`);
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, attrValue);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', content);
+    };
+
+    const setLink = (rel, href) => {
+      let el = document.querySelector(`link[rel="${rel}"]`);
+      if (!el) {
+        el = document.createElement('link');
+        el.setAttribute('rel', rel);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('href', href);
+    };
+
+    setMeta('name', 'description', data.description);
+    setLink('canonical', data.canonical);
+    setMeta('property', 'og:title', data.title);
+    setMeta('property', 'og:description', data.description);
+    setMeta('property', 'og:url', data.canonical);
+    setMeta('property', 'og:locale', data.ogLocale);
+    setMeta('property', 'og:locale:alternate', lang === 'pt' ? 'en_US' : 'pt_PT');
+    setMeta('property', 'og:image:alt', ALT_IMAGEM[lang] || ALT_IMAGEM.pt);
+    setMeta('name', 'twitter:title', data.title);
+    setMeta('name', 'twitter:description', data.description);
+    setMeta('name', 'twitter:image:alt', ALT_IMAGEM[lang] || ALT_IMAGEM.pt);
+  }, [data, htmlLang, lang]);
+
+  // A biblioteca fica só com o que não existe no public/index.html. Tudo o que
+  // lá existe (título, descrição, og:, twitter:, robots) é do efeito acima: se
+  // a biblioteca também o escrevesse, ficava repetido.
   return (
     <Helmet>
-      {/* Idioma do HTML */}
-      <html lang={htmlLang} />
-
-      {/* Título e Description */}
-      <title>{data.title}</title>
-      <meta name="description" content={data.description} />
-
-      {/* Canonical & Hreflang */}
-      <link rel="canonical" href={data.canonical} />
+      {/* Hreflang */}
       <link rel="alternate" hreflang={lang} href={data.canonical} />
       <link rel="alternate" hreflang={altLang} href={data.alternate} />
-      <link rel="alternate" hreflang="x-default" href={`${BASE_URL}/`} />
-
-      {/* Open Graph */}
-      <meta property="og:type" content="website" />
-      <meta property="og:site_name" content="NEXUGAL" />
-      <meta property="og:title" content={data.title} />
-      <meta property="og:description" content={data.description} />
-      <meta property="og:url" content={data.canonical} />
-      <meta property="og:image" content={`${BASE_URL}/images/og-image.png`} />
-      <meta property="og:image:width" content="1200" />
-      <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content="NEXUGAL — Codificando o Amanhã da sua Empresa" />
-      <meta property="og:locale" content={data.ogLocale} />
-
-      {/* Twitter Card */}
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={data.title} />
-      <meta name="twitter:description" content={data.description} />
-      <meta name="twitter:image" content={`${BASE_URL}/images/og-image.png`} />
-
-      {/* Robots */}
-      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      <link rel="alternate" hreflang="x-default" href={versaoPortuguesa} />
 
       {/* JSON-LD Structured Data */}
       {schemas.map((schema, index) => (

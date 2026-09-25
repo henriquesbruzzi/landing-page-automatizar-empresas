@@ -1,16 +1,16 @@
 {
-  "short_name": "NEXUGAL",
-  "name": "NEXUGAL — Consultoria Tecnológica",
-  "description": "Consultoria tecnológica em Braga, Portugal. Desenvolvimento web, cibersegurança, soluções cloud, IA e análise de dados.",
+  "short_name": "Nexugal",
+  "name": "Nexugal",
+  "description": "Reformulação de operações com gestão implementada",
   "icons": [
     {
-      "src": "/icons/favicon.png",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/favicon.png",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -18,9 +18,9 @@
   ],
   "start_url": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#000000",
-  "lang": "pt-BR",
+  "theme_color": "#0F2E5C",
+  "background_color": "#FFFFFF",
+  "lang": "pt-PT",
   "orientation": "portrait-primary",
   "categories": ["business", "technology"]
 }

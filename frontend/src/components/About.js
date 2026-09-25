@@ -11,26 +11,23 @@ import Entrada from './Entrada';
 // LinkedIn não aparece no cartão.
 const LINKEDIN = {
   rui: '',
-  henrique: '',
 };
 
-// Fotografia de cada fundador. Caminho a contar da pasta public, por exemplo
-// '/images/rui.jpg'. Enquanto estiver vazio, aparece uma silhueta neutra.
+// Fotografia do fundador. Caminho a contar da pasta public.
 const FOTOS = {
-  rui: '',
-  henrique: '',
+  rui: '/images/rui-240.jpg',
 };
 
 // ---------------------------------------------------------------------------
 
 // Espera entre cartões da mesma fila, para entrarem em cadeia
 const ATRASO_ENTRE_CARTOES = 90;
-const CARTOES_POR_FILA = 2;
+const CARTOES_POR_FILA = 1;
 
 // Silhueta neutra, no lugar da fotografia que ainda não existe
 const silhueta = (
   <svg
-    className="w-10 h-10 text-white/25"
+    className="w-10 h-10 text-linha"
     fill="none"
     viewBox="0 0 24 24"
     stroke="currentColor"
@@ -52,34 +49,34 @@ function About() {
   const fundadores = t.about.founders;
 
   return (
-    <section id="sobre" className="relative py-24 md:py-32 bg-black" aria-labelledby="about-title">
+    <section id="sobre" className="relative py-24 md:py-32 bg-white" aria-labelledby="about-title">
       {/* Linha divisória sutil no topo */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-cyan-neon/30 to-transparent"></div>
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-[1px] bg-gradient-to-r from-transparent via-azul-claro to-transparent"></div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
         {/* Header da secção */}
         <Entrada className="text-center mb-16">
-          <span className="font-display text-cyan-neon text-xs font-semibold tracking-[0.3em] uppercase mb-4 block">
+          <span className="font-display text-azul-medio text-xs font-semibold tracking-[0.3em] uppercase mb-4 block">
             {t.about.subtitle}
           </span>
-          <h2 id="about-title" className="font-display text-white text-3xl md:text-4xl lg:text-5xl font-bold tracking-[0.05em] mb-6">
+          <h2 id="about-title" className="font-display text-azul-profundo text-3xl md:text-4xl lg:text-5xl font-bold tracking-[0.05em] mb-6">
             {t.about.title}
-            <span className="text-cyan-neon">{t.about.titleHighlight}</span>
+            <span className="text-azul-vivo">{t.about.titleHighlight}</span>
           </h2>
-          <p className="text-white/90 max-w-3xl mx-auto text-sm md:text-base leading-relaxed text-justify">
+          <p className="text-texto max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
             {t.about.description}
           </p>
         </Entrada>
 
-        {/* De onde vem a forma de trabalhar dos dois */}
+        {/* De onde vem a forma de trabalhar */}
         <Entrada className="text-center mb-12">
-          <p className="text-white/90 max-w-3xl mx-auto text-sm md:text-base leading-relaxed text-justify">
+          <p className="text-texto max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
             {fundadores.intro}
           </p>
         </Entrada>
 
-        {/* Fundadores */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        {/* Fundador */}
+        <div className="max-w-2xl mx-auto grid grid-cols-1 gap-6 md:gap-8">
           {fundadores.people.map((pessoa, index) => {
             const foto = FOTOS[pessoa.id];
             const linkedin = LINKEDIN[pessoa.id];
@@ -90,10 +87,10 @@ function About() {
                 className="h-full"
                 atraso={(index % CARTOES_POR_FILA) * ATRASO_ENTRE_CARTOES}
               >
-                <div className="group h-full flex flex-col p-8 rounded-2xl border border-white/5 bg-white/[0.02] hover:border-cyan-neon/20 hover:bg-white/[0.04] transition-colors duration-500">
+                <div className="group h-full flex flex-col p-8 rounded-2xl border border-linha bg-neve hover:border-azul-claro hover:bg-white hover:shadow-azul transition-colors duration-500">
                   <div className="flex items-center gap-5 mb-6">
                     {/* Fotografia, ou silhueta enquanto não houver */}
-                    <div className="w-20 h-20 shrink-0 rounded-full overflow-hidden border border-white/10 bg-white/[0.03] flex items-center justify-center group-hover:border-cyan-neon/30 transition-colors duration-500">
+                    <div className="w-20 h-20 shrink-0 rounded-full overflow-hidden border border-linha bg-white flex items-center justify-center group-hover:border-azul-claro transition-colors duration-500">
                       {foto ? (
                         <img
                           src={foto}
@@ -106,16 +103,16 @@ function About() {
                     </div>
 
                     <div>
-                      <h3 className="font-display text-white text-base md:text-lg font-semibold tracking-[0.05em]">
+                      <h3 className="font-display text-azul-profundo text-base md:text-lg font-semibold tracking-[0.05em]">
                         {pessoa.name}
                       </h3>
-                      <p className="font-display text-cyan-neon text-xs font-semibold tracking-[0.2em] uppercase mt-2">
+                      <p className="font-display text-azul-medio text-xs font-semibold tracking-[0.2em] uppercase mt-2">
                         {pessoa.role}
                       </p>
                     </div>
                   </div>
 
-                  <p className="text-white/90 text-sm font-medium leading-relaxed flex-1 text-justify">
+                  <p className="text-texto text-sm font-medium leading-relaxed flex-1">
                     {pessoa.description}
                   </p>
 
@@ -128,7 +125,7 @@ function About() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`${fundadores.linkedinLabel}${pessoa.name}`}
-                        className="text-white/60 hover:text-cyan-neon transition-colors duration-300"
+                        className="text-texto hover:text-azul-medio transition-colors duration-300"
                       >
                         {iconeLinkedin}
                       </a>

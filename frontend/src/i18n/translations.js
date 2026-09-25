@@ -2,60 +2,188 @@ const translations = {
   pt: {
     nav: {
       home: 'HOME',
-      services: 'SERVIÇOS',
+      services: 'EXEMPLOS DE SERVIÇOS',
       about: 'SOBRE',
       faq: 'FAQ',
+      contact: 'CONTACTO',
     },
     hero: {
       title_line1: 'Deixe a sua empresa',
       title_line2_start: 'andar ',
       title_line2_highlight: 'sozinha',
-      subtitle: 'Menos trabalho manual. Mais tempo para o que interessa.',
-      cta: 'Contacte-nos',
+      subtitle: 'A informação que anda espalhada junta-se num só sítio, sem ninguém copiar nada.',
+      cta: 'Falar connosco',
+      ctaSecundario: 'Ver exemplos',
+      esquema: {
+        // Lido por quem usa leitor de ecrã, em vez do desenho
+        descricao: 'Quatro origens de informação, email, Excel, o seu ERP e WhatsApp, juntam-se num sítio só e dão origem a um resumo semanal.',
+        // A ORDEM destas quatro é a mesma das linhas do resumo, e é ela que faz
+        // a correspondência entre origem e resultado. Mexer numa obriga a mexer
+        // na outra, senão o esquema passa a mentir.
+        origens: [
+          { id: 'email', nome: 'Email' },
+          { id: 'excel', nome: 'Excel' },
+          { id: 'erp', nome: 'O seu ERP' },
+          { id: 'whatsapp', nome: 'WhatsApp' },
+        ],
+        resumo: {
+          titulo: 'O seu resumo de segunda-feira',
+          entrega: 'chega ao email às 7h30',
+          // Uma linha por origem, pela mesma ordem. Os números ganham peso
+          // sozinhos, o componente encontra-os: não é preciso marcá-los aqui.
+          linhas: [
+            { texto: '47 faturas lançadas, 2 por rever' },
+            // A `nota` continua a linha em vez de abrir uma nova: o cartão tem
+            // de ficar com quatro linhas, uma por cada caixa do esquema.
+            {
+              texto: '3 artigos em rutura de stock',
+              nota: 'fornecedor alertado a *8/09*, sem resposta há *2 dias*',
+            },
+            { texto: '18 420 € vendidos, 6 310 € por receber' },
+            // O `destaque` é a única parte realçada do cartão, porque é a
+            // única que pede acção a quem o lê
+            { texto: '20 pedidos respondidos,', destaque: '3 à espera de si' },
+          ],
+          rodape: 'agende este resumo ao seu gosto',
+        },
+      },
     },
-    services: {
-      subtitle: 'O que fazemos',
-      title: 'Nossos ',
-      titleHighlight: 'Serviços',
-      description: 'Trabalho manual a menos, informação a circular, e alguém a quem ligar quando é preciso.',
-      items: [
+    exemplos: {
+      rotulo: 'EXEMPLOS',
+      titulo: 'Isto é o que fazemos, em concreto',
+      // Uma frase só, de propósito. A anterior dava a entender que estava aqui
+      // tudo o que a Nexugal faz, e não está.
+      subtitulo: 'Alguns exemplos do que fazemos.',
+      indiceTitulo: 'Saltar para',
+      // Cada bloco tem o seu próprio desenho, moldado à história que conta. A
+      // unidade vem da paleta, da letra e do estilo das caixas, não de serem
+      // todos iguais. O esquema de setas ficou só no hero.
+      //
+      // O campo `visual` diz qual dos desenhos usar. Um bloco novo obriga a um
+      // desenho novo: não há aqui um molde que sirva para tudo, e é de
+      // propósito.
+      blocos: [
         {
-          id: 'servico-automacao',
-          icon: 'ciclo',
-          title: 'Automação de trabalho administrativo',
-          description: 'Encomendas, faturação, mapas mensais e o envio de ficheiros ao contabilista deixam de precisar de alguém a escrevê-los à mão.',
+          id: 'exemplo-faturacao',
+          visual: 'papel',
+          indice: 'Contabilidade e faturação',
+          rotulo: 'CONTABILIDADE E FATURAÇÃO',
+          dor: 'Alguém passa duas manhãs por mês a lançar faturas de fornecedor.',
+          explicacao: 'Chegam por email, por WhatsApp e em papel. Passam a ser lidas e transformadas em dados sozinhas, e o que precisa mesmo de olhos fica numa lista curta.',
+          arte: {
+            descricao: 'Uma pilha de faturas em papel dá origem a uma tabela de dados já preenchida.',
+            papelEtiqueta: 'FATURA',
+            papelLegenda: 'Não interessa como chega, em PDF, em papel ou numa foto.',
+            colunas: ['FORNECEDOR', 'DOC', 'VALOR'],
+            linhas: [
+              { fornecedor: 'Malhas do Ave', doc: 'FT 1184', valor: '1 240,00' },
+              { fornecedor: 'Tintex', doc: 'FT A/9042', valor: '418,60' },
+              { fornecedor: 'Fios e Cores', doc: 'FT 331', valor: '96,40' },
+            ],
+            // Duas linhas por preencher, desenhadas como barras: mostram que o
+            // trabalho continua a andar depois de a imagem ficar parada.
+            porPreencher: 2,
+            // "sozinhas" é o argumento todo: sem essa palavra o 214 não prova nada
+            resumo: { total: '214', totalTexto: 'faturas lançadas sozinhas em setembro,', rever: '3', reverTexto: 'precisaram de si' },
+          },
         },
         {
-          id: 'servico-sistemas',
-          icon: 'elo',
-          title: 'Sistemas de informação e integrações',
-          description: 'O ERP, a loja online, as folhas de Excel e os portais das transportadoras passam a falar uns com os outros, sem ninguém reescrever a mesma coisa em três sítios.',
+          id: 'exemplo-pedidos',
+          visual: 'conversa',
+          indice: 'Pedidos de clientes',
+          rotulo: 'PEDIDOS DE CLIENTES',
+          dor: 'As mesmas cinco perguntas todos os dias, e as encomendas anotadas num papel.',
+          explicacao: 'O que chega por email, por WhatsApp e pelo formulário é lido, cruzado com a encomenda, e a resposta fica escrita à espera de um clique. Nada sai sem alguém aprovar.',
+          arte: {
+            descricao: 'Uma pergunta de cliente e a resposta já escrita, ao lado do que o dia rendeu.',
+            pergunta: 'Boa tarde, a minha encomenda 4471 ainda não chegou.',
+            perguntaOrigem: 'cliente, WhatsApp, 14h02',
+            resposta: 'Saiu do armazém ontem às 17h20, entrega prevista para amanhã, dia 10.',
+            contadores: [
+              { numero: '34', legenda: 'mensagens tratadas hoje' },
+              { numero: '0', legenda: 'chamadas atendidas', realce: true },
+            ],
+            nota: '5 à espera de si',
+          },
         },
         {
-          id: 'servico-ia',
-          icon: 'brain',
-          title: 'Inteligência artificial aplicada ao negócio',
-          description: 'Usamos IA onde ela resolve mesmo: ler emails e documentos, classificar pedidos e preparar respostas.',
+          id: 'exemplo-stock',
+          visual: 'discordancia',
+          indice: 'Stock e compras',
+          rotulo: 'STOCK E COMPRAS',
+          dor: 'O stock do programa diz uma coisa e o armazém diz outra.',
+          explicacao: 'O ERP, a loja e o portal da transportadora passam a falar entre si. As diferenças aparecem numa lista de manhã, em vez de aparecerem ao cliente na hora de entregar.',
+          arte: {
+            descricao: 'O mesmo artigo com dois números diferentes, um no programa e outro na loja e armazém, e o resultado da verificação da manhã.',
+            // Um artigo só, em grande. Quatro artigos obrigavam quem lia a
+            // comparar número a número para encontrar a diferença.
+            //
+            // A ordem dos números é a da frase de baixo: o programa promete 19,
+            // na prateleira há 12, e faltam sete. Ao contrário, as correias
+            // existiam todas e a frase não tinha pé. O mesmo no bloco EN.
+            colunas: ['NO PROGRAMA', 'NA LOJA/ARMAZÉM'],
+            artigo: 'Correias',
+            numeros: ['19', '12'],
+            consequencia: 'Sete clientes iam comprar uma coisa que não existe.',
+            cartao: {
+              titulo: 'Hoje, 6h05',
+              linhas: [
+                { numero: '5 487', texto: 'referências verificadas', proprioBloco: true },
+                { numero: '9', texto: 'corrigidas sozinhas' },
+                { numero: '3', texto: 'precisam de decisão', destaque: true },
+              ],
+            },
+          },
         },
         {
-          id: 'servico-web',
-          icon: 'code',
-          title: 'Sites e canais para chegar ao cliente',
-          description: 'Site, formulários de pedido que substituem dezenas de emails, e páginas onde o cliente consulta sozinho o estado da encomenda.',
-        },
-        {
-          id: 'servico-dados',
-          icon: 'chart',
-          title: 'Dados e relatórios',
-          description: 'Os números que precisa de ver todas as semanas, sem ninguém refazer tabelas no fim do mês.',
-        },
-        {
-          id: 'servico-seguranca',
-          icon: 'shield',
-          title: 'Segurança, cloud e apoio contínuo',
-          description: 'O que construímos fica alojado com segurança e acompanhado por nós, com cópias de segurança, acessos controlados e alguém a quem ligar quando falha.',
+          id: 'exemplo-numeros',
+          visual: 'margem',
+          indice: 'Números do negócio',
+          rotulo: 'NÚMEROS DO NEGÓCIO',
+          dor: 'Só se sabe se o mês correu bem quando o contabilista fecha as contas.',
+          explicacao: 'Os números que andam espalhados por quatro programas juntam-se num só e chegam por email na segunda de manhã. Ninguém refaz tabelas no fim do mês.',
+          arte: {
+            descricao: 'Margem por artigo na semana 37: quatro artigos acima de zero e um abaixo.',
+            titulo: 'MARGEM POR ARTIGO, SEMANA 37',
+            zero: '0%',
+            // `valor` é o número que manda no comprimento da barra. Negativo
+            // atravessa para a esquerda do zero e acende a cor de alerta.
+            barras: [
+              { nome: 'Filtros', valor: 38, etiqueta: '38%' },
+              { nome: 'Correias', valor: 31, etiqueta: '31%' },
+              { nome: 'Baterias', valor: 22, etiqueta: '22%' },
+              { nome: 'Juntas', valor: 9, etiqueta: '9%' },
+              { nome: 'Óleos', valor: -7, etiqueta: '-7%' },
+            ],
+            remate: 'Um artigo a dar prejuízo, e ninguém sabia.',
+          },
         },
       ],
+      convite: {
+        frase: 'Tem tarefas que se repetem todas as semanas e comem tempo a alguém? Conte-nos qual é. Muitas vezes há forma de ganhar esse tempo.',
+        botao: 'Entre em contacto',
+      },
+      // A tira cresce quando houver capacidade real de integrar mais uma coisa,
+      // não se enche à partida. Cada entrada leva `logo` quando o ficheiro
+      // existir, e passa a imagem sem a tira ser refeita.
+      //
+      // O Moloni fica como nome. O ficheiro que chegou tem as letras a branco,
+      // é a versão para fundo escuro, e nesta tira branca só se via a flor.
+      // Quando houver a versão para fundo claro, é acrescentar o `logo`.
+      tira: {
+        texto: 'Fazemos integrações com',
+        ferramentas: [
+          { id: 'gmail', nome: 'Gmail', logo: '/logos/gmail.svg' },
+          { id: 'outlook', nome: 'Outlook', logo: '/logos/outlook.svg' },
+          { id: 'excel', nome: 'Excel', logo: '/logos/excel.svg' },
+          { id: 'google-sheets', nome: 'Google Sheets', logo: '/logos/google-sheets.svg' },
+          { id: 'primavera', nome: 'Cegid Primavera', logo: '/logos/cegid.svg' },
+          { id: 'moloni', nome: 'Moloni' },
+          { id: 'invoicexpress', nome: 'InvoiceXpress', logo: '/logos/invoicexpress.png' },
+          { id: 'shopify', nome: 'Shopify', logo: '/logos/shopify.svg' },
+          { id: 'woocommerce', nome: 'WooCommerce', logo: '/logos/woocommerce.svg' },
+        ],
+      },
     },
     process: {
       subtitle: 'Como trabalhamos',
@@ -108,7 +236,7 @@ const translations = {
           'Notícia ou imprensa',
           'Recomendação de amigo ou colega',
           'Já era cliente',
-          'Contacto direto da NEXUGAL',
+          'Contacto direto da Nexugal',
           // "Outro" tem de ficar sempre em último: o formulário identifica-o
           // pela última posição da lista para abrir a caixa de texto.
           'Outro',
@@ -122,31 +250,40 @@ const translations = {
         submit: 'Enviar Mensagem',
         sending: 'A enviar...',
         success: 'Mensagem enviada com sucesso! Entraremos em contacto em breve.',
+        // Avisos de recusa. Os quatro primeiros correspondem aos campos que o
+        // backend valida, e são escolhidos pelo campo que ele aponta na
+        // resposta. Os dois últimos cobrem uma recusa sem campo identificado e
+        // uma falha de rede. Sem eles, o visitante via "[object Object]" ou
+        // "Failed to fetch", que não dizem nada a ninguém.
+        nameError: 'Escreva o seu nome, com pelo menos 2 letras.',
+        emailError: 'Confirme o email: parece estar incompleto.',
+        phoneError: 'Confirme o número de telefone.',
+        // O "{email}" é trocado pelo endereço corrigido, que fica clicável
+        emailSuggestion: 'Quis dizer {email}?',
+        phoneDigitsError: 'O número não parece certo. Escreva os 9 dígitos, ou o número completo com o indicativo do país.',
+        companyError: 'Confirme o nome da empresa.',
+        messageError: 'A mensagem é facultativa, mas escrita tem de ter pelo menos 5 caracteres.',
+        sendError: 'Não foi possível enviar a mensagem. Tente outra vez dentro de momentos.',
+        networkError: 'Não foi possível falar com o servidor. Verifique a ligação à internet e tente outra vez.',
       },
       back: 'Voltar ao início',
-      logo: 'NEXUGAL, ir para a página inicial',
+      logo: 'Nexugal, ir para a página inicial',
     },
     about: {
       subtitle: 'Quem somos',
       title: 'Sobre a ',
-      titleHighlight: 'NEXUGAL',
-      description: 'A nossa equipa ajuda empresas a tirar do meio o trabalho manual que ninguém gosta de fazer e a pôr a informação a circular entre as pessoas e os sistemas. Sem projetos intermináveis, sem tecnologia a mais do que a necessária.',
+      titleHighlight: 'Nexugal',
+      description: 'Ajudamos empresas a tirar do meio o trabalho manual que ninguém gosta de fazer e a pôr a informação a circular entre as pessoas e os sistemas. Sem projetos intermináveis, sem tecnologia a mais do que a necessária.',
       founders: {
-        intro: 'Os nossos fundadores são licenciados em Engenharia e Gestão de Sistemas de Informação pela Universidade do Minho. É de lá que vem a forma como trabalhamos, a olhar ao mesmo tempo para o processo e para a tecnologia.',
+        intro: 'O nosso fundador é licenciado em Engenharia e Gestão de Sistemas de Informação pela Universidade do Minho. É de lá que vem a forma como trabalhamos, a olhar ao mesmo tempo para o processo e para a tecnologia.',
         photoAlt: 'Fotografia de ',
         linkedinLabel: 'LinkedIn de ',
         people: [
           {
             id: 'rui',
             name: 'Rui Machado',
-            role: 'Sócio fundador',
+            role: 'Fundador',
             description: 'Gere lojas de comércio eletrónico em vários países e foi aí que construiu as primeiras automações, das respostas a clientes à faturação e à expedição. Traz o método de quem já resolveu estes problemas na sua própria empresa, antes de os resolver nas dos outros.',
-          },
-          {
-            id: 'henrique',
-            name: 'Henrique Fernandes',
-            role: 'Sócio fundador',
-            description: 'Trabalhou como freelancer para mais de 80 clientes de vários setores, a construir software à medida e a automatizar processos. Traz o lado técnico da NEXUGAL, a parte de pegar num processo complicado e transformá-lo em algo simples de usar no dia a dia.',
           },
         ],
       },
@@ -159,24 +296,24 @@ const translations = {
       back: '← Voltar ao início',
       items: [
         {
-          question: 'Que tipo de serviços a NEXUGAL oferece?',
-          answer: 'Oferecemos uma gama completa de serviços tecnológicos: desenvolvimento web (sites, aplicações e plataformas), cibersegurança (auditorias, monitoramento e proteção de dados), soluções cloud (migração e gestão), consultoria em inteligência artificial, análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7.',
+          question: 'Que tipo de serviços a Nexugal oferece?',
+          answer: 'Oferecemos uma gama completa de serviços tecnológicos: desenvolvimento web (sites, aplicações e plataformas), cibersegurança (auditorias, monitorização e proteção de dados), soluções cloud (migração e gestão), consultoria em inteligência artificial, análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7.',
         },
         {
           question: 'Quanto tempo demora um projeto de desenvolvimento web?',
-          answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 2 a 4 semanas, enquanto uma aplicação web mais complexa pode levar entre 2 a 6 meses. Na fase de diagnóstico, definimos um roadmap claro com prazos detalhados para cada etapa.',
+          answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 2 a 4 semanas, enquanto uma aplicação web mais complexa pode levar entre 2 a 6 meses. Na fase de diagnóstico, dizemos o que fica pronto em cada etapa e quando.',
         },
         {
-          question: 'Como funciona o processo de trabalho da NEXUGAL?',
-          answer: 'O nosso processo segue 5 etapas: (1) Diagnóstico — mapeamos as necessidades do seu negócio; (2) Estratégia — desenhamos a arquitetura e o plano técnico; (3) Execução — desenvolvimento ágil com entregas contínuas; (4) Deploy — lançamento com zero downtime; (5) Evolução — suporte contínuo e otimização constante.',
+          question: 'Como funciona o processo de trabalho da Nexugal?',
+          answer: 'O nosso processo tem quatro etapas. Diagnóstico, percebemos como o trabalho corre hoje, ao pormenor, e daí sai um relatório com o que pode mudar e o que isso traz à empresa. Planeamento, dizemos o que vamos fazer, quanto custa e em quanto tempo, antes de começarmos. Desenvolvimento, fazemos por partes e vai vendo a funcionar antes de estar tudo pronto, para se corrigir cedo o que for preciso. Acompanhamento, fica a funcionar e nós ficamos por perto, com alguém a quem ligar quando for preciso.',
         },
         {
-          question: 'A NEXUGAL trabalha com empresas de que dimensão?',
+          question: 'A Nexugal trabalha com empresas de que dimensão?',
           answer: 'Trabalhamos com empresas de todas as dimensões, desde startups e PMEs até grandes corporações. As nossas soluções são personalizadas para se adaptarem às necessidades e ao orçamento de cada cliente.',
         },
         {
           question: 'Oferecem suporte após a entrega do projeto?',
-          answer: 'Sim! Oferecemos suporte técnico contínuo 24/7 e manutenção proativa. Após a entrega, acompanhamos o desempenho da solução, realizamos atualizações de segurança e garantimos que tudo funciona na perfeição.',
+          answer: 'Sim! Oferecemos suporte técnico contínuo 24/7 e manutenção proativa. Após a entrega, acompanhamos o desempenho da solução, aplicamos atualizações de segurança e corrigimos o que for aparecendo.',
         },
         {
           question: 'Qual é o custo dos vossos serviços?',
@@ -185,10 +322,6 @@ const translations = {
         {
           question: 'A consulta inicial é gratuita?',
           answer: 'Sim, a primeira consulta é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. Pode agendar através do nosso formulário de contacto.',
-        },
-        {
-          question: 'Em que regiões a NEXUGAL opera?',
-          answer: 'Estamos sediados em Braga, Portugal, mas trabalhamos com clientes em todo o território português e também no Brasil. Como muitos dos nossos serviços são prestados remotamente, podemos atender clientes em qualquer parte do mundo.',
         },
       ],
     },
@@ -224,9 +357,9 @@ const translations = {
         title: 'Links Rápidos',
         items: [
           { label: 'Home', href: '#home' },
-          { label: 'Serviços', href: '#servicos' },
+          { label: 'Exemplos', href: '#exemplos' },
           { label: 'Como trabalhamos', href: '#processo' },
-          { label: 'Sobre', href: '#sobre' },
+          { label: 'Sobre', href: '/sobre' },
         ],
       },
       legalLinks: [
@@ -235,91 +368,170 @@ const translations = {
       ],
       services: {
         title: 'Serviços',
-        // Nomes curtos dos cartões da secção de serviços, pela mesma ordem.
-        // O id aponta ao cartão respetivo e acende-o à chegada.
-        items: [
-          { id: 'servico-automacao', label: 'Automação administrativa' },
-          { id: 'servico-sistemas', label: 'Sistemas e integrações' },
-          { id: 'servico-ia', label: 'Inteligência artificial' },
-          { id: 'servico-web', label: 'Sites e canais' },
-          { id: 'servico-dados', label: 'Dados e relatórios' },
-          { id: 'servico-seguranca', label: 'Segurança, cloud e apoio' },
-        ],
       },
       social: {
         title: 'Redes Sociais',
+        // {rede} fica com o nome da rede, por exemplo LinkedIn. Só é lido
+        // por leitores de ecrã, no ícone de cada rede.
+        aria: 'Nexugal no {rede}',
       },
-      copyright: '© {year} NEXUGAL. Todos os direitos reservados.',
-      madeWith: 'Feito com tecnologia de ponta em',
-      location: 'Portugal',
-    },
-    chatbot: {
-      welcome: 'Olá! 👋 Sou o assistente virtual da NEXUGAL. Como posso ajudar hoje?',
-      placeholder: 'Digite sua mensagem...',
-      send: 'Enviar mensagem',
-      close: 'Fechar chat',
-      open: 'Abrir chat',
-      title: 'Assistente Virtual',
-      subtitle: 'NEXUGAL',
+      copyright: '© {year} Nexugal. Todos os direitos reservados.',
     },
   },
   en: {
     nav: {
       home: 'HOME',
-      services: 'SERVICES',
+      services: 'SERVICE EXAMPLES',
       about: 'ABOUT',
       faq: 'FAQ',
+      contact: 'CONTACT',
     },
     hero: {
       title_line1: 'Let your business',
       title_line2_start: 'run ',
-      title_line2_highlight: 'itself',
-      subtitle: 'Less manual work. More time for what matters.',
-      cta: 'Contact us',
+      title_line2_highlight: 'on its own',
+      subtitle: 'Information that lives in scattered places comes together in one, without anyone copying anything.',
+      cta: 'Talk to us',
+      ctaSecundario: 'See examples',
+      esquema: {
+        descricao: 'Four sources of information, email, Excel, your ERP and WhatsApp, come together in one place and produce a weekly summary.',
+        // Same order as the summary lines below. The order is what pairs each
+        // source with its result, so the two lists move together or not at all.
+        origens: [
+          { id: 'email', nome: 'Email' },
+          { id: 'excel', nome: 'Excel' },
+          { id: 'erp', nome: 'Your ERP' },
+          { id: 'whatsapp', nome: 'WhatsApp' },
+        ],
+        resumo: {
+          titulo: 'Your Monday summary',
+          entrega: 'arrives by email at 7:30',
+          linhas: [
+            { texto: '47 invoices posted, 2 to review' },
+            {
+              texto: '3 items out of stock',
+              nota: 'supplier alerted on *Sep 8*, no reply for *2 days*',
+            },
+            { texto: '€18,420 sold, €6,310 outstanding' },
+            { texto: '20 requests answered,', destaque: '3 waiting on you' },
+          ],
+          rodape: 'schedule this summary to suit you',
+        },
+      },
     },
-    services: {
-      subtitle: 'What we do',
-      title: 'Our ',
-      titleHighlight: 'Services',
-      description: 'Less manual work, information that flows, and someone to call when you need it.',
-      items: [
+    exemplos: {
+      rotulo: 'EXAMPLES',
+      titulo: 'This is what we do, in practice',
+      subtitulo: 'Some examples of what we do.',
+      indiceTitulo: 'Jump to',
+      blocos: [
         {
-          id: 'servico-automacao',
-          icon: 'ciclo',
-          title: 'Administrative work automation',
-          description: 'Orders, invoicing, monthly reports and sending files to the accountant no longer need someone to type them by hand.',
+          id: 'exemplo-faturacao',
+          visual: 'papel',
+          indice: 'Accounting and invoicing',
+          rotulo: 'ACCOUNTING AND INVOICING',
+          dor: 'Someone spends two mornings a month entering supplier invoices.',
+          explicacao: 'They arrive by email, by WhatsApp and on paper. They start being read and turned into data on their own, and whatever really needs a human eye ends up on a short list.',
+          arte: {
+            descricao: 'A stack of paper invoices turns into a table of data that is already filled in.',
+            papelEtiqueta: 'INVOICE',
+            papelLegenda: 'It does not matter how it arrives, as a PDF, on paper or in a photo.',
+            colunas: ['SUPPLIER', 'DOC', 'AMOUNT'],
+            linhas: [
+              { fornecedor: 'Malhas do Ave', doc: 'FT 1184', valor: '1 240,00' },
+              { fornecedor: 'Tintex', doc: 'FT A/9042', valor: '418,60' },
+              { fornecedor: 'Fios e Cores', doc: 'FT 331', valor: '96,40' },
+            ],
+            porPreencher: 2,
+            resumo: { total: '214', totalTexto: 'invoices entered on their own in September,', rever: '3', reverTexto: 'needed you' },
+          },
         },
         {
-          id: 'servico-sistemas',
-          icon: 'elo',
-          title: 'Information systems and integrations',
-          description: 'Your ERP, online shop, spreadsheets and carrier portals start to talk to each other, so nobody rewrites the same thing in three places.',
+          id: 'exemplo-pedidos',
+          visual: 'conversa',
+          indice: 'Customer requests',
+          rotulo: 'CUSTOMER REQUESTS',
+          dor: 'The same five questions every day, and orders written down on a piece of paper.',
+          explicacao: 'What arrives by email, by WhatsApp and through the form is read, matched against the order, and the reply is written and waiting for one click. Nothing goes out without someone approving it.',
+          arte: {
+            descricao: 'A customer question and the reply already written, next to what the day brought in.',
+            pergunta: 'Good afternoon, my order 4471 still has not arrived.',
+            perguntaOrigem: 'customer, WhatsApp, 14:02',
+            resposta: 'It left the warehouse yesterday at 17:20, delivery expected tomorrow, the 10th.',
+            contadores: [
+              { numero: '34', legenda: 'messages handled today' },
+              { numero: '0', legenda: 'calls answered', realce: true },
+            ],
+            nota: '5 waiting on you',
+          },
         },
         {
-          id: 'servico-ia',
-          icon: 'brain',
-          title: 'Artificial intelligence applied to business',
-          description: 'We use AI where it truly solves something: reading emails and documents, sorting requests and drafting replies.',
+          id: 'exemplo-stock',
+          visual: 'discordancia',
+          indice: 'Stock and purchasing',
+          rotulo: 'STOCK AND PURCHASING',
+          dor: 'The stock in the system says one thing and the warehouse says another.',
+          explicacao: 'The ERP, the shop and the carrier portal start talking to each other. Differences show up on a list in the morning, instead of showing up to the customer at delivery time.',
+          arte: {
+            descricao: 'The same product with two different numbers, one in the system and one in the shop and warehouse, and the result of the morning check.',
+            // O \u200B é um ponto de quebra invisível: lê-se "IN THE
+            // SHOP/WAREHOUSE", mas a linha pode partir depois da barra. Sem
+            // ele, o browser não parte ali, e a partir de 1280px
+            // "SHOP/WAREHOUSE" saía 6px da coluna do número.
+            colunas: ['IN THE SYSTEM', 'IN THE SHOP/\u200BWAREHOUSE'],
+            artigo: 'Belts',
+            numeros: ['19', '12'],
+            consequencia: 'Seven customers were about to buy something that does not exist.',
+            cartao: {
+              titulo: 'Today, 6:05',
+              linhas: [
+                { numero: '5 487', texto: 'references checked', proprioBloco: true },
+                { numero: '9', texto: 'corrected on their own' },
+                { numero: '3', texto: 'need a decision', destaque: true },
+              ],
+            },
+          },
         },
         {
-          id: 'servico-web',
-          icon: 'code',
-          title: 'Websites and channels to reach customers',
-          description: 'A website, request forms that replace dozens of emails, and pages where customers check the status of their order on their own.',
-        },
-        {
-          id: 'servico-dados',
-          icon: 'chart',
-          title: 'Data and reporting',
-          description: 'The numbers you need to see every week, without anyone rebuilding tables at the end of the month.',
-        },
-        {
-          id: 'servico-seguranca',
-          icon: 'shield',
-          title: 'Security, cloud and ongoing support',
-          description: 'What we build stays hosted securely and looked after by us, with backups, controlled access and someone to call when something fails.',
+          id: 'exemplo-numeros',
+          visual: 'margem',
+          indice: 'Business numbers',
+          rotulo: 'BUSINESS NUMBERS',
+          dor: 'You only know whether the month went well once the accountant closes the books.',
+          explicacao: 'The numbers scattered across four systems come together in one place and arrive by email on Monday morning. Nobody rebuilds spreadsheets at the end of the month.',
+          arte: {
+            descricao: 'Margin per product in week 37: four products above zero and one below.',
+            titulo: 'MARGIN PER PRODUCT, WEEK 37',
+            zero: '0%',
+            barras: [
+              { nome: 'Filters', valor: 38, etiqueta: '38%' },
+              { nome: 'Belts', valor: 31, etiqueta: '31%' },
+              { nome: 'Batteries', valor: 22, etiqueta: '22%' },
+              { nome: 'Gaskets', valor: 9, etiqueta: '9%' },
+              { nome: 'Oils', valor: -7, etiqueta: '-7%' },
+            ],
+            remate: 'One product losing money, and nobody knew.',
+          },
         },
       ],
+      convite: {
+        frase: 'Do you have tasks that repeat every week and eat up someone\'s time? Tell us which one. There is often a way to win that time back.',
+        botao: 'Get in touch',
+      },
+      tira: {
+        texto: 'We integrate with',
+        ferramentas: [
+          { id: 'gmail', nome: 'Gmail', logo: '/logos/gmail.svg' },
+          { id: 'outlook', nome: 'Outlook', logo: '/logos/outlook.svg' },
+          { id: 'excel', nome: 'Excel', logo: '/logos/excel.svg' },
+          { id: 'google-sheets', nome: 'Google Sheets', logo: '/logos/google-sheets.svg' },
+          { id: 'primavera', nome: 'Cegid Primavera', logo: '/logos/cegid.svg' },
+          { id: 'moloni', nome: 'Moloni' },
+          { id: 'invoicexpress', nome: 'InvoiceXpress', logo: '/logos/invoicexpress.png' },
+          { id: 'shopify', nome: 'Shopify', logo: '/logos/shopify.svg' },
+          { id: 'woocommerce', nome: 'WooCommerce', logo: '/logos/woocommerce.svg' },
+        ],
+      },
     },
     process: {
       subtitle: 'How we work',
@@ -372,7 +584,7 @@ const translations = {
           'News Article or Press Coverage',
           'Friend or Colleague Recommendation',
           'Already a client',
-          'Direct contact from NEXUGAL',
+          'Direct contact from Nexugal',
           // "Other" must stay last: the form identifies it by the list's final
           // position in order to open the free-text box.
           'Other',
@@ -386,31 +598,34 @@ const translations = {
         submit: 'Send Message',
         sending: 'Sending...',
         success: 'Message sent successfully! We will get in touch soon.',
+        nameError: 'Please enter your name, with at least 2 letters.',
+        emailError: 'Please check your email address: it looks incomplete.',
+        phoneError: 'Please check the phone number.',
+        emailSuggestion: 'Did you mean {email}?',
+        phoneDigitsError: 'The number does not look right. Please enter the 9 digits, or the full number with the country code.',
+        companyError: 'Please check the company name.',
+        messageError: 'The message is optional, but if you write one it needs at least 5 characters.',
+        sendError: 'We could not send your message. Please try again in a moment.',
+        networkError: 'We could not reach the server. Please check your internet connection and try again.',
       },
       back: 'Back to home',
-      logo: 'NEXUGAL, go to the home page',
+      logo: 'Nexugal, go to the home page',
     },
     about: {
       subtitle: 'Who we are',
       title: 'About ',
-      titleHighlight: 'NEXUGAL',
-      description: 'Our team helps companies take out the manual work nobody enjoys doing and get information moving between people and systems. No endless projects, no more technology than the job needs.',
+      titleHighlight: 'Nexugal',
+      description: 'We help companies take out the manual work nobody enjoys doing and get information moving between people and systems. No endless projects, no more technology than the job needs.',
       founders: {
-        intro: 'Our founders hold degrees in Information Systems Engineering and Management from the University of Minho. That is where our way of working comes from, with an eye on the process and on the technology at the same time.',
+        intro: 'Our founder holds a degree in Information Systems Engineering and Management from the University of Minho. That is where our way of working comes from, with an eye on the process and on the technology at the same time.',
         photoAlt: 'Photo of ',
         linkedinLabel: 'LinkedIn profile of ',
         people: [
           {
             id: 'rui',
             name: 'Rui Machado',
-            role: 'Founding partner',
+            role: 'Founder',
             description: 'He runs e-commerce stores in several countries, and that is where he built his first automations, from customer replies to invoicing and shipping. He brings the method of someone who has already solved these problems in his own company, before solving them for others.',
-          },
-          {
-            id: 'henrique',
-            name: 'Henrique Fernandes',
-            role: 'Founding partner',
-            description: 'He worked as a freelancer for more than 80 clients across various sectors, building custom software and automating processes. He brings the technical side of NEXUGAL, the part about taking a complicated process and turning it into something simple to use day to day.',
           },
         ],
       },
@@ -423,24 +638,24 @@ const translations = {
       back: '← Back to home',
       items: [
         {
-          question: 'What type of services does NEXUGAL offer?',
+          question: 'What type of services does Nexugal offer?',
           answer: 'We offer a complete range of technology services: web development (websites, applications and platforms), cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management), artificial intelligence consulting, data analytics with customized dashboards, and continuous 24/7 technical support.',
         },
         {
           question: 'How long does a web development project take?',
-          answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 2 to 4 weeks, while a more complex web application can take between 2 to 6 months. During the discovery phase, we define a clear roadmap with detailed deadlines for each stage.',
+          answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 2 to 4 weeks, while a more complex web application can take between 2 to 6 months. During the discovery phase, we tell you what is ready at each stage and when.',
         },
         {
-          question: 'How does NEXUGAL\'s work process function?',
-          answer: 'Our process follows 5 stages: (1) Discovery — we map your business needs; (2) Strategy — we design the architecture and technical plan; (3) Execution — agile development with continuous deliveries; (4) Deploy — launch with zero downtime; (5) Evolution — continuous support and constant optimization.',
+          question: 'How does Nexugal\'s work process function?',
+          answer: 'Our process has four stages. Discovery, we look in detail at how the work runs today, and from that comes a report with what can change and what that brings to the company. Planning, we tell you what we will do, what it costs and how long it takes, before we start. Development, we build it in parts and you see it working before everything is finished, so whatever needs correcting is caught early. Ongoing support, it keeps running and we stay close by, with someone to call when you need it.',
         },
         {
-          question: 'What size companies does NEXUGAL work with?',
+          question: 'What size companies does Nexugal work with?',
           answer: 'We work with companies of all sizes, from startups and SMEs to large corporations. Our solutions are customized to adapt to each client\'s needs and budget.',
         },
         {
           question: 'Do you offer support after project delivery?',
-          answer: 'Yes! We offer continuous 24/7 technical support and proactive maintenance. After delivery, we monitor the solution\'s performance, carry out security updates and ensure everything works perfectly.',
+          answer: 'Yes! We offer continuous 24/7 technical support and proactive maintenance. After delivery, we monitor the solution\'s performance, apply security updates and fix whatever comes up.',
         },
         {
           question: 'What is the cost of your services?',
@@ -449,10 +664,6 @@ const translations = {
         {
           question: 'Is the initial consultation free?',
           answer: 'Yes, the first consultation is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. You can schedule it through our contact form.',
-        },
-        {
-          question: 'In which regions does NEXUGAL operate?',
-          answer: 'We are based in Braga, Portugal, but we work with clients across the entire Portuguese territory and also in Brazil. Since many of our services are provided remotely, we can serve clients anywhere in the world.',
         },
       ],
     },
@@ -488,9 +699,9 @@ const translations = {
         title: 'Quick Links',
         items: [
           { label: 'Home', href: '#home' },
-          { label: 'Services', href: '#servicos' },
+          { label: 'Examples', href: '#exemplos' },
           { label: 'How we work', href: '#processo' },
-          { label: 'About', href: '#sobre' },
+          { label: 'About', href: '/us/about' },
         ],
       },
       legalLinks: [
@@ -499,30 +710,12 @@ const translations = {
       ],
       services: {
         title: 'Services',
-        items: [
-          { id: 'servico-automacao', label: 'Administrative automation' },
-          { id: 'servico-sistemas', label: 'Systems and integrations' },
-          { id: 'servico-ia', label: 'Artificial intelligence' },
-          { id: 'servico-web', label: 'Websites and channels' },
-          { id: 'servico-dados', label: 'Data and reporting' },
-          { id: 'servico-seguranca', label: 'Security, cloud and support' },
-        ],
       },
       social: {
         title: 'Social Media',
+        aria: 'Nexugal on {rede}',
       },
-      copyright: '© {year} NEXUGAL. All rights reserved.',
-      madeWith: 'Made with cutting-edge technology in',
-      location: 'Portugal',
-    },
-    chatbot: {
-      welcome: 'Hello! 👋 I\'m NEXUGAL\'s virtual assistant. How can I help you today?',
-      placeholder: 'Type your message...',
-      send: 'Send message',
-      close: 'Close chat',
-      open: 'Open chat',
-      title: 'Virtual Assistant',
-      subtitle: 'NEXUGAL',
+      copyright: '© {year} Nexugal. All rights reserved.',
     },
   },
 };

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
-import { pedirDestaque } from '../utils/destaqueServico';
 import Entrada from './Entrada';
 
 // Espera entre as quatro colunas, para entrarem em cadeia
@@ -15,7 +14,7 @@ const ATRASO_ENTRE_COLUNAS = 90;
 // 'https://www.linkedin.com/company/nexugal'. Enquanto estiver vazio, o ícone
 // dessa rede não aparece no rodapé. Sem nenhum preenchido, some o bloco todo.
 const REDES = {
-  linkedin: '',
+  linkedin: 'https://www.linkedin.com/company/nexugal',
   instagram: '',
   facebook: '',
 };
@@ -44,12 +43,11 @@ function Footer() {
   const redes = Object.keys(ICONES_REDES).filter((rede) => REDES[rede]);
 
   return (
-    <footer className="relative bg-black pt-20 pb-8 overflow-hidden">
+    <footer className="relative bg-neve pt-20 pb-8 overflow-hidden">
       {/* Linha divisória gradient no topo */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-neon/30 to-transparent"></div>
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-azul-claro to-transparent"></div>
 
       {/* Glow decorativo de fundo */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[200px] bg-cyan-neon/[0.03] blur-[120px] rounded-full pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-10 lg:px-16 relative z-10">
         {/* Grid principal */}
@@ -57,10 +55,10 @@ function Footer() {
 
           {/* Coluna 1 — Brand */}
           <Entrada className="lg:col-span-1">
-            <a href="#home" className="font-orbitron text-cyan-neon text-2xl font-bold tracking-[0.2em] hover:text-white transition-colors duration-300 block mb-4">
+            <a href="#home" className="font-orbitron text-azul-medio text-2xl font-bold tracking-[0.2em] hover:text-azul-profundo transition-colors duration-300 block mb-4">
               {f.brand.name}
             </a>
-            <p className="text-gray-300 text-sm leading-relaxed mb-6">
+            <p className="text-texto text-sm leading-relaxed mb-6">
               {f.brand.tagline}
             </p>
 
@@ -68,7 +66,7 @@ function Footer() {
                 REDES lá em cima ter o endereço dessa rede. */}
             {redes.length > 0 && (
               <div>
-                <span className="font-display text-white/80 text-[11px] font-semibold tracking-[0.2em] uppercase block mb-4">
+                <span className="font-display text-texto text-[11px] font-semibold tracking-[0.2em] uppercase block mb-4">
                   {f.social.title}
                 </span>
                 <div className="flex items-center gap-3">
@@ -78,8 +76,8 @@ function Footer() {
                       href={REDES[rede]}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={ICONES_REDES[rede].nome}
-                      className="w-10 h-10 rounded-xl border border-white/20 bg-white/[0.05] flex items-center justify-center text-white/80 hover:text-cyan-neon hover:border-cyan-neon hover:shadow-[0_0_15px_rgba(0,209,255,0.2)] transition-all duration-300"
+                      aria-label={f.social.aria.replace('{rede}', ICONES_REDES[rede].nome)}
+                      className="w-10 h-10 rounded-xl border border-linha bg-white flex items-center justify-center text-texto hover:text-azul-medio hover:border-azul-medio hover:shadow-azul transition-all duration-300"
                     >
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path d={ICONES_REDES[rede].caminho} />
@@ -93,7 +91,7 @@ function Footer() {
 
           {/* Coluna 2 — Links Rápidos */}
           <Entrada role="navigation" aria-label="Links rápidos" atraso={ATRASO_ENTRE_COLUNAS}>
-            <h4 className="font-display text-white text-xs font-semibold tracking-[0.2em] uppercase mb-6">
+            <h4 className="font-display text-azul-profundo text-xs font-semibold tracking-[0.2em] uppercase mb-6">
               {f.links.title}
             </h4>
             <ul className="space-y-3">
@@ -101,9 +99,9 @@ function Footer() {
                 <li key={index}>
                   <a
                     href={link.href}
-                    className="text-gray-300 text-sm hover:text-cyan-neon transition-colors duration-300 flex items-center gap-2 group"
+                    className="text-texto text-sm hover:text-azul-medio transition-colors duration-300 flex items-center gap-2 group"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-neon/60 group-hover:bg-cyan-neon transition-colors duration-300"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-azul-claro group-hover:bg-azul-medio transition-colors duration-300"></span>
                     {link.label}
                   </a>
                 </li>
@@ -111,18 +109,18 @@ function Footer() {
               <li>
                 <button
                   onClick={() => navigate(lang === 'pt' ? '/faq' : '/us/faq')}
-                  className="text-gray-300 text-sm hover:text-cyan-neon transition-colors duration-300 flex items-center gap-2 group"
+                  className="text-texto text-sm hover:text-azul-medio transition-colors duration-300 flex items-center gap-2 group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-neon/60 group-hover:bg-cyan-neon transition-colors duration-300"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-azul-claro group-hover:bg-azul-medio transition-colors duration-300"></span>
                   FAQ
                 </button>
               </li>
               <li>
                 <button
                   onClick={() => navigate(lang === 'pt' ? '/contacto' : '/us/contact')}
-                  className="text-cyan-neon text-sm font-medium hover:text-cyan-neon/80 transition-colors duration-300 flex items-center gap-2 group"
+                  className="text-azul-medio text-sm font-medium hover:text-azul-profundo transition-colors duration-300 flex items-center gap-2 group"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-neon group-hover:bg-cyan-neon transition-colors duration-300"></span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-azul-medio group-hover:bg-azul-profundo transition-colors duration-300"></span>
                   {lang === 'pt' ? 'Contacto' : 'Contact'}
                 </button>
               </li>
@@ -131,19 +129,18 @@ function Footer() {
 
           {/* Coluna 3 — Serviços */}
           <Entrada atraso={ATRASO_ENTRE_COLUNAS * 2}>
-            <h4 className="font-display text-white text-xs font-semibold tracking-[0.2em] uppercase mb-6">
+            <h4 className="font-display text-azul-profundo text-xs font-semibold tracking-[0.2em] uppercase mb-6">
               {f.services.title}
             </h4>
             <ul className="space-y-3">
-              {f.services.items.map((servico) => (
-                <li key={servico.id}>
+              {t.exemplos.blocos.map((bloco) => (
+                <li key={bloco.id}>
                   <a
-                    href={`#${servico.id}`}
-                    onClick={() => pedirDestaque(servico.id)}
-                    className="text-gray-300 text-sm hover:text-cyan-neon transition-colors duration-300 flex items-center gap-2 group"
+                    href={`#${bloco.id}`}
+                    className="text-texto text-sm hover:text-azul-medio transition-colors duration-300 flex items-center gap-2 group"
                   >
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-neon/60 group-hover:bg-cyan-neon transition-colors duration-300"></span>
-                    {servico.label}
+                    <span className="w-1.5 h-1.5 rounded-full bg-azul-claro group-hover:bg-azul-medio transition-colors duration-300"></span>
+                    {bloco.indice}
                   </a>
                 </li>
               ))}
@@ -152,7 +149,7 @@ function Footer() {
 
           {/* Coluna 4 — Contacto */}
           <Entrada atraso={ATRASO_ENTRE_COLUNAS * 3}>
-            <h4 className="font-display text-white text-xs font-semibold tracking-[0.2em] uppercase mb-6">
+            <h4 className="font-display text-azul-profundo text-xs font-semibold tracking-[0.2em] uppercase mb-6">
               {f.contact.title}
             </h4>
             <ul className="space-y-4">
@@ -162,10 +159,10 @@ function Footer() {
                   href={`mailto:${f.contact.email}`}
                   className="flex items-start gap-3 group"
                 >
-                  <svg className="w-4 h-4 mt-0.5 text-cyan-neon group-hover:scale-110 transition-transform duration-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <svg className="w-4 h-4 mt-0.5 text-azul-medio group-hover:scale-110 transition-transform duration-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
                   </svg>
-                  <span className="text-gray-200 text-sm group-hover:text-cyan-neon transition-colors duration-300">
+                  <span className="text-texto text-sm group-hover:text-azul-medio transition-colors duration-300">
                     {f.contact.email}
                   </span>
                 </a>
@@ -177,10 +174,10 @@ function Footer() {
                   href={`tel:${f.contact.phone.replace(/\s/g, '')}`}
                   className="flex items-start gap-3 group"
                 >
-                  <svg className="w-4 h-4 mt-0.5 text-cyan-neon group-hover:scale-110 transition-transform duration-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <svg className="w-4 h-4 mt-0.5 text-azul-medio group-hover:scale-110 transition-transform duration-300 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
                   </svg>
-                  <span className="text-gray-200 text-sm group-hover:text-cyan-neon transition-colors duration-300">
+                  <span className="text-texto text-sm group-hover:text-azul-medio transition-colors duration-300">
                     {f.contact.phone}
                   </span>
                 </a>
@@ -189,11 +186,11 @@ function Footer() {
               {/* Morada */}
               <li>
                 <div className="flex items-start gap-3">
-                  <svg className="w-4 h-4 mt-0.5 text-cyan-neon flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <svg className="w-4 h-4 mt-0.5 text-azul-medio flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                   </svg>
-                  <span className="text-gray-200 text-sm">
+                  <span className="text-texto text-sm">
                     {f.contact.address}
                   </span>
                 </div>
@@ -203,11 +200,11 @@ function Footer() {
         </div>
 
         {/* Linha divisória */}
-        <div className="h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent mb-8"></div>
+        <div className="h-[1px] bg-gradient-to-r from-transparent via-linha to-transparent mb-8"></div>
 
         {/* Bottom bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-gray-400 text-xs tracking-[0.1em]">
+          <p className="text-texto text-xs tracking-[0.1em]">
             {f.copyright.replace('{year}', new Date().getFullYear())}
           </p>
           <div className="flex items-center gap-6">
@@ -215,19 +212,12 @@ function Footer() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-gray-400 text-xs tracking-[0.08em] hover:text-cyan-neon transition-colors duration-300"
+                className="text-texto text-xs tracking-[0.08em] hover:text-azul-medio transition-colors duration-300"
               >
                 {link.label}
               </a>
             ))}
           </div>
-          <p className="text-gray-400 text-xs tracking-[0.1em]">
-            {f.madeWith}{' '}
-            <span className="text-cyan-neon font-semibold">
-              {f.location}
-            </span>
-            {' '}🇵🇹
-          </p>
         </div>
       </div>
     </footer>

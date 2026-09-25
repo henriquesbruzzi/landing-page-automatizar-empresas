@@ -5,83 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <!-- Título principal — será sobrescrito pelo React Helmet por rota -->
-    <title>NEXUGAL — Consultoria Tecnológica | Desenvolvimento Web, Cibersegurança & Cloud</title>
-
-    <!-- Meta description rica em keywords -->
-    <meta name="description" content="NEXUGAL — Consultoria tecnológica em Braga, Portugal. Especialistas em desenvolvimento web, cibersegurança, soluções cloud, inteligência artificial e análise de dados. Transformação digital para a sua empresa." />
+    <!-- Título e descrição da página inicial em português. O WhatsApp e as redes
+         sociais não correm JavaScript e leem só isto, em todas as páginas. Com
+         JavaScript, o SEO.js reescreve-os com os valores da página em que se
+         está. Os textos estão também no SEO.js: mudar um obriga a mudar o outro. -->
+    <title>Nexugal</title>
+    <meta name="description" content="Reformulação de operações com gestão implementada" />
 
     <!-- Keywords (ainda útil para alguns motores) -->
-    <meta name="keywords" content="consultoria tecnológica, desenvolvimento web, cibersegurança, soluções cloud, inteligência artificial, análise de dados, transformação digital, Braga, Portugal, NEXUGAL, IT consulting, web development, cybersecurity" />
+    <meta name="keywords" content="consultoria tecnológica, desenvolvimento web, cibersegurança, soluções cloud, inteligência artificial, análise de dados, transformação digital, Nexugal, IT consulting, web development, cybersecurity" />
 
     <!-- Autor -->
-    <meta name="author" content="NEXUGAL" />
+    <meta name="author" content="Nexugal" />
 
     <!-- Robots -->
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="googlebot" content="index, follow" />
 
-    <!-- Canonical (base — será sobrescrito por rota com React Helmet) -->
-    <link rel="canonical" href="https://www.nexugal.com/" />
-
-    <!-- Hreflang para SEO multilingue -->
-    <link rel="alternate" hreflang="pt" href="https://www.nexugal.com/" />
-    <link rel="alternate" hreflang="en" href="https://www.nexugal.com/us" />
-    <link rel="alternate" hreflang="x-default" href="https://www.nexugal.com/" />
+    <!-- Sem canonical nem hreflang aqui, de propósito. Este ficheiro é o mesmo
+         para todas as páginas, e o que aqui estivesse dizia à FAQ que era a
+         página inicial. O SEO.js escreve os certos em cada página, e o
+         sitemap.xml também declara os hreflang. -->
 
     <!-- Theme & Cor -->
-    <meta name="theme-color" content="#000000" />
-    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="theme-color" content="#FFFFFF" />
+    <meta name="msapplication-TileColor" content="#0F2E5C" />
 
-    <!-- Favicon -->
-    <link rel="icon" href="/icons/favicon.png" type="image/png" />
-    <link rel="apple-touch-icon" href="/icons/favicon.png" />
+    <!-- Ícone do site: um ficheiro por uso, todos gerados do mesmo N. Até
+         21/09/2026 era um só, de 1305 por 1205 e 623 KB, para tudo. O 48 é o
+         tamanho mínimo que a Google aceita para o mostrar nos resultados. -->
+    <link rel="icon" href="/icons/favicon-48.png" type="image/png" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
 
     <!-- Manifest PWA -->
     <link rel="manifest" href="/manifest.json" />
 
-    <!-- Open Graph (Facebook, LinkedIn, WhatsApp) -->
+    <!-- Open Graph (Facebook, LinkedIn, WhatsApp)
+         A imagem de partilha é um PNG de 1200 por 630: o tipo e as medidas
+         declarados aqui têm de bater certo com o ficheiro. Uma imagem nova vai
+         com um nome novo, porque o WhatsApp e as redes guardam a antiga pelo
+         endereço e continuariam a mostrá-la. -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="NEXUGAL" />
-    <meta property="og:title" content="NEXUGAL — Consultoria Tecnológica | Desenvolvimento Web, Cibersegurança & Cloud" />
-    <meta property="og:description" content="Consultoria tecnológica em Braga, Portugal. Especialistas em desenvolvimento web, cibersegurança, soluções cloud, IA e análise de dados." />
+    <meta property="og:site_name" content="Nexugal" />
+    <meta property="og:title" content="Nexugal" />
+    <meta property="og:description" content="Reformulação de operações com gestão implementada" />
     <meta property="og:url" content="https://www.nexugal.com/" />
-    <meta property="og:image" content="https://www.nexugal.com/images/og-image.png" />
+    <meta property="og:image" content="https://www.nexugal.com/images/nexugal-partilha-2.png" />
+    <meta property="og:image:secure_url" content="https://www.nexugal.com/images/nexugal-partilha-2.png" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="NEXUGAL — Codificando o Amanhã da sua Empresa" />
+    <meta property="og:image:alt" content="Menos tarefas repetidas. Mais tempo para o que importa." />
     <meta property="og:locale" content="pt_PT" />
     <meta property="og:locale:alternate" content="en_US" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="NEXUGAL — Consultoria Tecnológica" />
-    <meta name="twitter:description" content="Consultoria tecnológica em Braga, Portugal. Desenvolvimento web, cibersegurança, cloud, IA e análise de dados." />
-    <meta name="twitter:image" content="https://www.nexugal.com/images/og-image.png" />
-    <meta name="twitter:image:alt" content="NEXUGAL — Codificando o Amanhã da sua Empresa" />
+    <meta name="twitter:title" content="Nexugal" />
+    <meta name="twitter:description" content="Reformulação de operações com gestão implementada" />
+    <meta name="twitter:image" content="https://www.nexugal.com/images/nexugal-partilha-2.png" />
+    <meta name="twitter:image:alt" content="Menos tarefas repetidas. Mais tempo para o que importa." />
 
-    <!-- Geolocalização para SEO local -->
-    <meta name="geo.region" content="PT-03" />
-    <meta name="geo.placename" content="Braga" />
-    <meta name="geo.position" content="41.5518;-8.4229" />
-    <meta name="ICBM" content="41.5518, -8.4229" />
-
-    <!-- Preconnect para performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-
-    <!-- Letras do site, num pedido só e apenas com os pesos usados:
-         Space Grotesk nos títulos, Inter no texto corrido, Orbitron só no
-         logótipo. display=swap mostra o texto de imediato com a letra do
-         sistema e troca assim que a definitiva chega. -->
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@700&family=Space+Grotesk:wght@400;600;700&display=swap"
-    />
+    <!-- As letras do site vêm do próprio site (src/fonts, declaradas no
+         index.css). Até 21/09/2026 vinham da Google Fonts por aqui, e a página
+         não se desenhava enquanto a folha de estilo da Google não chegasse. -->
   </head>
   <body>
-    <noscript>Você precisa habilitar JavaScript para executar este app.</noscript>
+    <!-- Este ficheiro é o mesmo em português e em inglês, e sem JavaScript não
+         há forma de saber qual das línguas se pediu: vão as duas. -->
+    <noscript>
+      <p>É preciso ativar o JavaScript para ver este site.</p>
+      <p lang="en">You need to enable JavaScript to view this site.</p>
+    </noscript>
     <div id="root"></div>
   </body>
 </html>
