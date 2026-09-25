@@ -14,7 +14,7 @@ const ATRASO_ENTRE_COLUNAS = 90;
 // 'https://www.linkedin.com/company/nexugal'. Enquanto estiver vazio, o ícone
 // dessa rede não aparece no rodapé. Sem nenhum preenchido, some o bloco todo.
 const REDES = {
-  linkedin: '',
+  linkedin: 'https://www.linkedin.com/company/nexugal',
   instagram: '',
   facebook: '',
 };
@@ -76,8 +76,8 @@ function Footer() {
                       href={REDES[rede]}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={ICONES_REDES[rede].nome}
-                      className="w-10 h-10 rounded-xl border border-linha bg-white flex items-center justify-center text-texto hover:text-azul-medio hover:border-azul-medio hover:shadow-[0_0_15px_rgba(0,209,255,0.2)] transition-all duration-300"
+                      aria-label={`Nexugal no ${ICONES_REDES[rede].nome}`}
+                      className="w-10 h-10 rounded-xl border border-linha bg-white flex items-center justify-center text-texto hover:text-azul-medio hover:border-azul-medio hover:shadow-azul transition-all duration-300"
                     >
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path d={ICONES_REDES[rede].caminho} />

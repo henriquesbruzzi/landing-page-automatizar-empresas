@@ -144,9 +144,13 @@ const organizationSchema = {
     contactType: 'customer service',
     availableLanguage: ['Portuguese', 'English'],
   },
+  founder: {
+    '@type': 'Person',
+    name: 'Rui Machado',
+    sameAs: ['https://www.linkedin.com/in/rui-machado-8330812a9/'],
+  },
   sameAs: [
     'https://www.linkedin.com/company/nexugal',
-    'https://www.instagram.com/nexugal',
   ],
 };
 
