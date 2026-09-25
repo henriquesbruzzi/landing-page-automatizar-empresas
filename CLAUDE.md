@@ -124,9 +124,29 @@ de chegar.
    confirmação expressa do Rui.** Hoje faz-se à mão (ver secção 6). Se a Vercel
    voltar a publicar sozinha a partir de um ramo, o push para esse ramo passa a
    ser publicar, e pede a mesma confirmação. Como saber, na secção 6.
-5. O Rui vê o resultado localmente, no `npm start` (ver abaixo). **Não há links
-   de pré-visualização por ramo.**
-6. Se estiver bem: Pull Request → o Henrique revê → merge.
+5. O Rui vê o resultado localmente, no `npm start` (ver abaixo), ou pela
+   pré-visualização da Vercel do ponto 6. **O GitHub não dá link de
+   pré-visualização por ramo**, porque a Vercel não está ligada a ele (secção 6).
+6. **Quem junta ao `main`, e quando.** Regra do Rui, de 25/09/2026, e depende do
+   que a mudança muda:
+   - **Mudança que um visitante não vê:** documentação, correções internas,
+     arrumação de código, testes, configuração de build. **O Claude abre o Pull
+     Request e faz o merge sozinho**, sem esperar por ninguém.
+   - **Mudança que se vê:** textos, desenho, páginas novas, o formulário.
+     **Antes do merge**, o Claude faz uma pré-visualização com `vercel` (sem o
+     `--prod`), manda o link ao Rui e **espera pelo OK dele**.
+
+   **Na dúvida, é das que se veem.** Uma mudança de uma classe de CSS num
+   componente conta como visível; apagar código que ninguém importa, não.
+   O merge faz-se com **commit de merge, nunca com squash**, para o Henrique ver
+   o histórico.
+7. **Publicar no site real é sempre um passo à parte**, com `vercel --prod` a
+   partir do `main`, e pede sempre confirmação expressa do Rui (secção 6).
+
+O GitHub CLI (`gh`) está instalado desde 25/09/2026, com sessão iniciada na conta
+do Rui, e é com ele que o Claude abre e junta os Pull Requests. Se um dia disser
+que não há sessão: `gh auth login --web`, que dá um código para o Rui pôr em
+github.com/login/device.
 
 Para ver o site localmente: `cd frontend && npm install && npm start`
 (precisa de Node.js instalado; abre em http://localhost:3000).
