@@ -70,7 +70,7 @@
 }
 
 /* Espelho dos tokens do tailwind.config.js, para o estilo que não passa
-   pelo Tailwind: o chatbot.css e os keyframes deste ficheiro.
+   pelo Tailwind, hoje os keyframes deste ficheiro.
    Mudar uma cor obriga a mudá-la nos dois sítios. */
 :root {
   --azul-profundo: #0F2E5C;

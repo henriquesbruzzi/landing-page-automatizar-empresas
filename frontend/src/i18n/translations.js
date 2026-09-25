@@ -185,50 +185,6 @@ const translations = {
         ],
       },
     },
-    services: {
-      subtitle: 'O que fazemos',
-      title: 'Nossos ',
-      titleHighlight: 'Serviços',
-      description: 'Trabalho manual a menos, informação a circular, e alguém a quem ligar quando é preciso.',
-      items: [
-        {
-          id: 'servico-automacao',
-          icon: 'ciclo',
-          title: 'Automação de trabalho administrativo',
-          description: 'Encomendas, faturação, mapas mensais e o envio de ficheiros ao contabilista deixam de precisar de alguém a escrevê-los à mão.',
-        },
-        {
-          id: 'servico-sistemas',
-          icon: 'elo',
-          title: 'Sistemas de informação e integrações',
-          description: 'O ERP, a loja online, as folhas de Excel e os portais das transportadoras passam a falar uns com os outros, sem ninguém reescrever a mesma coisa em três sítios.',
-        },
-        {
-          id: 'servico-ia',
-          icon: 'brain',
-          title: 'Inteligência artificial aplicada ao negócio',
-          description: 'Usamos IA onde ela resolve mesmo: ler emails e documentos, classificar pedidos e preparar respostas.',
-        },
-        {
-          id: 'servico-web',
-          icon: 'code',
-          title: 'Sites e canais para chegar ao cliente',
-          description: 'Site, formulários de pedido que substituem dezenas de emails, e páginas onde o cliente consulta sozinho o estado da encomenda.',
-        },
-        {
-          id: 'servico-dados',
-          icon: 'chart',
-          title: 'Dados e relatórios',
-          description: 'Os números que precisa de ver todas as semanas, sem ninguém refazer tabelas no fim do mês.',
-        },
-        {
-          id: 'servico-seguranca',
-          icon: 'shield',
-          title: 'Segurança, cloud e apoio contínuo',
-          description: 'O que construímos fica alojado com segurança e acompanhado por nós, com cópias de segurança, acessos controlados e alguém a quem ligar quando falha.',
-        },
-      ],
-    },
     process: {
       subtitle: 'Como trabalhamos',
       title: 'Do primeiro dia até ',
@@ -421,15 +377,6 @@ const translations = {
       },
       copyright: '© {year} Nexugal. Todos os direitos reservados.',
     },
-    chatbot: {
-      welcome: 'Olá! 👋 Sou o assistente virtual da NEXUGAL. Como posso ajudar hoje?',
-      placeholder: 'Digite sua mensagem...',
-      send: 'Enviar mensagem',
-      close: 'Fechar chat',
-      open: 'Abrir chat',
-      title: 'Assistente Virtual',
-      subtitle: 'NEXUGAL',
-    },
   },
   en: {
     nav: {
@@ -585,50 +532,6 @@ const translations = {
           { id: 'woocommerce', nome: 'WooCommerce', logo: '/logos/woocommerce.svg' },
         ],
       },
-    },
-    services: {
-      subtitle: 'What we do',
-      title: 'Our ',
-      titleHighlight: 'Services',
-      description: 'Less manual work, information that flows, and someone to call when you need it.',
-      items: [
-        {
-          id: 'servico-automacao',
-          icon: 'ciclo',
-          title: 'Administrative work automation',
-          description: 'Orders, invoicing, monthly reports and sending files to the accountant no longer need someone to type them by hand.',
-        },
-        {
-          id: 'servico-sistemas',
-          icon: 'elo',
-          title: 'Information systems and integrations',
-          description: 'Your ERP, online shop, spreadsheets and carrier portals start to talk to each other, so nobody rewrites the same thing in three places.',
-        },
-        {
-          id: 'servico-ia',
-          icon: 'brain',
-          title: 'Artificial intelligence applied to business',
-          description: 'We use AI where it truly solves something: reading emails and documents, sorting requests and drafting replies.',
-        },
-        {
-          id: 'servico-web',
-          icon: 'code',
-          title: 'Websites and channels to reach customers',
-          description: 'A website, request forms that replace dozens of emails, and pages where customers check the status of their order on their own.',
-        },
-        {
-          id: 'servico-dados',
-          icon: 'chart',
-          title: 'Data and reporting',
-          description: 'The numbers you need to see every week, without anyone rebuilding tables at the end of the month.',
-        },
-        {
-          id: 'servico-seguranca',
-          icon: 'shield',
-          title: 'Security, cloud and ongoing support',
-          description: 'What we build stays hosted securely and looked after by us, with backups, controlled access and someone to call when something fails.',
-        },
-      ],
     },
     process: {
       subtitle: 'How we work',
@@ -813,15 +716,6 @@ const translations = {
         aria: 'Nexugal on {rede}',
       },
       copyright: '© {year} Nexugal. All rights reserved.',
-    },
-    chatbot: {
-      welcome: 'Hello! 👋 I\'m NEXUGAL\'s virtual assistant. How can I help you today?',
-      placeholder: 'Type your message...',
-      send: 'Send message',
-      close: 'Close chat',
-      open: 'Open chat',
-      title: 'Virtual Assistant',
-      subtitle: 'NEXUGAL',
     },
   },
 };
