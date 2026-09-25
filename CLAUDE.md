@@ -52,7 +52,6 @@ está na secção 7.
   `contraste.test.js` (teste de contraste, ver 7.5)
 - `src/fonts/`: as três letras do site (Inter, Space Grotesk, Orbitron), desde
   21/09 alojadas no próprio site e declaradas no `index.css` (7.11)
-- `src/chatbot/`: código de um widget de chat, **desligado** (ver secção 5)
 - `src/i18n/translations.js`: **quase todo o texto do site em PT e EN vive aqui**.
   Para mudar palavras no site, é quase sempre este ficheiro, não os componentes.
   As exceções estão em 7.4.
@@ -108,8 +107,13 @@ de chegar.
 
 ## 4. Como se trabalha aqui (fluxo acordado)
 
-1. `git pull` antes de começar, sempre.
+1. `git pull` antes de começar, sempre. **Mesmo quando a pasta parece estar em
+   dia:** a 24/09 não se fez, e repetiu-se trabalho que o Henrique já tinha
+   feito (7.13).
 2. Nunca commitar direto no `main`. Ramo próprio: `rui/<assunto>`.
+   **Desde 25/09 o `main` é o ramo de onde tudo sai** (7.15): é o que está
+   publicado, e é dele que se faz o ramo novo. Antes disso o `main` esteve meses
+   atrás do site, e havia três ramos por juntar.
 3. O Claude altera os ficheiros e **verifica que o build passa** antes de dar
    por concluído: `cd frontend && npm install && npm run build`. A Vercel
    constrói com `CI=true`, que trata os avisos como erros: testar também assim
@@ -136,25 +140,16 @@ comandos vão um por linha. Ver 7.5.
 
 - **`frontend/vercel.json` está morto.** Quem manda é o `vercel.json` da raiz.
   Editar o de dentro não faz nada. Não vale a pena tentar.
-- **O chatbot está desligado e não há planos para o ligar.** A pasta
-  `src/chatbot/` não é importada em lado nenhum — nem no `App.js`, nem em
-  componente nenhum. Nada dela é construída nem chega ao browser: não há
-  widget no site. **O código fica no repo de propósito. Não apagar.**
-  Enquanto assim for, nada do que lá está escrito é texto do site.
-- **Dentro desse código desligado** as respostas são fixas, escritas à mão em
-  `src/chatbot/services/chatService.js` (`simulateAIResponse`), e afirmam
-  "10+ anos de experiência e 200+ projetos entregues". A empresa está a nascer,
-  portanto é falso — mas **nenhum visitante vê isto**, porque o widget não corre.
-  Não replicar noutros sítios. Só passa a ser preciso corrigir no dia em que
-  alguém decidir ligar o widget.
-- **`src/i18n/translations.js` tem um bloco `chatbot:` em PT e EN.** São textos
-  órfãos do widget desligado. Ao contrário do resto do chatbot, estes **vão no
-  bundle** (o `translations.js` é importado), mas não são mostrados em lado
-  nenhum. Ficam pelo mesmo motivo que o resto do código do chatbot.
-
-  Como confirmar que o widget continua fora do site, depois de um `npm run build`:
-  procurar `simulateAIResponse` ou `ChatWidget` em `build/static/js/*.js`.
-  A 10/09/2026 dava zero ocorrências para ambos.
+- **O chatbot foi apagado a 25/09/2026** (`a5157f5`, 7.15). A regra antiga desta
+  secção dizia para não o apagar; **deixou de valer**, por decisão do Rui. Saiu a
+  pasta `src/chatbot/` inteira, com os treze ficheiros, e os blocos `chatbot:` do
+  `translations.js` em PT e EN. Não é preciso voltar a confirmar que o widget
+  está fora do site, nem a procurar `simulateAIResponse` ou `ChatWidget` no
+  build: já não existem no repositório. Com o código foi-se a afirmação falsa dos
+  "10+ anos de experiência e 200+ projetos entregues", que estava lá escrita à
+  mão e que nenhum visitante chegou a ver. **Se um dia voltar a haver widget de
+  chat, escreve-se de novo**: o antigo está no histórico do git, mas era um
+  simulador com respostas fixas, não servia para nada a sério.
 - **SEO dinâmico corrigido em `src/components/SEO.js`.** Corrigido a 13/09/2026.
   O `react-helmet-async` foi ajustado para a versão `1.3.0` (estável com React 18) e o componente `SEO.js` foi equipado com um efeito de sincronização DOM para garantir que os títulos, descrições, links canonical, hreflang e Open Graph sejam aplicados de forma fiável em todas as rotas (`/`, `/contacto`, `/faq`, `/sobre`, `/privacidade` e equivalentes em `/us`).
 - **O ponto de cima foi completado a 16/09/2026** (`18a2135`). Até aí ficavam
@@ -1082,8 +1077,8 @@ Como testar, em 7.5.
   trabalho (página interna). O contraste do admin nunca foi auditado ao vivo,
   porque exige login.
 - A tabela de cookies da política de privacidade a 380px (ver 7.1).
-- O bloco `services:` do `translations.js` (PT e EN), texto da grelha antiga que
-  já não aparece em lado nenhum (ver 7.1). Pode sair, com o acordo do Rui.
+- ~~O bloco `services:` do `translations.js`~~: **saiu a 25/09** (7.15), com o
+  acordo do Rui.
 
 #### 10. Próximo passo do fluxo, quando o Rui disser
 
@@ -1556,7 +1551,6 @@ Como se contornou:
 
 Não apagar sem o Rui decidir.
 
-- `src/chatbot/` e o bloco `chatbot:` do `translations.js` (secção 5).
 - `src/hooks/useRevealOnScroll.js`: não é importado em lado nenhum. É a entrada
   animada das secções ao chegar ao ecrã, retirada a pedido antes deste trabalho;
   ficou afinada para o dia em que voltar (diz-o o comentário no topo).
@@ -2640,3 +2634,129 @@ nenhuma.
 - **O `aria-label` bilingue ainda não está publicado.**
 - Os três ramos por juntar e o `main` atrás de todos continuam como estavam
   (7.2, ponto 10, e 7.11).
+
+### 7.15 Código morto fora, menu do telemóvel, e o main em dia (25/09/2026)
+
+Commits `a5157f5` (o código morto), `d4369b5` (o menu) e o que traz este texto.
+**Não publicado.**
+
+#### O chatbot e a grelha de serviços foram apagados
+
+**Decisão do Rui:** "Decidi apagá-lo". A regra da secção 5 que mandava não
+apagar deixou de valer, e foi reescrita.
+
+Saiu:
+
+| O quê | Onde | Quanto |
+|---|---|---|
+| A pasta do chatbot inteira | `src/chatbot/`, 13 ficheiros (componentes, contexto, hook, serviço, estilos e README) | 1123 linhas |
+| O bloco `chatbot:` dos textos | `translations.js`, PT e EN | 18 linhas |
+| O bloco `services:` dos textos | `translations.js`, PT e EN | 88 linhas |
+| A menção ao `chatbot.css` | comentário do `index.css` | 1 linha |
+
+**Nada disto chegava ao browser**, e por isso nada mudou no site:
+
+- a pasta `src/chatbot/` não era importada por ninguém. Confirmou-se antes de
+  apagar: fora da própria pasta, só o `translations.js` e um comentário do
+  `index.css` diziam a palavra "chatbot";
+- o bloco `services:` era texto da grelha de serviços antiga, que tinha saído a
+  10/09 (7.1). **Nenhum componente o lia:** o rodapé usa o seu próprio
+  `footer.services`, e o menu usa o `nav.services`. Esses dois ficam;
+- o `chatbot.css` nunca entrava no CSS do site, porque só era importado pelos
+  componentes que ninguém montava.
+
+**O chatbot não tinha dependência nenhuma só dele:** importava React e o seu
+próprio CSS, mais nada. O `package.json` não mudou.
+
+A afirmação falsa dos "10+ anos de experiência e 200+ projetos entregues", que
+vivia no `chatService.js`, foi-se com ele. Está no histórico do git, e é lá que
+deve ficar.
+
+#### O menu do telemóvel
+
+**O que o Rui viu:** "EXEMPLOS DE SERVIÇOS" partia em duas linhas e ficava
+encostado à esquerda, desalinhado dos outros, que estavam centrados.
+
+**Eram duas causas, não uma:**
+
+1. **O alinhamento.** Os cinco itens estão num `flex` com `items-center`, o que
+   centra a caixa de cada um, mas não o texto lá dentro. Os itens são de dois
+   tipos: "Home" e "Exemplos de serviços" são `<a>`, e o browser dá-lhes
+   `text-align: start`; os outros três são `<button>`, e aí o browser dá
+   `text-align: center`. Enquanto o texto coube numa linha, a diferença não se
+   via, porque a caixa encolhe ao texto. **Assim que um item partiu, apareceu.**
+2. **A largura.** A 20 caracteres, 24px e `tracking-[0.2em]`, o item pede 389px.
+   Um telemóvel pequeno tem 320.
+
+**O que se fez**, nos cinco itens e só no menu do telemóvel: `text-center`, e
+abaixo dos 640px `text-xl` com `tracking-widest` (que é 0.1em), voltando a
+`text-2xl` e `tracking-[0.2em]` a partir daí. O menu do telemóvel desaparece aos
+768px, por isso o tamanho grande só se vê na faixa dos 640 aos 767.
+
+**Porquê 20px e 0.1em, e não outra coisa.** Mediu-se o item em onze combinações,
+com o texto sem quebra. A 320px o espaço útil são os 320, porque o menu não tem
+margem lateral. Os candidatos que cabiam: 20px com 0.1em dá 284px, 18px com
+0.15em dá 274px, 20px com 0.15em dá 304px. Escolheu-se o primeiro, que é o que
+guarda mais tamanho de letra e ainda deixa 18px de cada lado. **Se um item novo
+for mais comprido do que este, a conta refaz-se:** o limite é o texto português,
+que é sempre o maior ("SERVICE EXAMPLES" pede 227px nas mesmas condições).
+
+**No computador não mudou nada**, e isso mediu-se: os itens do menu de cima
+continuam a 15px com 2,25px de espaçamento, e a camada do telemóvel continua em
+`display: none` aos 1280px.
+
+#### Verificação do Google no repositório: não existe
+
+O Rui perguntou; procurou-se em todo o repositório, incluindo o `.git` e o
+`build`. **Não há nada:** nenhuma etiqueta `google-site-verification`, nenhum
+ficheiro `google*.html`, e também nada do Bing, do Yandex ou do Facebook. A
+pasta `frontend/public` tem só `icons`, `images`, `logos`, `videos`,
+`index.html`, `manifest.json`, `robots.txt` e `sitemap.xml`. Não se criou nada,
+por instrução dele.
+
+Quer dizer que **a propriedade no Search Console, se existir, foi verificada por
+outro caminho** (o registo do domínio por DNS, ou a conta do Google Analytics ou
+do Tag Manager), ou então ainda não existe. Confirma-se entrando no Search
+Console, não no código. Se um dia for preciso verificar por ficheiro ou por
+etiqueta, o sítio é o `frontend/public/`.
+
+#### O main passa a ser o ramo de trabalho
+
+Até aqui o `main` esteve parado no `f5d9bd8` desde 10/09, e o site foi sendo
+publicado a partir de ramos: primeiro o `rui/site-branco`, depois o
+`rui/velocidade`, depois o `rui/formulario-erros`. Eram três ramos por juntar
+(7.2, ponto 10, e 7.11), e publicar a partir do `main` devolvia o site ao fundo
+preto.
+
+**Neste lote isso acaba.** O `rui/formulario-erros` já contém os outros dois, por
+ter saído deles em cadeia, por isso juntá-lo ao `main` junta tudo de uma vez.
+Confirmou-se antes de avançar que **o `main` não tinha nenhum commit que o ramo
+não tivesse**, e que continuava no `f5d9bd8`, o commit de onde o ramo saiu: o
+merge não tem nada a resolver.
+
+A partir daqui:
+
+- **o `main` é o que está publicado**, e é dele que se faz o ramo seguinte;
+- a pasta local fica no `main`, para o `vercel --prod` seguinte sair de lá;
+- a regra 2 da secção 4 passa a dizer isto.
+
+#### Verificado
+
+- `CI=true npm run build`: `Compiled successfully.` O JavaScript principal
+  perdeu 1,05 kB comprimidos, que eram os textos órfãos. O CSS não mudou, o que
+  confirma que o `chatbot.css` nunca lá estava.
+- Teste de contraste: 18 de 18.
+- **Nada visível mudou com as remoções:** a auditoria de 7.5 conta os mesmos 147
+  textos da página inicial de antes do lote, com zero falhas e sem scroll para o
+  lado. (Se der 142, é o aviso de cookies já respondido, não uma perda: são os
+  cinco textos dele.)
+- **Menu do telemóvel medido a 320, 360 e 390px, em PT e EN:** os cinco itens
+  centrados ao pixel, um em cada linha, sem scroll para o lado. O mais comprido
+  fica em 284px em português e 227px em inglês.
+
+#### O que fica por fazer
+
+- **Publicar**, a partir do `main`, quando o Rui quiser.
+- Os pendentes antigos ficam como estavam: o Moloni na tira (7.2, ponto 4), a
+  dívida do azul-claro (ponto 7), a pré-renderização (ponto 11), e a cache e o
+  CSP do `vercel.json` (7.11).
