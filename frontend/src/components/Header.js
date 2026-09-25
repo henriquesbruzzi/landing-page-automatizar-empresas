@@ -149,14 +149,14 @@ function Header() {
           <a
             href="#home"
             onClick={() => setIsMenuOpen(false)}
-            className="text-texto text-2xl tracking-[0.2em] hover:text-azul-medio transition-all duration-300"
+            className="text-texto text-xl tracking-widest text-center sm:text-2xl sm:tracking-[0.2em] hover:text-azul-medio transition-all duration-300"
           >
             {t.nav.home}
           </a>
           <a
             href="#exemplos"
             onClick={() => setIsMenuOpen(false)}
-            className="text-texto text-2xl tracking-[0.2em] hover:text-azul-medio transition-all duration-300"
+            className="text-texto text-xl tracking-widest text-center sm:text-2xl sm:tracking-[0.2em] hover:text-azul-medio transition-all duration-300"
           >
             {t.nav.services}
           </a>
@@ -165,7 +165,7 @@ function Header() {
               setIsMenuOpen(false);
               navigate(lang === 'pt' ? '/sobre' : '/us/about');
             }}
-            className="text-texto text-2xl tracking-[0.2em] hover:text-azul-medio transition-all duration-300 cursor-pointer"
+            className="text-texto text-xl tracking-widest text-center sm:text-2xl sm:tracking-[0.2em] hover:text-azul-medio transition-all duration-300 cursor-pointer"
           >
             {t.nav.about}
           </button>
@@ -174,7 +174,7 @@ function Header() {
               setIsMenuOpen(false);
               navigate(lang === 'pt' ? '/faq' : '/us/faq');
             }}
-            className="text-texto text-2xl tracking-[0.2em] hover:text-azul-medio transition-all duration-300 cursor-pointer"
+            className="text-texto text-xl tracking-widest text-center sm:text-2xl sm:tracking-[0.2em] hover:text-azul-medio transition-all duration-300 cursor-pointer"
           >
             {t.nav.faq}
           </button>
@@ -183,7 +183,7 @@ function Header() {
               setIsMenuOpen(false);
               navigate(lang === 'pt' ? '/contacto' : '/us/contact');
             }}
-            className="text-texto text-2xl tracking-[0.2em] hover:text-azul-medio transition-all duration-300 cursor-pointer"
+            className="text-texto text-xl tracking-widest text-center sm:text-2xl sm:tracking-[0.2em] hover:text-azul-medio transition-all duration-300 cursor-pointer"
           >
             {t.nav.contact}
           </button>
