@@ -264,6 +264,13 @@ comandos vão um por linha. Ver 7.5.
   - **Decisão do Rui, a 25/09: a Vercel não se liga ao GitHub.** A publicação
     continua a ser feita à mão, com `vercel --prod` na pasta principal, e um push
     não publica nada. Não voltar a propor o `vercel git connect`.
+  - **A 25/09/2026, ao fim do dia, publicou-se a partir do `main`**, pela
+    primeira vez desde agosto, e **foi o Claude a correr o `vercel --prod`**, com
+    autorização expressa do Rui. O site serve o `main.7609a02e.js`, com
+    `VERCEL_GIT_COMMIT_REF: "main"` e o commit `4a7f7c2`, que é o merge do
+    `rui/formulario-erros` (7.16). Repetiu-se o "Error: Not authorized" à
+    primeira e passou à segunda, pela quarta vez seguida. **Daqui para a frente
+    publica-se sempre do `main`.**
   - O que se aprendeu nessa publicação:
     - **A Vercel não está ligada ao GitHub** (22/09): no fim da publicação a
       própria ferramenta sugere "Automatically deploy changes on every push by
@@ -1467,11 +1474,15 @@ versões inglesas foram escritas pelo Claude e mostradas ao Rui.
 
 #### O site público já é este ramo, e publica-se à mão
 
-**Atualizado a 22/09: o nexugal.com mostra o `rui/velocidade`** (secção 6), que
-tem tudo o que o `rui/site-branco` tem e mais o trabalho de 21/09 (7.11). Quem
-publicar a partir do `rui/site-branco` tira ao site as melhorias de velocidade;
-quem publicar a partir do `main`, faz o site voltar ao fundo preto. Antes de
-publicar, confirmar em que ramo está a pasta (`git branch --show-current`).
+**Esta armadilha acabou a 25/09** (7.16): o `rui/formulario-erros` foi junto ao
+`main`, e o site passou a ser publicado do `main`. Já não há ramos atrasados à
+espera, e publicar do `main` deixou de devolver o site ao fundo preto.
+**Continua a valer confirmar em que ramo está a pasta antes de publicar**
+(`git branch --show-current`): deve dizer `main`.
+
+O que valia até lá, e explica o histórico: o nexugal.com mostrava o
+`rui/velocidade` desde 22/09, e antes disso o `rui/site-branco`. Publicar do
+ramo errado tirava ao site o trabalho que ele não tinha.
 
 Até 21/09: o nexugal.com mostrava o `rui/site-branco` (7.0), e o `main` estava atrás: **quem
 publicar a partir do `main` faz o site voltar ao fundo preto.** Uma publicação à
@@ -2657,8 +2668,8 @@ nenhuma.
 
 ### 7.15 Código morto fora, menu do telemóvel, e o main em dia (25/09/2026)
 
-Commits `a5157f5` (o código morto), `d4369b5` (o menu) e o que traz este texto.
-**Não publicado.**
+Commits `a5157f5` (o código morto), `d4369b5` (o menu) e os dois de
+documentação. **Publicado a 25/09**, dentro do merge para o `main` (7.16).
 
 #### O chatbot e a grelha de serviços foram apagados
 
@@ -2780,3 +2791,81 @@ A partir daqui:
 - Os pendentes antigos ficam como estavam: o Moloni na tira (7.2, ponto 4), a
   dívida do azul-claro (ponto 7), a pré-renderização (ponto 11), e a cache e o
   CSP do `vercel.json` (7.11).
+
+### 7.16 O merge para o main, o GitHub CLI, e a primeira publicação do main (25/09/2026)
+
+**Pull Request [#1](https://github.com/henriquesbruzzi/landing-page-automatizar-empresas/pull/1)**,
+junto ao `main` no commit de merge `4a7f7c2`, e publicado no mesmo dia.
+
+#### O que o merge resolveu
+
+O `main` estava parado no `f5d9bd8` desde 10/09, e o site andou duas semanas a
+ser publicado a partir de ramos: primeiro o `rui/site-branco`, depois o
+`rui/velocidade`, depois o `rui/formulario-erros`. Como cada um saiu do
+anterior, o último continha os três, e juntar só ele bastou. Antes de avançar
+confirmou-se que **o `main` não tinha nenhum commit que o ramo não tivesse**.
+
+São 40 commits, e o PR leva o resumo por lotes, para o Henrique ler. **Feito com
+commit de merge, não com squash**, por instrução do Rui: um squash juntava os 40
+num só e apagava o histórico que ele quer que o Henrique veja.
+
+**Os três ramos não foram apagados.** Ficam como estão, e este ficheiro
+refere-os em vários sítios.
+
+#### O GitHub CLI
+
+Instalado a pedido do Rui com `winget install --id GitHub.cli` (versão 2.101.0) e
+ligado à conta `ruimachado4`, com as permissões `repo`, `read:org` e `gist`. É
+com ele que o Claude abre e junta os Pull Requests. O executável está em
+`C:\Program Files\GitHub CLI\gh.exe`; **numa sessão nova o `gh` pode não estar
+no PATH do Git Bash**, e então chama-se pelo caminho completo.
+
+**Armadilha que custou três tentativas, e é fácil de repetir.** A sessão faz-se
+com `gh auth login --web`, que imprime um código de uma só vez e fica a
+perguntar ao GitHub se já foi autorizado. Duas coisas correram mal:
+
+- **Cada execução gera um código novo e mata o valor do anterior.** Gerou-se um
+  código numa tentativa de teste, parou-se o processo, e gerou-se outro. O Rui
+  autorizou um código cujo processo já não existia, e a autorização não teve
+  onde aterrar. **Gerar um código de cada vez, e nunca deixar dois vivos.**
+- **O `gh` copia o código para a área de transferência**, e dizer ao Rui para
+  colar é o que torna o erro de cima invisível: ele cola o que lá estiver, que
+  pode ser de uma tentativa anterior. **Dar o código escrito, e dizer para o
+  escrever à mão.**
+
+O processo tem de ficar a correr enquanto o Rui autoriza, por isso lança-se em
+segundo plano e lê-se o código do ficheiro de saída. Vê-se que resultou com
+`gh auth status`, que tem de dizer `Logged in to github.com account ruimachado4`.
+
+#### A publicação
+
+**Foi o Claude a correr o `vercel --prod`**, pela primeira vez, com autorização
+expressa do Rui nesse pedido. A app do Claude Code já não o bloqueou, ao
+contrário do que 7.11 registava a 22/09. Correu na pasta principal, com `--yes`
+para não esperar por respostas.
+
+Repetiu-se o **"Error: Not authorized" à primeira e passou à segunda**, pela
+quarta vez seguida (22, 24 e 25/09, duas vezes). **Já não vale a pena investigar:
+a resposta é repetir o comando.**
+
+#### Verificado no site real, depois de publicar
+
+- O site serve o `main.7609a02e.js`, com `VERCEL_GIT_COMMIT_REF: "main"` e o
+  commit `4a7f7c2`.
+- **O menu do telemóvel, a 320px:** os cinco itens centrados ao pixel (todos com
+  o centro em 160), um em cada linha, a 20px. "EXEMPLOS DE SERVIÇOS" ocupa 284px.
+- **O ícone do LinkedIn no rodapé:** 40 por 40px, com o endereço da página de
+  empresa, `target="_blank"`, `rel="noopener noreferrer"` e o rótulo certo.
+- **O código morto saiu mesmo:** zero ocorrências de `simulateAIResponse`,
+  `ChatWidget`, "assistente virtual" e "Digite sua mensagem" no pacote servido.
+
+**Nota sobre o JSON-LD:** no painel do Claude escondido ele não aparece, porque a
+biblioteca só escreve quando o browser desenha o ecrã (7.4). Confirmou-se no
+pacote que o site serve, onde o LinkedIn da empresa aparece duas vezes e o do
+Rui uma. Não é falha do site.
+
+#### O que muda daqui para a frente
+
+- **O `main` é o ramo de trabalho e o de publicação.** A pasta local fica nele.
+- O Claude junta ao `main` sozinho as mudanças que não se veem, e manda
+  pré-visualização antes das que se veem (regra na secção 4, ponto 6).
