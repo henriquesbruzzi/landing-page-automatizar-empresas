@@ -76,7 +76,7 @@ function Footer() {
                       href={REDES[rede]}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={`Nexugal no ${ICONES_REDES[rede].nome}`}
+                      aria-label={f.social.aria.replace('{rede}', ICONES_REDES[rede].nome)}
                       className="w-10 h-10 rounded-xl border border-linha bg-white flex items-center justify-center text-texto hover:text-azul-medio hover:border-azul-medio hover:shadow-azul transition-all duration-300"
                     >
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">

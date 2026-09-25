@@ -237,6 +237,18 @@ comandos vão um por linha. Ver 7.5.
     feita na pasta do repositório. À primeira o comando correu em `C:\Users\ruipe`
     e a Vercel perguntou se era mesmo para publicar a pasta pessoal ("You are
     deploying your home directory"). A resposta é não.
+  - **A 25/09/2026 o Rui publicou outra vez o `rui/formulario-erros`**
+    (`32ca5f3`, 7.14), com `vercel --prod` na pasta principal. O site passou a
+    servir o `main.1405c675.js`, com `VERCEL_GIT_COMMIT_REF:
+    "rui/formulario-erros"` e `REACT_APP_VERCEL_GIT_COMMIT_SHA` a acabar em
+    `32ca5f3`. Repetiu-se o "Error: Not authorized" à primeira e passou à segunda,
+    com tudo do lado dele em ordem: o `vercel whoami` devolveu `nexugalgeral-6777`
+    e o `.vercel/project.json` traz o `nexusgal-laddingpage` na equipa NEXUGAL.
+    **Se voltar a acontecer, a resposta é repetir o comando**, não andar à procura
+    de culpa na conta nem no âmbito.
+  - **Decisão do Rui, a 25/09: a Vercel não se liga ao GitHub.** A publicação
+    continua a ser feita à mão, com `vercel --prod` na pasta principal, e um push
+    não publica nada. Não voltar a propor o `vercel git connect`.
   - O que se aprendeu nessa publicação:
     - **A Vercel não está ligada ao GitHub** (22/09): no fim da publicação a
       própria ferramenta sugere "Automatically deploy changes on every push by
@@ -1645,6 +1657,14 @@ Não apagar sem o Rui decidir.
   700: usar outro peso obriga a ir buscar à Google Fonts o ficheiro que o tem e a
   declará-lo no `@font-face` (7.11).
 
+- **Ligar uma peça que estava desligada traz com ela o estilo do dia em que foi
+  escrita.** O bloco de redes sociais do rodapé estava construído desde o site
+  preto e nunca aparecia, porque a constante `REDES` tinha os endereços vazios.
+  Pôr lá o LinkedIn a 25/09 trouxe ao ecrã um hover em ciano néon
+  (`rgba(0,209,255,...)`) que ninguém tinha visto porque nunca tinha sido
+  desenhado (7.14). Antes de ligar código adormecido, ler o que ele diz sobre
+  cores, medidas e texto, que pode ser de outra versão do site.
+
 ### 7.5 Como verificar
 
 #### Build (obrigatório antes de dar qualquer coisa por feita)
@@ -2528,3 +2548,95 @@ falhas e sem scroll para o lado. Casos medidos no build: mensagem de 3 letras
 (passa e vai completada), email sem terminação (recusado), telefone com 4 dígitos
 e com 20 (recusados), telefone inglês `+44 20 7946 0958` (passa), e o clique na
 sugestão a corrigir o campo.
+
+### 7.14 O LinkedIn no rodapé e nos dados estruturados (25/09/2026)
+
+Dois commits: `32ca5f3`, **publicado pelo Rui no mesmo dia** (secção 6), e o que
+traz este texto e o `aria-label` em inglês, **não publicado**.
+
+**O pedido do Rui:** ligar o site à página de empresa no LinkedIn, "para ajudar o
+Google a indexá-la". O objetivo é o Google juntar o site e a página de empresa à
+mesma entidade, e para isso a ligação tem de existir nos dois sentidos.
+
+#### O que se fez
+
+- **Ícone do LinkedIn no rodapé** (`Footer.js`), com o endereço
+  `https://www.linkedin.com/company/nexugal`. **O bloco de redes sociais já estava
+  construído** de antes deste trabalho: o SVG das três redes escrito à mão em
+  `ICONES_REDES` e a constante `REDES` a decidir quais aparecem. Enquanto o
+  endereço estiver vazio, o ícone dessa rede não sai, e sem nenhum preenchido some
+  o bloco inteiro, título "Redes Sociais" incluído. Bastou preencher o do
+  LinkedIn. O `target="_blank"` e o `rel="noopener noreferrer"` já lá estavam.
+  **O Instagram e o Facebook continuam vazios**, à espera de contas que ainda não
+  existem.
+- **O brilho de néon que sobrava.** O hover desses ícones era
+  `hover:shadow-[0_0_15px_rgba(0,209,255,0.2)]`, o ciano do site preto (7.1).
+  Nunca se tinha visto, porque o bloco nunca chegava ao ecrã; ligar o LinkedIn
+  punha-o à vista. Passou a `shadow-azul`, o relevo que o resto do site usa.
+  Ficam dois `rgba(0,209,255,...)` no `AdminLeadsPage.js`, que é página interna.
+  Armadilha geral em 7.4.
+- **`founder` no JSON-LD da `Organization`** (`SEO.js`): um `Person` com
+  `name: 'Rui Machado'` e `sameAs` para `https://www.linkedin.com/in/rui-machado-8330812a9/`.
+  Ficou antes do `sameAs` da empresa, e só na `Organization`: o
+  `ProfessionalService` não foi tocado.
+- **O `sameAs` da empresa já tinha o LinkedIn**, escrito antes deste trabalho, com
+  o mesmo endereço que o Rui pediu. Não foi preciso criar campo nenhum, e não há
+  nem nunca houve JSON-LD no `public/index.html`: os blocos vivem todos no
+  `SEO.js` (7.2, ponto 5).
+- **O Instagram saiu do `sameAs`** (`https://www.instagram.com/nexugal`), por
+  decisão do Rui depois de lhe ser mostrado: a conta não existe, e um `sameAs` que
+  o Google não consegue confirmar joga contra o que se quer com o LinkedIn. Hoje o
+  `sameAs` tem uma entrada só. **Quando as contas existirem**, entram nos dois
+  sítios: aqui e na constante `REDES` do rodapé.
+- **O `aria-label` segue a língua da página** (segundo commit): "Nexugal no
+  LinkedIn" em português e "Nexugal on LinkedIn" em `/us`. Está em
+  `footer.social.aria` no `translations.js`, com `{rede}` no sítio do nome da
+  rede, pelo mesmo molde do `footer.copyright` e do seu `{year}`. À primeira
+  ficou escrito no componente, em português nas duas línguas, como os do
+  `Header.js` (7.9); o Rui mandou traduzir. **Uma rede nova não precisa de texto
+  novo:** o nome sai do `ICONES_REDES`.
+
+#### O que foi para o ar, revisto a pedido do Rui
+
+Antes de publicar, ele quis saber o que mais ia no mesmo lote, por o ramo levar
+muito mais do que este trabalho. **O `rui/formulario-erros` está 35 commits à
+frente do `main`**, que são o site branco inteiro: a paleta e o hero (7.1), os
+exemplos, o SEO (7.6), os lotes de 18/09 (7.7 a 7.10), a velocidade (7.11) e o
+formulário (7.12 e 7.13). Nada disto é novo, está tudo descrito acima, e já
+estava publicado desde 24/09.
+
+Procurou-se trabalho a meio em `frontend/src` e `frontend/public`, e **não há**:
+zero `TODO`, `FIXME`, `XXX` e `HACK`, zero linhas de código comentado, e o único
+`console.log` está no `contraste.test.js`, que não vai para o site. No pacote
+servido pelo site público confirmou-se também que **o chatbot continua de fora**
+(`simulateAIResponse` e `ChatWidget` com zero ocorrências), e com ele a afirmação
+falsa dos "200+ projetos" (secção 5), e que lá não aparecem nem o `admin123`, nem
+o `localhost:8000`, nem o "Codificando o Amanhã", nem "Consultoria Tecnológica".
+
+**O que vai no pacote e ninguém vê**, já conhecido e deixado de propósito: o
+bloco `chatbot:` do `translations.js` (secção 5), onde ficam também um "NEXUGAL"
+em maiúsculas e um "Digite sua mensagem" em português do Brasil, e o bloco
+`services:` (7.2, ponto 9), cujo texto está atual mas não aparece em página
+nenhuma.
+
+#### Verificado
+
+- `CI=true npm run build`: `Compiled successfully.` Teste de contraste: 18 de 18.
+- Auditoria de contraste de 7.5: zero falhas em `/` a 1280px e em `/us` a 380px,
+  sem scroll para o lado. Passou de 146 para 147 textos, que é o título "Redes
+  Sociais" a aparecer pela primeira vez.
+- No build servido, o ícone mede 40 por 40px, tem o endereço, o `target`, o `rel`
+  e o `aria-label` certos em cada língua, e o `founder` está no JSON-LD nas dez
+  páginas.
+- **No site público, depois de publicado:** o pacote é o `main.1405c675.js`, saído
+  do `32ca5f3`; o endereço do LinkedIn aparece duas vezes (o rodapé e o `sameAs`),
+  o do Rui uma, e o do Instagram nenhuma.
+
+#### O que fica por fazer
+
+- **Pedir ao Google para reler a página inicial**, no Search Console. É assim que
+  ele apanha o `sameAs` novo. Do outro lado, a página de empresa no LinkedIn deve
+  ter o nexugal.com no campo do site, senão a ligação fica só num sentido.
+- **O `aria-label` bilingue ainda não está publicado.**
+- Os três ramos por juntar e o `main` atrás de todos continuam como estavam
+  (7.2, ponto 10, e 7.11).

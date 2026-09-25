@@ -415,6 +415,9 @@ const translations = {
       },
       social: {
         title: 'Redes Sociais',
+        // {rede} fica com o nome da rede, por exemplo LinkedIn. Só é lido
+        // por leitores de ecrã, no ícone de cada rede.
+        aria: 'Nexugal no {rede}',
       },
       copyright: '© {year} Nexugal. Todos os direitos reservados.',
     },
@@ -807,6 +810,7 @@ const translations = {
       },
       social: {
         title: 'Social Media',
+        aria: 'Nexugal on {rede}',
       },
       copyright: '© {year} Nexugal. All rights reserved.',
     },
