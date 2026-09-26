@@ -47,6 +47,7 @@ const iconeLinkedin = (
 function About() {
   const { t } = useLanguage();
   const fundadores = t.about.founders;
+  const historia = t.about.historia;
 
   return (
     <section id="sobre" className="relative py-24 md:py-32 bg-white" aria-labelledby="about-title">
@@ -59,20 +60,25 @@ function About() {
           <span className="font-display text-azul-medio text-xs font-semibold tracking-[0.3em] uppercase mb-4 block">
             {t.about.subtitle}
           </span>
-          <h2 id="about-title" className="font-display text-azul-profundo text-3xl md:text-4xl lg:text-5xl font-bold tracking-[0.05em] mb-6">
+          <h2 id="about-title" className="font-display text-azul-profundo text-3xl md:text-4xl lg:text-5xl font-bold tracking-[0.05em]">
             {t.about.title}
             <span className="text-azul-vivo">{t.about.titleHighlight}</span>
           </h2>
-          <p className="text-texto max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
-            {t.about.description}
-          </p>
         </Entrada>
 
-        {/* De onde vem a forma de trabalhar */}
-        <Entrada className="text-center mb-12">
-          <p className="text-texto max-w-3xl mx-auto text-sm md:text-base leading-relaxed">
-            {fundadores.intro}
-          </p>
+        {/* Como começou. Com a mesma largura do cartão por baixo, e alinhado à
+            esquerda: quatro parágrafos centrados liam-se mal. */}
+        <Entrada className="max-w-2xl mx-auto mb-12 md:mb-16">
+          <h3 className="font-display text-azul-profundo text-2xl md:text-3xl font-bold tracking-[0.05em] mb-6">
+            {historia.titulo}
+          </h3>
+          <div className="space-y-4">
+            {historia.paragrafos.map((paragrafo) => (
+              <p key={paragrafo} className="text-texto text-sm md:text-base leading-relaxed">
+                {paragrafo}
+              </p>
+            ))}
+          </div>
         </Entrada>
 
         {/* Fundador */}
