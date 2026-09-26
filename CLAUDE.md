@@ -2873,8 +2873,12 @@ Rui uma. Não é falha do site.
 ### 7.17 O Sobre com "Como começou" (26/09/2026)
 
 Pedido do Rui, com o texto escrito por ele. **Aprovado em local** (`npm start`),
-sem pré-visualização da Vercel: o Rui viu e aprovou antes do merge. **Não
-publicado.**
+sem pré-visualização da Vercel: o Rui viu e aprovou antes do merge.
+**Publicado a 26/09/2026 pelo Claude**, com autorização do Rui, com
+`vercel --prod` a partir do `main`: o site serve o `main.34a38a38.js`, com
+`VERCEL_GIT_COMMIT_REF: "main"` e o commit `ad0579b` (o merge do PR #3), e o
+texto novo está no pacote. O "Error: Not authorized" voltou à primeira e passou
+à segunda, pela quinta vez seguida.
 
 **O que mudou** (`translations.js` e `About.js`):
 
