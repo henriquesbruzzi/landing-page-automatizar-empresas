@@ -273,9 +273,17 @@ const translations = {
       subtitle: 'Quem somos',
       title: 'Sobre a ',
       titleHighlight: 'Nexugal',
-      description: 'Ajudamos empresas a tirar do meio o trabalho manual que ninguém gosta de fazer e a pôr a informação a circular entre as pessoas e os sistemas. Sem projetos intermináveis, sem tecnologia a mais do que a necessária.',
+      // Um parágrafo por entrada, pela ordem em que aparecem
+      historia: {
+        titulo: 'Como começou',
+        paragrafos: [
+          'Novembro de 2025. A Nexugal começou por dar suporte a lojas online e, em menos de um ano, já trabalhava com lojas em mais de dez países, cada uma com a sua língua, moeda, fornecedores e parceiros.',
+          'O problema era sempre o mesmo: trabalho manual a travar o crescimento. Algumas horas por dia só para fechar as contas. Emails de clientes a acumular, alguns vistos três dias depois. Cada encomenda nova trazia mais trabalho, não mais tempo.',
+          'Automatizámos a contabilidade, o apoio ao cliente e a gestão de stock, entre outras coisas. As contas do dia passaram a fechar em cinco minutos e os clientes têm resposta sem ninguém estar a escrever email a email.',
+          'O que resolvemos no comércio online resolve-se em qualquer empresa. Hoje ajudamos empresas de outros setores a tirar do meio o trabalho manual que ninguém gosta de fazer e a pôr a informação a circular entre as pessoas e os sistemas. Sem projetos intermináveis, sem tecnologia a mais do que a necessária.',
+        ],
+      },
       founders: {
-        intro: 'O nosso fundador é licenciado em Engenharia e Gestão de Sistemas de Informação pela Universidade do Minho. É de lá que vem a forma como trabalhamos, a olhar ao mesmo tempo para o processo e para a tecnologia.',
         photoAlt: 'Fotografia de ',
         linkedinLabel: 'LinkedIn de ',
         people: [
@@ -283,7 +291,7 @@ const translations = {
             id: 'rui',
             name: 'Rui Machado',
             role: 'Fundador',
-            description: 'Gere lojas de comércio eletrónico em vários países e foi aí que construiu as primeiras automações, das respostas a clientes à faturação e à expedição. Traz o método de quem já resolveu estes problemas na sua própria empresa, antes de os resolver nas dos outros.',
+            description: 'Licenciado em Engenharia e Gestão de Sistemas de Informação pela Universidade do Minho. Construiu as primeiras automações da Nexugal nas lojas online que acompanhamos desde novembro de 2025, da contabilidade ao apoio ao cliente e à gestão de stock.',
           },
         ],
       },
@@ -615,9 +623,16 @@ const translations = {
       subtitle: 'Who we are',
       title: 'About ',
       titleHighlight: 'Nexugal',
-      description: 'We help companies take out the manual work nobody enjoys doing and get information moving between people and systems. No endless projects, no more technology than the job needs.',
+      historia: {
+        titulo: 'How it started',
+        paragrafos: [
+          'November 2025. Nexugal started out supporting online stores and, in less than a year, was already working with stores in more than ten countries, each with its own language, currency, suppliers and partners.',
+          'The problem was always the same: manual work holding back growth. A few hours a day just to close the books. Customer emails piling up, some seen three days later. Every new order brought more work, not more time.',
+          'We automated the accounting, customer support and stock management, among other things. The day\'s books now close in five minutes, and customers get an answer without anyone writing emails one by one.',
+          'What we solved in online retail can be solved in any business. Today we help companies in other sectors take out the manual work nobody enjoys doing and get information moving between people and systems. No endless projects, no more technology than the job needs.',
+        ],
+      },
       founders: {
-        intro: 'Our founder holds a degree in Information Systems Engineering and Management from the University of Minho. That is where our way of working comes from, with an eye on the process and on the technology at the same time.',
         photoAlt: 'Photo of ',
         linkedinLabel: 'LinkedIn profile of ',
         people: [
@@ -625,7 +640,7 @@ const translations = {
             id: 'rui',
             name: 'Rui Machado',
             role: 'Founder',
-            description: 'He runs e-commerce stores in several countries, and that is where he built his first automations, from customer replies to invoicing and shipping. He brings the method of someone who has already solved these problems in his own company, before solving them for others.',
+            description: 'Degree in Information Systems Engineering and Management from the University of Minho. Built Nexugal\'s first automations in the online stores we have supported since November 2025, from accounting to customer support and stock management.',
           },
         ],
       },

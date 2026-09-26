@@ -2869,3 +2869,34 @@ Rui uma. Não é falha do site.
 - **O `main` é o ramo de trabalho e o de publicação.** A pasta local fica nele.
 - O Claude junta ao `main` sozinho as mudanças que não se veem, e manda
   pré-visualização antes das que se veem (regra na secção 4, ponto 6).
+
+### 7.17 O Sobre com "Como começou" (26/09/2026)
+
+Pedido do Rui, com o texto escrito por ele. **Aprovado em local** (`npm start`),
+sem pré-visualização da Vercel: o Rui viu e aprovou antes do merge. **Não
+publicado.**
+
+**O que mudou** (`translations.js` e `About.js`):
+
+- Saiu o parágrafo do topo, "Ajudamos empresas a tirar do meio o trabalho
+  manual..." (`about.description`, PT e EN). A frase não se perdeu: é agora o
+  fim do último parágrafo da secção nova.
+- Saiu o parágrafo "O nosso fundador é licenciado..." (`about.founders.intro`).
+  No lugar dele, a secção **"Como começou"** (EN "How it started"), em
+  `about.historia`: `titulo` e `paragrafos[]`, um parágrafo por entrada.
+- O cartão do Rui Machado tem texto novo (`founders.people[0].description`).
+- O texto PT é o do Rui, tal e qual. O inglês foi escrito pelo Claude e
+  aprovado pelo Rui.
+
+**Desenho:** a secção tem a largura do cartão por baixo (`max-w-2xl`) e está
+alinhada à esquerda, porque quatro parágrafos centrados liam-se mal (escolha do
+Claude, aprovada pelo Rui). O título é um `h3` em Space Grotesk azul-profundo,
+24px no telemóvel e 30px a partir de 768px, um tamanho abaixo do "Sobre a
+Nexugal".
+
+**Verificado:** `CI=true npm run build` com `Compiled successfully.`; zero
+travessões no `translations.js`; auditoria de contraste de 7.5 em `/sobre` a
+1280px com zero falhas; `/sobre` e `/us/about` sem scroll para o lado a 380px.
+
+**O que isto torna velho:** o que 7.1, ponto 5, e 7.0 dizem sobre os textos do
+Sobre.
