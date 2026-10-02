@@ -318,11 +318,16 @@ const translations = {
         },
         {
           question: 'Qual é o custo dos vossos serviços?',
-          answer: 'Cada projeto é único, por isso o custo depende dos requisitos específicos, da complexidade e do prazo desejado. Oferecemos uma consulta gratuita e sem compromisso onde apresentamos um orçamento personalizado e transparente.',
+          // A avaliação e a proposta que sai dela não têm custo; o cliente só
+          // paga se aceitar avançar (Rui, 02/10/2026). A ordem destas frases
+          // segue a das fases do "Como trabalhamos".
+          answer: 'Cada projeto é único, por isso o custo depende dos requisitos específicos, da complexidade e do prazo desejado. Começamos por uma avaliação gratuita e sem compromisso, e daí sai uma proposta com um orçamento personalizado e transparente, também sem custo. Só paga se aceitar avançar.',
         },
         {
-          question: 'A consulta inicial é gratuita?',
-          answer: 'Sim, a primeira consulta é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. Pode agendar através do nosso formulário de contacto.',
+          // A "primeira consulta" era a própria avaliação: não há uma conversa
+          // à parte antes dela.
+          question: 'A avaliação é gratuita?',
+          answer: 'Sim, a avaliação é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. A proposta que sai dela também não tem custo: só paga se aceitar avançar. Pode agendar a avaliação através do nosso formulário de contacto.',
         },
       ],
     },
@@ -654,11 +659,11 @@ const translations = {
         },
         {
           question: 'What is the cost of your services?',
-          answer: 'Each project is unique, so the cost depends on the specific requirements, complexity and desired timeline. We offer a free, no-obligation consultation where we present a personalized and transparent quote.',
+          answer: 'Each project is unique, so the cost depends on the specific requirements, complexity and desired timeline. We start with a free, no-obligation assessment, followed by a proposal with a personalized and transparent quote, also at no cost. You only pay if you agree to go ahead.',
         },
         {
-          question: 'Is the initial consultation free?',
-          answer: 'Yes, the first consultation is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. You can schedule it through our contact form.',
+          question: 'Is the assessment free?',
+          answer: 'Yes, the assessment is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. The proposal that comes out of it is also free: you only pay if you agree to go ahead. You can schedule the assessment through our contact form.',
         },
       ],
     },
