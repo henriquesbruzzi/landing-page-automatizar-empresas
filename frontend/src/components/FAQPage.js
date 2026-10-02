@@ -73,42 +73,51 @@ function FAQPage() {
                         : 'border-linha bg-neve hover:border-azul-claro'
                     }`}
                   >
-                    {/* O id é o que a resposta, mais abaixo, usa como nome
-                        (aria-labelledby): um leitor de ecrã anuncia-a com o
-                        texto da pergunta. Até 02/10/2026 a resposta apontava
-                        para este id e nenhum elemento o tinha. */}
-                    <button
-                      id={`faq-question-${index}`}
-                      onClick={() => toggleQuestion(index)}
-                      className="w-full flex items-center justify-between p-6 md:p-8 text-left group cursor-pointer"
-                      aria-expanded={isOpen}
-                      aria-controls={`faq-answer-${index}`}
-                    >
-                      <h2 className={`font-display text-sm md:text-base font-semibold tracking-[0.03em] pr-6 leading-relaxed transition-colors duration-300 ${
-                        isOpen ? 'text-azul-medio' : 'text-texto group-hover:text-azul-profundo'
-                      }`}>
-                        {item.question}
-                      </h2>
+                    {/* A pergunta é um título com o botão lá dentro, como no
+                        padrão de acordeão da W3C. Até 03/10/2026 era ao
+                        contrário, o título dentro do botão: aí deixa de contar
+                        como título, e quem saltava de título em título com um
+                        leitor de ecrã não encontrava as perguntas. O h2 não
+                        traz estilo nenhum (o Tailwind tira-lhe margens, tamanho
+                        e peso); o texto da pergunta tem as classes que o h2
+                        tinha.
+                        O id do botão é o que a resposta, mais abaixo, usa como
+                        nome (aria-labelledby): um leitor de ecrã anuncia-a com
+                        o texto da pergunta. */}
+                    <h2>
+                      <button
+                        id={`faq-question-${index}`}
+                        onClick={() => toggleQuestion(index)}
+                        className="w-full flex items-center justify-between p-6 md:p-8 text-left group cursor-pointer"
+                        aria-expanded={isOpen}
+                        aria-controls={`faq-answer-${index}`}
+                      >
+                        <span className={`font-display text-sm md:text-base font-semibold tracking-[0.03em] pr-6 leading-relaxed transition-colors duration-300 ${
+                          isOpen ? 'text-azul-medio' : 'text-texto group-hover:text-azul-profundo'
+                        }`}>
+                          {item.question}
+                        </span>
 
-                      {/* Ícone +/- */}
-                      <span className={`flex-shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500 ${
-                        isOpen
-                          ? 'border-azul-claro bg-azul-vivo/10 rotate-45'
-                          : 'border-linha bg-white group-hover:border-azul-claro'
-                      }`}>
-                        <svg
-                          className={`w-4 h-4 transition-colors duration-300 ${
-                            isOpen ? 'text-azul-medio' : 'text-texto'
-                          }`}
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                      </span>
-                    </button>
+                        {/* Ícone +/- */}
+                        <span className={`flex-shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500 ${
+                          isOpen
+                            ? 'border-azul-claro bg-azul-vivo/10 rotate-45'
+                            : 'border-linha bg-white group-hover:border-azul-claro'
+                        }`}>
+                          <svg
+                            className={`w-4 h-4 transition-colors duration-300 ${
+                              isOpen ? 'text-azul-medio' : 'text-texto'
+                            }`}
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                          </svg>
+                        </span>
+                      </button>
+                    </h2>
 
                     {/* Resposta com animação. Abre até à altura do próprio
                         texto: a linha da grelha passa de 0fr a 1fr, e a caixa
