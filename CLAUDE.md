@@ -793,7 +793,10 @@ pediu **quatro correções, "nem mais uma"**:
   Planeamento, Desenvolvimento, Acompanhamento). "Quem ler as duas apanha a
   contradição." Reescrita com os quatro nomes da secção, pela mesma ordem, e com
   o conteúdo tirado dos próprios cartões, sem acrescentar etapas, prazos nem
-  compromissos. Saíram com ela o "Deploy" e o "zero downtime".
+  compromissos. Saíram com ela o "Deploy" e o "zero downtime". (A 02/10 o
+  Diagnóstico e o Planeamento juntaram-se numa fase só, e as quatro passaram a
+  Avaliação, Proposta, Desenvolvimento e Acompanhamento, na secção e nesta
+  resposta: 7.19.)
 - **Garantias:** "garantimos que tudo funciona na perfeição" passou a "aplicamos
   atualizações de segurança e corrigimos o que for aparecendo". Regras do Rui
   para frases deste tipo: nada de garantias absolutas, nada de "perfeição",
@@ -1625,6 +1628,16 @@ Não apagar sem o Rui decidir.
   que está na secção do `Process.js`; o "Como trabalhamos" do rodapé depende do
   id `processo`, que está na coluna dos passos (7.18). Mudar o nome de um deles
   também não dá erro nenhum: a ligação simplesmente deixa de descer.
+- **O `/sobre` e o `/us/about` são redirecionados em dois sítios** (7.19): no
+  `vercel.json` da raiz, com um 308, que é o que vale no site publicado; e no
+  `App.js`, que é o que vale no `npm start` (não lê o `vercel.json`) e apanha o
+  que o servidor deixa passar, como `/sobre/` ou `/Sobre`. Mudar o destino
+  obriga a mudar nos dois.
+- **Os nomes das fases do "Como trabalhamos" estão escritos duas vezes** no
+  `translations.js`: nos passos (`process.steps`) e na resposta da FAQ sobre o
+  processo, que os repete por extenso, em PT e em EN. A resposta sobre os prazos
+  diz também em que fase se diz o que fica pronto e quando (7.19). Mudar uma fase
+  obriga a mudar as três.
 - **O aviso de cookies tem de continuar a anunciar-se** (`anunciarAviso`, de
   `utils/avisoCookies.js`). O botão flutuante começa por assumir que o aviso está
   no ecrã sempre que ainda não há resposta guardada. Se o aviso deixar de
@@ -1690,7 +1703,11 @@ Não apagar sem o Rui decidir.
   voltar a pôr a folha da Google Fonts no `index.html`: bloqueava o desenho da
   página. Hoje há Inter 400, 500 e 600, Space Grotesk 400, 600 e 700 e Orbitron
   700: usar outro peso obriga a ir buscar à Google Fonts o ficheiro que o tem e a
-  declará-lo no `@font-face` (7.11).
+  declará-lo no `@font-face` (7.11). **Exceção, vista a 02/10 (7.19):** a Inter e
+  a Space Grotesk são letras variáveis, com todos os pesos no mesmo ficheiro; para
+  essas basta declarar o peso novo com o mesmo `src`, sem descarregar nada. Um
+  `font-bold` em Inter, sem o 700 declarado, sai a 600: é o que acontece hoje ao
+  "3 à espera de si" do cartão do hero.
 
 - **Ligar uma peça que estava desligada traz com ela o estilo do dia em que foi
   escrita.** O bloco de redes sociais do rodapé estava construído desde o site
@@ -3005,10 +3022,117 @@ só com os destaques.
 - **Redirecionamento no servidor** (falar com o Henrique): uma regra `redirects`
   no `vercel.json` da raiz dava ao Google um 308 de `/sobre` para `/`, em vez de
   uma página que muda de endereço depois de abrir. O Google segue os dois, mas
-  recomenda o do servidor.
+  recomenda o do servidor. **Feito no mesmo dia, a pedido do Rui (7.19).**
 - **Search Console:** depois de publicar, pedir ao Google para reler o
   `sitemap.xml`, que já não tem o `/sobre`.
 
 **O que isto torna velho:** 7.1, ponto 5 (a página do Sobre), 7.17 inteiro, a
 decisão da linha órfã em 7.3, e o que 7.2, ponto 14, diz sobre a descrição do
 Sobre no `SEO.js`.
+
+### 7.19 Fases novas, destaques a negrito e o redirecionamento no servidor (02/10/2026)
+
+Mesmo ramo e mesmo Pull Request do 7.18 (#5), **por juntar e por publicar**: o
+Rui vê primeiro.
+
+#### As fases de trabalho
+
+O Diagnóstico e o Planeamento juntaram-se numa fase só. Ficam quatro, com o
+texto do Rui:
+
+| | Antes | Depois |
+|---|---|---|
+| 01 | Diagnóstico: "Percebemos como o trabalho corre hoje, ao pormenor. Daí sai um relatório com o que pode mudar e o que isso traz à empresa." | Avaliação: "Avaliamos a empresa: como o trabalho corre hoje, ao pormenor, e o que dá para melhorar." |
+| 02 | Planeamento: "Dizemos o que vamos fazer, quanto custa e em quanto tempo, antes de começarmos. O valor combinado é o que fica, sem surpresas pelo caminho." | Proposta: "Apresentamos um relatório com o que pode mudar, o que isso traz à empresa e o plano para lá chegar: o que vamos fazer, quanto custa e em quanto tempo." |
+
+O Desenvolvimento e o Acompanhamento ficam como estavam. Em inglês, Assessment e
+Proposal (eram Discovery e Planning), escritos pelo Claude para o Rui rever.
+
+**Com o Planeamento saiu a frase "O valor combinado é o que fica, sem surpresas
+pelo caminho."** (EN "The price we agree on is the price that stands, with no
+surprises along the way."). Não estava em mais sítio nenhum, e o texto novo do
+Rui não a traz.
+
+**Procurou-se no projeto todo** (frontend, backend, `public/`, `vercel.json`, os
+`.md` da raiz e este ficheiro) por "diagnóstico", "planeamento", pelos nomes e
+pelo número das fases, em PT e EN. Só havia no `translations.js` e aqui:
+
+- os passos (`process.steps`, PT e EN);
+- a resposta da FAQ sobre o processo, que repete as quatro fases por extenso:
+  Avaliação e Proposta no lugar das duas primeiras, com o texto dos passos. Na
+  Avaliação ficou "percebemos", o verbo que a resposta já usava, para não se ler
+  "Avaliação, avaliamos";
+- a resposta da FAQ sobre os prazos: "Na fase de diagnóstico, dizemos o que fica
+  pronto em cada etapa e quando" passou a "Na proposta, ...", porque o tempo de
+  cada etapa é agora parte da proposta (EN: "During the discovery phase" passou a
+  "In the proposal");
+- este ficheiro: uma nota em 7.1, ponto 6, e duas armadilhas novas em 7.4. O
+  resto do que aqui se diz das fases é histórico e ficou como estava.
+
+O JSON-LD da FAQ lê o `translations.js` e mudou sozinho. O `SEO.js`, o
+`index.html`, o `sitemap.xml`, o rodapé e o backend não falam das fases.
+
+**Ficou por mexer, à espera do Rui.** Duas respostas da FAQ falam de uma
+primeira consulta gratuita, sem dizer como se liga às fases:
+
+- "Qual é o custo dos vossos serviços?": "Oferecemos uma consulta gratuita e sem
+  compromisso onde apresentamos um orçamento personalizado e transparente." Com
+  as fases novas, o custo vem na Proposta, depois da Avaliação: a frase só bate
+  certo se a avaliação e a proposta forem gratuitas.
+- "A consulta inicial é gratuita?": "Sim, a primeira consulta é totalmente
+  gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos
+  possíveis soluções e respondemos a todas as suas questões." Não se sabe se esta
+  consulta é a Avaliação ou uma conversa antes dela.
+
+O convite final ("Falamos primeiro, sem custo, para perceber se há aqui trabalho
+para fazer.") serve nos dois casos. Saber se a avaliação é paga ou gratuita é do
+Rui: não se inventou.
+
+#### Os destaques do "Quem somos" a negrito
+
+Mantêm o azul-médio e passam a `font-semibold` (600). É o peso mais forte da
+Inter que o `index.css` declara, e o mesmo com que sai o realce "3 à espera de
+si" do cartão do hero, que pede `font-bold` mas, sem o 700 declarado, sai a 600.
+O ficheiro da Inter é variável e já tem o 700: declará-lo é acrescentar um
+`@font-face` com o mesmo `src`, sem descarregar nada, mas engrossava também o
+realce do cartão do hero e o "Nexugal" da política de privacidade. Não se fez sem
+o Rui pedir.
+
+#### O redirecionamento no servidor
+
+`vercel.json` da raiz, `redirects`, a pedido do Rui: `/sobre` para `/#sobre` e
+`/us/about` para `/us#sobre`, com `permanent: true` (308). O redirecionamento do
+`App.js` ficou, para o `npm start` e para o que o servidor deixa passar (7.4).
+
+Verificado sem publicar, com a biblioteca da própria Vercel que transforma o
+`vercel.json` em rotas (`@vercel/routing-utils` 6.6.0, instalada numa pasta
+temporária, fora do projeto). Gera
+`{"src":"^/sobre$","headers":{"Location":"/#sobre"},"status":308}` e o
+equivalente para o `/us/about`, com o `#` intacto. A regra é exata e sensível a
+maiúsculas: `/sobre/` e `/Sobre` não lhe batem, recebem a página, e o `App.js`
+leva-os à secção (visto no build). `/sobrevivente` não bate.
+
+**Por confirmar depois de publicar:** a Vercel passa a query do pedido para o
+destino, e a documentação não diz onde a põe quando o destino tem `#`. Se a puser
+depois do `#` (`/#sobre?fbclid=...`), o `useAncoraAoChegar` já a ignora: visto no
+build, a secção fica a 80px do topo. Depois de publicar, confirmar com
+`curl -sI https://www.nexugal.com/sobre` que a resposta é 308 com
+`location: /#sobre`.
+
+#### Verificado
+
+- `CI=true npm run build`: `Compiled successfully.` Teste de contraste: 18 de 18.
+- No pacote: zero ocorrências de "Diagn", "Planeam", "discovery phase",
+  "Planning", "O valor combinado" e "price we agree". O único "Discovery" que lá
+  está é do react-router (`routeDiscovery`).
+- Auditoria de contraste de 7.5 a 380 e a 1280px em `/`, `/us`, `/faq` e
+  `/us/faq`, com as respostas da FAQ abertas: zero falhas, sem scroll para o lado.
+- Na secção, nas duas larguras: os rótulos e os textos novos, os quatro
+  destaques a 600 e azul-médio, os troços da linha a ligar os círculos (0 a 1px)
+  e cada rótulo ao meio do seu círculo.
+- Nas duas páginas da FAQ, as respostas novas, e nenhum nome antigo.
+- Nenhum erro na consola.
+
+**O que isto torna velho:** o que 7.18 diz dos "quatro passos de sempre, com os
+mesmos textos", e o ponto do 7.18, "O que fica por fazer", sobre o
+redirecionamento no servidor.
