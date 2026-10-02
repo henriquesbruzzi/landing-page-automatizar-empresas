@@ -3251,6 +3251,7 @@ falhas, sem scroll para o lado. Nenhum erro na consola.
 Visto de passagem, e não mexido: a caixa de cada resposta diz
 `aria-labelledby="faq-question-N"`, mas nenhum elemento tem esse id. Um leitor
 de ecrã fica sem o nome da região. Dar o id ao `h2` da pergunta resolve.
+**Corrigido no mesmo dia, a pedido do Rui, com o id no botão (7.22).**
 
 #### Os emails de prospeção do backend: Pull Request #6, à parte
 
@@ -3287,4 +3288,43 @@ arrancou.** O backend só muda no ar quando o Henrique o publicar com
 
 **O que isto torna velho:** o "por corrigir" da FAQ cortada em 7.20, e o aviso
 de 7.20 sobre os emails de prospeção.
+
+### 7.22 O nome das respostas da FAQ para leitores de ecrã (02/10/2026)
+
+Mesmo ramo e mesmo Pull Request do site (#5), **por juntar e por publicar**. O
+PR #6, dos emails, não foi tocado.
+
+**O pedido do Rui:** cada resposta da FAQ tem de apontar para a pergunta a que
+pertence, em PT e EN, e abrir e fechar tem de continuar a funcionar.
+
+**O que se fez** (`FAQPage.js`): o botão de cada pergunta ganhou o id
+`faq-question-N`, que é o que a resposta já dizia no `aria-labelledby`. Um
+leitor de ecrã passa a anunciar cada resposta com o texto da pergunta. Ficou no
+botão, e não no `h2` como 7.21 sugeria, porque é o que manda o padrão de
+acordeão da W3C (o painel tem o nome do botão que o abre). O nome sai igual: o
+botão só tem o texto da pergunta e o ícone, que não tem texto.
+
+**Verificado no build, a 1280px, em PT e EN:** as sete respostas apontam para um
+id que existe uma só vez na página, que é o do botão que as abre (o mesmo do
+`aria-controls`), e o texto dele é a pergunta. O painel do Claude não mostra o
+nome que o browser calcula (a árvore que lê não segue o `aria-labelledby`, e o
+`computedName` não existe nesta versão do Chrome): a verificação é a da regra
+dos nomes acessíveis, que dá a uma região com `aria-labelledby` o texto do
+elemento apontado. Abrir e fechar, conduzido pelo relógio das transições (7.21),
+a partir de todas fechadas: cada resposta abre até à altura do texto, com
+`aria-expanded` a passar a `true` e as outras fechadas, e fecha até 0, com
+alturas intermédias a meio. Build com `CI=true`, teste de contraste 18 de 18, e
+auditoria de contraste em `/faq` e `/us/faq` com zero falhas.
+
+**Armadilha do teste, não do site:** no painel escondido as transições só andam
+quando são conduzidas à mão. Uma resposta deixada a fechar por um teste anterior
+fica parada a meio, e o teste seguinte dá-a como aberta. Começar sempre com todas
+fechadas e acabadas.
+
+**Por resolver, visto ao mesmo tempo (não pedido):** a pergunta é um `h2` dentro
+do botão. Dentro de um botão os títulos deixam de contar como títulos, por isso
+quem navega de título em título com um leitor de ecrã não encontra as perguntas
+(e o HTML não permite um título dentro de um botão). O padrão da W3C é o
+contrário: o botão dentro do título, `<h2><button>...</button></h2>`. Muda a
+marcação, e por isso espera pelo Rui.
 
