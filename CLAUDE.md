@@ -1405,6 +1405,11 @@ por iniciativa própria; se incomodarem, é decisão do Rui.
 - **A bandeira dos Estados Unidos no cabeçalho fica como está** (troca de língua).
 - **O "suporte técnico contínuo 24/7" da FAQ fica**, e o resto da FAQ, para lá das
   quatro correções, não se toca.
+- **A Avaliação e a Proposta não têm custo** (Rui, 02/10/2026). A Avaliação é
+  gratuita e sem compromisso, a Proposta que sai dela também, e o cliente só paga
+  se aceitar avançar. A "primeira consulta" de que a FAQ falava é a própria
+  Avaliação: não há uma conversa à parte antes dela. Texto novo sobre preços ou
+  sobre o primeiro contacto segue isto (7.20).
 - **A FAQ não declara limite geográfico nenhum.** A 16/09 a decisão alargou-se
   ao site todo: nenhuma afirmação de onde a Nexugal trabalha, "nem Braga, nem
   Portugal", e nada no lugar do que sai. **A morada da empresa fica** (18/09): nos
@@ -3086,7 +3091,8 @@ primeira consulta gratuita, sem dizer como se liga às fases:
 
 O convite final ("Falamos primeiro, sem custo, para perceber se há aqui trabalho
 para fazer.") serve nos dois casos. Saber se a avaliação é paga ou gratuita é do
-Rui: não se inventou.
+Rui: não se inventou. **Respondido no mesmo dia, e as duas respostas acertadas
+(7.20).**
 
 #### Os destaques do "Quem somos" a negrito
 
@@ -3136,3 +3142,67 @@ build, a secção fica a 80px do topo. Depois de publicar, confirmar com
 **O que isto torna velho:** o que 7.18 diz dos "quatro passos de sempre, com os
 mesmos textos", e o ponto do 7.18, "O que fica por fazer", sobre o
 redirecionamento no servidor.
+
+### 7.20 A avaliação gratuita na FAQ (02/10/2026)
+
+Mesmo ramo e mesmo Pull Request (#5), **por juntar e por publicar**.
+
+**As respostas do Rui ao que ficou em aberto em 7.19:** a Avaliação é gratuita e
+sem compromisso; a Proposta que sai dela também não tem custo, e o cliente só
+paga se aceitar avançar; a "primeira consulta" da FAQ é a própria Avaliação, sem
+conversa à parte antes dela. Ficou registado em 7.3, nas decisões.
+
+**O pedido:** acertar as duas respostas da FAQ com isto, em PT e EN; "consulta"
+passa a "avaliação", também na pergunta; na resposta do custo, a avaliação
+gratuita primeiro e a proposta com o orçamento depois, pela ordem das fases; o
+tom e o tamanho das outras respostas.
+
+| | Antes | Depois |
+|---|---|---|
+| Custo, PT | "Cada projeto é único, por isso o custo depende dos requisitos específicos, da complexidade e do prazo desejado. Oferecemos uma consulta gratuita e sem compromisso onde apresentamos um orçamento personalizado e transparente." | "Cada projeto é único, por isso o custo depende dos requisitos específicos, da complexidade e do prazo desejado. Começamos por uma avaliação gratuita e sem compromisso, e daí sai uma proposta com um orçamento personalizado e transparente, também sem custo. Só paga se aceitar avançar." |
+| Custo, EN | "Each project is unique, so the cost depends on the specific requirements, complexity and desired timeline. We offer a free, no-obligation consultation where we present a personalized and transparent quote." | "Each project is unique, so the cost depends on the specific requirements, complexity and desired timeline. We start with a free, no-obligation assessment, followed by a proposal with a personalized and transparent quote, also at no cost. You only pay if you agree to go ahead." |
+| Pergunta, PT | "A consulta inicial é gratuita?" | "A avaliação é gratuita?" |
+| Resposta, PT | "Sim, a primeira consulta é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. Pode agendar através do nosso formulário de contacto." | "Sim, a avaliação é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. A proposta que sai dela também não tem custo: só paga se aceitar avançar. Pode agendar a avaliação através do nosso formulário de contacto." |
+| Pergunta, EN | "Is the initial consultation free?" | "Is the assessment free?" |
+| Resposta, EN | "Yes, the first consultation is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. You can schedule it through our contact form." | "Yes, the assessment is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. The proposal that comes out of it is also free: you only pay if you agree to go ahead. You can schedule the assessment through our contact form." |
+
+Escolhas do Claude, para o Rui rever:
+
+- A pergunta ficou "A avaliação é gratuita?", sem o "inicial": a avaliação já é
+  a primeira fase, e "avaliação inicial" dava a entender que havia outra depois.
+- O "Pode agendar" passou a "Pode agendar a avaliação", porque a frase de antes
+  passou a falar da proposta, e sem o complemento não se sabia qual das duas se
+  agendava.
+- O "apresentamos possíveis soluções" da avaliação ficou como estava: não
+  contradiz as fases, e não foi pedido.
+
+**Procurou-se "consulta" no resto do projeto:** no site só havia nestas duas
+respostas, em PT e EN. O convite final ("Falamos primeiro, sem custo...") fica,
+porque bate certo com uma avaliação gratuita. **Fora do site, e do Henrique:** os
+emails de prospeção do `backend/main.py` oferecem "uma breve conversa sem
+compromisso de 10 minutos". Não se mexeu; fica para o Rui ver com ele, porque
+pode não bater com "não há uma conversa à parte antes da avaliação".
+
+**Verificado:** `CI=true npm run build` com `Compiled successfully.`; nas duas
+páginas da FAQ, os textos novos e nenhuma "consulta" nem "consultation"; o
+JSON-LD da FAQ lê o mesmo texto; auditoria de contraste de 7.5 em `/faq` e
+`/us/faq` a 320, 360, 390 e 1280px (conta também o texto das respostas
+fechadas): zero falhas, sem scroll para o lado; nenhum erro na consola.
+
+**Encontrado ao verificar, e por corrigir (não foi pedido):** cada resposta da
+FAQ abre numa caixa com altura máxima de 384px (`max-h-96`, no `FAQPage.js`), e
+o que passar disso fica cortado, sem aviso. A resposta sobre o processo passa:
+
+| Largura | PT | EN | O que se perde |
+|---|---|---|---|
+| 320px | 508px (era 484) | 484px | cerca de 4 linhas em PT, 3 em EN |
+| 360px | 435px | 411px | a última linha em PT, o fundo da última em EN |
+| 375px | 411px | 386px | o fundo da última linha em PT; em EN só a folga de baixo |
+| 390px | 386px | 386px (era 362) | só a folga de baixo, o texto vê-se |
+| 414px | 362px | 338px | nada |
+
+As margens de baixo da caixa são 24px, e é por isso que até 24px a mais não
+corta texto. **Já acontecia antes de 02/10** com o texto antigo, com as mesmas
+alturas a 360 e a 375px. As respostas do custo e da avaliação ficam nos 313px e
+cabem em todas as larguras. A correção é trocar o `max-h-96` por uma altura que
+chegue (por exemplo `max-h-[40rem]`); espera pelo Rui.
