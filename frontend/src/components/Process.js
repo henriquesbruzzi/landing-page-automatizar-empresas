@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from '../i18n/LanguageContext';
+import { comDestaques } from '../utils/destaques';
 import Entrada from './Entrada';
 
 /**
@@ -20,28 +21,13 @@ const ROTULO = 'font-display text-azul-medio text-sm font-semibold tracking-[0.3
 const TITULO = 'font-display text-azul-profundo text-3xl md:text-4xl font-bold tracking-[0.05em]';
 const TEXTO = 'text-texto text-sm md:text-base leading-relaxed';
 
-// O que fica entre [ ] no translations.js sai a azul e a negrito, sem os
-// parênteses retos. Azul-médio, e não o azul-vivo do "andar sozinho" do
-// título: o azul-vivo só passa o contraste em letra grande, e aqui é texto
-// corrido (3,1 para 1 sobre o fundo neve, para um mínimo de 4,5). Decisão do
-// Rui. O negrito é o semibold (600), o peso mais forte da Inter que o
-// index.css declara; o realce do cartão do hero também sai com ele.
-function comDestaques(texto) {
-  return texto.split(/\[([^\]]+)\]/).map((parte, i) =>
-    i % 2 === 1 ? (
-      <span key={i} className="font-semibold text-azul-medio">
-        {parte}
-      </span>
-    ) : (
-      parte
-    )
-  );
-}
-
 function Process() {
   const { t } = useLanguage();
   const historia = t.about.historia;
+  const [primeiro, ...resto] = historia.paragrafos;
   const passos = t.process.steps;
+  // Só conta no telemóvel: a partir de md a história vê-se sempre inteira
+  const [historiaAberta, setHistoriaAberta] = useState(false);
 
   return (
     <section id="sobre" className="relative py-24 md:py-32 bg-neve overflow-hidden">
@@ -54,13 +40,52 @@ function Process() {
           <Entrada>
             <span className={ROTULO}>{t.about.subtitle}</span>
             <h2 className={`${TITULO} mb-8`}>{historia.titulo}</h2>
-            <div className="space-y-5">
-              {historia.paragrafos.map((paragrafo) => (
-                <p key={paragrafo} className={TEXTO}>
-                  {comDestaques(paragrafo)}
-                </p>
-              ))}
+
+            {/* No telemóvel (abaixo de md) vê-se só o primeiro parágrafo, com o
+                fim a desvanecer para o fundo, e o resto abre com "Ler mais". O
+                resto não sai da página: fica lá, escondido, e o Google lê-o na
+                mesma. A partir de md vê-se tudo, sem botão, como antes. */}
+            <div className="relative">
+              <p className={TEXTO}>{comDestaques(primeiro)}</p>
+              <div
+                className={`pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-b from-neve/0 to-neve transition-opacity duration-500 motion-reduce:transition-none md:hidden ${
+                  historiaAberta ? 'opacity-0' : 'opacity-100'
+                }`}
+                aria-hidden="true"
+              />
             </div>
+
+            {/* A altura abre e fecha como nas respostas da FAQ: a linha da
+                grelha passa de 0fr a 1fr. Fechado, o resto fica invisível para
+                os leitores de ecrã também (o invisible só entra no fim da
+                animação de fechar). */}
+            <div
+              id="historia-resto"
+              className={`grid transition-all duration-500 motion-reduce:transition-none md:visible md:grid-rows-[1fr] ${
+                historiaAberta ? 'visible grid-rows-[1fr]' : 'invisible grid-rows-[0fr]'
+              }`}
+            >
+              <div className="overflow-hidden">
+                <div className="space-y-5 pt-5">
+                  {resto.map((paragrafo) => (
+                    <p key={paragrafo} className={TEXTO}>
+                      {comDestaques(paragrafo)}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Mesmo desenho do "Ver exemplos" do hero */}
+            <button
+              type="button"
+              onClick={() => setHistoriaAberta(!historiaAberta)}
+              aria-expanded={historiaAberta}
+              aria-controls="historia-resto"
+              className="mt-6 border-b-2 border-azul-claro pb-1 text-sm font-semibold text-azul-medio transition-colors duration-300 hover:border-azul-medio md:hidden"
+            >
+              {historiaAberta ? t.about.lerMenos : t.about.lerMais}
+            </button>
           </Entrada>
 
           {/* ---------------- Como trabalhamos ---------------- */}

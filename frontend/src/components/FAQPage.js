@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
+import { comDestaques } from '../utils/destaques';
 import Entrada from './Entrada';
 
 function FAQPage() {
@@ -138,7 +139,7 @@ function FAQPage() {
                         <div className="px-6 md:px-8 pb-6 md:pb-8">
                           <div className="h-[1px] bg-gradient-to-r from-azul-claro via-azul-claro to-transparent mb-5"></div>
                           <p className="text-texto text-sm leading-relaxed">
-                            {item.answer}
+                            {comDestaques(item.answer)}
                           </p>
                         </div>
                       </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import translations from '../i18n/translations';
+import { semDestaques } from '../utils/destaques';
 
 /**
  * Componente SEO reutilizável: etiquetas do cabeçalho por página, mais JSON-LD.
@@ -329,7 +330,9 @@ function getFaqSchema(lang) {
       name: item.question,
       acceptedAnswer: {
         '@type': 'Answer',
-        text: item.answer,
+        // As respostas trazem destaques entre [ ] para a página; o Google
+        // recebe o texto simples, sem as marcas.
+        text: semDestaques(item.answer),
       },
     })),
   };

@@ -279,7 +279,8 @@ const translations = {
       historia: {
         titulo: 'Como começou',
         // Um parágrafo por entrada, pela ordem em que aparecem. O que fica
-        // entre [ ] sai a azul, sem os parênteses retos.
+        // entre [ ] sai a azul, sem os parênteses retos. No telemóvel só se vê
+        // o primeiro, e os outros abrem com o "Ler mais".
         paragrafos: [
           'Novembro de 2025. A Nexugal começou por dar suporte a lojas online e, em menos de um ano, já trabalhava com lojas em [mais de dez países], cada uma com a sua língua, moeda, fornecedores e parceiros.',
           'O problema era sempre o mesmo: [trabalho manual e repetitivo] a travar o crescimento. Algumas horas por dia só para fechar as contas, emails de clientes a acumular, cada encomenda nova trazia mais trabalho, não mais tempo.',
@@ -288,6 +289,8 @@ const translations = {
           'Estamos aqui para tirar da sua empresa o trabalho manual e repetitivo e as falhas do dia a dia que lhe consomem [tempo e recursos].',
         ],
       },
+      lerMais: 'Ler mais',
+      lerMenos: 'Ler menos',
     },
     faq: {
       subtitle: 'Perguntas Frequentes',
@@ -295,39 +298,42 @@ const translations = {
       titleHighlight: 'Frequentes',
       description: 'Encontre respostas para as perguntas mais comuns sobre os nossos serviços, processos e formas de trabalho.',
       back: '← Voltar ao início',
+      // Nas respostas, o que fica entre [ ] sai a azul e a negrito na página,
+      // como no "Quem somos": 1 ou 2 por resposta, e nada nas perguntas. Os
+      // dados da FAQ para o Google recebem o texto sem as marcas (SEO.js).
       items: [
         {
           question: 'Que tipo de serviços a Nexugal oferece?',
-          answer: 'Oferecemos uma gama completa de serviços tecnológicos: desenvolvimento web (sites, aplicações e plataformas), cibersegurança (auditorias, monitorização e proteção de dados), soluções cloud (migração e gestão), consultoria em inteligência artificial, análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7.',
+          answer: 'Oferecemos uma gama completa de serviços tecnológicos: [desenvolvimento web] (sites, aplicações e plataformas), cibersegurança (auditorias, monitorização e proteção de dados), soluções cloud (migração e gestão), consultoria em [inteligência artificial], análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7.',
         },
         {
           question: 'Quanto tempo demora um projeto de desenvolvimento web?',
-          answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 2 a 4 semanas, enquanto uma aplicação web mais complexa pode levar entre 2 a 6 meses. Na proposta, dizemos o que fica pronto em cada etapa e quando.',
+          answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em [2 a 4 semanas], enquanto uma aplicação web mais complexa pode levar entre [2 a 6 meses]. Na proposta, dizemos o que fica pronto em cada etapa e quando.',
         },
         {
           question: 'Como funciona o processo de trabalho da Nexugal?',
-          answer: 'O nosso processo tem quatro etapas. Avaliação, percebemos como o trabalho corre hoje, ao pormenor, e o que dá para melhorar. Proposta, apresentamos um relatório com o que pode mudar, o que isso traz à empresa e o plano para lá chegar: o que vamos fazer, quanto custa e em quanto tempo. Desenvolvimento, fazemos por partes e vai vendo a funcionar antes de estar tudo pronto, para se corrigir cedo o que for preciso. Acompanhamento, fica a funcionar e nós ficamos por perto, com alguém a quem ligar quando for preciso.',
+          answer: 'O nosso processo tem [quatro etapas]. Avaliação, percebemos como o trabalho corre hoje, ao pormenor, e o que dá para melhorar. Proposta, apresentamos um relatório com o que pode mudar, o que isso traz à empresa e o plano para lá chegar: o que vamos fazer, quanto custa e em quanto tempo. Desenvolvimento, fazemos por partes e vai vendo a funcionar antes de estar tudo pronto, para se corrigir cedo o que for preciso. Acompanhamento, fica a funcionar e nós ficamos por perto, com alguém a quem ligar quando for preciso.',
         },
         {
           question: 'A Nexugal trabalha com empresas de que dimensão?',
-          answer: 'Trabalhamos com empresas de todas as dimensões, desde startups e PMEs até grandes corporações. As nossas soluções são personalizadas para se adaptarem às necessidades e ao orçamento de cada cliente.',
+          answer: 'Trabalhamos com empresas de [todas as dimensões], desde startups e PMEs até grandes corporações. As nossas soluções são [personalizadas] para se adaptarem às necessidades e ao orçamento de cada cliente.',
         },
         {
           question: 'Oferecem suporte após a entrega do projeto?',
-          answer: 'Sim! Oferecemos suporte técnico contínuo 24/7 e manutenção proativa. Após a entrega, acompanhamos o desempenho da solução, aplicamos atualizações de segurança e corrigimos o que for aparecendo.',
+          answer: 'Sim! Oferecemos [suporte técnico contínuo 24/7] e [manutenção proativa]. Após a entrega, acompanhamos o desempenho da solução, aplicamos atualizações de segurança e corrigimos o que for aparecendo.',
         },
         {
           question: 'Qual é o custo dos vossos serviços?',
           // A avaliação e a proposta que sai dela não têm custo; o cliente só
           // paga se aceitar avançar (Rui, 02/10/2026). A ordem destas frases
           // segue a das fases do "Como trabalhamos".
-          answer: 'Cada projeto é único, por isso o custo depende dos requisitos específicos, da complexidade e do prazo desejado. Começamos por uma avaliação gratuita e sem compromisso, e daí sai uma proposta com um orçamento personalizado e transparente, também sem custo. Só paga se aceitar avançar.',
+          answer: 'Cada projeto é único, por isso o custo depende dos requisitos específicos, da complexidade e do prazo desejado. Começamos por uma [avaliação gratuita e sem compromisso], e daí sai uma proposta com um orçamento personalizado e transparente, também sem custo. [Só paga se aceitar avançar].',
         },
         {
           // A "primeira consulta" era a própria avaliação: não há uma conversa
           // à parte antes dela.
           question: 'A avaliação é gratuita?',
-          answer: 'Sim, a avaliação é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. A proposta que sai dela também não tem custo: só paga se aceitar avançar. Pode agendar a avaliação através do nosso formulário de contacto.',
+          answer: 'Sim, a avaliação é [totalmente gratuita e sem compromisso]. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. A proposta que sai dela também não tem custo: [só paga se aceitar avançar]. Pode agendar a avaliação através do nosso formulário de contacto.',
         },
       ],
     },
@@ -629,6 +635,8 @@ const translations = {
           'We are here to rid your business of the manual, repetitive work and the everyday mistakes that drain your [time and resources].',
         ],
       },
+      lerMais: 'Read more',
+      lerMenos: 'Read less',
     },
     faq: {
       subtitle: 'Frequently Asked Questions',
@@ -639,31 +647,31 @@ const translations = {
       items: [
         {
           question: 'What type of services does Nexugal offer?',
-          answer: 'We offer a complete range of technology services: web development (websites, applications and platforms), cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management), artificial intelligence consulting, data analytics with customized dashboards, and continuous 24/7 technical support.',
+          answer: 'We offer a complete range of technology services: [web development] (websites, applications and platforms), cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management), [artificial intelligence] consulting, data analytics with customized dashboards, and continuous 24/7 technical support.',
         },
         {
           question: 'How long does a web development project take?',
-          answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 2 to 4 weeks, while a more complex web application can take between 2 to 6 months. In the proposal, we tell you what is ready at each stage and when.',
+          answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in [2 to 4 weeks], while a more complex web application can take between [2 to 6 months]. In the proposal, we tell you what is ready at each stage and when.',
         },
         {
           question: 'How does Nexugal\'s work process function?',
-          answer: 'Our process has four stages. Assessment, we look in detail at how the work runs today and what can be improved. Proposal, we present a report with what can change, what that brings to the company and the plan to get there: what we will do, what it costs and how long it takes. Development, we build it in parts and you see it working before everything is finished, so whatever needs correcting is caught early. Ongoing support, it keeps running and we stay close by, with someone to call when you need it.',
+          answer: 'Our process has [four stages]. Assessment, we look in detail at how the work runs today and what can be improved. Proposal, we present a report with what can change, what that brings to the company and the plan to get there: what we will do, what it costs and how long it takes. Development, we build it in parts and you see it working before everything is finished, so whatever needs correcting is caught early. Ongoing support, it keeps running and we stay close by, with someone to call when you need it.',
         },
         {
           question: 'What size companies does Nexugal work with?',
-          answer: 'We work with companies of all sizes, from startups and SMEs to large corporations. Our solutions are customized to adapt to each client\'s needs and budget.',
+          answer: 'We work with companies of [all sizes], from startups and SMEs to large corporations. Our solutions are [customized] to adapt to each client\'s needs and budget.',
         },
         {
           question: 'Do you offer support after project delivery?',
-          answer: 'Yes! We offer continuous 24/7 technical support and proactive maintenance. After delivery, we monitor the solution\'s performance, apply security updates and fix whatever comes up.',
+          answer: 'Yes! We offer [continuous 24/7 technical support] and [proactive maintenance]. After delivery, we monitor the solution\'s performance, apply security updates and fix whatever comes up.',
         },
         {
           question: 'What is the cost of your services?',
-          answer: 'Each project is unique, so the cost depends on the specific requirements, complexity and desired timeline. We start with a free, no-obligation assessment, followed by a proposal with a personalized and transparent quote, also at no cost. You only pay if you agree to go ahead.',
+          answer: 'Each project is unique, so the cost depends on the specific requirements, complexity and desired timeline. We start with a [free, no-obligation assessment], followed by a proposal with a personalized and transparent quote, also at no cost. [You only pay if you agree to go ahead].',
         },
         {
           question: 'Is the assessment free?',
-          answer: 'Yes, the assessment is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. The proposal that comes out of it is also free: you only pay if you agree to go ahead. You can schedule the assessment through our contact form.',
+          answer: 'Yes, the assessment is [completely free and with no obligation]. In it, we analyze your needs, present possible solutions and answer all your questions. The proposal that comes out of it is also free: [you only pay if you agree to go ahead]. You can schedule the assessment through our contact form.',
         },
       ],
     },
