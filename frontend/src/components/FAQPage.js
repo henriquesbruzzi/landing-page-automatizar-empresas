@@ -105,20 +105,28 @@ function FAQPage() {
                       </span>
                     </button>
 
-                    {/* Resposta com animação */}
+                    {/* Resposta com animação. Abre até à altura do próprio
+                        texto: a linha da grelha passa de 0fr a 1fr, e a caixa
+                        de dentro esconde o que ainda não cabe. Até 02/10/2026
+                        abria até uma altura máxima fixa (max-h-96, 384px), e a
+                        resposta sobre o processo ficava cortada nos telemóveis
+                        mais estreitos. Assim nenhuma resposta fica cortada,
+                        por mais comprida que seja. */}
                     <div
                       id={`faq-answer-${index}`}
                       role="region"
                       aria-labelledby={`faq-question-${index}`}
-                      className={`overflow-hidden transition-all duration-500 ${
-                        isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                      className={`grid transition-all duration-500 ${
+                        isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
                       }`}
                     >
-                      <div className="px-6 md:px-8 pb-6 md:pb-8">
-                        <div className="h-[1px] bg-gradient-to-r from-azul-claro via-azul-claro to-transparent mb-5"></div>
-                        <p className="text-texto text-sm leading-relaxed">
-                          {item.answer}
-                        </p>
+                      <div className="overflow-hidden">
+                        <div className="px-6 md:px-8 pb-6 md:pb-8">
+                          <div className="h-[1px] bg-gradient-to-r from-azul-claro via-azul-claro to-transparent mb-5"></div>
+                          <p className="text-texto text-sm leading-relaxed">
+                            {item.answer}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -196,7 +196,7 @@ const translations = {
         {
           number: '01',
           keyword: 'Avaliação',
-          description: 'Avaliamos a empresa: como o trabalho corre hoje, ao pormenor, e o que dá para melhorar.',
+          description: 'Avaliamos a empresa, sem custo: como o trabalho corre hoje, ao pormenor, e o que dá para melhorar.',
         },
         {
           number: '02',
@@ -547,7 +547,7 @@ const translations = {
         {
           number: '01',
           keyword: 'Assessment',
-          description: 'We assess the company: how the work runs today, in detail, and what can be improved.',
+          description: 'We assess the company, at no cost: how the work runs today, in detail, and what can be improved.',
         },
         {
           number: '02',
