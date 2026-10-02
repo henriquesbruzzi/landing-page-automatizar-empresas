@@ -269,30 +269,20 @@ const translations = {
       back: 'Voltar ao início',
       logo: 'Nexugal, ir para a página inicial',
     },
+    // A coluna da esquerda da secção "Como trabalhamos", na página inicial.
+    // Até 02/10/2026 era uma página à parte, o /sobre.
     about: {
       subtitle: 'Quem somos',
-      title: 'Sobre a ',
-      titleHighlight: 'Nexugal',
-      // Um parágrafo por entrada, pela ordem em que aparecem
       historia: {
         titulo: 'Como começou',
+        // Um parágrafo por entrada, pela ordem em que aparecem. O que fica
+        // entre [ ] sai a azul, sem os parênteses retos.
         paragrafos: [
-          'Novembro de 2025. A Nexugal começou por dar suporte a lojas online e, em menos de um ano, já trabalhava com lojas em mais de dez países, cada uma com a sua língua, moeda, fornecedores e parceiros.',
-          'O problema era sempre o mesmo: trabalho manual a travar o crescimento. Algumas horas por dia só para fechar as contas. Emails de clientes a acumular, alguns vistos três dias depois. Cada encomenda nova trazia mais trabalho, não mais tempo.',
+          'Novembro de 2025. A Nexugal começou por dar suporte a lojas online e, em menos de um ano, já trabalhava com lojas em [mais de dez países], cada uma com a sua língua, moeda, fornecedores e parceiros.',
+          'O problema era sempre o mesmo: [trabalho manual e repetitivo] a travar o crescimento. Algumas horas por dia só para fechar as contas, emails de clientes a acumular, cada encomenda nova trazia mais trabalho, não mais tempo.',
           'Automatizámos a contabilidade, o apoio ao cliente e a gestão de stock, entre outras coisas. As contas do dia passaram a fechar em cinco minutos e os clientes têm resposta sem ninguém estar a escrever email a email.',
-          'O que resolvemos no comércio online resolve-se em qualquer empresa. Hoje ajudamos empresas de outros setores a tirar do meio o trabalho manual que ninguém gosta de fazer e a pôr a informação a circular entre as pessoas e os sistemas. Sem projetos intermináveis, sem tecnologia a mais do que a necessária.',
-        ],
-      },
-      founders: {
-        photoAlt: 'Fotografia de ',
-        linkedinLabel: 'LinkedIn de ',
-        people: [
-          {
-            id: 'rui',
-            name: 'Rui Machado',
-            role: 'Fundador',
-            description: 'Licenciado em Engenharia e Gestão de Sistemas de Informação pela Universidade do Minho. Construiu as primeiras automações da Nexugal nas lojas online que acompanhamos desde novembro de 2025, da contabilidade ao apoio ao cliente e à gestão de stock.',
-          },
+          'O que resolvemos no comércio online, já aplicamos a empresas com [diversas dimensões e em diversos setores] até hoje.',
+          'Estamos aqui para tirar da sua empresa o trabalho manual e repetitivo e as falhas do dia a dia que lhe consomem [tempo e recursos].',
         ],
       },
     },
@@ -367,7 +357,7 @@ const translations = {
           { label: 'Home', href: '#home' },
           { label: 'Exemplos', href: '#exemplos' },
           { label: 'Como trabalhamos', href: '#processo' },
-          { label: 'Sobre', href: '/sobre' },
+          { label: 'Sobre', href: '#sobre' },
         ],
       },
       legalLinks: [
@@ -621,27 +611,14 @@ const translations = {
     },
     about: {
       subtitle: 'Who we are',
-      title: 'About ',
-      titleHighlight: 'Nexugal',
       historia: {
         titulo: 'How it started',
         paragrafos: [
-          'November 2025. Nexugal started out supporting online stores and, in less than a year, was already working with stores in more than ten countries, each with its own language, currency, suppliers and partners.',
-          'The problem was always the same: manual work holding back growth. A few hours a day just to close the books. Customer emails piling up, some seen three days later. Every new order brought more work, not more time.',
+          'November 2025. Nexugal started out supporting online stores and, in less than a year, was already working with stores in [more than ten countries], each with its own language, currency, suppliers and partners.',
+          'The problem was always the same: [manual, repetitive work] holding back growth. A few hours a day just to close the books, customer emails piling up, every new order bringing more work, not more time.',
           'We automated the accounting, customer support and stock management, among other things. The day\'s books now close in five minutes, and customers get an answer without anyone writing emails one by one.',
-          'What we solved in online retail can be solved in any business. Today we help companies in other sectors take out the manual work nobody enjoys doing and get information moving between people and systems. No endless projects, no more technology than the job needs.',
-        ],
-      },
-      founders: {
-        photoAlt: 'Photo of ',
-        linkedinLabel: 'LinkedIn profile of ',
-        people: [
-          {
-            id: 'rui',
-            name: 'Rui Machado',
-            role: 'Founder',
-            description: 'Degree in Information Systems Engineering and Management from the University of Minho. Built Nexugal\'s first automations in the online stores we have supported since November 2025, from accounting to customer support and stock management.',
-          },
+          'What we solved in online retail we have since applied to companies [of different sizes and in different sectors].',
+          'We are here to rid your business of the manual, repetitive work and the everyday mistakes that drain your [time and resources].',
         ],
       },
     },
@@ -716,7 +693,7 @@ const translations = {
           { label: 'Home', href: '#home' },
           { label: 'Examples', href: '#exemplos' },
           { label: 'How we work', href: '#processo' },
-          { label: 'About', href: '/us/about' },
+          { label: 'About', href: '#sobre' },
         ],
       },
       legalLinks: [

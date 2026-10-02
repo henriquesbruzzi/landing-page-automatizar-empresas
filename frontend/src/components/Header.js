@@ -74,13 +74,13 @@ function Header() {
               {t.nav.services}
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-azul-medio group-hover:w-full transition-all duration-300"></span>
             </a>
-            <button
-              onClick={() => navigate(lang === 'pt' ? '/sobre' : '/us/about')}
-              className="text-texto text-sm tracking-[0.15em] hover:text-azul-profundo transition-all duration-300 relative group cursor-pointer"
+            <a
+              href="#sobre"
+              className="text-texto text-sm tracking-[0.15em] hover:text-azul-profundo transition-all duration-300 relative group"
             >
               {t.nav.about}
               <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-azul-medio group-hover:w-full transition-all duration-300"></span>
-            </button>
+            </a>
             <button
               onClick={() => navigate(lang === 'pt' ? '/faq' : '/us/faq')}
               className="text-texto text-sm tracking-[0.15em] hover:text-azul-profundo transition-all duration-300 relative group cursor-pointer"
@@ -160,15 +160,13 @@ function Header() {
           >
             {t.nav.services}
           </a>
-          <button
-            onClick={() => {
-              setIsMenuOpen(false);
-              navigate(lang === 'pt' ? '/sobre' : '/us/about');
-            }}
-            className="text-texto text-xl tracking-widest text-center sm:text-2xl sm:tracking-[0.2em] hover:text-azul-medio transition-all duration-300 cursor-pointer"
+          <a
+            href="#sobre"
+            onClick={() => setIsMenuOpen(false)}
+            className="text-texto text-xl tracking-widest text-center sm:text-2xl sm:tracking-[0.2em] hover:text-azul-medio transition-all duration-300"
           >
             {t.nav.about}
-          </button>
+          </a>
           <button
             onClick={() => {
               setIsMenuOpen(false);
