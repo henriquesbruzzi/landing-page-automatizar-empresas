@@ -73,7 +73,12 @@ function FAQPage() {
                         : 'border-linha bg-neve hover:border-azul-claro'
                     }`}
                   >
+                    {/* O id é o que a resposta, mais abaixo, usa como nome
+                        (aria-labelledby): um leitor de ecrã anuncia-a com o
+                        texto da pergunta. Até 02/10/2026 a resposta apontava
+                        para este id e nenhum elemento o tinha. */}
                     <button
+                      id={`faq-question-${index}`}
                       onClick={() => toggleQuestion(index)}
                       className="w-full flex items-center justify-between p-6 md:p-8 text-left group cursor-pointer"
                       aria-expanded={isOpen}
