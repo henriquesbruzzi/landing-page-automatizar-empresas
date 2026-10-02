@@ -3205,4 +3205,86 @@ As margens de baixo da caixa são 24px, e é por isso que até 24px a mais não
 corta texto. **Já acontecia antes de 02/10** com o texto antigo, com as mesmas
 alturas a 360 e a 375px. As respostas do custo e da avaliação ficam nos 313px e
 cabem em todas as larguras. A correção é trocar o `max-h-96` por uma altura que
-chegue (por exemplo `max-h-[40rem]`); espera pelo Rui.
+chegue (por exemplo `max-h-[40rem]`); espera pelo Rui. **Corrigido no mesmo dia,
+a pedido do Rui, de outra maneira (7.21).**
+
+### 7.21 A avaliação "sem custo" no passo 01, a FAQ inteira no telemóvel, e os emails do backend (02/10/2026)
+
+Mesmo ramo e mesmo Pull Request do site (#5), **por juntar e por publicar**. Os
+emails ficaram num Pull Request à parte, o #6 (ver abaixo).
+
+#### O passo 01
+
+| | Antes | Depois |
+|---|---|---|
+| PT | "Avaliamos a empresa: como o trabalho corre hoje, ao pormenor, e o que dá para melhorar." | "Avaliamos a empresa, sem custo: como o trabalho corre hoje, ao pormenor, e o que dá para melhorar." |
+| EN | "We assess the company: how the work runs today, in detail, and what can be improved." | "We assess the company, at no cost: how the work runs today, in detail, and what can be improved." |
+
+O PT é do Rui; o EN, do Claude, com o "at no cost" que a resposta da FAQ sobre o
+custo já usa. A resposta da FAQ sobre o processo, que repete as fases, não diz
+"sem custo": não foi pedido, e as duas respostas a seguir (custo e avaliação) já
+o dizem.
+
+#### A FAQ inteira no telemóvel
+
+O problema está em 7.20. **A correção não subiu a altura máxima: tirou-a.** A
+caixa de cada resposta é agora uma grelha com uma só linha, que passa de `0fr`
+(fechada) a `1fr` (aberta), e a caixa de dentro tem `overflow-hidden`. Uma linha
+`1fr` tem a altura do próprio texto, por isso nenhuma resposta fica cortada, por
+mais comprida que seja, e o problema não volta quando a FAQ ganhar respostas
+maiores. A animação é a mesma, meio segundo na altura e na opacidade; e fecha
+agora sem o atraso que tinha (com a altura máxima, a caixa encolhia primeiro o
+espaço vazio entre o texto e os 384px, e só depois se via mexer). A grelha anima
+no Chrome desde 2022 (107), no Safari 16 e no Firefox 66; num browser mais
+antigo abre e fecha sem animação, mas inteira.
+
+**Verificado no build, a 320 e a 360px, em PT e EN, e a 1280px:** as sete
+respostas abrem até à altura exata do texto (a do processo, a 320px, 508px em PT
+e 484px em EN, onde antes parava nos 384), e nenhuma fica cortada. A animação
+viu-se pelo relógio de cada transição, porque o painel escondido não as faz
+correr sozinho (7.4): a abrir e a fechar há uma transição de 500ms na
+`grid-template-rows` e na `opacity`, com uma altura intermédia a meio (a do
+processo, a 320px, 394px a abrir e 114px a fechar), e a caixa volta a 0 no fim.
+Auditoria de contraste de 7.5 em `/`, `/us`, `/faq` e `/us/faq` a 1280px: zero
+falhas, sem scroll para o lado. Nenhum erro na consola.
+
+Visto de passagem, e não mexido: a caixa de cada resposta diz
+`aria-labelledby="faq-question-N"`, mas nenhum elemento tem esse id. Um leitor
+de ecrã fica sem o nome da região. Dar o id ao `h2` da pergunta resolve.
+
+#### Os emails de prospeção do backend: Pull Request #6, à parte
+
+Pedido do Rui, no código do Henrique, e por isso num Pull Request só seu
+(`rui/emails-avaliacao-gratuita`, feito a partir do `main`), para o site não
+ficar à espera da revisão dele. **Por juntar: o Henrique revê.** Explica-lhe na
+descrição o motivo: a avaliação passou a ser a primeira fase e é gratuita, e não
+há uma conversa à parte antes dela (7.3).
+
+O Rui pediu para trocar a "breve conversa sem compromisso de 10 minutos" pela
+avaliação gratuita. Ao procurar, apareceram mais quatro ofertas de conversas ou
+chamadas curtas noutros modelos; perguntado, o Rui mandou trocar essas também, e
+deixar as demonstrações, os exemplos e a proposta de parceria como estavam.
+
+| Email | Antes | Depois |
+|---|---|---|
+| Oficinas & Automóvel | "Gostaríamos de agendar uma conversa de 10 minutos para mostrar como estas ferramentas podem poupar horas por dia na {company}." | "Gostaríamos de agendar uma avaliação gratuita e sem compromisso para mostrar como estas ferramentas podem poupar horas por dia na {company}." |
+| Oficinas & Automóvel | "Está disponível para uma breve chamada esta semana?" | "Está disponível para começarmos esta semana?" |
+| Imobiliárias & Construção | "Tem 10 minutos para uma conversa sem compromisso?" | "Tem interesse numa avaliação gratuita e sem compromisso?" |
+| Serviços Profissionais | "Estaria disponível para uma chamada de 15 minutos para ver se faz sentido para a {company}?" | "Estaria disponível para uma avaliação gratuita e sem compromisso, para ver se faz sentido para a {company}?" |
+| Logística & Transportes | "Gostaria de agendar uma conversa de 15 minutos para perceber se podemos ajudar?" | "Gostaria de agendar uma avaliação gratuita e sem compromisso, para perceber se podemos ajudar?" |
+| Genérico e de reserva | "Gostaríamos de agendar uma breve conversa sem compromisso de 10 minutos para analisar como podemos ajudar a {company} (...)" | "Gostaríamos de agendar uma avaliação gratuita e sem compromisso para analisar como podemos ajudar a {company} (...)" |
+| Genérico e de reserva | "Pode responder a este e-mail ou agendar uma chamada connosco em https://www.nexugal.com." | "Pode responder a este e-mail ou agendar a avaliação connosco em https://www.nexugal.com." |
+
+O genérico é o modelo `default`; o de reserva é o texto do `send_outreach_email`,
+usado quando o envio não traz mensagem própria. Os emails são só em português.
+
+**Verificado sem correr nada:** o `main.py` lê-se com o `ast` do Python, sem
+executar o módulo; os 11 modelos leem-se do código, e os marcadores `{name}` e
+`{company}` continuam a ser preenchidos (o backend troca-os com `replace`).
+**Nenhum email foi enviado, nenhum script de envio foi corrido, e o servidor não
+arrancou.** O backend só muda no ar quando o Henrique o publicar com
+`railway up` (secção 6).
+
+**O que isto torna velho:** o "por corrigir" da FAQ cortada em 7.20, e o aviso
+de 7.20 sobre os emails de prospeção.
+
