@@ -35,18 +35,20 @@ está na secção 7.
 - `src/components/`
   - `Header` (menu fixo), `Hero` (primeira dobra), `EsquemaIntegracoes` (o
     desenho do hero), `Exemplos` (secção de exemplos), `VisuaisExemplos` (os
-    quatro desenhos dessa secção), `Process` ("Como trabalhamos"),
-    `CallToAction` (convite final), `BotaoContactoFlutuante`, `Footer`,
-    `CookieBanner`
-  - `About` (o "quem somos", mostrado só na página do Sobre), `ContactPage`,
-    `FAQPage`, `Dropdown` (lista de escolha do formulário de contacto)
+    quatro desenhos dessa secção), `Process` ("Quem somos" e "Como
+    trabalhamos", lado a lado, desde 02/10, 7.18), `CallToAction` (convite
+    final), `BotaoContactoFlutuante`, `Footer`, `CookieBanner`
+  - `ContactPage`, `FAQPage`, `Dropdown` (lista de escolha do formulário de
+    contacto). O `About`, o "quem somos" da página do Sobre, saiu a 02/10 (7.18)
   - `SEO` (título, descrição, canonical e JSON-LD de cada página), `Entrada`
     (invólucro que hoje não anima nada, ver 7.4)
-- `src/pages/`: `SobrePage`, `PrivacyPolicyPage`, `AdminLoginPage`, `AdminLeadsPage`.
+- `src/pages/`: `PrivacyPolicyPage`, `AdminLoginPage`, `AdminLeadsPage`.
   Desde 21/09 (no ramo `rui/velocidade`) a política de privacidade e as duas do
-  admin vêm em ficheiros à parte, só quando são abertas (7.11)
+  admin vêm em ficheiros à parte, só quando são abertas (7.11). A `SobrePage`
+  saiu a 02/10 (7.18)
 - `src/hooks/`: `useTypewriter` (o título do hero a escrever-se),
-  `usePrefersReducedMotion`, `useRevealOnScroll` (sem uso, ver 7.4)
+  `usePrefersReducedMotion`, `useAncoraAoChegar` (quem chega com `/#sobre` cai
+  na secção, 7.18), `useRevealOnScroll` (sem uso, ver 7.4)
 - `src/utils/`: `avisoCookies.js` (liga o aviso de cookies ao botão flutuante),
   `entrada.js` (a entrada animada que o hero usava; sem uso desde 21/09, 7.11),
   `contraste.test.js` (teste de contraste, ver 7.5)
@@ -61,7 +63,8 @@ está na secção 7.
   (o hero antigo, 5 MB) foi apagada a 18/09 (7.8). **No ramo `rui/velocidade`
   (21/09, 7.11)** as imagens passaram ao tamanho a que aparecem, com nomes novos:
   o N do hero é `images/nexugal-n-132.png` (era `nexugal-n.png`, 1001 px e 464 KB),
-  a fotografia do Sobre `images/rui-240.jpg`, o ícone do site `icons/favicon-48.png`,
+  a fotografia do Sobre `images/rui-240.jpg` (apagada a 02/10 com a página, 7.18),
+  o ícone do site `icons/favicon-48.png`,
   `icons/apple-touch-icon.png`, `icons/icon-192.png` e `icons/icon-512.png` (era um
   só `favicon.png` de 623 KB), as bandeiras `icons/portugal-120.png` e
   `icons/united-states-120.png`; e saiu o vídeo `videos/landingpage.mp4`, que
@@ -69,9 +72,10 @@ está na secção 7.
 - `tailwind.config.js`: cores e tipografia. As cores estão repetidas em
   `src/index.css` (ver 7.1)
 
-Rotas: `/`, `/contacto`, `/faq`, `/sobre`, `/privacidade`; em inglês `/us`,
-`/us/contact`, `/us/faq`, `/us/about`, `/us/privacy`; e `/admin/login`,
-`/admin/leads`.
+Rotas: `/`, `/contacto`, `/faq`, `/privacidade`; em inglês `/us`,
+`/us/contact`, `/us/faq`, `/us/privacy`; e `/admin/login`, `/admin/leads`.
+O `/sobre` e o `/us/about` já não são páginas: desde 02/10 levam à secção
+`#sobre` da página inicial (7.18).
 
 ### Backend (`backend/`)
 
@@ -1428,7 +1432,9 @@ por iniciativa própria; se incomodarem, é decisão do Rui.
   páginas (7.9). Hoje "NEXUGAL" só existe no logótipo, e no admin, no chatbot
   desligado e no backend, que ficaram de fora (7.9). Texto novo com a marca
   escreve-a "Nexugal".
-- **A linha órfã do "Como trabalhamos" no telemóvel fica como está.**
+- **A linha órfã do "Como trabalhamos" no telemóvel fica como está.** (Deixou de
+  existir a 02/10: os passos passaram a linha do tempo, com a linha a ligar os
+  círculos, a pedido do Rui, 7.18.)
 - **Botões:** o do fecho dos exemplos diz "Entre em contacto"; o do hero e o
   flutuante dizem "Falar connosco". (O do convite final diz "Iniciar Conversa" e
   o da página da FAQ "Fale Connosco"; não foram objeto de decisão.)
@@ -1615,6 +1621,10 @@ Não apagar sem o Rui decidir.
   `id="contacto-final"` no `CallToAction.js`. Mudar o nome de um deles não parte
   nada à vista: o botão simplesmente deixa de aparecer, ou de desaparecer. Os ids
   estão em constantes no topo do `BotaoContactoFlutuante.js`.
+- **O SOBRE do menu e do rodapé, e o `/sobre` antigo, dependem do id `sobre`**,
+  que está na secção do `Process.js`; o "Como trabalhamos" do rodapé depende do
+  id `processo`, que está na coluna dos passos (7.18). Mudar o nome de um deles
+  também não dá erro nenhum: a ligação simplesmente deixa de descer.
 - **O aviso de cookies tem de continuar a anunciar-se** (`anunciarAviso`, de
   `utils/avisoCookies.js`). O botão flutuante começa por assumir que o aviso está
   no ecrã sempre que ainda não há resposta guardada. Se o aviso deixar de
@@ -2904,3 +2914,101 @@ travessões no `translations.js`; auditoria de contraste de 7.5 em `/sobre` a
 
 **O que isto torna velho:** o que 7.1, ponto 5, e 7.0 dizem sobre os textos do
 Sobre.
+
+### 7.18 O "quem somos" passa para a página inicial, e a página do Sobre sai (02/10/2026)
+
+Ramo `rui/quem-somos-na-inicial`, com Pull Request aberto e **por juntar**: é
+uma mudança que se vê, e o Rui pediu para a ver em local antes do merge e da
+publicação.
+
+**O pedido do Rui:** juntar o "Quem somos" à secção "Como trabalhamos" da
+página inicial, e apagar a página do Sobre.
+
+#### O que mudou
+
+- **A secção "Como trabalhamos" (`Process.js`) tem duas colunas** a partir de
+  1024px. À esquerda, "QUEM SOMOS", o título "Como começou" e cinco parágrafos
+  novos, escritos pelo Rui. À direita, "COMO TRABALHAMOS", "Do primeiro dia até
+  andar sozinho" e os quatro passos de sempre, com os mesmos textos. Saiu o
+  título grande centrado: cada coluna tem o seu, os dois a 30px no telemóvel e a
+  36px a partir de 768px. No telemóvel empilham, com a história primeiro.
+  Ficaram o fundo neve e a linha fina do topo.
+- **Os passos deixaram de ser cartões** e passaram a uma linha do tempo
+  vertical: o círculo numerado de sempre (agora com fundo branco), o rótulo em
+  maiúsculas espaçadas à altura do meio do círculo, e o texto por baixo, sem
+  caixas. **A linha liga os círculos:** cada passo, menos o último, desenha o
+  troço que vai do fundo do seu círculo ao topo do seguinte, e por isso liga-os
+  seja qual for a altura do texto. Substitui a "linha órfã" do telemóvel (7.3).
+- **Destaques a azul nos parágrafos.** No `translations.js` marcam-se entre
+  parênteses retos, `[mais de dez países]`, e saem a azul sem eles
+  (`comDestaques`, no `Process.js`). O Rui pediu-os no azul do "andar sozinho",
+  o azul-vivo, que dá 3,07 para 1 sobre o neve; em texto corrido o mínimo é 4,5.
+  Perguntado, escolheu o **azul-médio** (6,36 para 1). O "andar sozinho" do
+  título continua azul-vivo: em letra grande passa (o mínimo aí é 3).
+- **Ids:** a secção passou de `processo` a `sobre`. O `processo` ficou na coluna
+  dos passos, para o "Como trabalhamos" do rodapé continuar a descer até eles,
+  com uma margem de cima (`scroll-mt-16 md:scroll-mt-20`) para o rótulo não
+  ficar colado ao menu.
+- **Menu:** o SOBRE, no computador e no telemóvel, passou de botão que mudava de
+  página a ligação `#sobre`, igual ao EXEMPLOS DE SERVIÇOS: o mesmo scroll suave
+  e a mesma folga do menu fixo (o `scroll-padding-top` do `index.css`). No
+  telemóvel continua centrado como os outros (7.15). **Rodapé:** o "Sobre"
+  passou de `/sobre` (EN `/us/about`) a `#sobre`.
+- **O `/sobre` e o `/us/about` levam à secção** (`App.js`): `/sobre` vai para
+  `/#sobre` e `/us/about` para `/us#sobre`, sem deixar a página antiga no
+  histórico do browser. Quem redireciona é o próprio site, no browser, e não a
+  Vercel (ver "O que fica por fazer").
+- **`useAncoraAoChegar`** (`src/hooks/`, novo), usado na página inicial: quem
+  chega com uma secção no endereço (`/#sobre`, `/us#exemplos`) cai nela. O
+  browser não o faz sozinho, porque a secção ainda não existe quando a página
+  abre. Salta seco, sem a animação, que atravessaria a página toda. Só corre ao
+  chegar, para não cortar o scroll suave dos cliques no menu. E volta a acertar
+  quando as letras e as imagens acabam de chegar, se o visitante ainda não mexeu
+  na página: o Chrome e o Firefox compensam sozinhos o que muda de altura por
+  cima da secção, o Safari não.
+- **Saiu, por deixar de ser usado:** `pages/SobrePage.js`, `components/About.js`;
+  no `translations.js`, o `about.title`, o `about.titleHighlight` e o
+  `about.founders` (PT e EN); no `SEO.js`, o `about` (título, descrição e o
+  caminho de navegação do JSON-LD); e as duas entradas do `sitemap.xml`, que tem
+  agora oito páginas.
+- **O cartão do fundador saiu do site**, com a fotografia
+  (`images/rui-240.jpg`, apagada; está no histórico do git). Perguntado, o Rui
+  confirmou. O `founder` do JSON-LD (o Rui Machado, com o LinkedIn, 7.14) fica:
+  é da `Organization`, não da página.
+
+O português é o do Rui, tal e qual. O inglês foi escrito pelo Claude, para o
+Rui rever: o primeiro e o terceiro parágrafos são os aprovados a 26/09 (7.17),
+só com os destaques.
+
+#### Verificado
+
+- `CI=true npm run build`: `Compiled successfully.` Teste de contraste: 18 de 18.
+- Auditoria de contraste de 7.5 na página inicial, PT e EN, a 380, 1024, 1280 e
+  1920px: zero falhas, sem scroll para o lado. Na secção, o texto mais justo é o
+  "andar sozinho" do título (3,07, para um mínimo de 3), igual ao que já era.
+- Medido no build: colunas de 416px a 1024 e de 528px a partir de 1280; "Como
+  começou" numa linha e o título dos passos em duas (três em inglês, a 380px);
+  cada troço da linha começa no fundo de um círculo e acaba no topo do seguinte
+  (0 a 1px de diferença); o rótulo de cada passo ao meio do seu círculo.
+- Saltos medidos como em 7.4, sem a animação, que o painel escondido não faz: o
+  SOBRE do menu, o EXEMPLOS DE SERVIÇOS e o "Sobre" do rodapé deixam a secção a
+  80px do topo, a altura do menu; o "Como trabalhamos" do rodapé deixa a coluna
+  dos passos a 160px. No telemóvel, o SOBRE fecha o menu e cai no mesmo sítio.
+- `/sobre` e `/us/about`, abertos pelo endereço, no build e no `npm start`:
+  acabam em `/#sobre` e `/us#sobre`, com a secção a 80px do topo, o título e o
+  canonical da página inicial na língua certa, e nenhum erro nem aviso na
+  consola.
+
+#### O que fica por fazer
+
+- **O Rui ver em local e aprovar**, antes do merge e da publicação.
+- **Redirecionamento no servidor** (falar com o Henrique): uma regra `redirects`
+  no `vercel.json` da raiz dava ao Google um 308 de `/sobre` para `/`, em vez de
+  uma página que muda de endereço depois de abrir. O Google segue os dois, mas
+  recomenda o do servidor.
+- **Search Console:** depois de publicar, pedir ao Google para reler o
+  `sitemap.xml`, que já não tem o `/sobre`.
+
+**O que isto torna velho:** 7.1, ponto 5 (a página do Sobre), 7.17 inteiro, a
+decisão da linha órfã em 7.3, e o que 7.2, ponto 14, diz sobre a descrição do
+Sobre no `SEO.js`.
