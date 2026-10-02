@@ -18,7 +18,10 @@ const GESTOS = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
  */
 export function useAncoraAoChegar() {
   useLayoutEffect(() => {
-    const id = window.location.hash.slice(1);
+    // O split protege de um endereço como /#sobre?fbclid=..., que pode
+    // aparecer se o redirecionamento da Vercel juntar a query depois do #
+    // (a documentação não diz onde a põe).
+    const id = window.location.hash.slice(1).split('?')[0];
     if (!id) return undefined;
 
     const saltar = () => {

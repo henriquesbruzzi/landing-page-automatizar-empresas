@@ -190,15 +190,18 @@ const translations = {
       title: 'Do primeiro dia até ',
       titleHighlight: 'andar sozinho',
       steps: [
+        // O Diagnóstico e o Planeamento juntaram-se numa fase só a 02/10/2026.
+        // Os nomes das fases estão também na resposta da FAQ sobre o processo,
+        // mais abaixo: mudar aqui obriga a mudar lá.
         {
           number: '01',
-          keyword: 'Diagnóstico',
-          description: 'Percebemos como o trabalho corre hoje, ao pormenor. Daí sai um relatório com o que pode mudar e o que isso traz à empresa.',
+          keyword: 'Avaliação',
+          description: 'Avaliamos a empresa: como o trabalho corre hoje, ao pormenor, e o que dá para melhorar.',
         },
         {
           number: '02',
-          keyword: 'Planeamento',
-          description: 'Dizemos o que vamos fazer, quanto custa e em quanto tempo, antes de começarmos. O valor combinado é o que fica, sem surpresas pelo caminho.',
+          keyword: 'Proposta',
+          description: 'Apresentamos um relatório com o que pode mudar, o que isso traz à empresa e o plano para lá chegar: o que vamos fazer, quanto custa e em quanto tempo.',
         },
         {
           number: '03',
@@ -299,11 +302,11 @@ const translations = {
         },
         {
           question: 'Quanto tempo demora um projeto de desenvolvimento web?',
-          answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 2 a 4 semanas, enquanto uma aplicação web mais complexa pode levar entre 2 a 6 meses. Na fase de diagnóstico, dizemos o que fica pronto em cada etapa e quando.',
+          answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 2 a 4 semanas, enquanto uma aplicação web mais complexa pode levar entre 2 a 6 meses. Na proposta, dizemos o que fica pronto em cada etapa e quando.',
         },
         {
           question: 'Como funciona o processo de trabalho da Nexugal?',
-          answer: 'O nosso processo tem quatro etapas. Diagnóstico, percebemos como o trabalho corre hoje, ao pormenor, e daí sai um relatório com o que pode mudar e o que isso traz à empresa. Planeamento, dizemos o que vamos fazer, quanto custa e em quanto tempo, antes de começarmos. Desenvolvimento, fazemos por partes e vai vendo a funcionar antes de estar tudo pronto, para se corrigir cedo o que for preciso. Acompanhamento, fica a funcionar e nós ficamos por perto, com alguém a quem ligar quando for preciso.',
+          answer: 'O nosso processo tem quatro etapas. Avaliação, percebemos como o trabalho corre hoje, ao pormenor, e o que dá para melhorar. Proposta, apresentamos um relatório com o que pode mudar, o que isso traz à empresa e o plano para lá chegar: o que vamos fazer, quanto custa e em quanto tempo. Desenvolvimento, fazemos por partes e vai vendo a funcionar antes de estar tudo pronto, para se corrigir cedo o que for preciso. Acompanhamento, fica a funcionar e nós ficamos por perto, com alguém a quem ligar quando for preciso.',
         },
         {
           question: 'A Nexugal trabalha com empresas de que dimensão?',
@@ -538,13 +541,13 @@ const translations = {
       steps: [
         {
           number: '01',
-          keyword: 'Discovery',
-          description: 'We look in detail at how the work runs today. From that comes a report with what can change and what that brings to the company.',
+          keyword: 'Assessment',
+          description: 'We assess the company: how the work runs today, in detail, and what can be improved.',
         },
         {
           number: '02',
-          keyword: 'Planning',
-          description: 'We tell you what we will do, what it costs and how long it takes, before we start. The price we agree on is the price that stands, with no surprises along the way.',
+          keyword: 'Proposal',
+          description: 'We present a report with what can change, what that brings to the company and the plan to get there: what we will do, what it costs and how long it takes.',
         },
         {
           number: '03',
@@ -635,11 +638,11 @@ const translations = {
         },
         {
           question: 'How long does a web development project take?',
-          answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 2 to 4 weeks, while a more complex web application can take between 2 to 6 months. During the discovery phase, we tell you what is ready at each stage and when.',
+          answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 2 to 4 weeks, while a more complex web application can take between 2 to 6 months. In the proposal, we tell you what is ready at each stage and when.',
         },
         {
           question: 'How does Nexugal\'s work process function?',
-          answer: 'Our process has four stages. Discovery, we look in detail at how the work runs today, and from that comes a report with what can change and what that brings to the company. Planning, we tell you what we will do, what it costs and how long it takes, before we start. Development, we build it in parts and you see it working before everything is finished, so whatever needs correcting is caught early. Ongoing support, it keeps running and we stay close by, with someone to call when you need it.',
+          answer: 'Our process has four stages. Assessment, we look in detail at how the work runs today and what can be improved. Proposal, we present a report with what can change, what that brings to the company and the plan to get there: what we will do, what it costs and how long it takes. Development, we build it in parts and you see it working before everything is finished, so whatever needs correcting is caught early. Ongoing support, it keeps running and we stay close by, with someone to call when you need it.',
         },
         {
           question: 'What size companies does Nexugal work with?',

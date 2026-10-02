@@ -124,7 +124,10 @@ function App() {
 
         {/* O "quem somos" foi uma página à parte até 02/10/2026 e passou a
             secção da página inicial. Os endereços antigos levam à secção,
-            para não partir ligações que andem por aí. */}
+            para não partir ligações que andem por aí. No site publicado quem
+            redireciona primeiro é a Vercel, com um 308 (vercel.json da raiz);
+            estas duas rotas ficam para o npm start, que não lê o vercel.json.
+            Mudar o destino obriga a mudar nos dois sítios. */}
         <Route path="/sobre" element={<Navigate to="/#sobre" replace />} />
         <Route path="/us/about" element={<Navigate to="/us#sobre" replace />} />
 

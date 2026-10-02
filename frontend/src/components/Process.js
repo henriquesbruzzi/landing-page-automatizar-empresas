@@ -20,14 +20,16 @@ const ROTULO = 'font-display text-azul-medio text-sm font-semibold tracking-[0.3
 const TITULO = 'font-display text-azul-profundo text-3xl md:text-4xl font-bold tracking-[0.05em]';
 const TEXTO = 'text-texto text-sm md:text-base leading-relaxed';
 
-// O que fica entre [ ] no translations.js sai a azul, sem os parênteses
-// retos. Azul-médio, e não o azul-vivo do "andar sozinho" do título: o
-// azul-vivo só passa o contraste em letra grande, e aqui é texto corrido
-// (3,1 para 1 sobre o fundo neve, para um mínimo de 4,5). Decisão do Rui.
+// O que fica entre [ ] no translations.js sai a azul e a negrito, sem os
+// parênteses retos. Azul-médio, e não o azul-vivo do "andar sozinho" do
+// título: o azul-vivo só passa o contraste em letra grande, e aqui é texto
+// corrido (3,1 para 1 sobre o fundo neve, para um mínimo de 4,5). Decisão do
+// Rui. O negrito é o semibold (600), o peso mais forte da Inter que o
+// index.css declara; o realce do cartão do hero também sai com ele.
 function comDestaques(texto) {
   return texto.split(/\[([^\]]+)\]/).map((parte, i) =>
     i % 2 === 1 ? (
-      <span key={i} className="text-azul-medio">
+      <span key={i} className="font-semibold text-azul-medio">
         {parte}
       </span>
     ) : (
