@@ -1572,6 +1572,12 @@ novo com `<defs>` (marker, gradient, mask, clipPath, filter) tem de ter ids
   SEO.js e o react-helmet-async").
 - **As capturas de ecrã escondido vêm deslocadas**, mesmo com a página no topo e
   as secções de cima escondidas (16/09). Medir em vez de capturar.
+- **Medidas de "antes" e "depois" só se comparam na mesma escala** (visto a
+  03/10, 7.23). O painel encolhe a largura emulada para caber, e o
+  `devicePixelRatio` muda de uma medição para a outra (viram-se 1, 1,25, 1,75 e
+  2 na mesma hora). Um contorno de 1px arredonda aos píxeis reais (0,8px a 1,25,
+  0,57px a 1,75), e tudo o que está dentro dele mexe décimas de píxel. Guardar o
+  `devicePixelRatio` com cada medição, e repetir a que não bater.
 - O `.claude/launch.json` (fora do git) tem duas configurações: `nexugal-frontend`
   (`npm start`, porta 3000, ou outra se estiver ocupada) e `nexugal-build` (serve
   a pasta `frontend/build` na porta 4173, com `npx serve -s`).
@@ -3326,5 +3332,41 @@ do botão. Dentro de um botão os títulos deixam de contar como títulos, por i
 quem navega de título em título com um leitor de ecrã não encontra as perguntas
 (e o HTML não permite um título dentro de um botão). O padrão da W3C é o
 contrário: o botão dentro do título, `<h2><button>...</button></h2>`. Muda a
-marcação, e por isso espera pelo Rui.
+marcação, e por isso espera pelo Rui. **Feito a 03/10, a pedido do Rui (7.23).**
+
+### 7.23 As perguntas da FAQ como títulos (03/10/2026)
+
+Mesmo ramo e mesmo Pull Request do site (#5), **por juntar e por publicar**. O
+PR #6, dos emails, não foi tocado.
+
+**O pedido do Rui:** o botão de cada pergunta passa a ficar dentro do título,
+como no padrão de acordeão da W3C, para as perguntas contarem como títulos para
+os leitores de ecrã, em PT e EN; o aspeto, a animação e o nome das respostas
+ficam iguais.
+
+**O que mudou** (`FAQPage.js`): era `<button><h2>pergunta</h2><ícone></button>`,
+passou a `<h2><button><span>pergunta</span><ícone></button></h2>`. O `span` tem
+as classes que o `h2` tinha; o `h2` de fora não tem classes, porque o Tailwind
+já lhe tira margens, tamanho e peso. O id do botão, o `aria-expanded`, o
+`aria-controls` e a resposta ficaram como estavam.
+
+**Verificado no build:**
+
+- **Aspeto igual**, medido peça a peça (cartão, botão, texto da pergunta, ícone,
+  resposta, a lista e o botão de contacto por baixo, com posição, tamanho, letra,
+  cor e espaçamentos), com tudo fechado e com a pergunta 3 aberta, em PT e EN, a
+  360 e a 1280px: **zero diferenças**, com as duas versões servidas uma a seguir
+  à outra na mesma escala (armadilha em 7.4: a primeira comparação deu décimas de
+  píxel de diferença, todas do contorno arredondado com a escala do painel a
+  mudar entre as medições). As capturas das duas versões mostram o mesmo
+  desenho.
+- **Abrir e fechar** iguais: as mesmas transições de 500ms (`grid-template-rows`
+  e `opacity`), e as mesmas alturas a meio da animação que se mediram a 02/10
+  antes desta mudança (a 1280px, em PT, 117, 98 e 155px nas três primeiras).
+- **Títulos e nomes:** sete `h2`, cada um só com o botão da sua pergunta e com o
+  texto dela, e nenhum título dentro de um botão; cada resposta continua a apontar
+  para o botão da sua pergunta (7.22).
+- `CI=true npm run build` com `Compiled successfully.`, teste de contraste 18 de
+  18, auditoria de contraste em `/faq` e `/us/faq` a 360 e a 1280px com zero
+  falhas e sem scroll para o lado, e nenhum erro na consola.
 
