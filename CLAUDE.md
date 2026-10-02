@@ -51,7 +51,9 @@ está na secção 7.
   na secção, 7.18), `useRevealOnScroll` (sem uso, ver 7.4)
 - `src/utils/`: `avisoCookies.js` (liga o aviso de cookies ao botão flutuante),
   `entrada.js` (a entrada animada que o hero usava; sem uso desde 21/09, 7.11),
-  `contraste.test.js` (teste de contraste, ver 7.5)
+  `destaques.js` (o texto entre `[ ]` a azul e a negrito, e o mesmo texto sem as
+  marcas para o Google; desde 03/10, 7.24), `contraste.test.js` (teste de
+  contraste, ver 7.5)
 - `src/fonts/`: as três letras do site (Inter, Space Grotesk, Orbitron), desde
   21/09 alojadas no próprio site e declaradas no `index.css` (7.11)
 - `src/i18n/translations.js`: **quase todo o texto do site em PT e EN vive aqui**.
@@ -1578,6 +1580,13 @@ novo com `<defs>` (marker, gradient, mask, clipPath, filter) tem de ter ids
   2 na mesma hora). Um contorno de 1px arredonda aos píxeis reais (0,8px a 1,25,
   0,57px a 1,75), e tudo o que está dentro dele mexe décimas de píxel. Guardar o
   `devicePixelRatio` com cada medição, e repetir a que não bater.
+- **Mudar a largura com a página aberta arranca as transições, e elas ficam
+  paradas no início** (visto a 03/10, 7.24). Uma caixa que muda de altura ou de
+  visibilidade com a largura (o "Ler mais" do "Quem somos", que só fecha abaixo de
+  md) fica no estado de partida, como se a classe do computador não contasse:
+  `getAnimations()` mostra-as `running` com `currentTime` 0. Não é avaria. Depois
+  de mudar a largura, recarregar a página, ou acabar as animações à mão
+  (`finish()`), antes de medir.
 - O `.claude/launch.json` (fora do git) tem duas configurações: `nexugal-frontend`
   (`npm start`, porta 3000, ou outra se estiver ocupada) e `nexugal-build` (serve
   a pasta `frontend/build` na porta 4173, com `npx serve -s`).
@@ -3369,4 +3378,88 @@ já lhe tira margens, tamanho e peso. O id do botão, o `aria-expanded`, o
 - `CI=true npm run build` com `Compiled successfully.`, teste de contraste 18 de
   18, auditoria de contraste em `/faq` e `/us/faq` a 360 e a 1280px com zero
   falhas e sem scroll para o lado, e nenhum erro na consola.
+
+### 7.24 "Ler mais" no "Quem somos" do telemóvel, e destaques na FAQ (03/10/2026)
+
+Mesmo ramo e mesmo Pull Request do site (#5), **por juntar e por publicar**. O
+PR #6, dos emails, não foi tocado.
+
+#### "Ler mais" no telemóvel (`Process.js`)
+
+O pedido do Rui: no telemóvel, só o primeiro parágrafo da história e um botão
+"Ler mais" (EN "Read more"); o fim do texto visível a desvanecer para a cor do
+fundo, o resto a abrir com uma animação de altura, e o botão a passar a "Ler
+menos" (EN "Read less") e a fechar da mesma forma; o texto escondido fica na
+página, para o Google; o botão acessível por teclado e com o estado anunciado;
+no computador, tudo como estava.
+
+Como ficou:
+
+- **"Telemóvel" é abaixo de md (768px)**, o mesmo corte do menu de telemóvel. A
+  partir daí vê-se tudo, sem botão, também no tablet, onde as colunas ainda estão
+  empilhadas.
+- **O primeiro parágrafo fica sempre à vista**, e por cima da sua última linha há
+  um véu de 40px que vai do transparente ao neve (o fundo da secção). Desaparece
+  a abrir e volta a fechar, com a mesma animação.
+- **Os outros quatro parágrafos** abrem e fecham como as respostas da FAQ: uma
+  grelha com uma só linha, de `0fr` a `1fr`, em meio segundo. Fechados, ficam
+  `invisible` (fora do alcance dos leitores de ecrã também), mas continuam no
+  HTML da página: o Google lê-os. O `invisible` só entra no fim da animação de
+  fechar, por isso o texto não desaparece antes de a caixa encolher. Com "menos
+  movimento" pedido no sistema, abre e fecha sem animação.
+- **O botão** tem o desenho do "Ver exemplos" do hero (azul-médio a negrito, com
+  o traço azul-claro por baixo), é um `button` verdadeiro (Tab, Enter e Espaço), e
+  tem `aria-expanded` e `aria-controls="historia-resto"`. Os textos estão no
+  `translations.js`, em `about.lerMais` e `about.lerMenos`.
+- **No computador fica igual**: comparada a coluna "Quem somos" das duas versões,
+  peça a peça, a 1280px e na mesma escala, em PT e EN: zero diferenças.
+
+#### Destaques nas respostas da FAQ
+
+O pedido do Rui: 1 a 2 palavras-chave por resposta, a azul e a negrito como no
+"Quem somos", nada nas perguntas, o mesmo em EN, e os dados da FAQ para o Google
+com o texto simples.
+
+Marcam-se como no "Quem somos", entre `[ ]` no `translations.js`. A função que
+os desenha passou do `Process.js` para `utils/destaques.js` (`comDestaques`), e
+serve agora os dois sítios. O `SEO.js` usa a `semDestaques`, que tira as marcas:
+o Google recebe exatamente o texto que se lê na página, sem `[ ]`.
+
+| Pergunta | PT | EN |
+|---|---|---|
+| Serviços | desenvolvimento web; inteligência artificial | web development; artificial intelligence |
+| Prazo | 2 a 4 semanas; 2 a 6 meses | 2 to 4 weeks; 2 to 6 months |
+| Processo | quatro etapas | four stages |
+| Dimensão | todas as dimensões; personalizadas | all sizes; customized |
+| Suporte | suporte técnico contínuo 24/7; manutenção proativa | continuous 24/7 technical support; proactive maintenance |
+| Custo | avaliação gratuita e sem compromisso; Só paga se aceitar avançar | free, no-obligation assessment; You only pay if you agree to go ahead |
+| Avaliação | totalmente gratuita e sem compromisso; só paga se aceitar avançar | completely free and with no obligation; you only pay if you agree to go ahead |
+
+Escolhas do Claude, para o Rui rever. Ficaram de fora, de propósito: o
+"formulário de contacto" da última resposta, porque a azul e a negrito parecia
+uma ligação que não é; e, na primeira resposta, o "suporte técnico contínuo 24/7",
+para não repetir o destaque da resposta sobre o suporte.
+
+#### Verificado
+
+- **Telemóvel, a 320 e a 360px, em PT e EN:** fechado, a caixa do resto tem
+  altura 0, está `invisible` e o véu está a 1; o texto escondido está no HTML (os
+  cinco parágrafos). A abrir há transição de 500ms na altura (a 320px em PT, 478
+  de 616px a meio) e o véu desaparece; aberto, a caixa tem a altura do texto, o
+  botão diz "Ler menos" e `aria-expanded` passa a `true`; a fechar, o mesmo ao
+  contrário, e o texto só fica `invisible` no fim. Teclado: com o foco no botão,
+  Enter abre e Espaço fecha, o foco fica no botão e vê-se o contorno de foco.
+- **Tablet (768px):** tudo à vista, sem botão e sem véu.
+- **FAQ, a 320, 360 e 1280px, em PT e EN:** 13 destaques por língua (2, 2, 1, 2,
+  2, 2 e 2), todos a 600 e azul-médio, nenhum nas perguntas, nenhum `[` ou `]` à
+  vista; os dados da FAQ para o Google, lidos com o remendo do desenho do ecrã
+  (7.2, ponto 5), trazem as sete respostas iguais ao texto da página, sem marcas.
+- **Contraste:** zero falhas em `/` e `/us` a 320 e 360px (com o "Quem somos"
+  fechado e aberto) e a 1280px, e nas FAQ com cada resposta aberta, nas três
+  larguras. Teste de contraste 18 de 18, sem scroll para o lado, e nenhum erro na
+  consola.
+- `CI=true npm run build` com `Compiled successfully.`, e as classes novas
+  (`from-neve/0`, `md:visible`, `md:grid-rows-[1fr]`, `motion-reduce:`) no CSS
+  gerado.
+
 
