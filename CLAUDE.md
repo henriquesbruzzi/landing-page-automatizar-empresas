@@ -277,6 +277,11 @@ comandos vão um por linha. Ver 7.5.
     `rui/formulario-erros` (7.16). Repetiu-se o "Error: Not authorized" à
     primeira e passou à segunda, pela quarta vez seguida. **Daqui para a frente
     publica-se sempre do `main`.**
+  - **A 03/10/2026, à 01h06 (Lisboa), o Claude publicou o `main` com o PR #5**
+    (o merge `3f72b90`), com `npx vercel --prod --yes`, autorizado pelo Rui:
+    deployment `dpl_6divH1aUFyft3uUhA1xEFUdJBm5t`. O site serve o
+    `main.ed01edb8.js`, com `VERCEL_GIT_COMMIT_REF: "main"` e o commit `3f72b90`.
+    **Passou à primeira**, sem o "Error: Not authorized". Verificação em 7.26.
   - O que se aprendeu nessa publicação:
     - **A Vercel não está ligada ao GitHub** (22/09): no fim da publicação a
       própria ferramenta sugere "Automatically deploy changes on every push by
@@ -3138,7 +3143,9 @@ destino, e a documentação não diz onde a põe quando o destino tem `#`. Se a 
 depois do `#` (`/#sobre?fbclid=...`), o `useAncoraAoChegar` já a ignora: visto no
 build, a secção fica a 80px do topo. Depois de publicar, confirmar com
 `curl -sI https://www.nexugal.com/sobre` que a resposta é 308 com
-`location: /#sobre`.
+`location: /#sobre`. **Confirmado a 03/10, no site publicado (7.26):** a Vercel
+põe a query antes do `#` (`/sobre?fbclid=teste` dá 308 para
+`/?fbclid=teste#sobre`), que é a forma certa; a defesa do hook fica, sem uso.
 
 #### Verificado
 
@@ -3512,5 +3519,39 @@ serviços ficou mais comprida, e o acordeão abre até à altura do texto, 7.21)
 contraste sem falhas com cada resposta aberta, e os dados da FAQ para o Google
 iguais ao texto da página, sem marcas (lidos com o remendo do desenho do ecrã,
 7.2, ponto 5). Nenhum erro na consola.
+
+### 7.26 O PR #5 junto ao main e publicado (03/10/2026)
+
+O Rui aprovou o PR #5 (7.18 a 7.25) e mandou juntar e publicar. Antes de juntar:
+o ramo tinha tudo o que estava no `main`, e o build passou com `npm install` e
+`CI=true npm run build`, com o teste de contraste a 18 de 18. Merge com commit de
+merge (`3f72b90`), e publicação com `npx vercel --prod --yes` a partir do `main`,
+na pasta principal (secção 6). O PR #6, dos emails, ficou como estava, aberto,
+à espera do Henrique.
+
+**Verificado no site publicado** (www.nexugal.com, `main.ed01edb8.js`):
+
+- **Redirecionamentos** (`curl`): `/sobre` dá 308 para `/#sobre`; `/us/about`
+  dá 308 para `/us#sobre`; `/sobre?fbclid=teste` dá 308 para
+  `/?fbclid=teste#sobre`, e `/us/about?fbclid=teste` para `/us?fbclid=teste#sobre`;
+  `/sobre/` não bate na regra e recebe a página, como previsto (o `App.js` leva-o
+  à secção).
+- **No browser, a 1280px:** `/sobre?fbclid=teste`, `/sobre` e `/us/about` chegam
+  à secção, a 80px do topo, cada um na sua língua; as duas colunas com 528px, os
+  cinco parágrafos e os quatro destaques do "Quem somos", as fases Avaliação,
+  Proposta, Desenvolvimento e Acompanhamento, e sem "Ler mais". O SOBRE do menu
+  e o "Sobre" do rodapé deixam a secção a 80px do topo, como o EXEMPLOS DE
+  SERVIÇOS; o "Como trabalhamos" do rodapé deixa a coluna dos passos a 160px.
+- **No browser, a 360px, em PT e EN:** o "Ler mais" fechado (altura 0,
+  `invisible`, véu a 1), a abrir e a fechar com a animação (em PT, 421 de 543px a
+  meio), "Ler menos"/"Read less" quando aberto, sem scroll para o lado.
+- **FAQ, a 360px, em PT e EN:** as respostas novas dos serviços e dos prazos,
+  igual ao texto pedido; destaques 2, 0, 1, 2, 2, 1 e 1; as sete perguntas como
+  títulos; nenhum `[` ou `]` à vista; nenhuma resposta cortada.
+- Nenhum erro na consola.
+
+**Fica por fazer, do 7.18:** pedir ao Google, no Search Console, para reler o
+`sitemap.xml`, que já não tem o `/sobre`.
+
 
 
