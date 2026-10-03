@@ -3462,4 +3462,55 @@ para não repetir o destaque da resposta sobre o suporte.
   (`from-neve/0`, `md:visible`, `md:grid-rows-[1fr]`, `motion-reduce:`) no CSS
   gerado.
 
+**Mudou no dia seguinte (7.25):** as respostas 1 e 2 da FAQ e os destaques de
+três respostas. A tabela de cima já não é a atual.
+
+### 7.25 Respostas novas na FAQ sobre serviços e prazos, e menos destaques (03/10/2026)
+
+Mesmo ramo e mesmo Pull Request do site (#5), **por juntar e por publicar**. O
+PR #6, dos emails, não foi tocado.
+
+**O pedido do Rui:** a resposta sobre os serviços e a dos prazos com texto novo,
+escrito por ele; tirar o destaque de "Só paga se aceitar avançar" nas respostas
+do custo e da avaliação; o inglês no mesmo tom, escrito pelo Claude.
+
+| Resposta | Antes | Depois |
+|---|---|---|
+| Serviços, PT | "Oferecemos uma gama completa de serviços tecnológicos: [desenvolvimento web] (sites, aplicações e plataformas), cibersegurança (...), soluções cloud (...), consultoria em [inteligência artificial], análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7." | "Oferecemos uma gama completa de serviços tecnológicos, com foco em tirar das empresas o trabalho manual e repetitivo: [automação de processos] (faturas, encomendas, pedidos de clientes, stock e relatórios deixam de passar à mão), consultoria em [inteligência artificial] aplicada ao negócio, ligação entre os programas que a empresa já usa (ERP, contabilidade, loja online), desenvolvimento web (sites, aplicações e plataformas), análise de dados com dashboards personalizados, cibersegurança (auditorias, monitorização e proteção de dados), soluções cloud (migração e gestão) e suporte técnico contínuo 24/7." |
+| Serviços, EN | "We offer a complete range of technology services: [web development] (...), [artificial intelligence] consulting, (...) and continuous 24/7 technical support." | "We offer a complete range of technology services, focused on taking manual, repetitive work out of businesses: [process automation] (invoices, orders, customer requests, stock and reports are no longer handled by hand), consulting on [artificial intelligence] applied to the business, connecting the systems the company already uses (ERP, accounting, online store), web development (websites, applications and platforms), data analytics with customized dashboards, cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management) and continuous 24/7 technical support." |
+| Prazos, PT | "(...) pronto em [2 a 4 semanas], enquanto uma aplicação web mais complexa pode levar entre [2 a 6 meses]. (...)" | "O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 1 a 3 semanas, enquanto uma aplicação web mais complexa pode levar entre 1 e 6 meses. Na proposta, dizemos o que fica pronto em cada etapa e quando." (sem destaques) |
+| Prazos, EN | "(...) ready in [2 to 4 weeks], while a more complex web application can take between [2 to 6 months]. (...)" | "The timeframe varies depending on the complexity of the project. A corporate website can be ready in 1 to 3 weeks, while a more complex web application can take between 1 and 6 months. In the proposal, we tell you what is ready at each stage and when." (sem destaques) |
+
+No custo e na avaliação, o texto ficou igual; saiu só o destaque de "Só paga se
+aceitar avançar" e de "You only pay if you agree to go ahead" (nas duas). O
+comentário do `translations.js` passou de "1 ou 2 por resposta" a "no máximo 2".
+
+Escolhas do inglês: "pedidos de clientes" é "customer requests", como no bloco
+dos exemplos (7.1, ponto 4); "programas" é "systems", a palavra que o inglês do
+site já usa ("Systems that talk to each other"); "aplicada ao negócio" refere-se
+à inteligência artificial, por isso "consulting on artificial intelligence applied
+to the business".
+
+**Destaques, como ficaram** (PT e EN, pela ordem das respostas): 2, 0, 1, 2, 2,
+1 e 1.
+
+| Pergunta | PT | EN |
+|---|---|---|
+| Serviços | automação de processos; inteligência artificial | process automation; artificial intelligence |
+| Prazo | (nenhum) | (nenhum) |
+| Processo | quatro etapas | four stages |
+| Dimensão | todas as dimensões; personalizadas | all sizes; customized |
+| Suporte | suporte técnico contínuo 24/7; manutenção proativa | continuous 24/7 technical support; proactive maintenance |
+| Custo | avaliação gratuita e sem compromisso | free, no-obligation assessment |
+| Avaliação | totalmente gratuita e sem compromisso | completely free and with no obligation |
+
+**Verificado:** as respostas 1 e 2 em PT comparadas carácter a carácter com o
+pedido; `CI=true npm run build` com `Compiled successfully.`; teste de contraste
+18 de 18; nas FAQ a 320, 360 e 1280px, em PT e EN, os destaques acima, todos a
+600 e azul-médio, nenhum `[` ou `]` à vista, nenhuma resposta cortada (a dos
+serviços ficou mais comprida, e o acordeão abre até à altura do texto, 7.21),
+contraste sem falhas com cada resposta aberta, e os dados da FAQ para o Google
+iguais ao texto da página, sem marcas (lidos com o remendo do desenho do ecrã,
+7.2, ponto 5). Nenhum erro na consola.
+
 
