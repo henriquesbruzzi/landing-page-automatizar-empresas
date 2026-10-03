@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
+import { comDestaques } from '../utils/destaques';
 import Entrada from './Entrada';
 
 function FAQPage() {
@@ -73,52 +74,74 @@ function FAQPage() {
                         : 'border-linha bg-neve hover:border-azul-claro'
                     }`}
                   >
-                    <button
-                      onClick={() => toggleQuestion(index)}
-                      className="w-full flex items-center justify-between p-6 md:p-8 text-left group cursor-pointer"
-                      aria-expanded={isOpen}
-                      aria-controls={`faq-answer-${index}`}
-                    >
-                      <h2 className={`font-display text-sm md:text-base font-semibold tracking-[0.03em] pr-6 leading-relaxed transition-colors duration-300 ${
-                        isOpen ? 'text-azul-medio' : 'text-texto group-hover:text-azul-profundo'
-                      }`}>
-                        {item.question}
-                      </h2>
+                    {/* A pergunta é um título com o botão lá dentro, como no
+                        padrão de acordeão da W3C. Até 03/10/2026 era ao
+                        contrário, o título dentro do botão: aí deixa de contar
+                        como título, e quem saltava de título em título com um
+                        leitor de ecrã não encontrava as perguntas. O h2 não
+                        traz estilo nenhum (o Tailwind tira-lhe margens, tamanho
+                        e peso); o texto da pergunta tem as classes que o h2
+                        tinha.
+                        O id do botão é o que a resposta, mais abaixo, usa como
+                        nome (aria-labelledby): um leitor de ecrã anuncia-a com
+                        o texto da pergunta. */}
+                    <h2>
+                      <button
+                        id={`faq-question-${index}`}
+                        onClick={() => toggleQuestion(index)}
+                        className="w-full flex items-center justify-between p-6 md:p-8 text-left group cursor-pointer"
+                        aria-expanded={isOpen}
+                        aria-controls={`faq-answer-${index}`}
+                      >
+                        <span className={`font-display text-sm md:text-base font-semibold tracking-[0.03em] pr-6 leading-relaxed transition-colors duration-300 ${
+                          isOpen ? 'text-azul-medio' : 'text-texto group-hover:text-azul-profundo'
+                        }`}>
+                          {item.question}
+                        </span>
 
-                      {/* Ícone +/- */}
-                      <span className={`flex-shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500 ${
-                        isOpen
-                          ? 'border-azul-claro bg-azul-vivo/10 rotate-45'
-                          : 'border-linha bg-white group-hover:border-azul-claro'
-                      }`}>
-                        <svg
-                          className={`w-4 h-4 transition-colors duration-300 ${
-                            isOpen ? 'text-azul-medio' : 'text-texto'
-                          }`}
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                          strokeWidth={2}
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                        </svg>
-                      </span>
-                    </button>
+                        {/* Ícone +/- */}
+                        <span className={`flex-shrink-0 w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500 ${
+                          isOpen
+                            ? 'border-azul-claro bg-azul-vivo/10 rotate-45'
+                            : 'border-linha bg-white group-hover:border-azul-claro'
+                        }`}>
+                          <svg
+                            className={`w-4 h-4 transition-colors duration-300 ${
+                              isOpen ? 'text-azul-medio' : 'text-texto'
+                            }`}
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            strokeWidth={2}
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                          </svg>
+                        </span>
+                      </button>
+                    </h2>
 
-                    {/* Resposta com animação */}
+                    {/* Resposta com animação. Abre até à altura do próprio
+                        texto: a linha da grelha passa de 0fr a 1fr, e a caixa
+                        de dentro esconde o que ainda não cabe. Até 02/10/2026
+                        abria até uma altura máxima fixa (max-h-96, 384px), e a
+                        resposta sobre o processo ficava cortada nos telemóveis
+                        mais estreitos. Assim nenhuma resposta fica cortada,
+                        por mais comprida que seja. */}
                     <div
                       id={`faq-answer-${index}`}
                       role="region"
                       aria-labelledby={`faq-question-${index}`}
-                      className={`overflow-hidden transition-all duration-500 ${
-                        isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                      className={`grid transition-all duration-500 ${
+                        isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
                       }`}
                     >
-                      <div className="px-6 md:px-8 pb-6 md:pb-8">
-                        <div className="h-[1px] bg-gradient-to-r from-azul-claro via-azul-claro to-transparent mb-5"></div>
-                        <p className="text-texto text-sm leading-relaxed">
-                          {item.answer}
-                        </p>
+                      <div className="overflow-hidden">
+                        <div className="px-6 md:px-8 pb-6 md:pb-8">
+                          <div className="h-[1px] bg-gradient-to-r from-azul-claro via-azul-claro to-transparent mb-5"></div>
+                          <p className="text-texto text-sm leading-relaxed">
+                            {comDestaques(item.answer)}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>

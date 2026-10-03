@@ -1,6 +1,10 @@
 {
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/build",
+  "redirects": [
+    { "source": "/sobre", "destination": "/#sobre", "permanent": true },
+    { "source": "/us/about", "destination": "/us#sobre", "permanent": true }
+  ],
   "rewrites": [
     {
       "source": "/(.*)",

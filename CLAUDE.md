@@ -35,21 +35,25 @@ está na secção 7.
 - `src/components/`
   - `Header` (menu fixo), `Hero` (primeira dobra), `EsquemaIntegracoes` (o
     desenho do hero), `Exemplos` (secção de exemplos), `VisuaisExemplos` (os
-    quatro desenhos dessa secção), `Process` ("Como trabalhamos"),
-    `CallToAction` (convite final), `BotaoContactoFlutuante`, `Footer`,
-    `CookieBanner`
-  - `About` (o "quem somos", mostrado só na página do Sobre), `ContactPage`,
-    `FAQPage`, `Dropdown` (lista de escolha do formulário de contacto)
+    quatro desenhos dessa secção), `Process` ("Quem somos" e "Como
+    trabalhamos", lado a lado, desde 02/10, 7.18), `CallToAction` (convite
+    final), `BotaoContactoFlutuante`, `Footer`, `CookieBanner`
+  - `ContactPage`, `FAQPage`, `Dropdown` (lista de escolha do formulário de
+    contacto). O `About`, o "quem somos" da página do Sobre, saiu a 02/10 (7.18)
   - `SEO` (título, descrição, canonical e JSON-LD de cada página), `Entrada`
     (invólucro que hoje não anima nada, ver 7.4)
-- `src/pages/`: `SobrePage`, `PrivacyPolicyPage`, `AdminLoginPage`, `AdminLeadsPage`.
+- `src/pages/`: `PrivacyPolicyPage`, `AdminLoginPage`, `AdminLeadsPage`.
   Desde 21/09 (no ramo `rui/velocidade`) a política de privacidade e as duas do
-  admin vêm em ficheiros à parte, só quando são abertas (7.11)
+  admin vêm em ficheiros à parte, só quando são abertas (7.11). A `SobrePage`
+  saiu a 02/10 (7.18)
 - `src/hooks/`: `useTypewriter` (o título do hero a escrever-se),
-  `usePrefersReducedMotion`, `useRevealOnScroll` (sem uso, ver 7.4)
+  `usePrefersReducedMotion`, `useAncoraAoChegar` (quem chega com `/#sobre` cai
+  na secção, 7.18), `useRevealOnScroll` (sem uso, ver 7.4)
 - `src/utils/`: `avisoCookies.js` (liga o aviso de cookies ao botão flutuante),
   `entrada.js` (a entrada animada que o hero usava; sem uso desde 21/09, 7.11),
-  `contraste.test.js` (teste de contraste, ver 7.5)
+  `destaques.js` (o texto entre `[ ]` a azul e a negrito, e o mesmo texto sem as
+  marcas para o Google; desde 03/10, 7.24), `contraste.test.js` (teste de
+  contraste, ver 7.5)
 - `src/fonts/`: as três letras do site (Inter, Space Grotesk, Orbitron), desde
   21/09 alojadas no próprio site e declaradas no `index.css` (7.11)
 - `src/i18n/translations.js`: **quase todo o texto do site em PT e EN vive aqui**.
@@ -61,7 +65,8 @@ está na secção 7.
   (o hero antigo, 5 MB) foi apagada a 18/09 (7.8). **No ramo `rui/velocidade`
   (21/09, 7.11)** as imagens passaram ao tamanho a que aparecem, com nomes novos:
   o N do hero é `images/nexugal-n-132.png` (era `nexugal-n.png`, 1001 px e 464 KB),
-  a fotografia do Sobre `images/rui-240.jpg`, o ícone do site `icons/favicon-48.png`,
+  a fotografia do Sobre `images/rui-240.jpg` (apagada a 02/10 com a página, 7.18),
+  o ícone do site `icons/favicon-48.png`,
   `icons/apple-touch-icon.png`, `icons/icon-192.png` e `icons/icon-512.png` (era um
   só `favicon.png` de 623 KB), as bandeiras `icons/portugal-120.png` e
   `icons/united-states-120.png`; e saiu o vídeo `videos/landingpage.mp4`, que
@@ -69,9 +74,10 @@ está na secção 7.
 - `tailwind.config.js`: cores e tipografia. As cores estão repetidas em
   `src/index.css` (ver 7.1)
 
-Rotas: `/`, `/contacto`, `/faq`, `/sobre`, `/privacidade`; em inglês `/us`,
-`/us/contact`, `/us/faq`, `/us/about`, `/us/privacy`; e `/admin/login`,
-`/admin/leads`.
+Rotas: `/`, `/contacto`, `/faq`, `/privacidade`; em inglês `/us`,
+`/us/contact`, `/us/faq`, `/us/privacy`; e `/admin/login`, `/admin/leads`.
+O `/sobre` e o `/us/about` já não são páginas: desde 02/10 levam à secção
+`#sobre` da página inicial (7.18).
 
 ### Backend (`backend/`)
 
@@ -789,7 +795,10 @@ pediu **quatro correções, "nem mais uma"**:
   Planeamento, Desenvolvimento, Acompanhamento). "Quem ler as duas apanha a
   contradição." Reescrita com os quatro nomes da secção, pela mesma ordem, e com
   o conteúdo tirado dos próprios cartões, sem acrescentar etapas, prazos nem
-  compromissos. Saíram com ela o "Deploy" e o "zero downtime".
+  compromissos. Saíram com ela o "Deploy" e o "zero downtime". (A 02/10 o
+  Diagnóstico e o Planeamento juntaram-se numa fase só, e as quatro passaram a
+  Avaliação, Proposta, Desenvolvimento e Acompanhamento, na secção e nesta
+  resposta: 7.19.)
 - **Garantias:** "garantimos que tudo funciona na perfeição" passou a "aplicamos
   atualizações de segurança e corrigimos o que for aparecendo". Regras do Rui
   para frases deste tipo: nada de garantias absolutas, nada de "perfeição",
@@ -1398,6 +1407,11 @@ por iniciativa própria; se incomodarem, é decisão do Rui.
 - **A bandeira dos Estados Unidos no cabeçalho fica como está** (troca de língua).
 - **O "suporte técnico contínuo 24/7" da FAQ fica**, e o resto da FAQ, para lá das
   quatro correções, não se toca.
+- **A Avaliação e a Proposta não têm custo** (Rui, 02/10/2026). A Avaliação é
+  gratuita e sem compromisso, a Proposta que sai dela também, e o cliente só paga
+  se aceitar avançar. A "primeira consulta" de que a FAQ falava é a própria
+  Avaliação: não há uma conversa à parte antes dela. Texto novo sobre preços ou
+  sobre o primeiro contacto segue isto (7.20).
 - **A FAQ não declara limite geográfico nenhum.** A 16/09 a decisão alargou-se
   ao site todo: nenhuma afirmação de onde a Nexugal trabalha, "nem Braga, nem
   Portugal", e nada no lugar do que sai. **A morada da empresa fica** (18/09): nos
@@ -1428,7 +1442,9 @@ por iniciativa própria; se incomodarem, é decisão do Rui.
   páginas (7.9). Hoje "NEXUGAL" só existe no logótipo, e no admin, no chatbot
   desligado e no backend, que ficaram de fora (7.9). Texto novo com a marca
   escreve-a "Nexugal".
-- **A linha órfã do "Como trabalhamos" no telemóvel fica como está.**
+- **A linha órfã do "Como trabalhamos" no telemóvel fica como está.** (Deixou de
+  existir a 02/10: os passos passaram a linha do tempo, com a linha a ligar os
+  círculos, a pedido do Rui, 7.18.)
 - **Botões:** o do fecho dos exemplos diz "Entre em contacto"; o do hero e o
   flutuante dizem "Falar connosco". (O do convite final diz "Iniciar Conversa" e
   o da página da FAQ "Fale Connosco"; não foram objeto de decisão.)
@@ -1558,6 +1574,19 @@ novo com `<defs>` (marker, gradient, mask, clipPath, filter) tem de ter ids
   SEO.js e o react-helmet-async").
 - **As capturas de ecrã escondido vêm deslocadas**, mesmo com a página no topo e
   as secções de cima escondidas (16/09). Medir em vez de capturar.
+- **Medidas de "antes" e "depois" só se comparam na mesma escala** (visto a
+  03/10, 7.23). O painel encolhe a largura emulada para caber, e o
+  `devicePixelRatio` muda de uma medição para a outra (viram-se 1, 1,25, 1,75 e
+  2 na mesma hora). Um contorno de 1px arredonda aos píxeis reais (0,8px a 1,25,
+  0,57px a 1,75), e tudo o que está dentro dele mexe décimas de píxel. Guardar o
+  `devicePixelRatio` com cada medição, e repetir a que não bater.
+- **Mudar a largura com a página aberta arranca as transições, e elas ficam
+  paradas no início** (visto a 03/10, 7.24). Uma caixa que muda de altura ou de
+  visibilidade com a largura (o "Ler mais" do "Quem somos", que só fecha abaixo de
+  md) fica no estado de partida, como se a classe do computador não contasse:
+  `getAnimations()` mostra-as `running` com `currentTime` 0. Não é avaria. Depois
+  de mudar a largura, recarregar a página, ou acabar as animações à mão
+  (`finish()`), antes de medir.
 - O `.claude/launch.json` (fora do git) tem duas configurações: `nexugal-frontend`
   (`npm start`, porta 3000, ou outra se estiver ocupada) e `nexugal-build` (serve
   a pasta `frontend/build` na porta 4173, com `npx serve -s`).
@@ -1615,6 +1644,20 @@ Não apagar sem o Rui decidir.
   `id="contacto-final"` no `CallToAction.js`. Mudar o nome de um deles não parte
   nada à vista: o botão simplesmente deixa de aparecer, ou de desaparecer. Os ids
   estão em constantes no topo do `BotaoContactoFlutuante.js`.
+- **O SOBRE do menu e do rodapé, e o `/sobre` antigo, dependem do id `sobre`**,
+  que está na secção do `Process.js`; o "Como trabalhamos" do rodapé depende do
+  id `processo`, que está na coluna dos passos (7.18). Mudar o nome de um deles
+  também não dá erro nenhum: a ligação simplesmente deixa de descer.
+- **O `/sobre` e o `/us/about` são redirecionados em dois sítios** (7.19): no
+  `vercel.json` da raiz, com um 308, que é o que vale no site publicado; e no
+  `App.js`, que é o que vale no `npm start` (não lê o `vercel.json`) e apanha o
+  que o servidor deixa passar, como `/sobre/` ou `/Sobre`. Mudar o destino
+  obriga a mudar nos dois.
+- **Os nomes das fases do "Como trabalhamos" estão escritos duas vezes** no
+  `translations.js`: nos passos (`process.steps`) e na resposta da FAQ sobre o
+  processo, que os repete por extenso, em PT e em EN. A resposta sobre os prazos
+  diz também em que fase se diz o que fica pronto e quando (7.19). Mudar uma fase
+  obriga a mudar as três.
 - **O aviso de cookies tem de continuar a anunciar-se** (`anunciarAviso`, de
   `utils/avisoCookies.js`). O botão flutuante começa por assumir que o aviso está
   no ecrã sempre que ainda não há resposta guardada. Se o aviso deixar de
@@ -1680,7 +1723,11 @@ Não apagar sem o Rui decidir.
   voltar a pôr a folha da Google Fonts no `index.html`: bloqueava o desenho da
   página. Hoje há Inter 400, 500 e 600, Space Grotesk 400, 600 e 700 e Orbitron
   700: usar outro peso obriga a ir buscar à Google Fonts o ficheiro que o tem e a
-  declará-lo no `@font-face` (7.11).
+  declará-lo no `@font-face` (7.11). **Exceção, vista a 02/10 (7.19):** a Inter e
+  a Space Grotesk são letras variáveis, com todos os pesos no mesmo ficheiro; para
+  essas basta declarar o peso novo com o mesmo `src`, sem descarregar nada. Um
+  `font-bold` em Inter, sem o 700 declarado, sai a 600: é o que acontece hoje ao
+  "3 à espera de si" do cartão do hero.
 
 - **Ligar uma peça que estava desligada traz com ela o estilo do dia em que foi
   escrita.** O bloco de redes sociais do rodapé estava construído desde o site
@@ -2904,3 +2951,566 @@ travessões no `translations.js`; auditoria de contraste de 7.5 em `/sobre` a
 
 **O que isto torna velho:** o que 7.1, ponto 5, e 7.0 dizem sobre os textos do
 Sobre.
+
+### 7.18 O "quem somos" passa para a página inicial, e a página do Sobre sai (02/10/2026)
+
+Ramo `rui/quem-somos-na-inicial`, com Pull Request aberto e **por juntar**: é
+uma mudança que se vê, e o Rui pediu para a ver em local antes do merge e da
+publicação.
+
+**O pedido do Rui:** juntar o "Quem somos" à secção "Como trabalhamos" da
+página inicial, e apagar a página do Sobre.
+
+#### O que mudou
+
+- **A secção "Como trabalhamos" (`Process.js`) tem duas colunas** a partir de
+  1024px. À esquerda, "QUEM SOMOS", o título "Como começou" e cinco parágrafos
+  novos, escritos pelo Rui. À direita, "COMO TRABALHAMOS", "Do primeiro dia até
+  andar sozinho" e os quatro passos de sempre, com os mesmos textos. Saiu o
+  título grande centrado: cada coluna tem o seu, os dois a 30px no telemóvel e a
+  36px a partir de 768px. No telemóvel empilham, com a história primeiro.
+  Ficaram o fundo neve e a linha fina do topo.
+- **Os passos deixaram de ser cartões** e passaram a uma linha do tempo
+  vertical: o círculo numerado de sempre (agora com fundo branco), o rótulo em
+  maiúsculas espaçadas à altura do meio do círculo, e o texto por baixo, sem
+  caixas. **A linha liga os círculos:** cada passo, menos o último, desenha o
+  troço que vai do fundo do seu círculo ao topo do seguinte, e por isso liga-os
+  seja qual for a altura do texto. Substitui a "linha órfã" do telemóvel (7.3).
+- **Destaques a azul nos parágrafos.** No `translations.js` marcam-se entre
+  parênteses retos, `[mais de dez países]`, e saem a azul sem eles
+  (`comDestaques`, no `Process.js`). O Rui pediu-os no azul do "andar sozinho",
+  o azul-vivo, que dá 3,07 para 1 sobre o neve; em texto corrido o mínimo é 4,5.
+  Perguntado, escolheu o **azul-médio** (6,36 para 1). O "andar sozinho" do
+  título continua azul-vivo: em letra grande passa (o mínimo aí é 3).
+- **Ids:** a secção passou de `processo` a `sobre`. O `processo` ficou na coluna
+  dos passos, para o "Como trabalhamos" do rodapé continuar a descer até eles,
+  com uma margem de cima (`scroll-mt-16 md:scroll-mt-20`) para o rótulo não
+  ficar colado ao menu.
+- **Menu:** o SOBRE, no computador e no telemóvel, passou de botão que mudava de
+  página a ligação `#sobre`, igual ao EXEMPLOS DE SERVIÇOS: o mesmo scroll suave
+  e a mesma folga do menu fixo (o `scroll-padding-top` do `index.css`). No
+  telemóvel continua centrado como os outros (7.15). **Rodapé:** o "Sobre"
+  passou de `/sobre` (EN `/us/about`) a `#sobre`.
+- **O `/sobre` e o `/us/about` levam à secção** (`App.js`): `/sobre` vai para
+  `/#sobre` e `/us/about` para `/us#sobre`, sem deixar a página antiga no
+  histórico do browser. Quem redireciona é o próprio site, no browser, e não a
+  Vercel (ver "O que fica por fazer").
+- **`useAncoraAoChegar`** (`src/hooks/`, novo), usado na página inicial: quem
+  chega com uma secção no endereço (`/#sobre`, `/us#exemplos`) cai nela. O
+  browser não o faz sozinho, porque a secção ainda não existe quando a página
+  abre. Salta seco, sem a animação, que atravessaria a página toda. Só corre ao
+  chegar, para não cortar o scroll suave dos cliques no menu. E volta a acertar
+  quando as letras e as imagens acabam de chegar, se o visitante ainda não mexeu
+  na página: o Chrome e o Firefox compensam sozinhos o que muda de altura por
+  cima da secção, o Safari não.
+- **Saiu, por deixar de ser usado:** `pages/SobrePage.js`, `components/About.js`;
+  no `translations.js`, o `about.title`, o `about.titleHighlight` e o
+  `about.founders` (PT e EN); no `SEO.js`, o `about` (título, descrição e o
+  caminho de navegação do JSON-LD); e as duas entradas do `sitemap.xml`, que tem
+  agora oito páginas.
+- **O cartão do fundador saiu do site**, com a fotografia
+  (`images/rui-240.jpg`, apagada; está no histórico do git). Perguntado, o Rui
+  confirmou. O `founder` do JSON-LD (o Rui Machado, com o LinkedIn, 7.14) fica:
+  é da `Organization`, não da página.
+
+O português é o do Rui, tal e qual. O inglês foi escrito pelo Claude, para o
+Rui rever: o primeiro e o terceiro parágrafos são os aprovados a 26/09 (7.17),
+só com os destaques.
+
+#### Verificado
+
+- `CI=true npm run build`: `Compiled successfully.` Teste de contraste: 18 de 18.
+- Auditoria de contraste de 7.5 na página inicial, PT e EN, a 380, 1024, 1280 e
+  1920px: zero falhas, sem scroll para o lado. Na secção, o texto mais justo é o
+  "andar sozinho" do título (3,07, para um mínimo de 3), igual ao que já era.
+- Medido no build: colunas de 416px a 1024 e de 528px a partir de 1280; "Como
+  começou" numa linha e o título dos passos em duas (três em inglês, a 380px);
+  cada troço da linha começa no fundo de um círculo e acaba no topo do seguinte
+  (0 a 1px de diferença); o rótulo de cada passo ao meio do seu círculo.
+- Saltos medidos como em 7.4, sem a animação, que o painel escondido não faz: o
+  SOBRE do menu, o EXEMPLOS DE SERVIÇOS e o "Sobre" do rodapé deixam a secção a
+  80px do topo, a altura do menu; o "Como trabalhamos" do rodapé deixa a coluna
+  dos passos a 160px. No telemóvel, o SOBRE fecha o menu e cai no mesmo sítio.
+- `/sobre` e `/us/about`, abertos pelo endereço, no build e no `npm start`:
+  acabam em `/#sobre` e `/us#sobre`, com a secção a 80px do topo, o título e o
+  canonical da página inicial na língua certa, e nenhum erro nem aviso na
+  consola.
+
+#### O que fica por fazer
+
+- **O Rui ver em local e aprovar**, antes do merge e da publicação.
+- **Redirecionamento no servidor** (falar com o Henrique): uma regra `redirects`
+  no `vercel.json` da raiz dava ao Google um 308 de `/sobre` para `/`, em vez de
+  uma página que muda de endereço depois de abrir. O Google segue os dois, mas
+  recomenda o do servidor. **Feito no mesmo dia, a pedido do Rui (7.19).**
+- **Search Console:** depois de publicar, pedir ao Google para reler o
+  `sitemap.xml`, que já não tem o `/sobre`.
+
+**O que isto torna velho:** 7.1, ponto 5 (a página do Sobre), 7.17 inteiro, a
+decisão da linha órfã em 7.3, e o que 7.2, ponto 14, diz sobre a descrição do
+Sobre no `SEO.js`.
+
+### 7.19 Fases novas, destaques a negrito e o redirecionamento no servidor (02/10/2026)
+
+Mesmo ramo e mesmo Pull Request do 7.18 (#5), **por juntar e por publicar**: o
+Rui vê primeiro.
+
+#### As fases de trabalho
+
+O Diagnóstico e o Planeamento juntaram-se numa fase só. Ficam quatro, com o
+texto do Rui:
+
+| | Antes | Depois |
+|---|---|---|
+| 01 | Diagnóstico: "Percebemos como o trabalho corre hoje, ao pormenor. Daí sai um relatório com o que pode mudar e o que isso traz à empresa." | Avaliação: "Avaliamos a empresa: como o trabalho corre hoje, ao pormenor, e o que dá para melhorar." |
+| 02 | Planeamento: "Dizemos o que vamos fazer, quanto custa e em quanto tempo, antes de começarmos. O valor combinado é o que fica, sem surpresas pelo caminho." | Proposta: "Apresentamos um relatório com o que pode mudar, o que isso traz à empresa e o plano para lá chegar: o que vamos fazer, quanto custa e em quanto tempo." |
+
+O Desenvolvimento e o Acompanhamento ficam como estavam. Em inglês, Assessment e
+Proposal (eram Discovery e Planning), escritos pelo Claude para o Rui rever.
+
+**Com o Planeamento saiu a frase "O valor combinado é o que fica, sem surpresas
+pelo caminho."** (EN "The price we agree on is the price that stands, with no
+surprises along the way."). Não estava em mais sítio nenhum, e o texto novo do
+Rui não a traz.
+
+**Procurou-se no projeto todo** (frontend, backend, `public/`, `vercel.json`, os
+`.md` da raiz e este ficheiro) por "diagnóstico", "planeamento", pelos nomes e
+pelo número das fases, em PT e EN. Só havia no `translations.js` e aqui:
+
+- os passos (`process.steps`, PT e EN);
+- a resposta da FAQ sobre o processo, que repete as quatro fases por extenso:
+  Avaliação e Proposta no lugar das duas primeiras, com o texto dos passos. Na
+  Avaliação ficou "percebemos", o verbo que a resposta já usava, para não se ler
+  "Avaliação, avaliamos";
+- a resposta da FAQ sobre os prazos: "Na fase de diagnóstico, dizemos o que fica
+  pronto em cada etapa e quando" passou a "Na proposta, ...", porque o tempo de
+  cada etapa é agora parte da proposta (EN: "During the discovery phase" passou a
+  "In the proposal");
+- este ficheiro: uma nota em 7.1, ponto 6, e duas armadilhas novas em 7.4. O
+  resto do que aqui se diz das fases é histórico e ficou como estava.
+
+O JSON-LD da FAQ lê o `translations.js` e mudou sozinho. O `SEO.js`, o
+`index.html`, o `sitemap.xml`, o rodapé e o backend não falam das fases.
+
+**Ficou por mexer, à espera do Rui.** Duas respostas da FAQ falam de uma
+primeira consulta gratuita, sem dizer como se liga às fases:
+
+- "Qual é o custo dos vossos serviços?": "Oferecemos uma consulta gratuita e sem
+  compromisso onde apresentamos um orçamento personalizado e transparente." Com
+  as fases novas, o custo vem na Proposta, depois da Avaliação: a frase só bate
+  certo se a avaliação e a proposta forem gratuitas.
+- "A consulta inicial é gratuita?": "Sim, a primeira consulta é totalmente
+  gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos
+  possíveis soluções e respondemos a todas as suas questões." Não se sabe se esta
+  consulta é a Avaliação ou uma conversa antes dela.
+
+O convite final ("Falamos primeiro, sem custo, para perceber se há aqui trabalho
+para fazer.") serve nos dois casos. Saber se a avaliação é paga ou gratuita é do
+Rui: não se inventou. **Respondido no mesmo dia, e as duas respostas acertadas
+(7.20).**
+
+#### Os destaques do "Quem somos" a negrito
+
+Mantêm o azul-médio e passam a `font-semibold` (600). É o peso mais forte da
+Inter que o `index.css` declara, e o mesmo com que sai o realce "3 à espera de
+si" do cartão do hero, que pede `font-bold` mas, sem o 700 declarado, sai a 600.
+O ficheiro da Inter é variável e já tem o 700: declará-lo é acrescentar um
+`@font-face` com o mesmo `src`, sem descarregar nada, mas engrossava também o
+realce do cartão do hero e o "Nexugal" da política de privacidade. Não se fez sem
+o Rui pedir.
+
+#### O redirecionamento no servidor
+
+`vercel.json` da raiz, `redirects`, a pedido do Rui: `/sobre` para `/#sobre` e
+`/us/about` para `/us#sobre`, com `permanent: true` (308). O redirecionamento do
+`App.js` ficou, para o `npm start` e para o que o servidor deixa passar (7.4).
+
+Verificado sem publicar, com a biblioteca da própria Vercel que transforma o
+`vercel.json` em rotas (`@vercel/routing-utils` 6.6.0, instalada numa pasta
+temporária, fora do projeto). Gera
+`{"src":"^/sobre$","headers":{"Location":"/#sobre"},"status":308}` e o
+equivalente para o `/us/about`, com o `#` intacto. A regra é exata e sensível a
+maiúsculas: `/sobre/` e `/Sobre` não lhe batem, recebem a página, e o `App.js`
+leva-os à secção (visto no build). `/sobrevivente` não bate.
+
+**Por confirmar depois de publicar:** a Vercel passa a query do pedido para o
+destino, e a documentação não diz onde a põe quando o destino tem `#`. Se a puser
+depois do `#` (`/#sobre?fbclid=...`), o `useAncoraAoChegar` já a ignora: visto no
+build, a secção fica a 80px do topo. Depois de publicar, confirmar com
+`curl -sI https://www.nexugal.com/sobre` que a resposta é 308 com
+`location: /#sobre`.
+
+#### Verificado
+
+- `CI=true npm run build`: `Compiled successfully.` Teste de contraste: 18 de 18.
+- No pacote: zero ocorrências de "Diagn", "Planeam", "discovery phase",
+  "Planning", "O valor combinado" e "price we agree". O único "Discovery" que lá
+  está é do react-router (`routeDiscovery`).
+- Auditoria de contraste de 7.5 a 380 e a 1280px em `/`, `/us`, `/faq` e
+  `/us/faq`, com as respostas da FAQ abertas: zero falhas, sem scroll para o lado.
+- Na secção, nas duas larguras: os rótulos e os textos novos, os quatro
+  destaques a 600 e azul-médio, os troços da linha a ligar os círculos (0 a 1px)
+  e cada rótulo ao meio do seu círculo.
+- Nas duas páginas da FAQ, as respostas novas, e nenhum nome antigo.
+- Nenhum erro na consola.
+
+**O que isto torna velho:** o que 7.18 diz dos "quatro passos de sempre, com os
+mesmos textos", e o ponto do 7.18, "O que fica por fazer", sobre o
+redirecionamento no servidor.
+
+### 7.20 A avaliação gratuita na FAQ (02/10/2026)
+
+Mesmo ramo e mesmo Pull Request (#5), **por juntar e por publicar**.
+
+**As respostas do Rui ao que ficou em aberto em 7.19:** a Avaliação é gratuita e
+sem compromisso; a Proposta que sai dela também não tem custo, e o cliente só
+paga se aceitar avançar; a "primeira consulta" da FAQ é a própria Avaliação, sem
+conversa à parte antes dela. Ficou registado em 7.3, nas decisões.
+
+**O pedido:** acertar as duas respostas da FAQ com isto, em PT e EN; "consulta"
+passa a "avaliação", também na pergunta; na resposta do custo, a avaliação
+gratuita primeiro e a proposta com o orçamento depois, pela ordem das fases; o
+tom e o tamanho das outras respostas.
+
+| | Antes | Depois |
+|---|---|---|
+| Custo, PT | "Cada projeto é único, por isso o custo depende dos requisitos específicos, da complexidade e do prazo desejado. Oferecemos uma consulta gratuita e sem compromisso onde apresentamos um orçamento personalizado e transparente." | "Cada projeto é único, por isso o custo depende dos requisitos específicos, da complexidade e do prazo desejado. Começamos por uma avaliação gratuita e sem compromisso, e daí sai uma proposta com um orçamento personalizado e transparente, também sem custo. Só paga se aceitar avançar." |
+| Custo, EN | "Each project is unique, so the cost depends on the specific requirements, complexity and desired timeline. We offer a free, no-obligation consultation where we present a personalized and transparent quote." | "Each project is unique, so the cost depends on the specific requirements, complexity and desired timeline. We start with a free, no-obligation assessment, followed by a proposal with a personalized and transparent quote, also at no cost. You only pay if you agree to go ahead." |
+| Pergunta, PT | "A consulta inicial é gratuita?" | "A avaliação é gratuita?" |
+| Resposta, PT | "Sim, a primeira consulta é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. Pode agendar através do nosso formulário de contacto." | "Sim, a avaliação é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. A proposta que sai dela também não tem custo: só paga se aceitar avançar. Pode agendar a avaliação através do nosso formulário de contacto." |
+| Pergunta, EN | "Is the initial consultation free?" | "Is the assessment free?" |
+| Resposta, EN | "Yes, the first consultation is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. You can schedule it through our contact form." | "Yes, the assessment is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. The proposal that comes out of it is also free: you only pay if you agree to go ahead. You can schedule the assessment through our contact form." |
+
+Escolhas do Claude, para o Rui rever:
+
+- A pergunta ficou "A avaliação é gratuita?", sem o "inicial": a avaliação já é
+  a primeira fase, e "avaliação inicial" dava a entender que havia outra depois.
+- O "Pode agendar" passou a "Pode agendar a avaliação", porque a frase de antes
+  passou a falar da proposta, e sem o complemento não se sabia qual das duas se
+  agendava.
+- O "apresentamos possíveis soluções" da avaliação ficou como estava: não
+  contradiz as fases, e não foi pedido.
+
+**Procurou-se "consulta" no resto do projeto:** no site só havia nestas duas
+respostas, em PT e EN. O convite final ("Falamos primeiro, sem custo...") fica,
+porque bate certo com uma avaliação gratuita. **Fora do site, e do Henrique:** os
+emails de prospeção do `backend/main.py` oferecem "uma breve conversa sem
+compromisso de 10 minutos". Não se mexeu; fica para o Rui ver com ele, porque
+pode não bater com "não há uma conversa à parte antes da avaliação".
+
+**Verificado:** `CI=true npm run build` com `Compiled successfully.`; nas duas
+páginas da FAQ, os textos novos e nenhuma "consulta" nem "consultation"; o
+JSON-LD da FAQ lê o mesmo texto; auditoria de contraste de 7.5 em `/faq` e
+`/us/faq` a 320, 360, 390 e 1280px (conta também o texto das respostas
+fechadas): zero falhas, sem scroll para o lado; nenhum erro na consola.
+
+**Encontrado ao verificar, e por corrigir (não foi pedido):** cada resposta da
+FAQ abre numa caixa com altura máxima de 384px (`max-h-96`, no `FAQPage.js`), e
+o que passar disso fica cortado, sem aviso. A resposta sobre o processo passa:
+
+| Largura | PT | EN | O que se perde |
+|---|---|---|---|
+| 320px | 508px (era 484) | 484px | cerca de 4 linhas em PT, 3 em EN |
+| 360px | 435px | 411px | a última linha em PT, o fundo da última em EN |
+| 375px | 411px | 386px | o fundo da última linha em PT; em EN só a folga de baixo |
+| 390px | 386px | 386px (era 362) | só a folga de baixo, o texto vê-se |
+| 414px | 362px | 338px | nada |
+
+As margens de baixo da caixa são 24px, e é por isso que até 24px a mais não
+corta texto. **Já acontecia antes de 02/10** com o texto antigo, com as mesmas
+alturas a 360 e a 375px. As respostas do custo e da avaliação ficam nos 313px e
+cabem em todas as larguras. A correção é trocar o `max-h-96` por uma altura que
+chegue (por exemplo `max-h-[40rem]`); espera pelo Rui. **Corrigido no mesmo dia,
+a pedido do Rui, de outra maneira (7.21).**
+
+### 7.21 A avaliação "sem custo" no passo 01, a FAQ inteira no telemóvel, e os emails do backend (02/10/2026)
+
+Mesmo ramo e mesmo Pull Request do site (#5), **por juntar e por publicar**. Os
+emails ficaram num Pull Request à parte, o #6 (ver abaixo).
+
+#### O passo 01
+
+| | Antes | Depois |
+|---|---|---|
+| PT | "Avaliamos a empresa: como o trabalho corre hoje, ao pormenor, e o que dá para melhorar." | "Avaliamos a empresa, sem custo: como o trabalho corre hoje, ao pormenor, e o que dá para melhorar." |
+| EN | "We assess the company: how the work runs today, in detail, and what can be improved." | "We assess the company, at no cost: how the work runs today, in detail, and what can be improved." |
+
+O PT é do Rui; o EN, do Claude, com o "at no cost" que a resposta da FAQ sobre o
+custo já usa. A resposta da FAQ sobre o processo, que repete as fases, não diz
+"sem custo": não foi pedido, e as duas respostas a seguir (custo e avaliação) já
+o dizem.
+
+#### A FAQ inteira no telemóvel
+
+O problema está em 7.20. **A correção não subiu a altura máxima: tirou-a.** A
+caixa de cada resposta é agora uma grelha com uma só linha, que passa de `0fr`
+(fechada) a `1fr` (aberta), e a caixa de dentro tem `overflow-hidden`. Uma linha
+`1fr` tem a altura do próprio texto, por isso nenhuma resposta fica cortada, por
+mais comprida que seja, e o problema não volta quando a FAQ ganhar respostas
+maiores. A animação é a mesma, meio segundo na altura e na opacidade; e fecha
+agora sem o atraso que tinha (com a altura máxima, a caixa encolhia primeiro o
+espaço vazio entre o texto e os 384px, e só depois se via mexer). A grelha anima
+no Chrome desde 2022 (107), no Safari 16 e no Firefox 66; num browser mais
+antigo abre e fecha sem animação, mas inteira.
+
+**Verificado no build, a 320 e a 360px, em PT e EN, e a 1280px:** as sete
+respostas abrem até à altura exata do texto (a do processo, a 320px, 508px em PT
+e 484px em EN, onde antes parava nos 384), e nenhuma fica cortada. A animação
+viu-se pelo relógio de cada transição, porque o painel escondido não as faz
+correr sozinho (7.4): a abrir e a fechar há uma transição de 500ms na
+`grid-template-rows` e na `opacity`, com uma altura intermédia a meio (a do
+processo, a 320px, 394px a abrir e 114px a fechar), e a caixa volta a 0 no fim.
+Auditoria de contraste de 7.5 em `/`, `/us`, `/faq` e `/us/faq` a 1280px: zero
+falhas, sem scroll para o lado. Nenhum erro na consola.
+
+Visto de passagem, e não mexido: a caixa de cada resposta diz
+`aria-labelledby="faq-question-N"`, mas nenhum elemento tem esse id. Um leitor
+de ecrã fica sem o nome da região. Dar o id ao `h2` da pergunta resolve.
+**Corrigido no mesmo dia, a pedido do Rui, com o id no botão (7.22).**
+
+#### Os emails de prospeção do backend: Pull Request #6, à parte
+
+Pedido do Rui, no código do Henrique, e por isso num Pull Request só seu
+(`rui/emails-avaliacao-gratuita`, feito a partir do `main`), para o site não
+ficar à espera da revisão dele. **Por juntar: o Henrique revê.** Explica-lhe na
+descrição o motivo: a avaliação passou a ser a primeira fase e é gratuita, e não
+há uma conversa à parte antes dela (7.3).
+
+O Rui pediu para trocar a "breve conversa sem compromisso de 10 minutos" pela
+avaliação gratuita. Ao procurar, apareceram mais quatro ofertas de conversas ou
+chamadas curtas noutros modelos; perguntado, o Rui mandou trocar essas também, e
+deixar as demonstrações, os exemplos e a proposta de parceria como estavam.
+
+| Email | Antes | Depois |
+|---|---|---|
+| Oficinas & Automóvel | "Gostaríamos de agendar uma conversa de 10 minutos para mostrar como estas ferramentas podem poupar horas por dia na {company}." | "Gostaríamos de agendar uma avaliação gratuita e sem compromisso para mostrar como estas ferramentas podem poupar horas por dia na {company}." |
+| Oficinas & Automóvel | "Está disponível para uma breve chamada esta semana?" | "Está disponível para começarmos esta semana?" |
+| Imobiliárias & Construção | "Tem 10 minutos para uma conversa sem compromisso?" | "Tem interesse numa avaliação gratuita e sem compromisso?" |
+| Serviços Profissionais | "Estaria disponível para uma chamada de 15 minutos para ver se faz sentido para a {company}?" | "Estaria disponível para uma avaliação gratuita e sem compromisso, para ver se faz sentido para a {company}?" |
+| Logística & Transportes | "Gostaria de agendar uma conversa de 15 minutos para perceber se podemos ajudar?" | "Gostaria de agendar uma avaliação gratuita e sem compromisso, para perceber se podemos ajudar?" |
+| Genérico e de reserva | "Gostaríamos de agendar uma breve conversa sem compromisso de 10 minutos para analisar como podemos ajudar a {company} (...)" | "Gostaríamos de agendar uma avaliação gratuita e sem compromisso para analisar como podemos ajudar a {company} (...)" |
+| Genérico e de reserva | "Pode responder a este e-mail ou agendar uma chamada connosco em https://www.nexugal.com." | "Pode responder a este e-mail ou agendar a avaliação connosco em https://www.nexugal.com." |
+
+O genérico é o modelo `default`; o de reserva é o texto do `send_outreach_email`,
+usado quando o envio não traz mensagem própria. Os emails são só em português.
+
+**Verificado sem correr nada:** o `main.py` lê-se com o `ast` do Python, sem
+executar o módulo; os 11 modelos leem-se do código, e os marcadores `{name}` e
+`{company}` continuam a ser preenchidos (o backend troca-os com `replace`).
+**Nenhum email foi enviado, nenhum script de envio foi corrido, e o servidor não
+arrancou.** O backend só muda no ar quando o Henrique o publicar com
+`railway up` (secção 6).
+
+**O que isto torna velho:** o "por corrigir" da FAQ cortada em 7.20, e o aviso
+de 7.20 sobre os emails de prospeção.
+
+### 7.22 O nome das respostas da FAQ para leitores de ecrã (02/10/2026)
+
+Mesmo ramo e mesmo Pull Request do site (#5), **por juntar e por publicar**. O
+PR #6, dos emails, não foi tocado.
+
+**O pedido do Rui:** cada resposta da FAQ tem de apontar para a pergunta a que
+pertence, em PT e EN, e abrir e fechar tem de continuar a funcionar.
+
+**O que se fez** (`FAQPage.js`): o botão de cada pergunta ganhou o id
+`faq-question-N`, que é o que a resposta já dizia no `aria-labelledby`. Um
+leitor de ecrã passa a anunciar cada resposta com o texto da pergunta. Ficou no
+botão, e não no `h2` como 7.21 sugeria, porque é o que manda o padrão de
+acordeão da W3C (o painel tem o nome do botão que o abre). O nome sai igual: o
+botão só tem o texto da pergunta e o ícone, que não tem texto.
+
+**Verificado no build, a 1280px, em PT e EN:** as sete respostas apontam para um
+id que existe uma só vez na página, que é o do botão que as abre (o mesmo do
+`aria-controls`), e o texto dele é a pergunta. O painel do Claude não mostra o
+nome que o browser calcula (a árvore que lê não segue o `aria-labelledby`, e o
+`computedName` não existe nesta versão do Chrome): a verificação é a da regra
+dos nomes acessíveis, que dá a uma região com `aria-labelledby` o texto do
+elemento apontado. Abrir e fechar, conduzido pelo relógio das transições (7.21),
+a partir de todas fechadas: cada resposta abre até à altura do texto, com
+`aria-expanded` a passar a `true` e as outras fechadas, e fecha até 0, com
+alturas intermédias a meio. Build com `CI=true`, teste de contraste 18 de 18, e
+auditoria de contraste em `/faq` e `/us/faq` com zero falhas.
+
+**Armadilha do teste, não do site:** no painel escondido as transições só andam
+quando são conduzidas à mão. Uma resposta deixada a fechar por um teste anterior
+fica parada a meio, e o teste seguinte dá-a como aberta. Começar sempre com todas
+fechadas e acabadas.
+
+**Por resolver, visto ao mesmo tempo (não pedido):** a pergunta é um `h2` dentro
+do botão. Dentro de um botão os títulos deixam de contar como títulos, por isso
+quem navega de título em título com um leitor de ecrã não encontra as perguntas
+(e o HTML não permite um título dentro de um botão). O padrão da W3C é o
+contrário: o botão dentro do título, `<h2><button>...</button></h2>`. Muda a
+marcação, e por isso espera pelo Rui. **Feito a 03/10, a pedido do Rui (7.23).**
+
+### 7.23 As perguntas da FAQ como títulos (03/10/2026)
+
+Mesmo ramo e mesmo Pull Request do site (#5), **por juntar e por publicar**. O
+PR #6, dos emails, não foi tocado.
+
+**O pedido do Rui:** o botão de cada pergunta passa a ficar dentro do título,
+como no padrão de acordeão da W3C, para as perguntas contarem como títulos para
+os leitores de ecrã, em PT e EN; o aspeto, a animação e o nome das respostas
+ficam iguais.
+
+**O que mudou** (`FAQPage.js`): era `<button><h2>pergunta</h2><ícone></button>`,
+passou a `<h2><button><span>pergunta</span><ícone></button></h2>`. O `span` tem
+as classes que o `h2` tinha; o `h2` de fora não tem classes, porque o Tailwind
+já lhe tira margens, tamanho e peso. O id do botão, o `aria-expanded`, o
+`aria-controls` e a resposta ficaram como estavam.
+
+**Verificado no build:**
+
+- **Aspeto igual**, medido peça a peça (cartão, botão, texto da pergunta, ícone,
+  resposta, a lista e o botão de contacto por baixo, com posição, tamanho, letra,
+  cor e espaçamentos), com tudo fechado e com a pergunta 3 aberta, em PT e EN, a
+  360 e a 1280px: **zero diferenças**, com as duas versões servidas uma a seguir
+  à outra na mesma escala (armadilha em 7.4: a primeira comparação deu décimas de
+  píxel de diferença, todas do contorno arredondado com a escala do painel a
+  mudar entre as medições). As capturas das duas versões mostram o mesmo
+  desenho.
+- **Abrir e fechar** iguais: as mesmas transições de 500ms (`grid-template-rows`
+  e `opacity`), e as mesmas alturas a meio da animação que se mediram a 02/10
+  antes desta mudança (a 1280px, em PT, 117, 98 e 155px nas três primeiras).
+- **Títulos e nomes:** sete `h2`, cada um só com o botão da sua pergunta e com o
+  texto dela, e nenhum título dentro de um botão; cada resposta continua a apontar
+  para o botão da sua pergunta (7.22).
+- `CI=true npm run build` com `Compiled successfully.`, teste de contraste 18 de
+  18, auditoria de contraste em `/faq` e `/us/faq` a 360 e a 1280px com zero
+  falhas e sem scroll para o lado, e nenhum erro na consola.
+
+### 7.24 "Ler mais" no "Quem somos" do telemóvel, e destaques na FAQ (03/10/2026)
+
+Mesmo ramo e mesmo Pull Request do site (#5), **por juntar e por publicar**. O
+PR #6, dos emails, não foi tocado.
+
+#### "Ler mais" no telemóvel (`Process.js`)
+
+O pedido do Rui: no telemóvel, só o primeiro parágrafo da história e um botão
+"Ler mais" (EN "Read more"); o fim do texto visível a desvanecer para a cor do
+fundo, o resto a abrir com uma animação de altura, e o botão a passar a "Ler
+menos" (EN "Read less") e a fechar da mesma forma; o texto escondido fica na
+página, para o Google; o botão acessível por teclado e com o estado anunciado;
+no computador, tudo como estava.
+
+Como ficou:
+
+- **"Telemóvel" é abaixo de md (768px)**, o mesmo corte do menu de telemóvel. A
+  partir daí vê-se tudo, sem botão, também no tablet, onde as colunas ainda estão
+  empilhadas.
+- **O primeiro parágrafo fica sempre à vista**, e por cima da sua última linha há
+  um véu de 40px que vai do transparente ao neve (o fundo da secção). Desaparece
+  a abrir e volta a fechar, com a mesma animação.
+- **Os outros quatro parágrafos** abrem e fecham como as respostas da FAQ: uma
+  grelha com uma só linha, de `0fr` a `1fr`, em meio segundo. Fechados, ficam
+  `invisible` (fora do alcance dos leitores de ecrã também), mas continuam no
+  HTML da página: o Google lê-os. O `invisible` só entra no fim da animação de
+  fechar, por isso o texto não desaparece antes de a caixa encolher. Com "menos
+  movimento" pedido no sistema, abre e fecha sem animação.
+- **O botão** tem o desenho do "Ver exemplos" do hero (azul-médio a negrito, com
+  o traço azul-claro por baixo), é um `button` verdadeiro (Tab, Enter e Espaço), e
+  tem `aria-expanded` e `aria-controls="historia-resto"`. Os textos estão no
+  `translations.js`, em `about.lerMais` e `about.lerMenos`.
+- **No computador fica igual**: comparada a coluna "Quem somos" das duas versões,
+  peça a peça, a 1280px e na mesma escala, em PT e EN: zero diferenças.
+
+#### Destaques nas respostas da FAQ
+
+O pedido do Rui: 1 a 2 palavras-chave por resposta, a azul e a negrito como no
+"Quem somos", nada nas perguntas, o mesmo em EN, e os dados da FAQ para o Google
+com o texto simples.
+
+Marcam-se como no "Quem somos", entre `[ ]` no `translations.js`. A função que
+os desenha passou do `Process.js` para `utils/destaques.js` (`comDestaques`), e
+serve agora os dois sítios. O `SEO.js` usa a `semDestaques`, que tira as marcas:
+o Google recebe exatamente o texto que se lê na página, sem `[ ]`.
+
+| Pergunta | PT | EN |
+|---|---|---|
+| Serviços | desenvolvimento web; inteligência artificial | web development; artificial intelligence |
+| Prazo | 2 a 4 semanas; 2 a 6 meses | 2 to 4 weeks; 2 to 6 months |
+| Processo | quatro etapas | four stages |
+| Dimensão | todas as dimensões; personalizadas | all sizes; customized |
+| Suporte | suporte técnico contínuo 24/7; manutenção proativa | continuous 24/7 technical support; proactive maintenance |
+| Custo | avaliação gratuita e sem compromisso; Só paga se aceitar avançar | free, no-obligation assessment; You only pay if you agree to go ahead |
+| Avaliação | totalmente gratuita e sem compromisso; só paga se aceitar avançar | completely free and with no obligation; you only pay if you agree to go ahead |
+
+Escolhas do Claude, para o Rui rever. Ficaram de fora, de propósito: o
+"formulário de contacto" da última resposta, porque a azul e a negrito parecia
+uma ligação que não é; e, na primeira resposta, o "suporte técnico contínuo 24/7",
+para não repetir o destaque da resposta sobre o suporte.
+
+#### Verificado
+
+- **Telemóvel, a 320 e a 360px, em PT e EN:** fechado, a caixa do resto tem
+  altura 0, está `invisible` e o véu está a 1; o texto escondido está no HTML (os
+  cinco parágrafos). A abrir há transição de 500ms na altura (a 320px em PT, 478
+  de 616px a meio) e o véu desaparece; aberto, a caixa tem a altura do texto, o
+  botão diz "Ler menos" e `aria-expanded` passa a `true`; a fechar, o mesmo ao
+  contrário, e o texto só fica `invisible` no fim. Teclado: com o foco no botão,
+  Enter abre e Espaço fecha, o foco fica no botão e vê-se o contorno de foco.
+- **Tablet (768px):** tudo à vista, sem botão e sem véu.
+- **FAQ, a 320, 360 e 1280px, em PT e EN:** 13 destaques por língua (2, 2, 1, 2,
+  2, 2 e 2), todos a 600 e azul-médio, nenhum nas perguntas, nenhum `[` ou `]` à
+  vista; os dados da FAQ para o Google, lidos com o remendo do desenho do ecrã
+  (7.2, ponto 5), trazem as sete respostas iguais ao texto da página, sem marcas.
+- **Contraste:** zero falhas em `/` e `/us` a 320 e 360px (com o "Quem somos"
+  fechado e aberto) e a 1280px, e nas FAQ com cada resposta aberta, nas três
+  larguras. Teste de contraste 18 de 18, sem scroll para o lado, e nenhum erro na
+  consola.
+- `CI=true npm run build` com `Compiled successfully.`, e as classes novas
+  (`from-neve/0`, `md:visible`, `md:grid-rows-[1fr]`, `motion-reduce:`) no CSS
+  gerado.
+
+**Mudou no dia seguinte (7.25):** as respostas 1 e 2 da FAQ e os destaques de
+três respostas. A tabela de cima já não é a atual.
+
+### 7.25 Respostas novas na FAQ sobre serviços e prazos, e menos destaques (03/10/2026)
+
+Mesmo ramo e mesmo Pull Request do site (#5), **por juntar e por publicar**. O
+PR #6, dos emails, não foi tocado.
+
+**O pedido do Rui:** a resposta sobre os serviços e a dos prazos com texto novo,
+escrito por ele; tirar o destaque de "Só paga se aceitar avançar" nas respostas
+do custo e da avaliação; o inglês no mesmo tom, escrito pelo Claude.
+
+| Resposta | Antes | Depois |
+|---|---|---|
+| Serviços, PT | "Oferecemos uma gama completa de serviços tecnológicos: [desenvolvimento web] (sites, aplicações e plataformas), cibersegurança (...), soluções cloud (...), consultoria em [inteligência artificial], análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7." | "Oferecemos uma gama completa de serviços tecnológicos, com foco em tirar das empresas o trabalho manual e repetitivo: [automação de processos] (faturas, encomendas, pedidos de clientes, stock e relatórios deixam de passar à mão), consultoria em [inteligência artificial] aplicada ao negócio, ligação entre os programas que a empresa já usa (ERP, contabilidade, loja online), desenvolvimento web (sites, aplicações e plataformas), análise de dados com dashboards personalizados, cibersegurança (auditorias, monitorização e proteção de dados), soluções cloud (migração e gestão) e suporte técnico contínuo 24/7." |
+| Serviços, EN | "We offer a complete range of technology services: [web development] (...), [artificial intelligence] consulting, (...) and continuous 24/7 technical support." | "We offer a complete range of technology services, focused on taking manual, repetitive work out of businesses: [process automation] (invoices, orders, customer requests, stock and reports are no longer handled by hand), consulting on [artificial intelligence] applied to the business, connecting the systems the company already uses (ERP, accounting, online store), web development (websites, applications and platforms), data analytics with customized dashboards, cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management) and continuous 24/7 technical support." |
+| Prazos, PT | "(...) pronto em [2 a 4 semanas], enquanto uma aplicação web mais complexa pode levar entre [2 a 6 meses]. (...)" | "O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 1 a 3 semanas, enquanto uma aplicação web mais complexa pode levar entre 1 e 6 meses. Na proposta, dizemos o que fica pronto em cada etapa e quando." (sem destaques) |
+| Prazos, EN | "(...) ready in [2 to 4 weeks], while a more complex web application can take between [2 to 6 months]. (...)" | "The timeframe varies depending on the complexity of the project. A corporate website can be ready in 1 to 3 weeks, while a more complex web application can take between 1 and 6 months. In the proposal, we tell you what is ready at each stage and when." (sem destaques) |
+
+No custo e na avaliação, o texto ficou igual; saiu só o destaque de "Só paga se
+aceitar avançar" e de "You only pay if you agree to go ahead" (nas duas). O
+comentário do `translations.js` passou de "1 ou 2 por resposta" a "no máximo 2".
+
+Escolhas do inglês: "pedidos de clientes" é "customer requests", como no bloco
+dos exemplos (7.1, ponto 4); "programas" é "systems", a palavra que o inglês do
+site já usa ("Systems that talk to each other"); "aplicada ao negócio" refere-se
+à inteligência artificial, por isso "consulting on artificial intelligence applied
+to the business".
+
+**Destaques, como ficaram** (PT e EN, pela ordem das respostas): 2, 0, 1, 2, 2,
+1 e 1.
+
+| Pergunta | PT | EN |
+|---|---|---|
+| Serviços | automação de processos; inteligência artificial | process automation; artificial intelligence |
+| Prazo | (nenhum) | (nenhum) |
+| Processo | quatro etapas | four stages |
+| Dimensão | todas as dimensões; personalizadas | all sizes; customized |
+| Suporte | suporte técnico contínuo 24/7; manutenção proativa | continuous 24/7 technical support; proactive maintenance |
+| Custo | avaliação gratuita e sem compromisso | free, no-obligation assessment |
+| Avaliação | totalmente gratuita e sem compromisso | completely free and with no obligation |
+
+**Verificado:** as respostas 1 e 2 em PT comparadas carácter a carácter com o
+pedido; `CI=true npm run build` com `Compiled successfully.`; teste de contraste
+18 de 18; nas FAQ a 320, 360 e 1280px, em PT e EN, os destaques acima, todos a
+600 e azul-médio, nenhum `[` ou `]` à vista, nenhuma resposta cortada (a dos
+serviços ficou mais comprida, e o acordeão abre até à altura do texto, 7.21),
+contraste sem falhas com cada resposta aberta, e os dados da FAQ para o Google
+iguais ao texto da página, sem marcas (lidos com o remendo do desenho do ecrã,
+7.2, ponto 5). Nenhum erro na consola.
+
+

@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { LanguageProvider } from './i18n/LanguageContext';
+import { useAncoraAoChegar } from './hooks/useAncoraAoChegar';
 import SEO from './components/SEO';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -10,7 +11,6 @@ import CallToAction from './components/CallToAction';
 import Footer from './components/Footer';
 import ContactPage from './components/ContactPage';
 import FAQPage from './components/FAQPage';
-import SobrePage from './pages/SobrePage';
 import CookieBanner from './components/CookieBanner';
 import BotaoContactoFlutuante from './components/BotaoContactoFlutuante';
 
@@ -34,6 +34,9 @@ function RequireAdminAuth({ children }) {
 }
 
 function Layout({ lang }) {
+  // Quem chega com uma secção no endereço (/#sobre) cai nela
+  useAncoraAoChegar();
+
   return (
     <>
       <SEO lang={lang} page="home" />
@@ -119,26 +122,14 @@ function App() {
           }
         />
 
-        {/* PT, quem somos */}
-        <Route
-          path="/sobre"
-          element={
-            <>
-              <SEO lang="pt" page="about" />
-              <SobrePage />
-            </>
-          }
-        />
-        {/* EN, about */}
-        <Route
-          path="/us/about"
-          element={
-            <>
-              <SEO lang="en" page="about" />
-              <SobrePage />
-            </>
-          }
-        />
+        {/* O "quem somos" foi uma página à parte até 02/10/2026 e passou a
+            secção da página inicial. Os endereços antigos levam à secção,
+            para não partir ligações que andem por aí. No site publicado quem
+            redireciona primeiro é a Vercel, com um 308 (vercel.json da raiz);
+            estas duas rotas ficam para o npm start, que não lê o vercel.json.
+            Mudar o destino obriga a mudar nos dois sítios. */}
+        <Route path="/sobre" element={<Navigate to="/#sobre" replace />} />
+        <Route path="/us/about" element={<Navigate to="/us#sobre" replace />} />
 
         {/* Admin — Login */}
         <Route

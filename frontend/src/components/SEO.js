@@ -1,13 +1,16 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import translations from '../i18n/translations';
+import { semDestaques } from '../utils/destaques';
 
 /**
  * Componente SEO reutilizável: etiquetas do cabeçalho por página, mais JSON-LD.
  *
  * Props:
  *  - lang: 'pt' | 'en'
- *  - page: 'home' | 'contact' | 'faq' | 'about' | 'privacy'
+ *  - page: 'home' | 'contact' | 'faq' | 'privacy'
+ *    (o 'about' saiu a 02/10/2026, com a página do Sobre: o /sobre leva agora
+ *    à secção da página inicial, que usa o SEO da 'home')
  *
  * Cada etiqueta tem UM só sítio que a escreve. Quando havia dois (o
  * public/index.html e a biblioteca), cada página ficava com dois canonical, duas
@@ -56,14 +59,6 @@ const seoData = {
       alternate: `${BASE_URL}/us/faq`,
       ogLocale: 'pt_PT',
     },
-    about: {
-      title: 'Sobre nós, Nexugal | Sistemas que falam entre si',
-      description:
-        'Conheça a Nexugal: quem somos, a nossa visão e a nossa paixão por transformar empresas através da tecnologia, cibersegurança e inovação.',
-      canonical: `${BASE_URL}/sobre`,
-      alternate: `${BASE_URL}/us/about`,
-      ogLocale: 'pt_PT',
-    },
     privacy: {
       title: 'Política de Privacidade, Nexugal | Proteção de Dados e RGPD',
       description:
@@ -95,14 +90,6 @@ const seoData = {
         'Answers to frequently asked questions about Nexugal services: web development, cybersecurity, cloud, AI, timelines, costs and support.',
       canonical: `${BASE_URL}/us/faq`,
       alternate: `${BASE_URL}/faq`,
-      ogLocale: 'en_US',
-    },
-    about: {
-      title: 'About us, Nexugal | Systems that talk to each other',
-      description:
-        'Meet Nexugal: who we are, our vision and our passion for transforming businesses through technology, cybersecurity, and innovation.',
-      canonical: `${BASE_URL}/us/about`,
-      alternate: `${BASE_URL}/sobre`,
       ogLocale: 'en_US',
     },
     privacy: {
@@ -236,15 +223,6 @@ function getBreadcrumbs(lang, page) {
     });
   }
 
-  if (page === 'about') {
-    items.push({
-      '@type': 'ListItem',
-      position: 2,
-      name: lang === 'pt' ? 'Sobre Nós' : 'About Us',
-      item: lang === 'pt' ? `${BASE_URL}/sobre` : `${BASE_URL}/us/about`,
-    });
-  }
-
   if (page === 'privacy') {
     items.push({
       '@type': 'ListItem',
@@ -352,7 +330,9 @@ function getFaqSchema(lang) {
       name: item.question,
       acceptedAnswer: {
         '@type': 'Answer',
-        text: item.answer,
+        // As respostas trazem destaques entre [ ] para a página; o Google
+        // recebe o texto simples, sem as marcas.
+        text: semDestaques(item.answer),
       },
     })),
   };

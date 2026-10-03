@@ -190,15 +190,18 @@ const translations = {
       title: 'Do primeiro dia até ',
       titleHighlight: 'andar sozinho',
       steps: [
+        // O Diagnóstico e o Planeamento juntaram-se numa fase só a 02/10/2026.
+        // Os nomes das fases estão também na resposta da FAQ sobre o processo,
+        // mais abaixo: mudar aqui obriga a mudar lá.
         {
           number: '01',
-          keyword: 'Diagnóstico',
-          description: 'Percebemos como o trabalho corre hoje, ao pormenor. Daí sai um relatório com o que pode mudar e o que isso traz à empresa.',
+          keyword: 'Avaliação',
+          description: 'Avaliamos a empresa, sem custo: como o trabalho corre hoje, ao pormenor, e o que dá para melhorar.',
         },
         {
           number: '02',
-          keyword: 'Planeamento',
-          description: 'Dizemos o que vamos fazer, quanto custa e em quanto tempo, antes de começarmos. O valor combinado é o que fica, sem surpresas pelo caminho.',
+          keyword: 'Proposta',
+          description: 'Apresentamos um relatório com o que pode mudar, o que isso traz à empresa e o plano para lá chegar: o que vamos fazer, quanto custa e em quanto tempo.',
         },
         {
           number: '03',
@@ -269,32 +272,25 @@ const translations = {
       back: 'Voltar ao início',
       logo: 'Nexugal, ir para a página inicial',
     },
+    // A coluna da esquerda da secção "Como trabalhamos", na página inicial.
+    // Até 02/10/2026 era uma página à parte, o /sobre.
     about: {
       subtitle: 'Quem somos',
-      title: 'Sobre a ',
-      titleHighlight: 'Nexugal',
-      // Um parágrafo por entrada, pela ordem em que aparecem
       historia: {
         titulo: 'Como começou',
+        // Um parágrafo por entrada, pela ordem em que aparecem. O que fica
+        // entre [ ] sai a azul, sem os parênteses retos. No telemóvel só se vê
+        // o primeiro, e os outros abrem com o "Ler mais".
         paragrafos: [
-          'Novembro de 2025. A Nexugal começou por dar suporte a lojas online e, em menos de um ano, já trabalhava com lojas em mais de dez países, cada uma com a sua língua, moeda, fornecedores e parceiros.',
-          'O problema era sempre o mesmo: trabalho manual a travar o crescimento. Algumas horas por dia só para fechar as contas. Emails de clientes a acumular, alguns vistos três dias depois. Cada encomenda nova trazia mais trabalho, não mais tempo.',
+          'Novembro de 2025. A Nexugal começou por dar suporte a lojas online e, em menos de um ano, já trabalhava com lojas em [mais de dez países], cada uma com a sua língua, moeda, fornecedores e parceiros.',
+          'O problema era sempre o mesmo: [trabalho manual e repetitivo] a travar o crescimento. Algumas horas por dia só para fechar as contas, emails de clientes a acumular, cada encomenda nova trazia mais trabalho, não mais tempo.',
           'Automatizámos a contabilidade, o apoio ao cliente e a gestão de stock, entre outras coisas. As contas do dia passaram a fechar em cinco minutos e os clientes têm resposta sem ninguém estar a escrever email a email.',
-          'O que resolvemos no comércio online resolve-se em qualquer empresa. Hoje ajudamos empresas de outros setores a tirar do meio o trabalho manual que ninguém gosta de fazer e a pôr a informação a circular entre as pessoas e os sistemas. Sem projetos intermináveis, sem tecnologia a mais do que a necessária.',
+          'O que resolvemos no comércio online, já aplicamos a empresas com [diversas dimensões e em diversos setores] até hoje.',
+          'Estamos aqui para tirar da sua empresa o trabalho manual e repetitivo e as falhas do dia a dia que lhe consomem [tempo e recursos].',
         ],
       },
-      founders: {
-        photoAlt: 'Fotografia de ',
-        linkedinLabel: 'LinkedIn de ',
-        people: [
-          {
-            id: 'rui',
-            name: 'Rui Machado',
-            role: 'Fundador',
-            description: 'Licenciado em Engenharia e Gestão de Sistemas de Informação pela Universidade do Minho. Construiu as primeiras automações da Nexugal nas lojas online que acompanhamos desde novembro de 2025, da contabilidade ao apoio ao cliente e à gestão de stock.',
-          },
-        ],
-      },
+      lerMais: 'Ler mais',
+      lerMenos: 'Ler menos',
     },
     faq: {
       subtitle: 'Perguntas Frequentes',
@@ -302,34 +298,42 @@ const translations = {
       titleHighlight: 'Frequentes',
       description: 'Encontre respostas para as perguntas mais comuns sobre os nossos serviços, processos e formas de trabalho.',
       back: '← Voltar ao início',
+      // Nas respostas, o que fica entre [ ] sai a azul e a negrito na página,
+      // como no "Quem somos": no máximo 2 por resposta, e nada nas perguntas.
+      // Os dados da FAQ para o Google recebem o texto sem as marcas (SEO.js).
       items: [
         {
           question: 'Que tipo de serviços a Nexugal oferece?',
-          answer: 'Oferecemos uma gama completa de serviços tecnológicos: desenvolvimento web (sites, aplicações e plataformas), cibersegurança (auditorias, monitorização e proteção de dados), soluções cloud (migração e gestão), consultoria em inteligência artificial, análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7.',
+          answer: 'Oferecemos uma gama completa de serviços tecnológicos, com foco em tirar das empresas o trabalho manual e repetitivo: [automação de processos] (faturas, encomendas, pedidos de clientes, stock e relatórios deixam de passar à mão), consultoria em [inteligência artificial] aplicada ao negócio, ligação entre os programas que a empresa já usa (ERP, contabilidade, loja online), desenvolvimento web (sites, aplicações e plataformas), análise de dados com dashboards personalizados, cibersegurança (auditorias, monitorização e proteção de dados), soluções cloud (migração e gestão) e suporte técnico contínuo 24/7.',
         },
         {
           question: 'Quanto tempo demora um projeto de desenvolvimento web?',
-          answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 2 a 4 semanas, enquanto uma aplicação web mais complexa pode levar entre 2 a 6 meses. Na fase de diagnóstico, dizemos o que fica pronto em cada etapa e quando.',
+          answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 1 a 3 semanas, enquanto uma aplicação web mais complexa pode levar entre 1 e 6 meses. Na proposta, dizemos o que fica pronto em cada etapa e quando.',
         },
         {
           question: 'Como funciona o processo de trabalho da Nexugal?',
-          answer: 'O nosso processo tem quatro etapas. Diagnóstico, percebemos como o trabalho corre hoje, ao pormenor, e daí sai um relatório com o que pode mudar e o que isso traz à empresa. Planeamento, dizemos o que vamos fazer, quanto custa e em quanto tempo, antes de começarmos. Desenvolvimento, fazemos por partes e vai vendo a funcionar antes de estar tudo pronto, para se corrigir cedo o que for preciso. Acompanhamento, fica a funcionar e nós ficamos por perto, com alguém a quem ligar quando for preciso.',
+          answer: 'O nosso processo tem [quatro etapas]. Avaliação, percebemos como o trabalho corre hoje, ao pormenor, e o que dá para melhorar. Proposta, apresentamos um relatório com o que pode mudar, o que isso traz à empresa e o plano para lá chegar: o que vamos fazer, quanto custa e em quanto tempo. Desenvolvimento, fazemos por partes e vai vendo a funcionar antes de estar tudo pronto, para se corrigir cedo o que for preciso. Acompanhamento, fica a funcionar e nós ficamos por perto, com alguém a quem ligar quando for preciso.',
         },
         {
           question: 'A Nexugal trabalha com empresas de que dimensão?',
-          answer: 'Trabalhamos com empresas de todas as dimensões, desde startups e PMEs até grandes corporações. As nossas soluções são personalizadas para se adaptarem às necessidades e ao orçamento de cada cliente.',
+          answer: 'Trabalhamos com empresas de [todas as dimensões], desde startups e PMEs até grandes corporações. As nossas soluções são [personalizadas] para se adaptarem às necessidades e ao orçamento de cada cliente.',
         },
         {
           question: 'Oferecem suporte após a entrega do projeto?',
-          answer: 'Sim! Oferecemos suporte técnico contínuo 24/7 e manutenção proativa. Após a entrega, acompanhamos o desempenho da solução, aplicamos atualizações de segurança e corrigimos o que for aparecendo.',
+          answer: 'Sim! Oferecemos [suporte técnico contínuo 24/7] e [manutenção proativa]. Após a entrega, acompanhamos o desempenho da solução, aplicamos atualizações de segurança e corrigimos o que for aparecendo.',
         },
         {
           question: 'Qual é o custo dos vossos serviços?',
-          answer: 'Cada projeto é único, por isso o custo depende dos requisitos específicos, da complexidade e do prazo desejado. Oferecemos uma consulta gratuita e sem compromisso onde apresentamos um orçamento personalizado e transparente.',
+          // A avaliação e a proposta que sai dela não têm custo; o cliente só
+          // paga se aceitar avançar (Rui, 02/10/2026). A ordem destas frases
+          // segue a das fases do "Como trabalhamos".
+          answer: 'Cada projeto é único, por isso o custo depende dos requisitos específicos, da complexidade e do prazo desejado. Começamos por uma [avaliação gratuita e sem compromisso], e daí sai uma proposta com um orçamento personalizado e transparente, também sem custo. Só paga se aceitar avançar.',
         },
         {
-          question: 'A consulta inicial é gratuita?',
-          answer: 'Sim, a primeira consulta é totalmente gratuita e sem compromisso. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. Pode agendar através do nosso formulário de contacto.',
+          // A "primeira consulta" era a própria avaliação: não há uma conversa
+          // à parte antes dela.
+          question: 'A avaliação é gratuita?',
+          answer: 'Sim, a avaliação é [totalmente gratuita e sem compromisso]. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. A proposta que sai dela também não tem custo: só paga se aceitar avançar. Pode agendar a avaliação através do nosso formulário de contacto.',
         },
       ],
     },
@@ -367,7 +371,7 @@ const translations = {
           { label: 'Home', href: '#home' },
           { label: 'Exemplos', href: '#exemplos' },
           { label: 'Como trabalhamos', href: '#processo' },
-          { label: 'Sobre', href: '/sobre' },
+          { label: 'Sobre', href: '#sobre' },
         ],
       },
       legalLinks: [
@@ -548,13 +552,13 @@ const translations = {
       steps: [
         {
           number: '01',
-          keyword: 'Discovery',
-          description: 'We look in detail at how the work runs today. From that comes a report with what can change and what that brings to the company.',
+          keyword: 'Assessment',
+          description: 'We assess the company, at no cost: how the work runs today, in detail, and what can be improved.',
         },
         {
           number: '02',
-          keyword: 'Planning',
-          description: 'We tell you what we will do, what it costs and how long it takes, before we start. The price we agree on is the price that stands, with no surprises along the way.',
+          keyword: 'Proposal',
+          description: 'We present a report with what can change, what that brings to the company and the plan to get there: what we will do, what it costs and how long it takes.',
         },
         {
           number: '03',
@@ -621,29 +625,18 @@ const translations = {
     },
     about: {
       subtitle: 'Who we are',
-      title: 'About ',
-      titleHighlight: 'Nexugal',
       historia: {
         titulo: 'How it started',
         paragrafos: [
-          'November 2025. Nexugal started out supporting online stores and, in less than a year, was already working with stores in more than ten countries, each with its own language, currency, suppliers and partners.',
-          'The problem was always the same: manual work holding back growth. A few hours a day just to close the books. Customer emails piling up, some seen three days later. Every new order brought more work, not more time.',
+          'November 2025. Nexugal started out supporting online stores and, in less than a year, was already working with stores in [more than ten countries], each with its own language, currency, suppliers and partners.',
+          'The problem was always the same: [manual, repetitive work] holding back growth. A few hours a day just to close the books, customer emails piling up, every new order bringing more work, not more time.',
           'We automated the accounting, customer support and stock management, among other things. The day\'s books now close in five minutes, and customers get an answer without anyone writing emails one by one.',
-          'What we solved in online retail can be solved in any business. Today we help companies in other sectors take out the manual work nobody enjoys doing and get information moving between people and systems. No endless projects, no more technology than the job needs.',
+          'What we solved in online retail we have since applied to companies [of different sizes and in different sectors].',
+          'We are here to rid your business of the manual, repetitive work and the everyday mistakes that drain your [time and resources].',
         ],
       },
-      founders: {
-        photoAlt: 'Photo of ',
-        linkedinLabel: 'LinkedIn profile of ',
-        people: [
-          {
-            id: 'rui',
-            name: 'Rui Machado',
-            role: 'Founder',
-            description: 'Degree in Information Systems Engineering and Management from the University of Minho. Built Nexugal\'s first automations in the online stores we have supported since November 2025, from accounting to customer support and stock management.',
-          },
-        ],
-      },
+      lerMais: 'Read more',
+      lerMenos: 'Read less',
     },
     faq: {
       subtitle: 'Frequently Asked Questions',
@@ -654,31 +647,31 @@ const translations = {
       items: [
         {
           question: 'What type of services does Nexugal offer?',
-          answer: 'We offer a complete range of technology services: web development (websites, applications and platforms), cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management), artificial intelligence consulting, data analytics with customized dashboards, and continuous 24/7 technical support.',
+          answer: 'We offer a complete range of technology services, focused on taking manual, repetitive work out of businesses: [process automation] (invoices, orders, customer requests, stock and reports are no longer handled by hand), consulting on [artificial intelligence] applied to the business, connecting the systems the company already uses (ERP, accounting, online store), web development (websites, applications and platforms), data analytics with customized dashboards, cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management) and continuous 24/7 technical support.',
         },
         {
           question: 'How long does a web development project take?',
-          answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 2 to 4 weeks, while a more complex web application can take between 2 to 6 months. During the discovery phase, we tell you what is ready at each stage and when.',
+          answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 1 to 3 weeks, while a more complex web application can take between 1 and 6 months. In the proposal, we tell you what is ready at each stage and when.',
         },
         {
           question: 'How does Nexugal\'s work process function?',
-          answer: 'Our process has four stages. Discovery, we look in detail at how the work runs today, and from that comes a report with what can change and what that brings to the company. Planning, we tell you what we will do, what it costs and how long it takes, before we start. Development, we build it in parts and you see it working before everything is finished, so whatever needs correcting is caught early. Ongoing support, it keeps running and we stay close by, with someone to call when you need it.',
+          answer: 'Our process has [four stages]. Assessment, we look in detail at how the work runs today and what can be improved. Proposal, we present a report with what can change, what that brings to the company and the plan to get there: what we will do, what it costs and how long it takes. Development, we build it in parts and you see it working before everything is finished, so whatever needs correcting is caught early. Ongoing support, it keeps running and we stay close by, with someone to call when you need it.',
         },
         {
           question: 'What size companies does Nexugal work with?',
-          answer: 'We work with companies of all sizes, from startups and SMEs to large corporations. Our solutions are customized to adapt to each client\'s needs and budget.',
+          answer: 'We work with companies of [all sizes], from startups and SMEs to large corporations. Our solutions are [customized] to adapt to each client\'s needs and budget.',
         },
         {
           question: 'Do you offer support after project delivery?',
-          answer: 'Yes! We offer continuous 24/7 technical support and proactive maintenance. After delivery, we monitor the solution\'s performance, apply security updates and fix whatever comes up.',
+          answer: 'Yes! We offer [continuous 24/7 technical support] and [proactive maintenance]. After delivery, we monitor the solution\'s performance, apply security updates and fix whatever comes up.',
         },
         {
           question: 'What is the cost of your services?',
-          answer: 'Each project is unique, so the cost depends on the specific requirements, complexity and desired timeline. We offer a free, no-obligation consultation where we present a personalized and transparent quote.',
+          answer: 'Each project is unique, so the cost depends on the specific requirements, complexity and desired timeline. We start with a [free, no-obligation assessment], followed by a proposal with a personalized and transparent quote, also at no cost. You only pay if you agree to go ahead.',
         },
         {
-          question: 'Is the initial consultation free?',
-          answer: 'Yes, the first consultation is completely free and with no obligation. In it, we analyze your needs, present possible solutions and answer all your questions. You can schedule it through our contact form.',
+          question: 'Is the assessment free?',
+          answer: 'Yes, the assessment is [completely free and with no obligation]. In it, we analyze your needs, present possible solutions and answer all your questions. The proposal that comes out of it is also free: you only pay if you agree to go ahead. You can schedule the assessment through our contact form.',
         },
       ],
     },
@@ -716,7 +709,7 @@ const translations = {
           { label: 'Home', href: '#home' },
           { label: 'Examples', href: '#exemplos' },
           { label: 'How we work', href: '#processo' },
-          { label: 'About', href: '/us/about' },
+          { label: 'About', href: '#sobre' },
         ],
       },
       legalLinks: [
