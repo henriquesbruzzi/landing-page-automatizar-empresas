@@ -299,16 +299,16 @@ const translations = {
       description: 'Encontre respostas para as perguntas mais comuns sobre os nossos serviços, processos e formas de trabalho.',
       back: '← Voltar ao início',
       // Nas respostas, o que fica entre [ ] sai a azul e a negrito na página,
-      // como no "Quem somos": 1 ou 2 por resposta, e nada nas perguntas. Os
-      // dados da FAQ para o Google recebem o texto sem as marcas (SEO.js).
+      // como no "Quem somos": no máximo 2 por resposta, e nada nas perguntas.
+      // Os dados da FAQ para o Google recebem o texto sem as marcas (SEO.js).
       items: [
         {
           question: 'Que tipo de serviços a Nexugal oferece?',
-          answer: 'Oferecemos uma gama completa de serviços tecnológicos: [desenvolvimento web] (sites, aplicações e plataformas), cibersegurança (auditorias, monitorização e proteção de dados), soluções cloud (migração e gestão), consultoria em [inteligência artificial], análise de dados com dashboards personalizados, e suporte técnico contínuo 24/7.',
+          answer: 'Oferecemos uma gama completa de serviços tecnológicos, com foco em tirar das empresas o trabalho manual e repetitivo: [automação de processos] (faturas, encomendas, pedidos de clientes, stock e relatórios deixam de passar à mão), consultoria em [inteligência artificial] aplicada ao negócio, ligação entre os programas que a empresa já usa (ERP, contabilidade, loja online), desenvolvimento web (sites, aplicações e plataformas), análise de dados com dashboards personalizados, cibersegurança (auditorias, monitorização e proteção de dados), soluções cloud (migração e gestão) e suporte técnico contínuo 24/7.',
         },
         {
           question: 'Quanto tempo demora um projeto de desenvolvimento web?',
-          answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em [2 a 4 semanas], enquanto uma aplicação web mais complexa pode levar entre [2 a 6 meses]. Na proposta, dizemos o que fica pronto em cada etapa e quando.',
+          answer: 'O prazo varia conforme a complexidade do projeto. Um site institucional pode estar pronto em 1 a 3 semanas, enquanto uma aplicação web mais complexa pode levar entre 1 e 6 meses. Na proposta, dizemos o que fica pronto em cada etapa e quando.',
         },
         {
           question: 'Como funciona o processo de trabalho da Nexugal?',
@@ -327,13 +327,13 @@ const translations = {
           // A avaliação e a proposta que sai dela não têm custo; o cliente só
           // paga se aceitar avançar (Rui, 02/10/2026). A ordem destas frases
           // segue a das fases do "Como trabalhamos".
-          answer: 'Cada projeto é único, por isso o custo depende dos requisitos específicos, da complexidade e do prazo desejado. Começamos por uma [avaliação gratuita e sem compromisso], e daí sai uma proposta com um orçamento personalizado e transparente, também sem custo. [Só paga se aceitar avançar].',
+          answer: 'Cada projeto é único, por isso o custo depende dos requisitos específicos, da complexidade e do prazo desejado. Começamos por uma [avaliação gratuita e sem compromisso], e daí sai uma proposta com um orçamento personalizado e transparente, também sem custo. Só paga se aceitar avançar.',
         },
         {
           // A "primeira consulta" era a própria avaliação: não há uma conversa
           // à parte antes dela.
           question: 'A avaliação é gratuita?',
-          answer: 'Sim, a avaliação é [totalmente gratuita e sem compromisso]. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. A proposta que sai dela também não tem custo: [só paga se aceitar avançar]. Pode agendar a avaliação através do nosso formulário de contacto.',
+          answer: 'Sim, a avaliação é [totalmente gratuita e sem compromisso]. Nela, analisamos as suas necessidades, apresentamos possíveis soluções e respondemos a todas as suas questões. A proposta que sai dela também não tem custo: só paga se aceitar avançar. Pode agendar a avaliação através do nosso formulário de contacto.',
         },
       ],
     },
@@ -647,11 +647,11 @@ const translations = {
       items: [
         {
           question: 'What type of services does Nexugal offer?',
-          answer: 'We offer a complete range of technology services: [web development] (websites, applications and platforms), cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management), [artificial intelligence] consulting, data analytics with customized dashboards, and continuous 24/7 technical support.',
+          answer: 'We offer a complete range of technology services, focused on taking manual, repetitive work out of businesses: [process automation] (invoices, orders, customer requests, stock and reports are no longer handled by hand), consulting on [artificial intelligence] applied to the business, connecting the systems the company already uses (ERP, accounting, online store), web development (websites, applications and platforms), data analytics with customized dashboards, cybersecurity (audits, monitoring and data protection), cloud solutions (migration and management) and continuous 24/7 technical support.',
         },
         {
           question: 'How long does a web development project take?',
-          answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in [2 to 4 weeks], while a more complex web application can take between [2 to 6 months]. In the proposal, we tell you what is ready at each stage and when.',
+          answer: 'The timeframe varies depending on the complexity of the project. A corporate website can be ready in 1 to 3 weeks, while a more complex web application can take between 1 and 6 months. In the proposal, we tell you what is ready at each stage and when.',
         },
         {
           question: 'How does Nexugal\'s work process function?',
@@ -667,11 +667,11 @@ const translations = {
         },
         {
           question: 'What is the cost of your services?',
-          answer: 'Each project is unique, so the cost depends on the specific requirements, complexity and desired timeline. We start with a [free, no-obligation assessment], followed by a proposal with a personalized and transparent quote, also at no cost. [You only pay if you agree to go ahead].',
+          answer: 'Each project is unique, so the cost depends on the specific requirements, complexity and desired timeline. We start with a [free, no-obligation assessment], followed by a proposal with a personalized and transparent quote, also at no cost. You only pay if you agree to go ahead.',
         },
         {
           question: 'Is the assessment free?',
-          answer: 'Yes, the assessment is [completely free and with no obligation]. In it, we analyze your needs, present possible solutions and answer all your questions. The proposal that comes out of it is also free: [you only pay if you agree to go ahead]. You can schedule the assessment through our contact form.',
+          answer: 'Yes, the assessment is [completely free and with no obligation]. In it, we analyze your needs, present possible solutions and answer all your questions. The proposal that comes out of it is also free: you only pay if you agree to go ahead. You can schedule the assessment through our contact form.',
         },
       ],
     },
