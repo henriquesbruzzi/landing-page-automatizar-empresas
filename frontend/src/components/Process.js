@@ -21,6 +21,19 @@ const ROTULO = 'font-display text-azul-medio text-sm font-semibold tracking-[0.3
 const TITULO = 'font-display text-azul-profundo text-3xl md:text-4xl font-bold tracking-[0.05em]';
 const TEXTO = 'text-texto text-sm md:text-base leading-relaxed';
 
+// Uma entrada dos parágrafos é uma frase ou uma lista de frases. A lista sai
+// num parágrafo só, com cada frase na sua linha e um pequeno espaço entre elas:
+// sem o espaço, no telemóvel uma frase que passa à linha seguinte parecia uma
+// frase nova.
+function comLinhas(entrada) {
+  if (!Array.isArray(entrada)) return comDestaques(entrada);
+  return entrada.map((linha, i) => (
+    <span key={linha} className={i > 0 ? 'mt-2 block' : 'block'}>
+      {comDestaques(linha)}
+    </span>
+  ));
+}
+
 function Process() {
   const { t } = useLanguage();
   const historia = t.about.historia;
@@ -46,7 +59,7 @@ function Process() {
                 resto não sai da página: fica lá, escondido, e o Google lê-o na
                 mesma. A partir de md vê-se tudo, sem botão, como antes. */}
             <div className="relative">
-              <p className={TEXTO}>{comDestaques(primeiro)}</p>
+              <p className={TEXTO}>{comLinhas(primeiro)}</p>
               <div
                 className={`pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-b from-neve/0 to-neve transition-opacity duration-500 motion-reduce:transition-none md:hidden ${
                   historiaAberta ? 'opacity-0' : 'opacity-100'
@@ -68,8 +81,8 @@ function Process() {
               <div className="overflow-hidden">
                 <div className="space-y-5 pt-5">
                   {resto.map((paragrafo) => (
-                    <p key={paragrafo} className={TEXTO}>
-                      {comDestaques(paragrafo)}
+                    <p key={[].concat(paragrafo).join(' ')} className={TEXTO}>
+                      {comLinhas(paragrafo)}
                     </p>
                   ))}
                 </div>

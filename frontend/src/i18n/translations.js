@@ -11,7 +11,8 @@ const translations = {
       title_line1: 'Deixe a sua empresa',
       title_line2_start: 'andar ',
       title_line2_highlight: 'sozinha',
-      subtitle: 'A informação que anda espalhada junta-se num só sítio, sem ninguém copiar nada.',
+      // Uma frase por linha
+      subtitle: ['Automação de processos para empresas.', 'Tempo para o negócio crescer.'],
       cta: 'Falar connosco',
       ctaSecundario: 'Ver exemplos',
       esquema: {
@@ -277,16 +278,22 @@ const translations = {
     about: {
       subtitle: 'Quem somos',
       historia: {
-        titulo: 'Como começou',
+        titulo: 'O nosso percurso',
         // Um parágrafo por entrada, pela ordem em que aparecem. O que fica
         // entre [ ] sai a azul, sem os parênteses retos. No telemóvel só se vê
-        // o primeiro, e os outros abrem com o "Ler mais".
+        // o primeiro, e os outros abrem com o "Ler mais". Uma entrada que seja
+        // uma lista de frases é um parágrafo só, com cada frase na sua linha.
         paragrafos: [
-          'Novembro de 2025. A Nexugal começou por dar suporte a lojas online e, em menos de um ano, já trabalhava com lojas em [mais de dez países], cada uma com a sua língua, moeda, fornecedores e parceiros.',
-          'O problema era sempre o mesmo: [trabalho manual e repetitivo] a travar o crescimento. Algumas horas por dia só para fechar as contas, emails de clientes a acumular, cada encomenda nova trazia mais trabalho, não mais tempo.',
-          'Automatizámos a contabilidade, o apoio ao cliente e a gestão de stock, entre outras coisas. As contas do dia passaram a fechar em cinco minutos e os clientes têm resposta sem ninguém estar a escrever email a email.',
-          'O que resolvemos no comércio online, já aplicamos a empresas com [diversas dimensões e em diversos setores] até hoje.',
-          'Estamos aqui para tirar da sua empresa o trabalho manual e repetitivo e as falhas do dia a dia que lhe consomem [tempo e recursos].',
+          'Desde 2025, a Nexugal já trabalhou com [mais de 20 clientes], de clínicas e escritórios de advogados a empresas de transporte, serviços e lojas online. Cada negócio tem os seus desafios, mas o padrão repete-se: processos que consomem tempo e atenção que deviam estar no crescimento.',
+          'Em todos os setores fazemos o mesmo: identificar o [trabalho repetitivo], eliminar tarefas desnecessárias e tornar as operações mais eficientes através da tecnologia.',
+          'Da contabilidade aos relatórios, passando pelo apoio ao cliente, pelo stock, pelas encomendas, pela faturação e pelas cobranças, já automatizámos grande parte do dia a dia de uma empresa, e há sempre mais para automatizar.',
+          [
+            'Mais do que automatizar processos, o nosso objetivo é [dar tempo de volta às empresas].',
+            'Tempo para as equipas se concentrarem no que importa.',
+            'Tempo para os gestores decidirem melhor.',
+            'Tempo para o negócio crescer.',
+          ],
+          'Seja qual for o setor ou a dimensão, a missão é a mesma: transformar processos complexos e repetitivos em operações simples e automáticas.',
         ],
       },
       lerMais: 'Ler mais',
@@ -316,7 +323,7 @@ const translations = {
         },
         {
           question: 'A Nexugal trabalha com empresas de que dimensão?',
-          answer: 'Trabalhamos com empresas de [todas as dimensões], desde startups e PMEs até grandes corporações. As nossas soluções são [personalizadas] para se adaptarem às necessidades e ao orçamento de cada cliente.',
+          answer: 'Trabalhamos com empresas de [todas as dimensões], das mais pequenas às grandes, em qualquer setor. As nossas soluções são [personalizadas] para se adaptarem às necessidades e ao orçamento de cada cliente.',
         },
         {
           question: 'Oferecem suporte após a entrega do projeto?',
@@ -402,7 +409,7 @@ const translations = {
       title_line1: 'Let your business',
       title_line2_start: 'run ',
       title_line2_highlight: 'on its own',
-      subtitle: 'Information that lives in scattered places comes together in one, without anyone copying anything.',
+      subtitle: ['Process automation for businesses.', 'Time for the business to grow.'],
       cta: 'Talk to us',
       ctaSecundario: 'See examples',
       esquema: {
@@ -626,13 +633,18 @@ const translations = {
     about: {
       subtitle: 'Who we are',
       historia: {
-        titulo: 'How it started',
+        titulo: 'Our journey',
         paragrafos: [
-          'November 2025. Nexugal started out supporting online stores and, in less than a year, was already working with stores in [more than ten countries], each with its own language, currency, suppliers and partners.',
-          'The problem was always the same: [manual, repetitive work] holding back growth. A few hours a day just to close the books, customer emails piling up, every new order bringing more work, not more time.',
-          'We automated the accounting, customer support and stock management, among other things. The day\'s books now close in five minutes, and customers get an answer without anyone writing emails one by one.',
-          'What we solved in online retail we have since applied to companies [of different sizes and in different sectors].',
-          'We are here to rid your business of the manual, repetitive work and the everyday mistakes that drain your [time and resources].',
+          'Since 2025, Nexugal has worked with [more than 20 clients], from clinics and law firms to transport companies, service businesses and online stores. Every business has its own challenges, but the pattern repeats itself: processes that eat up time and attention that should be going into growth.',
+          'In every sector we do the same: identify the [repetitive work], eliminate unnecessary tasks and make operations more efficient through technology.',
+          'From accounting to reporting, through customer support, stock, orders, invoicing and collections, we have already automated a large part of a company\'s day-to-day, and there is always more to automate.',
+          [
+            'More than automating processes, our goal is to [give time back to businesses].',
+            'Time for teams to focus on what matters.',
+            'Time for managers to make better decisions.',
+            'Time for the business to grow.',
+          ],
+          'Whatever the sector or size, the mission is the same: to turn complex, repetitive processes into simple, automatic operations.',
         ],
       },
       lerMais: 'Read more',
@@ -659,7 +671,7 @@ const translations = {
         },
         {
           question: 'What size companies does Nexugal work with?',
-          answer: 'We work with companies of [all sizes], from startups and SMEs to large corporations. Our solutions are [customized] to adapt to each client\'s needs and budget.',
+          answer: 'We work with companies of [all sizes], from the smallest to the largest, in any sector. Our solutions are [customized] to adapt to each client\'s needs and budget.',
         },
         {
           question: 'Do you offer support after project delivery?',
