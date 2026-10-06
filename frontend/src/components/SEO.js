@@ -30,6 +30,13 @@ import { semDestaques } from '../utils/destaques';
 
 const BASE_URL = process.env.REACT_APP_SITE_URL || 'https://www.nexugal.com';
 
+// A mesma frase descreve a página inicial e a empresa (Organization, no JSON-LD
+// mais abaixo). A portuguesa está também escrita à mão no public/index.html.
+const DESCRICAO = {
+  pt: 'Automação de processos para empresas. Tempo para o negócio crescer. Contabilidade, apoio ao cliente, stock, faturação e mais, sem trabalho manual.',
+  en: 'Process automation for businesses. Time for the business to grow. Accounting, customer support, stock, invoicing and more, without manual work.',
+};
+
 // Dados SEO por idioma e página
 const seoData = {
   pt: {
@@ -38,7 +45,7 @@ const seoData = {
     // aqui obriga a mudar lá.
     home: {
       title: 'Nexugal',
-      description: 'Reformulação de operações com gestão implementada',
+      description: DESCRICAO.pt,
       canonical: `${BASE_URL}/`,
       alternate: `${BASE_URL}/us`,
       ogLocale: 'pt_PT',
@@ -46,7 +53,7 @@ const seoData = {
     contact: {
       title: 'Contacto, Nexugal | Fale Connosco',
       description:
-        'Entre em contacto com a Nexugal. Preencha o formulário e a nossa equipa responde em 24 horas.',
+        'Entre em contacto com a Nexugal. Preencha o formulário e a nossa equipa responde no prazo de um dia útil.',
       canonical: `${BASE_URL}/contacto`,
       alternate: `${BASE_URL}/us/contact`,
       ogLocale: 'pt_PT',
@@ -54,7 +61,7 @@ const seoData = {
     faq: {
       title: 'FAQ, Nexugal | Perguntas frequentes sobre automação de processos',
       description:
-        'Respostas às perguntas mais frequentes sobre os serviços da Nexugal: desenvolvimento web, cibersegurança, cloud, IA, prazos, custos e suporte.',
+        'Perguntas frequentes sobre automação de processos para empresas de qualquer dimensão. Serviços, prazos, como trabalhamos, custos, avaliação gratuita e suporte.',
       canonical: `${BASE_URL}/faq`,
       alternate: `${BASE_URL}/us/faq`,
       ogLocale: 'pt_PT',
@@ -71,7 +78,7 @@ const seoData = {
   en: {
     home: {
       title: 'Nexugal',
-      description: 'Operations redesign with management put in place',
+      description: DESCRICAO.en,
       canonical: `${BASE_URL}/us`,
       alternate: `${BASE_URL}/`,
       ogLocale: 'en_US',
@@ -79,7 +86,7 @@ const seoData = {
     contact: {
       title: 'Contact, Nexugal | Get in Touch',
       description:
-        'Get in touch with Nexugal. Fill out the form and our team will respond within 24 hours.',
+        'Get in touch with Nexugal. Fill out the form and our team will respond within one business day.',
       canonical: `${BASE_URL}/us/contact`,
       alternate: `${BASE_URL}/contacto`,
       ogLocale: 'en_US',
@@ -87,7 +94,7 @@ const seoData = {
     faq: {
       title: 'FAQ, Nexugal | Frequently asked questions about process automation',
       description:
-        'Answers to frequently asked questions about Nexugal services: web development, cybersecurity, cloud, AI, timelines, costs and support.',
+        'Frequently asked questions about process automation for businesses of any size. Services, timelines, how we work, costs, free assessment and support.',
       canonical: `${BASE_URL}/us/faq`,
       alternate: `${BASE_URL}/faq`,
       ogLocale: 'en_US',
@@ -117,8 +124,7 @@ const organizationSchema = {
   name: 'Nexugal',
   url: BASE_URL,
   logo: `${BASE_URL}/icons/icon-512.png`,
-  description:
-    'Consultoria tecnológica especializada em desenvolvimento web, cibersegurança, soluções na nuvem, inteligência artificial e análise de dados.',
+  // A description entra no componente, na língua da página (DESCRICAO)
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Braga',
@@ -344,7 +350,8 @@ function SEO({ lang = 'pt', page = 'home' }) {
   const altLang = lang === 'pt' ? 'en' : 'pt';
 
   // Compor todos os schemas JSON-LD
-  const schemas = [organizationSchema, websiteSchema, localBusinessSchema, getBreadcrumbs(lang, page)];
+  const organizacao = { ...organizationSchema, description: DESCRICAO[lang] || DESCRICAO.pt };
+  const schemas = [organizacao, websiteSchema, localBusinessSchema, getBreadcrumbs(lang, page)];
   if (page === 'home') {
     schemas.push(serviceSchema);
   }

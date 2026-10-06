@@ -106,7 +106,11 @@ function Hero() {
             </h1>
 
             <p className="mt-6 max-w-md text-sm leading-relaxed text-texto md:text-base">
-              {t.hero.subtitle}
+              {t.hero.subtitle.map((frase) => (
+                <span key={frase} className="block">
+                  {frase}
+                </span>
+              ))}
             </p>
 
             <div className="mt-9 flex flex-wrap items-center justify-center gap-6 lg:justify-start">

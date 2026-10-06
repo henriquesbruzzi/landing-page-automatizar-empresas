@@ -1426,7 +1426,10 @@ por iniciativa própria; se incomodarem, é decisão do Rui.
 - **Página inicial, para o Google e o WhatsApp (16/09):** título "Nexugal",
   descrição "Reformulação de operações com gestão implementada", e "Menos tarefas
   repetidas. Mais tempo para o que importa." no texto alternativo da imagem de
-  partilha, no lugar de "Codificando o Amanhã".
+  partilha, no lugar de "Codificando o Amanhã". (A descrição mudou a 05/10:
+  "Automação de processos para empresas. Tempo para o negócio crescer.
+  Contabilidade, apoio ao cliente, stock, faturação e mais, sem trabalho
+  manual.", 7.27. O título e o texto alternativo ficaram.)
 - **Os seis serviços do JSON-LD ficam** (16/09), mesmo sem cartões na página, e
   o "24/7" também.
 - **Rótulos do stock (16/09):** NO PROGRAMA 19, NA LOJA/ARMAZÉM 12 (EN IN THE
@@ -1741,6 +1744,15 @@ Não apagar sem o Rui decidir.
   (`rgba(0,209,255,...)`) que ninguém tinha visto porque nunca tinha sido
   desenhado (7.14). Antes de ligar código adormecido, ler o que ele diz sobre
   cores, medidas e texto, que pode ser de outra versão do site.
+
+- **Não usar o `vercel curl` para ver uma pré-visualização.** As pré-visualizações
+  pedem login da Vercel, e o `vercel curl` passa essa proteção criando sozinho,
+  nas definições do projeto, uma chave "Protection Bypass for Automation", sem
+  perguntar nada; com `--debug`, escreve-a às claras no terminal. Aconteceu a
+  06/10, e a chave foi apagada no mesmo dia (7.27). Para ver uma pré-visualização,
+  abri-la no browser com a sessão da Vercel. E lá o formulário não funciona: o
+  ambiente Preview da Vercel não tem o `REACT_APP_API_URL`, e o site cai no
+  `localhost:8000` (secção 3).
 
 ### 7.5 Como verificar
 
@@ -3552,6 +3564,138 @@ na pasta principal (secção 6). O PR #6, dos emails, ficou como estava, aberto,
 
 **Fica por fazer, do 7.18:** pedir ao Google, no Search Console, para reler o
 `sitemap.xml`, que já não tem o `/sobre`.
+
+### 7.27 "O nosso percurso", o slogan e as descrições para o Google (05 e 06/10/2026)
+
+Ramo `rui/nosso-percurso`, feito a partir do `main` no `24dd732`. É uma mudança
+que se vê: o Rui viu-a em local (`npm start`) e aprovou. Pull Request para o
+`main` aberto a 06/10, **por juntar e por publicar**: a junção e a publicação
+ficam para uma ordem expressa do Rui.
+
+O texto português é todo do Rui. O inglês foi escrito pelo Claude e aprovado
+por ele. Em todas as rondas o Rui pediu, antes de mexer, a lista do que no
+resto do site contradizia o texto novo, sem alterar nada; o que ficou por
+mudar está em "Fica para depois", mais abaixo.
+
+#### O que mudou
+
+- **"Quem somos" (`about.historia` no `translations.js`).** O título passou de
+  "Como começou" a **"O nosso percurso"** (EN "Our journey"), e os cinco
+  parágrafos são novos. Saíram o "Novembro de 2025" e os "mais de dez países";
+  entraram "Desde 2025" e "mais de 20 clientes", de clínicas e escritórios de
+  advogados a empresas de transporte, serviços e lojas online. A etiqueta
+  "QUEM SOMOS" ficou. Destaques a azul só em três: "mais de 20 clientes",
+  "trabalho repetitivo" e "dar tempo de volta às empresas" (EN "more than 20
+  clients", "repetitive work", "give time back to businesses"). Procurou-se o
+  título antigo em todo o projeto: não era usado em âncoras, no menu, em
+  ligações nem no `sitemap.xml` (a secção é a `#sobre`).
+- **Um parágrafo pode ser uma lista de frases** (`comLinhas`, no `Process.js`):
+  sai num parágrafo só, cada frase na sua linha, com 8px entre elas (`mt-2`). É
+  o caso de "Mais do que automatizar processos, o nosso objetivo é dar tempo de
+  volta às empresas." e das três linhas "Tempo para...". O espaço foi pedido
+  porque, a 360px, uma frase que passava à linha seguinte parecia uma frase nova
+  (a linha tem 24px no telemóvel e 29px no computador). As entradas que são
+  texto simples saem como antes. O "Ler mais" do telemóvel continua a mostrar só
+  o primeiro parágrafo.
+- **Slogan no subtítulo do hero:** "Automação de processos para empresas." e
+  "Tempo para o negócio crescer.", cada frase na sua linha (EN "Process
+  automation for businesses." e "Time for the business to grow."). Era "A
+  informação que anda espalhada junta-se num só sítio, sem ninguém copiar
+  nada." O `hero.subtitle` passou a ser uma lista de frases, e o `Hero.js` põe
+  cada uma num `span` em bloco; as classes do parágrafo são as mesmas.
+- **Descrição da página inicial e da empresa, para o Google:** a mesma frase,
+  na constante `DESCRICAO` do `SEO.js`: "Automação de processos para empresas.
+  Tempo para o negócio crescer. Contabilidade, apoio ao cliente, stock,
+  faturação e mais, sem trabalho manual." (146 caracteres; EN 143). A descrição
+  da empresa (o `Organization` do JSON-LD) só existia em português, e era
+  "Consultoria tecnológica especializada em desenvolvimento web,
+  cibersegurança..."; passou a seguir a língua da página. **A portuguesa está
+  escrita também em mais quatro sítios, à mão:** as três etiquetas do
+  `public/index.html` (`description`, `og:description`, `twitter:description`,
+  que são o que o WhatsApp lê) e a `description` do `manifest.json`. Mudar uma
+  obriga a mudar as outras.
+- **Descrição da FAQ, para o Google** (`SEO.js`): "Perguntas frequentes sobre
+  automação de processos para empresas de qualquer dimensão. Serviços, prazos,
+  como trabalhamos, custos, avaliação gratuita e suporte." (159; EN 149). Cobre
+  as sete perguntas. Era "desenvolvimento web, cibersegurança, cloud, IA...".
+  Escrita pelo Claude e aprovada pelo Rui.
+- **FAQ, tipo de empresas:** "desde startups e PMEs até grandes corporações"
+  passou a "das mais pequenas às grandes, em qualquer setor" (EN "from the
+  smallest to the largest, in any sector"). O destaque em "todas as dimensões"
+  ficou. Regra do Rui: não usar "PMEs".
+- **Contacto, descrição para o Google:** "responde em 24 horas" passou a
+  "responde no prazo de um dia útil" (EN "within one business day"), igual ao
+  texto da própria página.
+
+#### Fica para depois
+
+Frases que ainda não refletem o posicionamento novo (automação de processos
+para empresas de qualquer dimensão e de qualquer setor). Ficaram de propósito,
+por decisão do Rui:
+
+- os serviços nos dados para o Google (`SEO.js`, o `serviceType` e a lista
+  "Serviços Nexugal": desenvolvimento web, cibersegurança, nuvem e afins);
+- as palavras-chave do `public/index.html` ("consultoria tecnológica...");
+- a FAQ de serviços ("gama completa de serviços tecnológicos") e a FAQ de
+  prazos, cuja própria pergunta é "Quanto tempo demora um projeto de
+  desenvolvimento web?";
+- os emails de prospeção do backend, do Henrique ("consultoria tecnológica...
+  especializada em [setor]").
+
+Fora do que um visitante vê: um texto de exemplo num campo do admin
+(`AdminLeadsPage.js`) fala de "desenvolvimento web".
+
+#### A pré-visualização, e a chave criada sem querer
+
+- `npx vercel --yes`, **sem `--prod`**, na pasta principal, a 06/10 às 00h15:
+  deployment `dpl_84qpxtPiworGR1jRFh19dRHZnHVA`, `target preview`, no endereço
+  `nexusgal-laddingpage-nnoc7it5h-nexugal.vercel.app`. O "Error: Not
+  authorized" voltou à primeira tentativa e passou à segunda (sexta vez). O
+  nexugal.com ficou igual: o mesmo `main.ed01edb8.js`, do commit `3f72b90`, e o
+  HTML igual antes e depois.
+- **As pré-visualizações pedem login da Vercel** (a proteção do projeto cobre
+  tudo menos os domínios próprios). Para as mostrar a alguém sem conta, há os
+  links de partilha do painel: na pré-visualização, botão Share, "Anyone with
+  the link" (no plano Hobby, um por conta; para o cancelar, voltar a "Only
+  people with access").
+- **Na pré-visualização o formulário aponta para `localhost:8000`** (armadilha
+  em 7.4).
+- **Para confirmar o conteúdo da pré-visualização usou-se o `vercel curl`, e
+  ele criou sozinho uma chave "Protection Bypass for Automation"** nas
+  definições do projeto, às 00h17, sem perguntar. Foi reportado ao Rui, e a
+  pedido dele apagou-se pouco antes das 00h50, pela API da Vercel:
+  `PATCH /v1/projects/{id}/protection-bypass`, com `revoke` e
+  `regenerate: false`. **Sem o `revoke`, o mesmo pedido cria uma chave nova**,
+  por isso confirmou-se antes, sem executar nada, que o pedido chegava inteiro
+  à ferramenta. O valor nunca foi escrito em ficheiro nem passado na linha de
+  comando. Confirmado depois: o projeto ficou sem chaves, nenhuma outra
+  definição do projeto mudou, e a chave antiga, que antes abria a
+  pré-visualização (200), passou a dar o pedido de login (302) menos de um
+  minuto depois. Procurou-se o valor no repositório (fora o `node_modules`), nos
+  rascunhos da sessão e na memória do Claude: não está em nenhum. Só ficou no
+  registo da conversa que o Claude Code guarda neste computador, fora do
+  projeto; apagada a chave, já não abre nada.
+
+#### Verificado
+
+- `CI=true npm run build` com `Compiled successfully.`, e teste de contraste 18
+  de 18, em cada ronda.
+- Auditoria de contraste de 7.5 com zero falhas em `/`, `/us`, `/faq` e
+  `/us/faq`, a 360 e a 1280px, e em `/contacto` e `/us/contact` a 360px; o
+  "Quem somos" medido aberto e fechado. Sem scroll para o lado, sem travessões e
+  sem erros na consola.
+- O subtítulo com uma linha por frase a 360, 768 e 1280px, em PT e EN, centrado
+  no telemóvel e no tablet e à esquerda no computador, como antes.
+- No build, com o remendo do desenho do ecrã (7.2, ponto 5): as descrições novas
+  nas três etiquetas de cada página e no `Organization`, em cada língua; e a
+  resposta nova da FAQ nos dados da FAQ para o Google, sem marcas. No
+  `npm start`, o subtítulo e a descrição da página inicial novos em PT e EN.
+- Na pré-visualização: o HTML, o `manifest.json` e o JavaScript com os textos
+  novos, e `VERCEL_GIT_COMMIT_REF: "rui/nosso-percurso"`.
+
+**O que isto torna velho:** o que 7.17 e 7.18 dizem do texto do "Quem somos"
+(o título "Como começou" e os cinco parágrafos), o subtítulo do hero em 7.1,
+ponto 2, e a descrição da página inicial nas decisões de 7.3 (já anotada lá).
 
 
 
