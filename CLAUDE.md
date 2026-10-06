@@ -282,6 +282,25 @@ comandos vão um por linha. Ver 7.5.
     deployment `dpl_6divH1aUFyft3uUhA1xEFUdJBm5t`. O site serve o
     `main.ed01edb8.js`, com `VERCEL_GIT_COMMIT_REF: "main"` e o commit `3f72b90`.
     **Passou à primeira**, sem o "Error: Not authorized". Verificação em 7.26.
+  - **A 06/10/2026, à 01h04 (Lisboa), o Claude publicou o `main` com o PR #8**
+    (o merge `eb3c717`), com `npx vercel --prod --yes`, autorizado pelo Rui:
+    deployment `dpl_3y6yKm7ZuvMxGaeyRKT7eUEhvwb1`, em
+    `https://nexusgal-laddingpage-e5k6y98gb-nexugal.vercel.app`. O site serve o
+    `main.53ae3c6f.js`, com `VERCEL_GIT_COMMIT_REF: "main"` e o commit `eb3c717`.
+    **Passou à primeira**, sem o "Error: Not authorized". Verificação em 7.27.
+    A publicação anterior era a `dpl_6divH1aUFyft3uUhA1xEFUdJBm5t` (a de 03/10,
+    em `https://nexusgal-laddingpage-nzh4ll18a-nexugal.vercel.app`). Para voltar
+    a ela, na pasta principal:
+    `npx vercel rollback dpl_6divH1aUFyft3uUhA1xEFUdJBm5t --yes`.
+  - **Voltar atrás (rollback): o que é preciso saber**, segundo a documentação da
+    Vercel, lida a 06/10:
+    - no plano Hobby só se pode voltar à publicação de produção imediatamente
+      anterior;
+    - **depois de um rollback, a Vercel deixa de pôr sozinha as publicações
+      novas no nexugal.com.** Um `vercel --prod` cria a publicação, mas os
+      domínios ficam na que se repôs. Para voltar ao normal, fazer
+      `vercel promote <identificador ou URL>` da publicação que se quer no ar
+      (ou "Undo Rollback" no painel da Vercel).
   - O que se aprendeu nessa publicação:
     - **A Vercel não está ligada ao GitHub** (22/09): no fim da publicação a
       própria ferramenta sugere "Automatically deploy changes on every push by
@@ -3568,9 +3587,10 @@ na pasta principal (secção 6). O PR #6, dos emails, ficou como estava, aberto,
 ### 7.27 "O nosso percurso", o slogan e as descrições para o Google (05 e 06/10/2026)
 
 Ramo `rui/nosso-percurso`, feito a partir do `main` no `24dd732`. É uma mudança
-que se vê: o Rui viu-a em local (`npm start`) e aprovou. Pull Request para o
-`main` aberto a 06/10, **por juntar e por publicar**: a junção e a publicação
-ficam para uma ordem expressa do Rui.
+que se vê: o Rui viu-a em local (`npm start`) e aprovou. **PR #8 juntado e
+publicado em produção a 06/10**: o Rui juntou-o ao `main` (o merge `eb3c717`) e
+deu a ordem de publicar, e publicou-se à 01h04 (secção 6). As verificações no
+site publicado estão em "Depois de publicar", mais abaixo.
 
 O texto português é todo do Rui. O inglês foi escrito pelo Claude e aprovado
 por ele. Em todas as rondas o Rui pediu, antes de mexer, a lista do que no
@@ -3645,6 +3665,15 @@ por decisão do Rui:
 Fora do que um visitante vê: um texto de exemplo num campo do admin
 (`AdminLeadsPage.js`) fala de "desenvolvimento web".
 
+E dois pendentes, registados a pedido do Rui depois de publicar:
+
+- **pedir ao Google, no Search Console, que indexe outra vez a página inicial**
+  (na Inspeção de URL, pedir a indexação), para ele ler o título, a descrição e os
+  dados novos. É no mesmo sítio que continua por fazer, do 7.18, o pedido para
+  reler o `sitemap.xml`;
+- **verificar se a imagem de partilha** (`images/nexugal-partilha-2.png`, 7.10)
+  **tem texto antigo.** Se tiver, a imagem nova entra com nome novo (7.4).
+
 #### A pré-visualização, e a chave criada sem querer
 
 - `npx vercel --yes`, **sem `--prod`**, na pasta principal, a 06/10 às 00h15:
@@ -3692,6 +3721,36 @@ Fora do que um visitante vê: um texto de exemplo num campo do admin
   `npm start`, o subtítulo e a descrição da página inicial novos em PT e EN.
 - Na pré-visualização: o HTML, o `manifest.json` e o JavaScript com os textos
   novos, e `VERCEL_GIT_COMMIT_REF: "rui/nosso-percurso"`.
+
+#### Depois de publicar (06/10)
+
+Antes de publicar: guardou-se a publicação anterior e o comando para voltar
+atrás (secção 6); confirmou-se que as variáveis de produção da Vercel incluem a
+`REACT_APP_API_URL` (visto só o nome, é a única); e, a partir do `main`, o build
+com `CI=true` passou e o teste de contraste deu 18 de 18. Verificado no site
+publicado, sem submeter o formulário e sem responder ao aviso de cookies:
+
+- `/`, `/us`, `/faq`, `/us/faq` e `/manifest.json` respondem 200. O JavaScript
+  principal passou de `main.ed01edb8.js` a `main.53ae3c6f.js`, saído do `main`,
+  commit `eb3c717`, ambiente de produção. Os quatro endereços do projeto
+  (www.nexugal.com, nexugal.com e os dois da Vercel) passaram para a publicação
+  nova, e o nexugal.com sem www continua a dar 308 para o www.
+- A 360px, em PT e EN: o subtítulo em duas linhas, uma frase em cada; "O nosso
+  percurso" e "Our journey" com o texto novo; o "Ler mais" a abrir e a fechar;
+  8px entre as frases "Tempo para..."; e, na FAQ, a frase nova das dimensões,
+  com a resposta aberta.
+- No HTML servido, a `description`, a `og:description` e a
+  `twitter:description` têm o texto novo, e a `description` do `manifest.json`
+  também.
+- "Reformulação de operações", "mais de dez países" e "responde em 24 horas"
+  não aparecem no HTML, no manifest nem no JavaScript, nem as versões inglesas.
+  O JavaScript escreve os acentos como códigos (o "ç" sai `\xe7`): procurou-se
+  com eles descodificados.
+- Nenhum dos quatro ficheiros de JavaScript servidos tem `localhost:8000`: o
+  formulário aponta para o Railway.
+- Sem erros na consola e sem scroll para o lado, a 360px, nas quatro páginas.
+
+Não se usou o `vercel curl` e não se mexeu em nenhuma definição da Vercel.
 
 **O que isto torna velho:** o que 7.17 e 7.18 dizem do texto do "Quem somos"
 (o título "Como começou" e os cinco parágrafos), o subtítulo do hero em 7.1,
