@@ -49,6 +49,22 @@ const translations = {
         },
       },
     },
+    // Secção do vídeo, logo a seguir ao hero (VideoNexugal.js). O slogan não
+    // se repete aqui: já está escrito na capa do vídeo.
+    video: {
+      titulo: 'Veja como funciona',
+      frase: 'Da informação espalhada por papéis, emails e folhas de Excel a um só sistema, desenhado à medida da sua empresa.',
+      // O botão que põe o vídeo a tocar
+      aria: 'Ver o vídeo da Nexugal',
+      // O vídeo em si, já a tocar
+      rotuloVideo: 'Vídeo da Nexugal',
+      // Ficheiros em public/video. `larga` (16:9) fica para quando existir:
+      // passa a ser a dos ecrãs a partir de 1024px.
+      versoes: {
+        vertical: { ficheiro: '/video/nexugal-video.mp4', capa: '/video/nexugal-video-poster.jpg', largura: 720, altura: 1280 },
+        larga: null,
+      },
+    },
     exemplos: {
       rotulo: 'EXEMPLOS',
       titulo: 'Isto é o que fazemos, em concreto',
@@ -436,6 +452,17 @@ const translations = {
           ],
           rodape: 'schedule this summary to suit you',
         },
+      },
+    },
+    video: {
+      titulo: 'See how it works',
+      frase: 'From information scattered across paper, emails and spreadsheets to a single system, designed around your business.',
+      aria: 'Watch the Nexugal video',
+      rotuloVideo: 'Nexugal video',
+      // For now the same video as the Portuguese page
+      versoes: {
+        vertical: { ficheiro: '/video/nexugal-video.mp4', capa: '/video/nexugal-video-poster.jpg', largura: 720, altura: 1280 },
+        larga: null,
       },
     },
     exemplos: {

@@ -5,6 +5,7 @@ import { useAncoraAoChegar } from './hooks/useAncoraAoChegar';
 import SEO from './components/SEO';
 import Header from './components/Header';
 import Hero from './components/Hero';
+import VideoNexugal from './components/VideoNexugal';
 import Exemplos from './components/Exemplos';
 import Process from './components/Process';
 import CallToAction from './components/CallToAction';
@@ -50,6 +51,7 @@ function Layout({ lang }) {
         </main>
 
         {/* Secções seguintes */}
+        <VideoNexugal />
         <Exemplos />
         <Process />
         <CallToAction />
