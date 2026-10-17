@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220" width="200" height="220">
+  <defs>
+    <clipPath id="bar"><rect x="0" y="0" width="62" height="200" rx="31"/></clipPath>
+    <linearGradient id="lBase" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b2aa8"/><stop offset=".42" stop-color="#1f74ff"/><stop offset="1" stop-color="#40e4ff"/>
+    </linearGradient>
+    <linearGradient id="lFlap" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9af7ff"/><stop offset="1" stop-color="#2fc8ff"/>
+    </linearGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#05125e" stop-opacity=".9"/><stop offset="1" stop-color="#05125e" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="rBase" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a1f96"/><stop offset=".45" stop-color="#1a4cf0"/><stop offset="1" stop-color="#3f93ff"/>
+    </linearGradient>
+    <linearGradient id="rFlap" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5a9cff"/><stop offset="1" stop-color="#1d4fff"/>
+    </linearGradient>
+    <g id="leg">
+      <rect x="0" y="0" width="62" height="200"/>
+    </g>
+  </defs>
+  
+  <g transform="translate(20 10)" clip-path="url(#bar)">
+    <rect width="62" height="200" fill="url(#lBase)"/>
+    <path d="M0 50 C 22 56, 44 72, 62 92 L62 160 C 44 130, 22 108, 0 98 Z" fill="url(#shade)"/>
+    <path d="M0 0 H62 V92 C 44 72, 22 56, 0 50 Z" fill="url(#lFlap)"/>
+  </g>
+  
+  <g transform="translate(180 210) rotate(180)" clip-path="url(#bar)">
+    <rect width="62" height="200" fill="url(#rBase)"/>
+    <path d="M0 50 C 22 56, 44 72, 62 92 L62 160 C 44 130, 22 108, 0 98 Z" fill="url(#shade)"/>
+    <path d="M0 0 H62 V92 C 44 72, 22 56, 0 50 Z" fill="url(#rFlap)"/>
+  </g>
+</svg>

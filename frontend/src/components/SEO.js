@@ -33,8 +33,8 @@ const BASE_URL = process.env.REACT_APP_SITE_URL || 'https://www.nexugal.com';
 // A mesma frase descreve a página inicial e a empresa (Organization, no JSON-LD
 // mais abaixo). A portuguesa está também escrita à mão no public/index.html.
 const DESCRICAO = {
-  pt: 'Automação de processos para empresas. Tempo para o negócio crescer. Contabilidade, apoio ao cliente, stock, faturação e mais, sem trabalho manual.',
-  en: 'Process automation for businesses. Time for the business to grow. Accounting, customer support, stock, invoicing and more, without manual work.',
+  pt: 'A sua empresa em piloto automático. Automação de processos para empresas: contabilidade, apoio ao cliente, stock, faturação e mais, sem trabalho manual.',
+  en: 'Your business on autopilot. Process automation for businesses: accounting, customer support, stock, invoicing and more, without manual work.',
 };
 
 // Dados SEO por idioma e página

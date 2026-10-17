@@ -60,10 +60,39 @@ module.exports = {
           '50%': { opacity: '0' },
           '100%': { opacity: '0' },
         },
+        // Pausa grande do vídeo (VideoNexugal.js). Entra a crescer um pouco; ao
+        // retomar, as duas barras afastam-se, rodam como uma fita e somem.
+        'pausa-entra': {
+          '0%': { opacity: '0', transform: 'scale(0.85)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        'pausa-sai-esq': {
+          '0%': { opacity: '1', transform: 'perspective(400px) translateX(0) rotateY(0deg) rotate(0deg)' },
+          '40%': { opacity: '1' },
+          '100%': { opacity: '0', transform: 'perspective(400px) translateX(-16%) rotateY(-50deg) rotate(-6deg)' },
+        },
+        'pausa-sai-dir': {
+          '0%': { opacity: '1', transform: 'perspective(400px) translateX(0) rotateY(0deg) rotate(0deg)' },
+          '40%': { opacity: '1' },
+          '100%': { opacity: '0', transform: 'perspective(400px) translateX(16%) rotateY(50deg) rotate(6deg)' },
+        },
+        aparecer: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        desaparecer: {
+          '0%': { opacity: '1' },
+          '100%': { opacity: '0' },
+        },
       },
       animation: {
         blink: 'blink 0.8s step-end infinite',
         'blink-fade': 'blink-fade 0.8s step-end infinite',
+        'pausa-entra': 'pausa-entra 200ms ease-out both',
+        'pausa-sai-esq': 'pausa-sai-esq 400ms cubic-bezier(0.4, 0, 0.2, 1) both',
+        'pausa-sai-dir': 'pausa-sai-dir 400ms cubic-bezier(0.4, 0, 0.2, 1) both',
+        aparecer: 'aparecer 200ms ease-out both',
+        desaparecer: 'desaparecer 400ms ease-in both',
       },
     },
   },
