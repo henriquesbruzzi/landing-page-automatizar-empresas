@@ -292,6 +292,27 @@ comandos vão um por linha. Ver 7.5.
     em `https://nexusgal-laddingpage-nzh4ll18a-nexugal.vercel.app`). Para voltar
     a ela, na pasta principal:
     `npx vercel rollback dpl_6divH1aUFyft3uUhA1xEFUdJBm5t --yes`.
+  - **A 17/10/2026, cerca das 14h52 (Lisboa), o Claude publicou o `main` com o
+    PR #10** (o merge `672b4ea`: slogan, título do hero e o vídeo, 7.28), com
+    `npx vercel --prod --yes`, autorizado pelo Rui: deployment
+    `dpl_F4UNtxqoXeyuhayxn8JA7hSdAufq`, em
+    `https://nexusgal-laddingpage-167clq34w-nexugal.vercel.app`. O site serve o
+    `main.02d399fd.js`, com `VERCEL_GIT_COMMIT_REF: "main"` e o commit
+    `672b4ea`. **Passou à primeira**, sem o "Error: Not authorized".
+    Verificado no nexugal.com, em `/` e `/us`, no computador e no telemóvel: os
+    textos novos no ecrã, no `<title>`, na meta description, nas etiquetas
+    Open Graph e Twitter e no `manifest.json`; o vídeo com a capa certa em cada
+    língua, os controlos, a pausa grande e a vista grande; e os dois MP4 a
+    responder `206 Partial Content` a um pedido do meio do ficheiro (é o que
+    deixa saltar na barra de tempo).
+    **A Vercel CLI (59.11.2) respondeu desta vez em JSON**, e uma das sugestões
+    do fim era "Promote to production", o que dava a entender que não tinha
+    publicado. Tinha: confirma-se com `npx vercel inspect <endereço>`, que tem
+    de dizer `target production` e ter o www.nexugal.com nos `Aliases`.
+    A publicação anterior era a `dpl_3y6yKm7ZuvMxGaeyRKT7eUEhvwb1` (a de 06/10,
+    em `https://nexusgal-laddingpage-e5k6y98gb-nexugal.vercel.app`). Para voltar
+    a ela, na pasta principal:
+    `npx vercel rollback dpl_3y6yKm7ZuvMxGaeyRKT7eUEhvwb1 --yes`.
   - **Voltar atrás (rollback): o que é preciso saber**, segundo a documentação da
     Vercel, lida a 06/10:
     - no plano Hobby só se pode voltar à publicação de produção imediatamente
