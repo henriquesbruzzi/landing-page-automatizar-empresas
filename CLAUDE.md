@@ -313,6 +313,26 @@ comandos vão um por linha. Ver 7.5.
     em `https://nexusgal-laddingpage-e5k6y98gb-nexugal.vercel.app`). Para voltar
     a ela, na pasta principal:
     `npx vercel rollback dpl_3y6yKm7ZuvMxGaeyRKT7eUEhvwb1 --yes`.
+  - **A 17/10/2026, cerca das 21h10 (Lisboa), o Claude publicou o `main` com o
+    PR #12** (o merge `829d279`: a versão 3:2 do vídeo, 7.28), com
+    `npx vercel --prod --yes`, autorizado pelo Rui: deployment
+    `dpl_H25CkvAiKBas5ekkgkW1qcedgTK3`, em
+    `https://nexusgal-laddingpage-lucc04aw2-nexugal.vercel.app`. O site serve o
+    `main.58c80760.js`, com `VERCEL_GIT_COMMIT_REF: "main"` e o commit
+    `829d279`. **Passou à primeira**, sem o "Error: Not authorized"
+    (confirmado com `npx vercel inspect`: `target production` e o
+    www.nexugal.com nos `Aliases`). Verificado no nexugal.com, em `/` e `/us`:
+    no computador (1280px) a 3:2 com 474 × 316, a capa 3:2 de cada língua,
+    volume a 25%, salto para o meio, pausa grande a 30% da altura e vista
+    grande com 1080 × 720; no telemóvel (375px) a vertical de sempre, com
+    240 × 427; no tablet ao alto (768px) a 3:2 com a largura da coluna,
+    688 × 459. Os quatro ficheiros 3:2 abrem, são iguais aos locais, e os
+    vídeos respondem `206 Partial Content` a um pedido do meio.
+    A publicação anterior era a `dpl_F4UNtxqoXeyuhayxn8JA7hSdAufq` (a das 14h52
+    do mesmo dia, em
+    `https://nexusgal-laddingpage-167clq34w-nexugal.vercel.app`). Para voltar
+    a ela, na pasta principal:
+    `npx vercel rollback dpl_F4UNtxqoXeyuhayxn8JA7hSdAufq --yes`.
   - **Voltar atrás (rollback): o que é preciso saber**, segundo a documentação da
     Vercel, lida a 06/10:
     - no plano Hobby só se pode voltar à publicação de produção imediatamente
@@ -3813,12 +3833,41 @@ Ramo `rui/video-e-slogan`, aprovado pelo Rui em local e publicado a 17/10.
   `pausa-nexugal.svg` (o ícone da pausa grande, usado tal como veio).
 - **Ligar e desligar por língua:** bloco `video` do `translations.js`,
   `mostrar: true` ou `false`. Sem vídeo, o cabeçalho fica sozinho à esquerda.
-  O bloco já aceita uma versão 16:9 para ecrãs largos (`versoes.larga`).
-- **Tamanho na secção: 222 × 395px no computador, por decisão do Rui.** É o
-  maior que cabe sem empurrar a página nem passar por cima do fio do topo e do
-  primeiro bloco; calcula-o o `useTamanhoDoVideo` (no `Exemplos.js`). A
-  1024px a coluna é mais estreita e fica 192 × 341. No telemóvel, 240px de
-  largura.
+  Cada língua tem duas versões (`versoes`): a vertical e a 3:2 (`larga`, a
+  seguir).
+- **Tamanho do vertical na secção: 222 × 395px no computador, por decisão do
+  Rui.** É o maior que cabe sem empurrar a página nem passar por cima do fio
+  do topo e do primeiro bloco; calcula-o o `useTamanhoDoVideo` (no
+  `Exemplos.js`). A 1024px a coluna é mais estreita e fica 192 × 341. No
+  telemóvel, 240px de largura. Desde a 3:2, o vertical só aparece abaixo de
+  640px (ou no computador, se uma língua não tiver 3:2).
+
+#### A versão 3:2 (17/10/2026, PR #12)
+
+- **Ficheiros:** `nexugal-video-3x2.mp4` e `nexugal-video-poster-3x2.jpg`
+  (PT), `nexugal-video-en-3x2.mp4` e `nexugal-video-poster-en-3x2.jpg` (EN),
+  1440 × 960, 42 s. Na pasta do Rui há também uns `nexugal_v6_..._phone.mp4`
+  de 12 MB, que não entraram.
+- **Qual onde:** abaixo de 640px a vertical; a partir daí a 3:2. Escolhe-se
+  ao carregar a página e só troca com o vídeo na capa: a tocar ou em pausa
+  fica a que está até voltar à capa. Quem escolhe é o `VideoNexugal.js`, que
+  avisa o `Exemplos.js` (`aoEscolherTipo`), porque a disposição muda.
+- **Tamanho:** no computador, centrada ao lado do texto e com a altura dele,
+  no máximo (474 × 316 a partir de 1280px, 400 × 267 a 1024px). Com a 3:2,
+  as duas colunas do cabeçalho são iguais; com 42rem para o texto, como no
+  vertical, a 1024px o vídeo ficava com 192px de largura. Em coluna única
+  (tablet ao alto), por baixo do texto e com a largura da coluna (688 × 459
+  a 768px), antes das etiquetas, como no telemóvel.
+- **O que muda no leitor** (`FORMATO`, no `VideoNexugal.js`): a pausa grande
+  mede 30% da altura (no vertical, 40% da largura), com o brilho
+  proporcional; o sinal de carregamento é mais pequeno; a vista grande vai
+  até 90% da altura ou da largura do ecrã (no vertical, 95% da largura). O
+  resto é igual, e a Media Session usa a capa 3:2.
+- **Para testar a troca no painel do Claude:** o painel não avisa a página
+  quando a largura muda (nem `resize` nem os avisos do `matchMedia`). Mede-se
+  cada largura com a página carregada já nela, e a troca testa-se pondo no
+  lugar do `matchMedia` uns avisos controlados à mão, antes de a secção ser
+  desenhada outra vez.
 
 #### Regras do leitor (não reabrir sem o Rui)
 
