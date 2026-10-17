@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import VisualExemplo from './VisuaisExemplos';
+import VideoNexugal from './VideoNexugal';
 
 /**
  * Secção de exemplos.
@@ -21,6 +22,53 @@ import VisualExemplo from './VisuaisExemplos';
 
 // Afasta o alvo do menu fixo quando se salta pelo índice
 const FOLGA_DO_MENU = 'scroll-mt-28';
+
+// Teto da altura do vídeo, para o caso de o texto ao lado crescer muito
+const VIDEO_ALTURA_MAXIMA = 480;
+
+/**
+ * Altura do texto do cabeçalho (rótulo, título e subtítulo, mais o índice),
+ * que é a altura que o vídeo ao lado pode ter.
+ *
+ * Mede-se cada peça pela sua altura natural e somam-se, em vez de medir a
+ * coluna: a coluna estica até à altura do vídeo, e medi-la faria o vídeo
+ * nunca encolher. O texto e o índice levam lg:self-start pelo mesmo motivo.
+ * Volta a medir quando o texto muda de tamanho (letras a chegar, outra
+ * largura, outra língua).
+ */
+function useAlturaDoTexto(textoRef, indiceRef) {
+  const [altura, setAltura] = useState(null);
+
+  useLayoutEffect(() => {
+    const texto = textoRef.current;
+    const indice = indiceRef.current;
+    if (!texto || !indice) return undefined;
+
+    const medir = () => {
+      const espaco = parseFloat(window.getComputedStyle(indice).marginTop) || 0;
+      const total = Math.floor(
+        texto.getBoundingClientRect().height + espaco + indice.getBoundingClientRect().height
+      );
+      setAltura(Math.min(total, VIDEO_ALTURA_MAXIMA));
+    };
+
+    medir();
+    const observador = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(medir) : null;
+    if (observador) {
+      observador.observe(texto);
+      observador.observe(indice);
+    }
+    window.addEventListener('resize', medir);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(medir);
+
+    return () => {
+      if (observador) observador.disconnect();
+      window.removeEventListener('resize', medir);
+    };
+  }, [textoRef, indiceRef]);
+
+  return altura;
+}
 
 function Bloco({ bloco, par }) {
   // Nos ímpares o desenho vem primeiro. Em coluna única o texto fica sempre
@@ -102,6 +150,9 @@ function Exemplos() {
   const navigate = useNavigate();
   const semAnimacao = usePrefersReducedMotion();
   const e = t.exemplos;
+  const textoRef = useRef(null);
+  const indiceRef = useRef(null);
+  const alturaDoTexto = useAlturaDoTexto(textoRef, indiceRef);
 
   const saltarPara = (id) => {
     const alvo = document.getElementById(id);
@@ -113,8 +164,15 @@ function Exemplos() {
       <div className="absolute left-1/2 top-0 h-[1px] w-1/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-azul-claro to-transparent" />
 
       {/* ---------------- cabeçalho e índice ---------------- */}
-      <div className="mx-auto w-full max-w-7xl px-6 pb-4 pt-16 md:px-10 md:pt-20 lg:px-16">
-        <div className="mx-auto max-w-3xl text-center">
+      {/* O texto à esquerda e o vídeo à direita, a partir de 1024px. Abaixo
+          disso empilham: texto, vídeo e, por fim, o índice, que fica assim
+          logo antes dos blocos para onde salta. O vídeo tem a altura do texto
+          e do índice juntos, medida em useAlturaDoTexto. O texto fica com a
+          largura que tinha quando estava centrado (max-w-2xl), para o título
+          não passar a uma linha e o vídeo não ficar minúsculo; o vídeo encosta
+          à direita. */}
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-y-10 px-6 pb-4 pt-16 md:px-10 md:pt-20 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:gap-y-0 lg:px-16">
+        <div ref={textoRef} className="lg:col-start-1 lg:row-start-1 lg:max-w-2xl lg:self-start">
           <span className="mb-4 block font-display text-xs font-semibold uppercase tracking-[0.3em] text-azul-medio">
             {e.rotulo}
           </span>
@@ -127,12 +185,21 @@ function Exemplos() {
           <p className="mt-6 text-sm leading-relaxed text-texto md:text-base">{e.subtitulo}</p>
         </div>
 
+        <VideoNexugal
+          altura={alturaDoTexto}
+          className="mx-auto lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mx-0 lg:self-start lg:justify-self-end"
+        />
+
         {/* Índice. Em fila no computador, e a passar à linha no telemóvel:
             quatro etiquetas não cabem numa fila de 380px, e uma barra que se
             arrasta para o lado esconde as de trás sem avisar. A passar à linha
             vê-se tudo de uma vez. */}
-        <nav aria-label={e.indiceTitulo} className="mt-10">
-          <ul className="flex flex-wrap items-center justify-center gap-2.5">
+        <nav
+          ref={indiceRef}
+          aria-label={e.indiceTitulo}
+          className="lg:col-start-1 lg:row-start-2 lg:mt-10 lg:max-w-2xl lg:self-start"
+        >
+          <ul className="flex flex-wrap items-center gap-2.5">
             {e.blocos.map((bloco) => (
               <li key={bloco.id}>
                 <button
