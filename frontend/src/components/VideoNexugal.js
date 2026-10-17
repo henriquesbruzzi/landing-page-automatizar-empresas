@@ -54,15 +54,22 @@ import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
  * JavaScript do site. Com preload="none" nada do vídeo se descarrega até
  * alguém clicar: só a capa.
  *
- * Tamanho: no computador quem decide é o Exemplos.js, que mede o espaço e
- * passa `tamanho` (largura e altura em píxeis inteiros). No telemóvel, LARGURA.
+ * Versões (translations.js, `video.versoes`): a vertical (9:16) abaixo de
+ * 640px, no telemóvel; a larga (3:2) daí para cima, no tablet e no
+ * computador. Escolhe-se ao carregar a página e sempre que o vídeo está na
+ * capa; a tocar ou em pausa, fica a que está até voltar à capa (trocar a
+ * meio seria outro ficheiro, do início). O Exemplos.js fica a saber qual é
+ * por `aoEscolherTipo`, porque a disposição da secção depende dela.
  *
- * Versões: hoje há só a vertical (9:16). Uma deitada (16:9) entra em
- * `video.versoes.larga` no translations.js e passa a ser a dos ecrãs a partir
- * de 1024px.
+ * Tamanho: no computador quem decide é o Exemplos.js, que mede o espaço e
+ * passa `tamanho` (largura e altura em píxeis inteiros). Abaixo de 1024px,
+ * o que está em FORMATO.
  */
 
-const ECRA_LARGO = '(min-width: 1024px)';
+// A partir daqui, a versão larga (3:2); abaixo, a vertical
+const ECRA_TABLET = '(min-width: 640px)';
+// A partir daqui, a secção tem duas colunas e o tamanho vem do Exemplos.js
+const ECRA_COMPUTADOR = '(min-width: 1024px)';
 const ICONE_PAUSA = '/video/pausa-nexugal.svg';
 const VOLUME_INICIAL = 0.25;
 const PASSO_VOLUME = 0.1;
@@ -78,22 +85,23 @@ const VISTA_CURVA = 'cubic-bezier(0.22, 1, 0.36, 1)';
 // Cantos da caixa, nos dois tamanhos (rounded-2xl)
 const RAIO = 16;
 
-function useEcraLargo() {
-  const [largo, setLargo] = useState(() => {
+// true enquanto a janela corresponder à consulta (uma largura mínima)
+function useCorresponde(consulta) {
+  const [corresponde, setCorresponde] = useState(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return false;
-    return window.matchMedia(ECRA_LARGO).matches;
+    return window.matchMedia(consulta).matches;
   });
 
   useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return undefined;
-    const mql = window.matchMedia(ECRA_LARGO);
-    const aoMudar = (evento) => setLargo(evento.matches);
-    setLargo(mql.matches);
+    const mql = window.matchMedia(consulta);
+    const aoMudar = (evento) => setCorresponde(evento.matches);
+    setCorresponde(mql.matches);
     mql.addEventListener('change', aoMudar);
     return () => mql.removeEventListener('change', aoMudar);
-  }, []);
+  }, [consulta]);
 
-  return largo;
+  return corresponde;
 }
 
 // Espera que as animações acabem, mas nunca mais do que `ms`: num separador
@@ -125,10 +133,32 @@ function reproduzir(video, aoFalhar) {
   }
 }
 
-// Classes escritas por extenso: o Tailwind só gera as que encontra no código.
-const LARGURA = {
-  vertical: 'w-full max-w-[240px] lg:w-[160px]',
-  larga: 'lg:w-[380px]',
+// O que muda de um formato para o outro. Classes escritas por extenso: o
+// Tailwind só gera as que encontra no código.
+// - lugar: a largura abaixo de 1024px (a lg: é só até o Exemplos.js medir);
+// - icone: a pausa grande, a 40% da largura no vertical e a 30% da altura no
+//   deitado (40% da largura de um vídeo deitado ficava enorme);
+// - brilho: o brilho do ícone, proporcional ao tamanho dele;
+// - sinal e sinalEmPausa: o sinal de carregamento, e onde fica com a pausa
+//   grande no ecrã (por baixo do ícone);
+// - larguraGrande: na vista grande, a parte da largura do ecrã que pode ocupar.
+const FORMATO = {
+  vertical: {
+    lugar: 'w-full max-w-[240px] lg:w-[160px]',
+    icone: 'w-[40%]',
+    brilho: '3.5cqw',
+    sinal: 'w-[12%]',
+    sinalEmPausa: 'top-[72%]',
+    larguraGrande: 95,
+  },
+  larga: {
+    lugar: 'w-full lg:w-[380px]',
+    icone: 'h-[30%]',
+    brilho: '1.6cqw',
+    sinal: 'w-[7%]',
+    sinalEmPausa: 'top-[79%]',
+    larguraGrande: 90,
+  },
 };
 
 const BOTAO_CONTROLO =
@@ -197,14 +227,19 @@ function IconeFechar() {
   );
 }
 
-export default function VideoNexugal({ tamanho = null, className = '' }) {
+export default function VideoNexugal({ tamanho = null, className = '', aoEscolherTipo = null }) {
   const { t } = useLanguage();
   const v = t.video;
   const { vertical, larga } = v.versoes;
 
-  const ecraLargo = useEcraLargo();
-  const tipo = larga && ecraLargo ? 'larga' : 'vertical';
+  const ecraTablet = useCorresponde(ECRA_TABLET);
+  const ecraComputador = useCorresponde(ECRA_COMPUTADOR);
+  // A versão que a largura pede agora, e a que está em uso (ver mais abaixo)
+  const tipoDoEcra = larga && ecraTablet ? 'larga' : 'vertical';
+  const [tipoEscolhido, setTipoEscolhido] = useState(tipoDoEcra);
+  const tipo = tipoEscolhido === 'larga' && larga ? 'larga' : 'vertical';
   const versao = tipo === 'larga' ? larga : vertical;
+  const formato = FORMATO[tipo];
   const proporcao = `${versao.largura} / ${versao.altura}`;
 
   const semMovimento = usePrefersReducedMotion();
@@ -249,6 +284,17 @@ export default function VideoNexugal({ tamanho = null, className = '' }) {
   const faseRef = useRef(fase);
   faseRef.current = fase;
   const grande = fase !== 'normal';
+
+  // A versão troca com a largura só na capa. A tocar ou em pausa fica a que
+  // está; ao voltar à capa, passa à que a largura pede.
+  useLayoutEffect(() => {
+    if (!aTocar && tipoEscolhido !== tipoDoEcra) setTipoEscolhido(tipoDoEcra);
+  }, [aTocar, tipoDoEcra, tipoEscolhido]);
+
+  // O Exemplos.js arruma a secção conforme a versão
+  useLayoutEffect(() => {
+    if (aoEscolherTipo) aoEscolherTipo(tipo);
+  }, [tipo, aoEscolherTipo]);
 
   // ---------------------------------------------------------------- vídeo
 
@@ -418,8 +464,8 @@ export default function VideoNexugal({ tamanho = null, className = '' }) {
     if (videoRef.current) videoRef.current.volume = VOLUME_INICIAL;
   }, [versao.ficheiro]);
 
-  // Outro vídeo (outra língua, ou a janela passou o corte de uma versão
-  // larga): volta à capa do novo. O antigo sai da página e o browser para-o.
+  // Outro vídeo (outra língua, ou a janela passou os 640px com o vídeo na
+  // capa): volta à capa do novo. O antigo sai da página e o browser para-o.
   useEffect(() => {
     modoRef.current = 'capa';
     clearTimeout(temporizadorRef.current);
@@ -786,18 +832,20 @@ export default function VideoNexugal({ tamanho = null, className = '' }) {
   // ------------------------------------------------------------- desenho
 
   // O lugar na página. No computador tem as medidas que o Exemplos.js passa;
-  // no telemóvel, a largura de LARGURA e a altura da proporção.
+  // abaixo disso, a largura de FORMATO e a altura da proporção.
   const estiloLugar =
-    ecraLargo && tamanho
+    ecraComputador && tamanho
       ? { width: tamanho.largura, height: tamanho.altura, maxWidth: 'none' }
       : { aspectRatio: proporcao };
 
-  // A caixa, na vista grande: centrada no ecrã, a 90% da altura, sem passar
-  // 95% da largura. As duas medidas por extenso, para o centrar com margin
-  // auto (um transform fixo aqui atrapalhava a animação de crescer).
+  // A caixa, na vista grande: centrada no ecrã, até 90% da altura ou à parte
+  // da largura de FORMATO (95% na vertical, 90% na deitada), o que limitar
+  // primeiro. As duas medidas por extenso, para o centrar com margin auto (um
+  // transform fixo aqui atrapalhava a animação de crescer).
+  const vw = formato.larguraGrande;
   const estiloGrande = {
-    width: `min(95vw, calc(90dvh * ${versao.largura} / ${versao.altura}))`,
-    height: `min(90dvh, calc(95vw * ${versao.altura} / ${versao.largura}))`,
+    width: `min(${vw}vw, calc(90dvh * ${versao.largura} / ${versao.altura}))`,
+    height: `min(90dvh, calc(${vw}vw * ${versao.altura} / ${versao.largura}))`,
   };
 
   // A tocar, os controlos somem ao fim de 2 s; em pausa ficam sempre.
@@ -807,7 +855,7 @@ export default function VideoNexugal({ tamanho = null, className = '' }) {
   const semSom = mudo || volume === 0;
 
   return (
-    <div ref={lugarRef} className={`relative ${LARGURA[tipo]} ${className}`} style={estiloLugar}>
+    <div ref={lugarRef} className={`relative ${formato.lugar} ${className}`} style={estiloLugar}>
       {grande && (
         <div
           ref={fundoRef}
@@ -909,10 +957,10 @@ export default function VideoNexugal({ tamanho = null, className = '' }) {
               <div className={`absolute inset-0 bg-azul-profundo/35 ${estadoPausa.veu}`} />
               <div className="absolute inset-0 flex items-center justify-center">
                 <div
-                  className={`relative w-[40%] ${estadoPausa.icone}`}
+                  className={`relative ${formato.icone} ${estadoPausa.icone}`}
                   style={{
                     aspectRatio: '200 / 220',
-                    filter: 'drop-shadow(0 0 3.5cqw rgba(64, 228, 255, 0.6))',
+                    filter: `drop-shadow(0 0 ${formato.brilho} rgba(64, 228, 255, 0.6))`,
                   }}
                 >
                   <img
@@ -935,8 +983,8 @@ export default function VideoNexugal({ tamanho = null, className = '' }) {
               <div
                 role="status"
                 aria-label={v.aCarregar}
-                className={`pointer-events-none absolute left-1/2 z-[15] w-[12%] -translate-x-1/2 -translate-y-1/2 ${
-                  pausa === 'visivel' ? 'top-[72%]' : 'top-1/2'
+                className={`pointer-events-none absolute left-1/2 z-[15] -translate-x-1/2 -translate-y-1/2 ${formato.sinal} ${
+                  pausa === 'visivel' ? formato.sinalEmPausa : 'top-1/2'
                 }`}
               >
                 <div className="aspect-square w-full animate-spin rounded-full border-[3px] border-white/30 border-t-white" />

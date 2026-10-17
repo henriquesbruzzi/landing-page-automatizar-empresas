@@ -71,11 +71,12 @@ const translations = {
       aCarregar: 'A carregar',
       // Para o leitor de ecrã: "0:12 de 0:42"
       de: 'de',
-      // Ficheiros em public/video. `larga` (16:9) fica para quando existir:
-      // passa a ser a dos ecrãs a partir de 1024px.
+      // Ficheiros em public/video. `vertical` (9:16) no telemóvel, abaixo de
+      // 640px; `larga` (3:2) no tablet e no computador. Sem `larga`, a
+      // vertical serve todas as larguras.
       versoes: {
         vertical: { ficheiro: '/video/nexugal-video.mp4', capa: '/video/nexugal-video-poster.jpg', largura: 720, altura: 1280 },
-        larga: null,
+        larga: { ficheiro: '/video/nexugal-video-3x2.mp4', capa: '/video/nexugal-video-poster-3x2.jpg', largura: 1440, altura: 960 },
       },
     },
     exemplos: {
@@ -484,7 +485,7 @@ const translations = {
       de: 'of',
       versoes: {
         vertical: { ficheiro: '/video/nexugal-video-en.mp4', capa: '/video/nexugal-video-poster-en.jpg', largura: 720, altura: 1280 },
-        larga: null,
+        larga: { ficheiro: '/video/nexugal-video-en-3x2.mp4', capa: '/video/nexugal-video-poster-en-3x2.jpg', largura: 1440, altura: 960 },
       },
     },
     exemplos: {
