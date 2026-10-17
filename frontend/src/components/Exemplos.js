@@ -38,7 +38,9 @@ const VIDEO_FOLGA_LADOS = 24;
  *
  * - em altura: o texto e o índice, mais o espaço vazio por cima (até ao topo
  *   da secção) e por baixo (até ao primeiro bloco), o menor dos dois de cada
- *   lado, porque o vídeo está centrado, e menos a folga;
+ *   lado, porque o vídeo está centrado, e menos a folga. Na versão deitada
+ *   (3:2), no máximo a altura do texto e do índice (pedido do Rui: "mais ou
+ *   menos com a altura do bloco de texto"), com `ajustarAoTexto`;
  * - em largura: a coluna do vídeo, menos a folga dos dois lados.
  *
  * Fica o menor dos dois, com a largura em píxeis inteiros (meio píxel deixava
@@ -46,7 +48,16 @@ const VIDEO_FOLGA_LADOS = 24;
  * altura natural (lg:self-start), nunca a coluna. Volta a medir quando alguma
  * coisa muda de tamanho (letras a chegar, outra largura, outra língua).
  */
-function useTamanhoDoVideo({ ativo, proporcao, cabecalhoRef, textoRef, indiceRef, celulaRef, blocosRef }) {
+function useTamanhoDoVideo({
+  ativo,
+  proporcao,
+  ajustarAoTexto,
+  cabecalhoRef,
+  textoRef,
+  indiceRef,
+  celulaRef,
+  blocosRef,
+}) {
   const [tamanho, setTamanho] = useState(null);
 
   useLayoutEffect(() => {
@@ -62,7 +73,8 @@ function useTamanhoDoVideo({ ativo, proporcao, cabecalhoRef, textoRef, indiceRef
         indice.getBoundingClientRect().height;
       const acima = caixaTexto.top - cabecalho.getBoundingClientRect().top;
       const abaixo = blocos.getBoundingClientRect().top - (caixaTexto.top + alturaTexto);
-      const alturaMaxima = alturaTexto + 2 * (Math.min(acima, abaixo) - VIDEO_FOLGA_VERTICAL);
+      const alturaComFolgas = alturaTexto + 2 * (Math.min(acima, abaixo) - VIDEO_FOLGA_VERTICAL);
+      const alturaMaxima = ajustarAoTexto ? Math.min(alturaTexto, alturaComFolgas) : alturaComFolgas;
       const larguraMaxima = celula.getBoundingClientRect().width - 2 * VIDEO_FOLGA_LADOS;
 
       const largura = Math.floor(Math.min(larguraMaxima, alturaMaxima * proporcao));
@@ -80,7 +92,7 @@ function useTamanhoDoVideo({ ativo, proporcao, cabecalhoRef, textoRef, indiceRef
       if (observador) observador.disconnect();
       window.removeEventListener('resize', medir);
     };
-  }, [ativo, proporcao, cabecalhoRef, textoRef, indiceRef, celulaRef, blocosRef]);
+  }, [ativo, proporcao, ajustarAoTexto, cabecalhoRef, textoRef, indiceRef, celulaRef, blocosRef]);
 
   return tamanho;
 }
@@ -166,17 +178,21 @@ function Exemplos() {
   const semAnimacao = usePrefersReducedMotion();
   const e = t.exemplos;
   const comVideo = t.video.mostrar;
-  const { vertical } = t.video.versoes;
+  const { vertical, larga } = t.video.versoes;
   const cabecalhoRef = useRef(null);
   const textoRef = useRef(null);
   const indiceRef = useRef(null);
   const celulaRef = useRef(null);
   const blocosRef = useRef(null);
-  // A proporção que conta no computador é a da versão larga, se houver
-  const versaoGrande = t.video.versoes.larga || vertical;
+  // Qual das versões está em uso: quem escolhe é o VideoNexugal.js (pela
+  // largura, e só com o vídeo na capa), e avisa por aoEscolherTipo.
+  const [tipoVideo, setTipoVideo] = useState(null);
+  const deitado = tipoVideo === 'larga' && Boolean(larga);
+  const versaoEmUso = deitado ? larga : vertical;
   const tamanhoDoVideo = useTamanhoDoVideo({
     ativo: comVideo,
-    proporcao: versaoGrande.largura / versaoGrande.altura,
+    proporcao: versaoEmUso.largura / versaoEmUso.altura,
+    ajustarAoTexto: deitado,
     cabecalhoRef,
     textoRef,
     indiceRef,
@@ -194,17 +210,23 @@ function Exemplos() {
       <div className="absolute left-1/2 top-0 h-[1px] w-1/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-azul-claro to-transparent" />
 
       {/* ---------------- cabeçalho e índice ---------------- */}
-      {/* O texto à esquerda e o vídeo à direita, a partir de 1024px. A coluna
-          do texto tem a largura que o cabeçalho tinha quando estava centrado
-          (42rem); o vídeo fica centrado no espaço que sobra até à margem
+      {/* O texto à esquerda e o vídeo à direita, a partir de 1024px. Com o
+          vídeo vertical, a coluna do texto tem a largura que o cabeçalho
+          tinha quando estava centrado (42rem); com o deitado (3:2), as duas
+          colunas são iguais, senão a 1024px o vídeo ficava com 190px de
+          largura. O vídeo fica centrado no espaço que sobra até à margem
           direita, com o tamanho de useTamanhoDoVideo. Abaixo de 1024px
-          empilham: texto, vídeo e, por fim, o índice, que fica assim logo
-          antes dos blocos para onde salta. Sem vídeo nesta língua
-          (video.mostrar), o texto fica sozinho, à esquerda. */}
+          empilham: texto, vídeo (o deitado com a largura da coluna) e, por
+          fim, o índice, que fica assim logo antes dos blocos para onde salta.
+          Sem vídeo nesta língua (video.mostrar), o texto fica sozinho. */}
       <div
         ref={cabecalhoRef}
         className={`mx-auto grid w-full max-w-7xl grid-cols-1 gap-y-10 px-6 pb-4 pt-16 md:px-10 md:pt-20 lg:gap-y-0 lg:px-16 ${
-          comVideo ? 'lg:grid-cols-[minmax(0,42rem)_minmax(15rem,1fr)]' : ''
+          !comVideo
+            ? ''
+            : deitado
+              ? 'lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]'
+              : 'lg:grid-cols-[minmax(0,42rem)_minmax(15rem,1fr)]'
         }`}
       >
         <div ref={textoRef} className="lg:col-start-1 lg:row-start-1 lg:max-w-2xl lg:self-start">
@@ -223,7 +245,7 @@ function Exemplos() {
         {comVideo && (
           <div ref={celulaRef} className="lg:relative lg:col-start-2 lg:row-span-2 lg:row-start-1">
             <div className="flex justify-center lg:absolute lg:inset-0 lg:items-center">
-              <VideoNexugal tamanho={tamanhoDoVideo} />
+              <VideoNexugal tamanho={tamanhoDoVideo} aoEscolherTipo={setTipoVideo} />
             </div>
           </div>
         )}
