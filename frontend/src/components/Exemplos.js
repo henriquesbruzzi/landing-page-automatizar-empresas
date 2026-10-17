@@ -23,41 +23,56 @@ import VideoNexugal from './VideoNexugal';
 // Afasta o alvo do menu fixo quando se salta pelo índice
 const FOLGA_DO_MENU = 'scroll-mt-28';
 
-// Teto da altura do vídeo, para o caso de o texto ao lado crescer muito
-const VIDEO_ALTURA_MAXIMA = 480;
+// Folga entre o vídeo e o que está à volta: em cima e em baixo (o fio do topo
+// da secção e o primeiro bloco) e dos lados (o texto e a margem direita).
+const VIDEO_FOLGA_VERTICAL = 24;
+const VIDEO_FOLGA_LADOS = 24;
 
 /**
- * Altura do texto do cabeçalho (rótulo, título e subtítulo, mais o índice),
- * que é a altura que o vídeo ao lado pode ter.
+ * Tamanho do vídeo ao lado do cabeçalho, a partir de 1024px.
  *
- * Mede-se cada peça pela sua altura natural e somam-se, em vez de medir a
- * coluna: a coluna estica até à altura do vídeo, e medi-la faria o vídeo
- * nunca encolher. O texto e o índice levam lg:self-start pelo mesmo motivo.
- * Volta a medir quando o texto muda de tamanho (letras a chegar, outra
- * largura, outra língua).
+ * O Rui pediu o vídeo tão grande quanto possível (perto do esquema do hero)
+ * sem passar por cima de nada nem empurrar a página. O vídeo está fora do
+ * fluxo (absoluto, centrado na sua coluna e na altura do texto), por isso não
+ * empurra; esta conta garante que também não passa por cima:
+ *
+ * - em altura: o texto e o índice, mais o espaço vazio por cima (até ao topo
+ *   da secção) e por baixo (até ao primeiro bloco), o menor dos dois de cada
+ *   lado, porque o vídeo está centrado, e menos a folga;
+ * - em largura: a coluna do vídeo, menos a folga dos dois lados.
+ *
+ * Fica o menor dos dois, com a largura em píxeis inteiros (meio píxel deixava
+ * uma linha escura no lado direito). Mede-se cada peça do texto pela sua
+ * altura natural (lg:self-start), nunca a coluna. Volta a medir quando alguma
+ * coisa muda de tamanho (letras a chegar, outra largura, outra língua).
  */
-function useAlturaDoTexto(textoRef, indiceRef) {
-  const [altura, setAltura] = useState(null);
+function useTamanhoDoVideo({ ativo, proporcao, cabecalhoRef, textoRef, indiceRef, celulaRef, blocosRef }) {
+  const [tamanho, setTamanho] = useState(null);
 
   useLayoutEffect(() => {
-    const texto = textoRef.current;
-    const indice = indiceRef.current;
-    if (!texto || !indice) return undefined;
+    const pecas = [cabecalhoRef, textoRef, indiceRef, celulaRef, blocosRef].map((r) => r.current);
+    if (!ativo || pecas.some((p) => !p)) return undefined;
+    const [cabecalho, texto, indice, celula, blocos] = pecas;
 
     const medir = () => {
-      const espaco = parseFloat(window.getComputedStyle(indice).marginTop) || 0;
-      const total = Math.floor(
-        texto.getBoundingClientRect().height + espaco + indice.getBoundingClientRect().height
-      );
-      setAltura(Math.min(total, VIDEO_ALTURA_MAXIMA));
+      const caixaTexto = texto.getBoundingClientRect();
+      const alturaTexto =
+        caixaTexto.height +
+        (parseFloat(window.getComputedStyle(indice).marginTop) || 0) +
+        indice.getBoundingClientRect().height;
+      const acima = caixaTexto.top - cabecalho.getBoundingClientRect().top;
+      const abaixo = blocos.getBoundingClientRect().top - (caixaTexto.top + alturaTexto);
+      const alturaMaxima = alturaTexto + 2 * (Math.min(acima, abaixo) - VIDEO_FOLGA_VERTICAL);
+      const larguraMaxima = celula.getBoundingClientRect().width - 2 * VIDEO_FOLGA_LADOS;
+
+      const largura = Math.floor(Math.min(larguraMaxima, alturaMaxima * proporcao));
+      if (largura <= 0) return;
+      setTamanho({ largura, altura: Math.round(largura / proporcao) });
     };
 
     medir();
     const observador = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(medir) : null;
-    if (observador) {
-      observador.observe(texto);
-      observador.observe(indice);
-    }
+    if (observador) pecas.forEach((p) => observador.observe(p));
     window.addEventListener('resize', medir);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(medir);
 
@@ -65,9 +80,9 @@ function useAlturaDoTexto(textoRef, indiceRef) {
       if (observador) observador.disconnect();
       window.removeEventListener('resize', medir);
     };
-  }, [textoRef, indiceRef]);
+  }, [ativo, proporcao, cabecalhoRef, textoRef, indiceRef, celulaRef, blocosRef]);
 
-  return altura;
+  return tamanho;
 }
 
 function Bloco({ bloco, par }) {
@@ -150,9 +165,24 @@ function Exemplos() {
   const navigate = useNavigate();
   const semAnimacao = usePrefersReducedMotion();
   const e = t.exemplos;
+  const comVideo = t.video.mostrar;
+  const { vertical } = t.video.versoes;
+  const cabecalhoRef = useRef(null);
   const textoRef = useRef(null);
   const indiceRef = useRef(null);
-  const alturaDoTexto = useAlturaDoTexto(textoRef, indiceRef);
+  const celulaRef = useRef(null);
+  const blocosRef = useRef(null);
+  // A proporção que conta no computador é a da versão larga, se houver
+  const versaoGrande = t.video.versoes.larga || vertical;
+  const tamanhoDoVideo = useTamanhoDoVideo({
+    ativo: comVideo,
+    proporcao: versaoGrande.largura / versaoGrande.altura,
+    cabecalhoRef,
+    textoRef,
+    indiceRef,
+    celulaRef,
+    blocosRef,
+  });
 
   const saltarPara = (id) => {
     const alvo = document.getElementById(id);
@@ -164,14 +194,19 @@ function Exemplos() {
       <div className="absolute left-1/2 top-0 h-[1px] w-1/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-azul-claro to-transparent" />
 
       {/* ---------------- cabeçalho e índice ---------------- */}
-      {/* O texto à esquerda e o vídeo à direita, a partir de 1024px. Abaixo
-          disso empilham: texto, vídeo e, por fim, o índice, que fica assim
-          logo antes dos blocos para onde salta. O vídeo tem a altura do texto
-          e do índice juntos, medida em useAlturaDoTexto. O texto fica com a
-          largura que tinha quando estava centrado (max-w-2xl), para o título
-          não passar a uma linha e o vídeo não ficar minúsculo; o vídeo encosta
-          à direita. */}
-      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-y-10 px-6 pb-4 pt-16 md:px-10 md:pt-20 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:gap-y-0 lg:px-16">
+      {/* O texto à esquerda e o vídeo à direita, a partir de 1024px. A coluna
+          do texto tem a largura que o cabeçalho tinha quando estava centrado
+          (42rem); o vídeo fica centrado no espaço que sobra até à margem
+          direita, com o tamanho de useTamanhoDoVideo. Abaixo de 1024px
+          empilham: texto, vídeo e, por fim, o índice, que fica assim logo
+          antes dos blocos para onde salta. Sem vídeo nesta língua
+          (video.mostrar), o texto fica sozinho, à esquerda. */}
+      <div
+        ref={cabecalhoRef}
+        className={`mx-auto grid w-full max-w-7xl grid-cols-1 gap-y-10 px-6 pb-4 pt-16 md:px-10 md:pt-20 lg:gap-y-0 lg:px-16 ${
+          comVideo ? 'lg:grid-cols-[minmax(0,42rem)_minmax(15rem,1fr)]' : ''
+        }`}
+      >
         <div ref={textoRef} className="lg:col-start-1 lg:row-start-1 lg:max-w-2xl lg:self-start">
           <span className="mb-4 block font-display text-xs font-semibold uppercase tracking-[0.3em] text-azul-medio">
             {e.rotulo}
@@ -185,10 +220,13 @@ function Exemplos() {
           <p className="mt-6 text-sm leading-relaxed text-texto md:text-base">{e.subtitulo}</p>
         </div>
 
-        <VideoNexugal
-          altura={alturaDoTexto}
-          className="mx-auto lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:mx-0 lg:self-start lg:justify-self-end"
-        />
+        {comVideo && (
+          <div ref={celulaRef} className="lg:relative lg:col-start-2 lg:row-span-2 lg:row-start-1">
+            <div className="flex justify-center lg:absolute lg:inset-0 lg:items-center">
+              <VideoNexugal tamanho={tamanhoDoVideo} />
+            </div>
+          </div>
+        )}
 
         {/* Índice. Em fila no computador, e a passar à linha no telemóvel:
             quatro etiquetas não cabem numa fila de 380px, e uma barra que se
@@ -216,7 +254,7 @@ function Exemplos() {
       </div>
 
       {/* ---------------- os quatro blocos ---------------- */}
-      <div className="mt-12">
+      <div ref={blocosRef} className="mt-12">
         {e.blocos.map((bloco, i) => (
           <Bloco key={bloco.id} bloco={bloco} par={i % 2 === 1} />
         ))}

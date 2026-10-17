@@ -3756,5 +3756,71 @@ Não se usou o `vercel curl` e não se mexeu em nenhuma definição da Vercel.
 (o título "Como começou" e os cinco parágrafos), o subtítulo do hero em 7.1,
 ponto 2, e a descrição da página inicial nas decisões de 7.3 (já anotada lá).
 
+### 7.28 Slogan, título do hero e o vídeo dos exemplos (17/10/2026)
 
+Ramo `rui/video-e-slogan`, aprovado pelo Rui em local e publicado a 17/10.
 
+#### Slogan e título
+
+- **Slogan:** "A sua empresa em piloto automático." (EN "Your business on
+  autopilot."). É o subtítulo do hero, a primeira frase da frase do rodapé
+  (`footer.brand.tagline`) e o fim do convite final ("Pronto para pôr a sua
+  empresa em piloto automático?" / "Ready to put your business on
+  autopilot?").
+- **Título do hero:** "Automação de processos para **empresas**" (EN "Process
+  automation for **businesses**"). Saiu "Deixe a sua empresa andar sozinha",
+  que repetia a ideia do slogan.
+- **Descrição para o Google e as partilhas:** "A sua empresa em piloto
+  automático. Automação de processos para empresas: contabilidade, apoio ao
+  cliente, stock, faturação e mais, sem trabalho manual." Regra do Rui: no
+  título e nas descrições, a expressão "automação de processos" não sai,
+  porque é o que as pessoas pesquisam. O `<title>` da página inicial continua
+  "Nexugal".
+- **Onde estão:** hero, rodapé e convite em `translations.js`; a descrição na
+  constante `DESCRICAO` do `SEO.js` e, escrita à mão, nas três etiquetas do
+  `public/index.html` e no `manifest.json` (mudar uma obriga a mudar as
+  outras, 7.27). A linha "Tempo para o negócio crescer." de "O nosso percurso"
+  ficou, por decisão do Rui.
+
+#### O vídeo
+
+- **Onde:** à direita do cabeçalho dos exemplos (`Exemplos.js`); o leitor é o
+  `VideoNexugal.js`. No telemóvel fica entre o texto e as etiquetas.
+- **Ficheiros** em `frontend/public/video`, fora do `src` (não entram no
+  JavaScript): `nexugal-video.mp4` e `nexugal-video-poster.jpg` (PT),
+  `nexugal-video-en.mp4` e `nexugal-video-poster-en.jpg` (EN), e
+  `pausa-nexugal.svg` (o ícone da pausa grande, usado tal como veio).
+- **Ligar e desligar por língua:** bloco `video` do `translations.js`,
+  `mostrar: true` ou `false`. Sem vídeo, o cabeçalho fica sozinho à esquerda.
+  O bloco já aceita uma versão 16:9 para ecrãs largos (`versoes.larga`).
+- **Tamanho na secção: 222 × 395px no computador, por decisão do Rui.** É o
+  maior que cabe sem empurrar a página nem passar por cima do fio do topo e do
+  primeiro bloco; calcula-o o `useTamanhoDoVideo` (no `Exemplos.js`). A
+  1024px a coluna é mais estreita e fica 192 × 341. No telemóvel, 240px de
+  largura.
+
+#### Regras do leitor (não reabrir sem o Rui)
+
+- **Controlos próprios, sem os do browser** (sem o atributo `controls`): é a
+  única maneira de tirar os três pontos e o ecrã inteiro em todos os browsers,
+  o Safari do iPhone incluído. Em baixo: reproduzir/pausar, som e barra do
+  tempo; em cima à direita, aumentar. Mais nada.
+- **Volume inicial a 25%.** No iPhone o volume é dos botões do telemóvel.
+- **A capa volta** ao fechar a vista grande e no fim do vídeo. A capa é uma
+  imagem por cima do vídeo, não o `poster`: depois de tocado, o browser
+  mostrava o primeiro frame.
+- **A vista grande cresce do sítio do vídeo** e encolhe de volta para lá. É o
+  mesmo elemento de vídeo, por isso não para nem recomeça.
+- Teclas com o foco no leitor (e sempre na vista grande): espaço/K, setas
+  (5 s e volume em 10%), M, F, Esc, 0 a 9, Home e End. Também: pausa grande
+  animada, sinal de carregamento, parte já carregada na barra, Media Session e
+  volta à capa se o vídeo falhar. A lista completa está no topo do
+  `VideoNexugal.js`.
+- **Armadilhas:** o painel de pré-visualização do Claude não faz andar as
+  animações (7.4); para as ver, mexe-se no relógio delas à mão
+  (`getAnimations()`, `currentTime`). E um vídeo que já falhou recusa o
+  `play()` sem novo aviso de erro: por isso cada tentativa recomeça com
+  `load()`.
+
+**O que isto torna velho:** o subtítulo do hero e a descrição da página
+inicial em 7.27, e o título do hero em 7.1, ponto 2, e em 7.3.

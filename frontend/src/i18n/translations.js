@@ -8,11 +8,11 @@ const translations = {
       contact: 'CONTACTO',
     },
     hero: {
-      title_line1: 'Deixe a sua empresa',
-      title_line2_start: 'andar ',
-      title_line2_highlight: 'sozinha',
+      title_line1: 'Automação de processos',
+      title_line2_start: 'para ',
+      title_line2_highlight: 'empresas',
       // Uma frase por linha
-      subtitle: ['Automação de processos para empresas.', 'Tempo para o negócio crescer.'],
+      subtitle: ['A sua empresa em piloto automático.'],
       cta: 'Falar connosco',
       ctaSecundario: 'Ver exemplos',
       esquema: {
@@ -51,10 +51,26 @@ const translations = {
     },
     // O vídeo ao lado do cabeçalho dos exemplos (VideoNexugal.js).
     video: {
+      // false esconde o vídeo nesta língua
+      mostrar: true,
       // O botão que põe o vídeo a tocar
       aria: 'Ver o vídeo da Nexugal',
       // O vídeo em si, já a tocar
       rotuloVideo: 'Vídeo da Nexugal',
+      // Os botões da vista grande
+      aumentar: 'Ver o vídeo em grande',
+      fechar: 'Fechar o vídeo',
+      // Os controlos do vídeo
+      reproduzir: 'Reproduzir',
+      pausar: 'Pausar',
+      ligarSom: 'Ligar o som',
+      desligarSom: 'Desligar o som',
+      volume: 'Volume',
+      tempo: 'Tempo do vídeo',
+      // Para o leitor de ecrã, enquanto o vídeo demora a arrancar
+      aCarregar: 'A carregar',
+      // Para o leitor de ecrã: "0:12 de 0:42"
+      de: 'de',
       // Ficheiros em public/video. `larga` (16:9) fica para quando existir:
       // passa a ser a dos ecrãs a partir de 1024px.
       versoes: {
@@ -358,8 +374,8 @@ const translations = {
       ],
     },
     cta: {
-      title_start: 'Pronto para a sua empresa ',
-      title_highlight: 'andar sozinha',
+      title_start: 'Pronto para pôr a sua empresa ',
+      title_highlight: 'em piloto automático',
       title_end: '?',
       description: 'Falamos primeiro, sem custo, para perceber se há aqui trabalho para fazer.',
       button: 'Iniciar Conversa',
@@ -377,7 +393,7 @@ const translations = {
     footer: {
       brand: {
         name: 'NEXUGAL',
-        tagline: 'Deixe a sua empresa andar sozinha. Menos trabalho manual, mais tempo para o que interessa.',
+        tagline: 'A sua empresa em piloto automático. Menos trabalho manual, mais tempo para o que interessa.',
       },
       contact: {
         title: 'Contacto',
@@ -419,10 +435,10 @@ const translations = {
       contact: 'CONTACT',
     },
     hero: {
-      title_line1: 'Let your business',
-      title_line2_start: 'run ',
-      title_line2_highlight: 'on its own',
-      subtitle: ['Process automation for businesses.', 'Time for the business to grow.'],
+      title_line1: 'Process automation',
+      title_line2_start: 'for ',
+      title_line2_highlight: 'businesses',
+      subtitle: ['Your business on autopilot.'],
       cta: 'Talk to us',
       ctaSecundario: 'See examples',
       esquema: {
@@ -452,11 +468,22 @@ const translations = {
       },
     },
     video: {
+      // O vídeo e a capa em inglês (17/10/2026). `mostrar: false` esconde-o.
+      mostrar: true,
       aria: 'Watch the Nexugal video',
       rotuloVideo: 'Nexugal video',
-      // For now the same video as the Portuguese page
+      aumentar: 'Watch the video full size',
+      fechar: 'Close the video',
+      reproduzir: 'Play',
+      pausar: 'Pause',
+      ligarSom: 'Unmute',
+      desligarSom: 'Mute',
+      volume: 'Volume',
+      tempo: 'Video time',
+      aCarregar: 'Loading',
+      de: 'of',
       versoes: {
-        vertical: { ficheiro: '/video/nexugal-video.mp4', capa: '/video/nexugal-video-poster.jpg', largura: 720, altura: 1280 },
+        vertical: { ficheiro: '/video/nexugal-video-en.mp4', capa: '/video/nexugal-video-poster-en.jpg', largura: 720, altura: 1280 },
         larga: null,
       },
     },
@@ -710,8 +737,8 @@ const translations = {
       ],
     },
     cta: {
-      title_start: 'Ready for your company to ',
-      title_highlight: 'run on its own',
+      title_start: 'Ready to put your business ',
+      title_highlight: 'on autopilot',
       title_end: '?',
       description: 'We talk first, at no cost, to see whether there is work here to do.',
       button: 'Start a Conversation',
@@ -729,7 +756,7 @@ const translations = {
     footer: {
       brand: {
         name: 'NEXUGAL',
-        tagline: 'Let your company run on its own. Less manual work, more time for what matters.',
+        tagline: 'Your business on autopilot. Less manual work, more time for what matters.',
       },
       contact: {
         title: 'Contact',
