@@ -335,6 +335,33 @@ comandos vão um por linha. Ver 7.5.
     `https://nexusgal-laddingpage-167clq34w-nexugal.vercel.app`). Para voltar
     a ela, na pasta principal:
     `npx vercel rollback dpl_F4UNtxqoXeyuhayxn8JA7hSdAufq --yes`.
+  - **A 18/10/2026, cerca das 11h34 (Lisboa), o Claude publicou o `main` com
+    os PR #14, #15 e #16** (o merge `5a2c74d`: o menu de telemóvel até 1023px,
+    7.29; o aviso de cookies a sair do ecrã com o menu aberto, 7.30; e o aviso
+    mais baixo no tablet, 7.31), com `npx vercel --prod --yes`, autorizado pelo
+    Rui: deployment `dpl_8NY2noNxGAQgXPaWcF1AsBoiCDLh`, em
+    `https://nexusgal-laddingpage-1vp2bzi59-nexugal.vercel.app`. O site serve o
+    `main.a4198c0e.js`, com `VERCEL_GIT_COMMIT_REF: "main"` e o commit
+    `5a2c74d`. **Passou à primeira**, sem o "Error: Not authorized"
+    (confirmado com `npx vercel inspect`: `target production` e o
+    www.nexugal.com e o nexugal.com nos `Aliases`). Antes de publicar: a pasta
+    principal no `main`, atualizada com `git pull` e sem alterações por gravar
+    (só a pasta `.claude/`, que não está no git), e o build com `CI=true` a
+    passar. Verificado no nexugal.com, em `/` e `/us`, a 786 × 801 e a
+    964 × 800: o botão ☰ no lugar do menu de cima; o aviso de cookies com os
+    botões ao lado do texto, um por cima do outro, com 222 px (PT) e 197 px
+    (EN) a 786 e 172 px a 964; com o menu aberto o aviso sai do ecrã e os seis
+    itens respondem ao toque, e ao fechar o aviso volta; sem scroll para o lado
+    nem erros na consola. O vídeo continua a funcionar: a 3:2 de cada língua
+    toca com volume a 25%, e os quatro MP4 e as duas capas 3:2 respondem
+    `206 Partial Content` a um pedido do meio. (O browser do painel tinha a
+    resposta ao aviso guardada de outra vez; apagou-se para o testar e repôs-se
+    no fim, sem carregar em nenhum botão do aviso.)
+    A publicação anterior era a `dpl_H25CkvAiKBas5ekkgkW1qcedgTK3` (a de 17/10
+    às 21h10, em
+    `https://nexusgal-laddingpage-lucc04aw2-nexugal.vercel.app`). Para voltar
+    a ela, na pasta principal:
+    `npx vercel rollback dpl_H25CkvAiKBas5ekkgkW1qcedgTK3 --yes`.
   - **Voltar atrás (rollback): o que é preciso saber**, segundo a documentação da
     Vercel, lida a 06/10:
     - no plano Hobby só se pode voltar à publicação de produção imediatamente
@@ -3928,7 +3955,7 @@ inicial em 7.27, e o título do hero em 7.1, ponto 2, e em 7.3.
 ### 7.29 O menu de telemóvel até 1023px (18/10/2026)
 
 Ramo `rui/menu-tablet`, só o `Header.js`. Aprovado pelo Rui em local e junto
-ao `main`. **Não publicado.**
+ao `main`. **Publicado a 18/10, com o 7.30 e o 7.31** (secção 6).
 
 #### O problema, medido no build
 
@@ -4007,7 +4034,8 @@ telemóvel nos 768px (já anotado lá).
 ### 7.30 O aviso de cookies sai do ecrã com o menu de telemóvel aberto (18/10/2026)
 
 Ramo `rui/menu-e-aviso-cookies`, feito a partir do `main` no `7ceb182` (já com
-o 7.29). Aprovado pelo Rui em local. **Por juntar e por publicar.**
+o 7.29). Aprovado pelo Rui em local, junto ao `main` (PR #15) e **publicado
+a 18/10** (secção 6).
 
 #### O problema, medido no build
 
@@ -4083,7 +4111,8 @@ como janela pelos leitores de ecrã. **O Rui escolheu a 1.**
 ### 7.31 O aviso de cookies mais baixo no tablet (18/10/2026)
 
 Ramo `rui/aviso-cookies-tablet`, feito a partir do `main` no `3dd00b5`. Só o
-`CookieBanner.js`. Aprovado pelo Rui no painel. **Por publicar.**
+`CookieBanner.js`. Aprovado pelo Rui no painel, junto ao `main` (PR #16) e
+**publicado a 18/10** (secção 6). O ramo local foi apagado depois.
 
 **O problema:** entre 768 e 1023px os dois botões ficavam ao lado do texto,
 lado a lado, e levavam cerca de 316px da largura. O texto ficava numa coluna de
