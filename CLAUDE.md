@@ -1654,7 +1654,15 @@ novo com `<defs>` (marker, gradient, mask, clipPath, filter) tem de ter ids
   md) fica no estado de partida, como se a classe do computador não contasse:
   `getAnimations()` mostra-as `running` com `currentTime` 0. Não é avaria. Depois
   de mudar a largura, recarregar a página, ou acabar as animações à mão
-  (`finish()`), antes de medir.
+  (`finish()`), antes de medir. O mesmo com um estilo mudado à mão numa peça
+  com `transition-all` (visto a 18/10): o valor calculado fica no de partida
+  até ao `finish()`.
+- **Escondido, não avisa a página de que o tamanho mudou** (visto a 17 e
+  18/10, 7.28 e 7.29): não chega nenhum `resize` nem nenhum aviso do
+  `matchMedia`, e o que se mede em `vh` (`h-screen`) fica com a altura de
+  antes. Medir cada tamanho com a página carregada já nele. O que reage à
+  mudança testa-se pondo no lugar do `matchMedia`, antes de a página arrancar,
+  um que guarde os ouvintes, e chamando-os à mão.
 - O `.claude/launch.json` (fora do git) tem duas configurações: `nexugal-frontend`
   (`npm start`, porta 3000, ou outra se estiver ocupada) e `nexugal-build` (serve
   a pasta `frontend/build` na porta 4173, com `npx serve -s`).
@@ -1716,6 +1724,11 @@ Não apagar sem o Rui decidir.
   que está na secção do `Process.js`; o "Como trabalhamos" do rodapé depende do
   id `processo`, que está na coluna dos passos (7.18). Mudar o nome de um deles
   também não dá erro nenhum: a ligação simplesmente deixa de descer.
+- **O menu de cima está no limite aos 1024px** (7.29). Em português pede 713px,
+  e aos 1024px sobram 42px entre o logótipo e o HOME. Um item novo, ou um texto
+  mais comprido, parte-o outra vez sem erro nenhum à vista: refazer a conta e,
+  se for preciso, subir o corte (`lg:` nos três sítios do `Header.js` e no
+  `matchMedia` que fecha o menu).
 - **O `/sobre` e o `/us/about` são redirecionados em dois sítios** (7.19): no
   `vercel.json` da raiz, com um 308, que é o que vale no site publicado; e no
   `App.js`, que é o que vale no `npm start` (não lê o `vercel.json`) e apanha o
@@ -1873,6 +1886,12 @@ cd frontend && CI=true npm test -- contraste
 No PowerShell, dentro da pasta `frontend`: `$env:CI = 'true'` e depois
 `npm test -- contraste`. Sem o `CI=true`, o teste fica à espera em modo de vigia
 e não acaba.
+
+**Num worktree do Claude** (uma pasta dentro de `.claude/worktrees/`) o comando
+de cima responde "No tests found": a procura de testes não entra em pastas cujo
+nome começa por ponto. Aí, na pasta `frontend`, dá-se o caminho exato:
+`CI=true npx react-scripts test --testMatch "<rootDir>/src/utils/contraste.test.js"`
+(visto a 18/10).
 
 O teste está em `frontend/src/utils/contraste.test.js`, compara os pares de cor
 do hero com os mínimos da norma e imprime uma tabela. A 14/09/2026: **18 testes,
@@ -2846,7 +2865,9 @@ encostado à esquerda, desalinhado dos outros, que estavam centrados.
 **O que se fez**, nos cinco itens e só no menu do telemóvel: `text-center`, e
 abaixo dos 640px `text-xl` com `tracking-widest` (que é 0.1em), voltando a
 `text-2xl` e `tracking-[0.2em]` a partir daí. O menu do telemóvel desaparece aos
-768px, por isso o tamanho grande só se vê na faixa dos 640 aos 767.
+768px, por isso o tamanho grande só se vê na faixa dos 640 aos 767. (Desde
+18/10 o menu do telemóvel vai até aos 1023px, e o tamanho grande vê-se dos 640
+aos 1023: 7.29.)
 
 **Porquê 20px e 0.1em, e não outra coisa.** Mediu-se o item em onze combinações,
 com o texto sem quebra. A 320px o espaço útil são os 320, porque o menu não tem
@@ -3476,7 +3497,8 @@ Como ficou:
 
 - **"Telemóvel" é abaixo de md (768px)**, o mesmo corte do menu de telemóvel. A
   partir daí vê-se tudo, sem botão, também no tablet, onde as colunas ainda estão
-  empilhadas.
+  empilhadas. (Desde 18/10 o menu de telemóvel vai até aos 1023px, 7.29; o "Ler
+  mais" ficou nos 768px.)
 - **O primeiro parágrafo fica sempre à vista**, e por cima da sua última linha há
   um véu de 40px que vai do transparente ao neve (o fundo da secção). Desaparece
   a abrir e volta a fechar, com a mesma animação.
@@ -3894,3 +3916,82 @@ Ramo `rui/video-e-slogan`, aprovado pelo Rui em local e publicado a 17/10.
 
 **O que isto torna velho:** o subtítulo do hero e a descrição da página
 inicial em 7.27, e o título do hero em 7.1, ponto 2, e em 7.3.
+
+### 7.29 O menu de telemóvel até 1023px (18/10/2026)
+
+Ramo `rui/menu-tablet`, só o `Header.js`. Aprovado pelo Rui em local e junto
+ao `main`. **Não publicado.**
+
+#### O problema, medido no build
+
+Visto ao testar a versão 3:2 do vídeo a 768px, e já estava assim no site
+publicado. O menu de cima aparecia a partir de 768px (`md`), e a 15px, com
+40px entre itens, não cabia:
+
+| Largura | Português | Inglês |
+|---|---|---|
+| 768px | "EXEMPLOS DE SERVIÇOS" em 3 linhas, logótipo colado ao HOME, bandeira 36px para lá da margem (a 4px da borda) | "SERVICE EXAMPLES" em 2 linhas, logótipo colado ao HOME |
+| 900px | 2 linhas, logótipo colado ao HOME | cabe, com 22px entre o logótipo e o HOME |
+| 1023px | cabe, com 89px | cabe, com 145px |
+
+O menu inteiro pede 713px em português e 656px em inglês. Para caber com
+folga, o ecrã precisa de cerca de 975px (PT) e 920px (EN).
+
+**As duas saídas mostradas ao Rui**, com maquetas: A, o menu de telemóvel até
+1023px; B, um menu de cima mais pequeno entre 768 e 1023px (12px, 0.15em, 20px
+entre itens, logótipo a 18px), que a 768px cabia com 44px de folga em
+português. **O Rui escolheu a A**: nenhuma letra fica mais pequena, um item novo
+não o parte outra vez nessa faixa, e num tablet, que se usa com o dedo, é o
+normal.
+
+#### O que mudou
+
+- **`md:` passou a `lg:`** no menu de cima, no botão das três riscas e na
+  camada do menu de telemóvel. A partir de 1024px fica tudo como estava (42px
+  entre o logótipo e o HOME em português, 98px em inglês).
+- **O menu fecha-se sozinho quando o ecrã chega aos 1024px** (um `matchMedia`
+  no `Header.js`). Sem isso, um tablet ao alto com o menu aberto, ao rodar,
+  ficava com o ecrã todo branco e a página sem scroll: o cabeçalho continuava
+  com `bg-white h-screen` e o `body` com `overflow: hidden`, mas a camada do
+  menu já estava escondida. Visto no build (820px para 1180px). Já acontecia
+  antes num telemóvel deitado acima dos 768px.
+- **Em ecrãs até 500px de altura** (um telemóvel deitado), a lista do menu
+  aberto centra-se abaixo da faixa do logótipo (`pt-20`, a altura do
+  cabeçalho) e os itens ficam a 12px (`gap-3`) em vez de 40. Pedido do Rui
+  depois de lhe ser mostrado: com 40px a lista pede 416px de altura, e a
+  844×390 o HOME saía cortado em cima, atrás do logótipo, e a bandeira em
+  baixo. Nos telemóveis mais pequenos deitados (667×375, 740×360) isso já
+  acontecia no site publicado. As classes são variantes escritas à mão,
+  `[@media(max-height:500px)]:`, porque o Tailwind não tem uma para a altura.
+
+#### Verificado
+
+- `CI=true npm run build` com `Compiled successfully.`, e as duas regras de
+  altura no CSS gerado. Teste de contraste: 18 de 18.
+- De 768 a 1023px, em PT e EN: o botão das três riscas, nenhum menu de cima, e
+  o menu aberto com os cinco itens centrados ao píxel, cada um numa linha (o
+  maior, "EXEMPLOS DE SERVIÇOS", com 389px). Fechado, o scroll volta.
+- Telemóvel deitado, com o menu aberto (o HOME abaixo do logótipo e a bandeira
+  dentro do ecrã): 932×430 (HOME a 117px, bandeira até 393), 844×390 (97 e
+  373), 740×360 (82 e 358) e 667×375 (90 e 366). **Limite conhecido:** a
+  568×320 (iPhone de 2012 a 2016) os textos veem-se todos e só a bandeira fica
+  8px cortada em baixo.
+- Sem mudança no telemóvel ao alto (390×844) e no tablet ao alto (768×1024):
+  40px entre itens e a lista na mesma posição.
+- O fecho ao rodar testou-se com o remendo de 7.4 (o painel escondido não avisa
+  a página de que a largura mudou): com o aviso, o menu fecha, o cabeçalho
+  volta aos 80px e o scroll fica livre. **Ver num browser verdadeiro, depois de
+  publicar.**
+- Auditoria de contraste de 7.5 sem falhas a 768 (PT), 1023 (EN) e 1280px, com
+  o menu fechado e aberto, e a 844×390 com o menu aberto. Sem scroll para o
+  lado em nenhuma.
+
+#### Visto, e não mexido
+
+Enquanto o visitante não responde ao aviso de cookies, o aviso fica desenhado
+por cima do menu de telemóvel aberto. Num telemóvel deitado tapa quase todos os
+itens. Já era assim no site publicado; ficou para uma sessão à parte, a pedido
+do Rui.
+
+**O que isto torna velho:** o que 7.15 e 7.24 dizem do corte do menu de
+telemóvel nos 768px (já anotado lá).
