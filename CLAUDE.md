@@ -4079,3 +4079,42 @@ como janela pelos leitores de ecrã. **O Rui escolheu a 1.**
   cinco que faltam são os do aviso.
 - O fecho do menu aos 1024px não se testou aqui (o painel escondido não avisa
   a página de que a largura mudou); passa pelo mesmo caminho que o X.
+
+### 7.31 O aviso de cookies mais baixo no tablet (18/10/2026)
+
+Ramo `rui/aviso-cookies-tablet`, feito a partir do `main` no `3dd00b5`. Só o
+`CookieBanner.js`. Aprovado pelo Rui no painel. **Por publicar.**
+
+**O problema:** entre 768 e 1023px os dois botões ficavam ao lado do texto,
+lado a lado, e levavam cerca de 316px da largura. O texto ficava numa coluna de
+260 a 440px, em 4 a 7 linhas, e o aviso chegava aos 296px de altura a 768px (a
+786×801, 40% do ecrã em português). Abaixo de 768px já estava bem: texto com a
+largura toda e botões por baixo.
+
+**O que o Rui pediu primeiro, e porque não ficou:** texto com a largura toda e
+botões por baixo até 1023px. Medido no build, só baixava o aviso até cerca de
+820px em português (e logo a 786px subia em inglês, de 222 para 238px). Acima
+disso a fila dos botões pesava mais do que as linhas de texto poupadas, e a
+964px o aviso subia de 197 para 238px. Mostrado ao Rui com as medidas, ele
+escolheu a alternativa.
+
+**O que mudou:** entre 768 e 1023px (`md:flex-col lg:flex-row` na caixa dos
+botões) os botões continuam ao lado do texto, mas um por cima do outro. A
+coluna deles passa a 168px em português e 139px em inglês. Altura do cartão do
+aviso, antes e depois:
+
+| Largura | Português | Inglês |
+|---|---|---|
+| 768px | 296 → 223 | 247 → 198 |
+| 786px | 272 → 223 | 222 → 198 |
+| 880px | 222 → 198 | 197 → 173 |
+| 964px | 197 → 173 | 197 → 173 |
+| 1023px | 197 → 173 | 197 → 173 |
+
+**Verificado:** `CI=true npm run build` com `Compiled successfully.` e teste de
+contraste 18 de 18. Abaixo de 768px e a partir de 1024px nada mudou: a 360,
+640, 767, 1024, 1280 e 1920px, em PT e EN, as duas versões comparadas na mesma
+página dão as mesmas posições e medidas, ao centésimo de píxel. (Comparar
+medidas tiradas em cargas diferentes dava diferenças de 1px, que são da escala
+do painel, 7.4.) Auditoria de contraste de 7.5 a 786 e 964px, PT e EN: zero
+falhas, sem scroll para o lado.
