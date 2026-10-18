@@ -406,9 +406,9 @@ Sabemos que gerir agendamentos, orçamentos, stock de peças e comunicação com
 • 📦 Controlo de stock em tempo real
 • 📲 Notificações automáticas aos clientes por SMS/email
 
-Gostaríamos de agendar uma conversa de 10 minutos para mostrar como estas ferramentas podem poupar horas por dia na {company}.
+Gostaríamos de agendar uma avaliação gratuita e sem compromisso para mostrar como estas ferramentas podem poupar horas por dia na {company}.
 
-Está disponível para uma breve chamada esta semana?
+Está disponível para começarmos esta semana?
 
 Com os melhores cumprimentos,
 Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
@@ -454,7 +454,7 @@ Algumas soluções que desenvolvemos para o setor:
 
 O objetivo é simples: que a {company} apareça melhor online e converta mais contactos em vendas.
 
-Tem 10 minutos para uma conversa sem compromisso?
+Tem interesse numa avaliação gratuita e sem compromisso?
 
 Com os melhores cumprimentos,
 Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
@@ -521,7 +521,7 @@ O que habitualmente automatizamos:
 
 O resultado: menos tempo em tarefas administrativas e mais tempo para o que realmente importa.
 
-Estaria disponível para uma chamada de 15 minutos para ver se faz sentido para a {company}?
+Estaria disponível para uma avaliação gratuita e sem compromisso, para ver se faz sentido para a {company}?
 
 Com os melhores cumprimentos,
 Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
@@ -584,7 +584,7 @@ Sabemos que neste setor, cada minuto e cada quilómetro contam. As nossas soluç
 
 O objetivo é reduzir custos operacionais e aumentar a satisfação dos clientes finais.
 
-Gostaria de agendar uma conversa de 15 minutos para perceber se podemos ajudar?
+Gostaria de agendar uma avaliação gratuita e sem compromisso, para perceber se podemos ajudar?
 
 Com os melhores cumprimentos,
 Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
@@ -618,9 +618,9 @@ Esperamos que esteja a ter uma excelente semana.
 
 Somos a NEXUGAL, uma consultoria tecnológica sediada em Braga especializada em apoiar empresas a automatizarem processos manuais, desenvolverem plataformas web de alta performance e aumentarem a sua eficiência operacional.
 
-Gostaríamos de agendar uma breve conversa sem compromisso de 10 minutos para analisar como podemos ajudar a {company} a poupar tempo e escalar os seus resultados através da tecnologia.
+Gostaríamos de agendar uma avaliação gratuita e sem compromisso para analisar como podemos ajudar a {company} a poupar tempo e escalar os seus resultados através da tecnologia.
 
-Pode responder a este e-mail ou agendar uma chamada connosco em https://www.nexugal.com.
+Pode responder a este e-mail ou agendar a avaliação connosco em https://www.nexugal.com.
 
 Com os melhores cumprimentos,
 Equipa NEXUGAL | nexugal.geral@gmail.com | https://www.nexugal.com""",
@@ -1367,9 +1367,9 @@ Esperamos que esteja a ter uma excelente semana.
 
 Somos a NEXUGAL, uma consultoria tecnológica sediada em Braga especializada em apoiar empresas do setor de {category} a automatizarem processos manuais, desenvolverem plataformas web de alta performance e aumentarem a sua eficiência operacional.
 
-Gostaríamos de agendar uma breve conversa sem compromisso de 10 minutos para analisar como podemos ajudar a {company} a poupar tempo e escalar os seus resultados através da tecnologia.
+Gostaríamos de agendar uma avaliação gratuita e sem compromisso para analisar como podemos ajudar a {company} a poupar tempo e escalar os seus resultados através da tecnologia.
 
-Pode responder a este e-mail ou agendar uma chamada connosco em https://www.nexugal.com.
+Pode responder a este e-mail ou agendar a avaliação connosco em https://www.nexugal.com.
 
 Com os melhores cumprimentos,
 
