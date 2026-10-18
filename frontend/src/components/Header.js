@@ -28,6 +28,18 @@ function Header() {
     };
   }, [isMenuOpen]);
 
+  // Fecha o menu mobile se o ecrã chegar aos 1024px com ele aberto (um tablet
+  // que roda para o lado). Sem isto, o cabeçalho ficava a tapar a página toda,
+  // em branco, com o scroll travado.
+  useEffect(() => {
+    const ecraLargo = window.matchMedia('(min-width: 1024px)');
+    const fechar = (e) => {
+      if (e.matches) setIsMenuOpen(false);
+    };
+    ecraLargo.addEventListener('change', fechar);
+    return () => ecraLargo.removeEventListener('change', fechar);
+  }, []);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -58,8 +70,10 @@ function Header() {
             NEXUGAL
           </a>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-10" aria-label="Navegação principal">
+          {/* Desktop Navigation. Só a partir de 1024px (lg): abaixo disso
+              o menu inteiro, a 15px, não cabe ao lado do logótipo (pede
+              cerca de 975px em português) e passa ao menu de telemóvel. */}
+          <nav className="hidden lg:flex items-center gap-10" aria-label="Navegação principal">
             <a
               href="#home"
               className="text-texto text-sm tracking-[0.15em] hover:text-azul-profundo transition-all duration-300 relative group"
@@ -115,7 +129,7 @@ function Header() {
           {/* Mobile Hamburger Button */}
           <button
             onClick={toggleMenu}
-            className="md:hidden flex flex-col justify-center items-center w-10 h-10 gap-[6px] group z-50 relative"
+            className="lg:hidden flex flex-col justify-center items-center w-10 h-10 gap-[6px] group z-50 relative"
             aria-label="Menu"
           >
             <span
@@ -137,15 +151,19 @@ function Header() {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Overlay. Em ecrãs baixos (até 500px de altura, um
+          telemóvel deitado) a lista não cabe com 40px entre itens: o HOME
+          ficava cortado em cima e a bandeira em baixo. Aí a lista centra-se
+          abaixo da faixa do logótipo (pt-20, a altura do cabeçalho) e os
+          itens ficam a 12px. */}
       <div
-        className={`md:hidden fixed inset-0 w-screen h-screen bg-white z-40 transition-all duration-300 flex flex-col justify-center items-center ${
+        className={`lg:hidden fixed inset-0 w-screen h-screen bg-white z-40 transition-all duration-300 flex flex-col justify-center items-center [@media(max-height:500px)]:pt-20 ${
           isMenuOpen
             ? 'opacity-100 pointer-events-auto'
             : 'opacity-0 pointer-events-none'
         }`}
       >
-        <nav className="flex flex-col items-center justify-center gap-10">
+        <nav className="flex flex-col items-center justify-center gap-10 [@media(max-height:500px)]:gap-3">
           <a
             href="#home"
             onClick={() => setIsMenuOpen(false)}
