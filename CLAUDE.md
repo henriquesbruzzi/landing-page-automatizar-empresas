@@ -50,6 +50,8 @@ está na secção 7.
   `usePrefersReducedMotion`, `useAncoraAoChegar` (quem chega com `/#sobre` cai
   na secção, 7.18), `useRevealOnScroll` (sem uso, ver 7.4)
 - `src/utils/`: `avisoCookies.js` (liga o aviso de cookies ao botão flutuante),
+  `menuTelemovel.js` (diz ao aviso de cookies que saia do ecrã enquanto o menu
+  de telemóvel está aberto; desde 18/10, 7.30),
   `entrada.js` (a entrada animada que o hero usava; sem uso desde 21/09, 7.11),
   `destaques.js` (o texto entre `[ ]` a azul e a negrito, e o mesmo texto sem as
   marcas para o Google; desde 03/10, 7.24), `contraste.test.js` (teste de
@@ -1744,6 +1746,12 @@ Não apagar sem o Rui decidir.
   no ecrã sempre que ainda não há resposta guardada. Se o aviso deixar de
   anunciar que saiu, o botão fica escondido nessa visita, sem erro nenhum à
   vista.
+- **O menu de telemóvel tem de continuar a anunciar-se** (`anunciarMenu`, de
+  `utils/menuTelemovel.js`, chamado no `Header.js`). É assim que o aviso de
+  cookies sabe que tem de sair do ecrã com o menu aberto (7.30). Se o menu
+  deixar de anunciar, o aviso volta a ficar por cima dele e a apanhar os
+  toques, sem erro nenhum à vista. **Ao esconder o aviso, não mexer no
+  `visible`:** é ele que diz ao botão flutuante se o aviso está por responder.
 - **Cores escritas à mão fora dos tokens:** `#4FA3DC` e `#1B5AA8` nas setas e
   pontas do `EsquemaIntegracoes.js`; cinzentos (`#E3EAF3`, `#C9D6E6`, `#8FA0B8`,
   `#D5E0EC`, `#E8EEF6`, `#EFF4F9`) e o `#DCE5EF` (o mesmo valor do token
@@ -3991,7 +3999,83 @@ normal.
 Enquanto o visitante não responde ao aviso de cookies, o aviso fica desenhado
 por cima do menu de telemóvel aberto. Num telemóvel deitado tapa quase todos os
 itens. Já era assim no site publicado; ficou para uma sessão à parte, a pedido
-do Rui.
+do Rui. **Resolvido a 18/10 (7.30).**
 
 **O que isto torna velho:** o que 7.15 e 7.24 dizem do corte do menu de
 telemóvel nos 768px (já anotado lá).
+
+### 7.30 O aviso de cookies sai do ecrã com o menu de telemóvel aberto (18/10/2026)
+
+Ramo `rui/menu-e-aviso-cookies`, feito a partir do `main` no `7ceb182` (já com
+o 7.29). Aprovado pelo Rui em local. **Por juntar e por publicar.**
+
+#### O problema, medido no build
+
+O aviso de cookies está numa camada acima de tudo (`z-[9999]`), e o cabeçalho,
+com o menu de telemóvel dentro, em `z-50`. Enquanto o visitante não responde
+ao aviso, ele ficava desenhado por cima do menu aberto. **Os itens tapados não
+respondiam ao toque**: o toque ia para o aviso, incluindo a margem
+transparente de 16px à volta do cartão.
+
+Itens tapados (de seis: HOME, EXEMPLOS, SOBRE, FAQ, CONTACTO e a bandeira),
+medido com o 7.29 já lá:
+
+| Ecrã | Português | Inglês |
+|---|---|---|
+| 320×568 | 5 | 5 |
+| 360×800 | 3 | 2 |
+| 375×667 | 4 | 3 |
+| 390×844 | 2 | 2 |
+| 414×896 | 1 (a bandeira) | 1 |
+| 768×1024 | 1 (a bandeira, 42%) | 0 |
+| 1023×768 | 1 (a bandeira) | 1 |
+| 568×320 | 6, e também o X de fechar o menu | 6, e o X |
+| 667×375 | 5 | 5 |
+| 844×390 | 6 | 5 |
+| 932×430 | 5 | 4 |
+
+No site publicado (menu de telemóvel só até 767px) acontecia igual ao alto e
+nos telemóveis deitados mais pequenos; com o 7.29 passou a acontecer também
+a 844 e 932 deitados.
+
+**As duas saídas mostradas ao Rui:** 1, o aviso sai do ecrã enquanto o menu
+está aberto e volta igual quando ele fecha; 2, o menu passa por cima do aviso.
+Vistas de fora são iguais. A 2 era mudar a camada do cabeçalho, mas o
+`transition-all` dele anima também a camada (vista a meio da entrada em 836,
+abaixo dos 9999 do aviso), e o aviso ficava por cima durante quase toda a
+entrada do menu; e continuava lá atrás, alcançável com o Tab e anunciado
+como janela pelos leitores de ecrã. **O Rui escolheu a 1.**
+
+#### O que mudou
+
+- **`utils/menuTelemovel.js`** (novo): o evento `nexugal:menu-telemovel` e a
+  função `anunciarMenu`, pelo mesmo molde do `avisoCookies.js`.
+- **`Header.js`**: o efeito que já trava o scroll com o menu aberto anuncia
+  também se o menu abriu ou fechou (e que fechou, ao sair da página).
+- **`CookieBanner.js`**: ouve o evento e, com o menu aberto, não se desenha.
+  Volta igual quando o menu fecha, por qualquer caminho (o X, um item, a
+  bandeira, ou o ecrã a chegar aos 1024px). **O `visible` não muda**: a
+  pergunta continua por responder, e o aviso não diz nada ao botão flutuante,
+  que continua escondido (armadilha em 7.4).
+
+#### Verificado
+
+- `CI=true npm run build` com `Compiled successfully.` Teste de contraste: 18
+  de 18. (Numa pasta de trabalho dentro de `.claude`, o
+  `npm test -- contraste` não encontra o teste, por o caminho ter uma pasta
+  com ponto; aí corre-se com
+  `npx react-scripts test --testMatch '<rootDir>/src/utils/contraste.test.js'`.)
+- Em 320×568, 375×667, 568×320 e 844×390 (PT e EN), 390×844, 667×375 e
+  768×1024 (PT), 932×430 e 1023×768 (EN): com o menu aberto o aviso não está
+  na página, os seis itens e o X respondem ao toque, e ao fechar o aviso
+  volta. Zero anúncios do aviso durante isso. A 360×800, em PT e EN, o mesmo
+  na auditoria de baixo. A 568×320 a bandeira continua 8px cortada em baixo (o limite
+  conhecido do 7.29).
+- A bandeira do menu leva a `/us` com o aviso de volta; o FAQ do menu e voltar
+  atrás, o mesmo, com o scroll livre.
+- Auditoria de contraste de 7.5 a 360px (menu fechado, com o aviso, e aberto)
+  e a 1280px, em PT e EN: zero falhas, sem scroll para o lado, nenhum erro na
+  consola. A 360px a página tem 151 textos com o menu fechado e 146 aberto: os
+  cinco que faltam são os do aviso.
+- O fecho do menu aos 1024px não se testou aqui (o painel escondido não avisa
+  a página de que a largura mudou); passa pelo mesmo caminho que o X.

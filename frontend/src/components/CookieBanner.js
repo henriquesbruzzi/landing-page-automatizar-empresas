@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { CHAVE_CONSENTIMENTO, anunciarAviso, consentimentoDado } from '../utils/avisoCookies';
+import { EVENTO_MENU } from '../utils/menuTelemovel';
 
 function CookieBanner() {
   const { lang, t } = useLanguage();
@@ -18,6 +19,19 @@ function CookieBanner() {
     return () => anunciarAviso(false);
   }, [visible]);
 
+  // Com o menu de telemóvel aberto, o aviso sai do ecrã e volta quando ele
+  // fecha. Por cima do menu tapava os itens e apanhava os toques (num
+  // telemóvel deitado, os seis, e a 568x320 também o X de fechar). O
+  // `visible` não mexe: a pergunta continua por responder, e o botão
+  // flutuante continua a contar com o aviso.
+  const [menuAberto, setMenuAberto] = useState(false);
+
+  useEffect(() => {
+    const ouvir = (evento) => setMenuAberto(!!evento.detail);
+    window.addEventListener(EVENTO_MENU, ouvir);
+    return () => window.removeEventListener(EVENTO_MENU, ouvir);
+  }, []);
+
   const accept = (type) => {
     try {
       localStorage.setItem(CHAVE_CONSENTIMENTO, type);
@@ -28,7 +42,7 @@ function CookieBanner() {
     setVisible(false);
   };
 
-  if (!visible) return null;
+  if (!visible || menuAberto) return null;
 
   const privacyHref = lang === 'pt' ? '/privacidade' : '/us/privacy';
 

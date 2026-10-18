@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
+import { anunciarMenu } from '../utils/menuTelemovel';
 
 function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,15 +17,18 @@ function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Trava o scroll do body enquanto o menu mobile está aberto
+  // Trava o scroll do body enquanto o menu mobile está aberto, e diz ao aviso
+  // de cookies que saia do ecrã até o menu fechar
   useEffect(() => {
     if (isMenuOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
     }
+    anunciarMenu(isMenuOpen);
     return () => {
       document.body.style.overflow = '';
+      anunciarMenu(false);
     };
   }, [isMenuOpen]);
 
