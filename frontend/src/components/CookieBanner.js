@@ -87,8 +87,14 @@ function CookieBanner() {
             </div>
           </div>
 
-          {/* Botões */}
-          <div className="flex flex-col sm:flex-row gap-3 shrink-0">
+          {/* Botões. Entre 768 e 1023px (md a lg) ficam ao lado do texto, um
+              por cima do outro: lado a lado, a coluna deles levava ~316px e o
+              texto ficava com 260 a 440px, em 4 a 7 linhas (o aviso chegava
+              aos 296px de altura a 768px). Empilhados levam ~168px, e o aviso
+              fica entre 173 e 223px. Pô-los por baixo do texto, como abaixo de
+              768px, só baixava o aviso até cerca de 820px: acima disso a fila
+              dos botões pesava mais do que as linhas poupadas. */}
+          <div className="flex flex-col sm:flex-row md:flex-col lg:flex-row gap-3 shrink-0">
             <button
               onClick={() => accept('essential')}
               className="text-xs tracking-[0.1em] px-5 py-3 rounded-full border border-linha text-texto hover:border-azul-medio hover:text-azul-profundo transition-all duration-300"
