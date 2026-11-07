@@ -127,8 +127,8 @@ const ALT_IMAGEM = {
 // WhatsApp e as redes guardam a antiga pelo endereço. A portuguesa está também
 // escrita à mão no public/index.html.
 const IMAGEM = {
-  pt: `${BASE_URL}/images/nexugal-partilha-3-pt.png`,
-  en: `${BASE_URL}/images/nexugal-partilha-3-en.png`,
+  pt: `${BASE_URL}/images/nexugal-partilha-4-pt.jpg`,
+  en: `${BASE_URL}/images/nexugal-partilha-4-en.jpg`,
 };
 
 /**

@@ -4278,3 +4278,43 @@ cada largura (474 × 316 e 240 × 427), o "Ler mais", a FAQ e o formulário.
 **Por fazer, do lado do Rui:** pedir ao LinkedIn (Post Inspector) e ao
 Facebook (Sharing Debugger) que leiam outra vez `/` e `/us`, e ao Google
 (Search Console, Inspeção de URL) que indexe outra vez a página inicial.
+
+### 7.33 A imagem de partilha nítida, a 2400 × 1260 (08/11/2026)
+
+Ramo `rui/imagem-partilha-nitida`. **Por juntar e por publicar:** o Rui vê a
+imagem primeiro.
+
+**O que o Rui viu:** no Post Inspector do LinkedIn a imagem de `/us` saía toda
+desfocada, e a imagem de base (a "opção B", `nexugal-partilha-B-so-N.png`, na
+pasta `Nexugal/site` dele) também não tinha boa resolução: os círculos tinham a
+borda desfocada e o logótipo e o nome eram imagem reduzida.
+
+**O que se fez:** as imagens foram refeitas de raiz, ao dobro do tamanho, num
+canvas do Chrome (puppeteer-core, fora do repositório):
+
+- `images/nexugal-partilha-4-pt.jpg` e `-4-en.jpg`, **2400 × 1260**, JPEG de
+  qualidade 92 (132 KB e 121 KB). As `-3` em PNG saíram (nome novo, regra de
+  7.4). JPEG para ficar bem abaixo dos 300 KB que se diz que o WhatsApp aceita
+  (em PNG, a este tamanho, eram 750 KB).
+- O N vem do `Nexugal/nexugal-N-transparente.png` do Rui (1001 × 983), reduzido
+  para 358 px de altura; o nome "NEXUGAL" desenhado em Arial Bold, como no
+  desenho dele; o slogan em Space Grotesk 700; os círculos desenhados com
+  borda nítida, no mesmo sítio e com o mesmo degradê (#128DD3 a #122D59).
+- O mesmo arranjo da `-3`, ao dobro: o logótipo, o nome e o slogan dentro do
+  quadrado central que o WhatsApp corta; o círculo de cima entra nesse quadrado
+  50 px, como antes.
+- `public/index.html`: `og:image:type` passou a `image/jpeg` e as medidas a
+  2400 × 1260; `SEO.js`: a constante `IMAGEM`.
+
+**O WhatsApp sem pré-visualização** (o Rui mandou `/?v=3` e `/us?v=3` pelo
+WhatsApp no computador, e saiu só "www.nexugal.com", sem imagem nem título):
+pedida como WhatsApp, como Facebook e como LinkedIn, a página responde 200 com
+as etiquetas certas, o `og:image` a 1,5 KB do início do ficheiro, e a imagem
+responde `image/png`. Do lado do site não se encontrou nada. Por confirmar no
+telemóvel, esperando que o cartão apareça antes de enviar.
+
+**O DNS do nexugal.com está na Vercel** (`ns1.vercel-dns.com`), e não há nenhum
+registo `google-site-verification`: a propriedade no Search Console, se existe,
+não está verificada pelo domínio. Para a verificar é preciso o código que o
+Google dá: ou um registo TXT (com `npx vercel dns add`, na conta deste
+computador) ou uma etiqueta no `public/index.html`.
