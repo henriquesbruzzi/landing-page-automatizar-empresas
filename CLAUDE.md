@@ -382,6 +382,15 @@ comandos vão um por linha. Ver 7.5.
     `https://nexusgal-laddingpage-1vp2bzi59-nexugal.vercel.app`). Para voltar
     a ela, na pasta principal:
     `npx vercel rollback dpl_8NY2noNxGAQgXPaWcF1AsBoiCDLh --yes`.
+  - **A 08/11/2026 o Claude publicou o `main` com o PR #20** (o merge
+    `2dd55e9`: a imagem de partilha nítida, 7.33), com `npx vercel --prod
+    --yes`, autorizado pelo Rui: deployment `dpl_7mAF5LCJkcDXcCuyAGjSwPEPKm6S`,
+    em `https://nexusgal-laddingpage-fo87n5w4l-nexugal.vercel.app`. O site
+    serve o `main.4e7168e6.js`. **Passou à primeira** (confirmado com
+    `npx vercel inspect`: `target production` e o www.nexugal.com e o
+    nexugal.com nos `Aliases`). A publicação anterior era a
+    `dpl_AZXiTgdqu3rfgK4i1KuwuyZPU68K` (a de 07/11). Para voltar a ela, na
+    pasta principal: `npx vercel rollback dpl_AZXiTgdqu3rfgK4i1KuwuyZPU68K --yes`.
   - **Voltar atrás (rollback): o que é preciso saber**, segundo a documentação da
     Vercel, lida a 06/10:
     - no plano Hobby só se pode voltar à publicação de produção imediatamente
@@ -4281,8 +4290,15 @@ Facebook (Sharing Debugger) que leiam outra vez `/` e `/us`, e ao Google
 
 ### 7.33 A imagem de partilha nítida, a 2400 × 1260 (08/11/2026)
 
-Ramo `rui/imagem-partilha-nitida`. **Por juntar e por publicar:** o Rui vê a
-imagem primeiro.
+Ramo `rui/imagem-partilha-nitida`, PR #20, aprovado pelo Rui, junto ao `main`
+no `2dd55e9` e **publicado a 08/11/2026** (secção 6).
+
+**Verificado no site, depois de publicar:** `/`, `/us`, `/faq` e `/us/faq`
+apontam para a imagem `-4` da sua língua, com `image/jpeg` e 2400 × 1260; as
+duas imagens respondem `image/jpeg` e são iguais byte a byte às do
+repositório; o `/contacto` continua com o `#root` vazio; o `/us` abre sem
+erros na consola. O endereço da imagem `-3` antiga devolve agora a página
+(HTML), não uma imagem.
 
 **O que o Rui viu:** no Post Inspector do LinkedIn a imagem de `/us` saía toda
 desfocada, e a imagem de base (a "opção B", `nexugal-partilha-B-so-N.png`, na
