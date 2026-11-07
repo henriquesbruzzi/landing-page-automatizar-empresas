@@ -56,7 +56,10 @@ const textoHtml = (texto) => String(texto).replace(/&/g, '&amp;').replace(/</g, 
 function trocar(html, procura, novo, nome) {
   const encontrados = html.match(new RegExp(procura.source, 'g')) || [];
   if (encontrados.length !== 1) falhar(`esperava 1 "${nome}" no index.html e há ${encontrados.length}`);
-  return html.replace(procura, novo);
+  // Com uma função, o texto entra tal e qual. Com uma frase, o replace lia
+  // os $ como instruções: um "US$10" ou um "$'" num texto colava pedaços do
+  // ficheiro no meio da página, sem erro nenhum.
+  return html.replace(procura, () => novo);
 }
 
 function meta(html, tipo, nome, valor) {

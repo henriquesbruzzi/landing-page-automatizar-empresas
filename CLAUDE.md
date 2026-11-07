@@ -4239,6 +4239,16 @@ JavaScript, viam a página vazia, e o `/us` com as etiquetas em português.
   aviso, o vídeo (3:2, volume a 25%), o "Ler mais", a FAQ e o formulário
   respondem, e a consola fica vazia. O `npm start` continua igual.
 
+**Revisão antes de publicar (07/11):** uma revisão independente do código não
+encontrou nada que impedisse publicar, e apanhou um defeito no script: o
+`replace` lia os `$` do texto como instruções. Já estava a acontecer: o
+`priceRange` "$$" do JSON-LD saía "$". O texto entra agora tal e qual
+(`() => novo`). Ficaram anotadas, sem mexer: o título do hero no HTML só está
+na cópia invisível (`aria-hidden`), porque o visível se escreve letra a letra
+e começa vazio; acima dos 640px o browser pede primeiro a capa vertical do
+vídeo, antes de passar à 3:2; e um `.env` na pasta `frontend` passaria a valer
+para o site e não para o script.
+
 **Depois de publicar:** `curl -s https://www.nexugal.com/us | grep og:locale`
 tem de dar `en_US`; o `/contacto` tem de vir com o `#root` vazio. Para as
 pré-visualizações: o Post Inspector do LinkedIn e o Sharing Debugger do
