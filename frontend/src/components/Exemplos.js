@@ -1,4 +1,5 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
+import { useAntesDePintar } from '../utils/antesDePintar';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
@@ -60,7 +61,7 @@ function useTamanhoDoVideo({
 }) {
   const [tamanho, setTamanho] = useState(null);
 
-  useLayoutEffect(() => {
+  useAntesDePintar(() => {
     const pecas = [cabecalhoRef, textoRef, indiceRef, celulaRef, blocosRef].map((r) => r.current);
     if (!ativo || pecas.some((p) => !p)) return undefined;
     const [cabecalho, texto, indice, celula, blocos] = pecas;

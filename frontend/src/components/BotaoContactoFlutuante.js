@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 import { EVENTO_AVISO, consentimentoDado } from '../utils/avisoCookies';
+import { useAntesDePintar } from '../utils/antesDePintar';
 
 /**
  * Botão de contacto que acompanha o scroll.
@@ -71,7 +72,13 @@ function BotaoContactoFlutuante() {
   const finalNoEcra = useEstaNoEcra(ID_SECCAO_FINAL, '0px 0px -25% 0px', false);
 
   // Enquanto não houver resposta ao aviso, conta-se com ele no ecrã
-  const [avisoNoEcra, setAvisoNoEcra] = useState(() => !consentimentoDado());
+  // (true no primeiro desenho, que tem de ser igual ao HTML já desenhado da
+  // página inicial; acerta antes de o browser pintar)
+  const [avisoNoEcra, setAvisoNoEcra] = useState(true);
+
+  useAntesDePintar(() => {
+    setAvisoNoEcra(!consentimentoDado());
+  }, []);
 
   useEffect(() => {
     const ouvir = (evento) => setAvisoNoEcra(!!evento.detail);

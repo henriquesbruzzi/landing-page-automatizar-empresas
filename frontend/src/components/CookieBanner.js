@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useAntesDePintar } from '../utils/antesDePintar';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import { CHAVE_CONSENTIMENTO, anunciarAviso, consentimentoDado } from '../utils/avisoCookies';
@@ -11,10 +12,20 @@ function CookieBanner() {
   // 21/09/2026 esperava 1,2 s e entrava a deslizar meio segundo: no telemóvel
   // é o maior bloco do ecrã, e a Google só dava a página por composta (LCP)
   // quando ele acabava de entrar, aos 4,1 s em 4G lenta.
-  const [visible, setVisible] = useState(() => !consentimentoDado());
+  //
+  // Começa em null (ainda não se sabe) e acerta antes de o browser pintar. A
+  // página inicial já vem desenhada no HTML (scripts/pre-renderizar.js), que
+  // não sabe se o visitante já respondeu: por isso o aviso não vai no HTML, e
+  // o primeiro desenho do React tem de ser igual a ele.
+  const [visible, setVisible] = useState(null);
+
+  useAntesDePintar(() => {
+    setVisible(!consentimentoDado());
+  }, []);
 
   // Quem partilha o canto de baixo precisa de saber que este aviso está lá
   useEffect(() => {
+    if (visible === null) return undefined;
     anunciarAviso(visible);
     return () => anunciarAviso(false);
   }, [visible]);

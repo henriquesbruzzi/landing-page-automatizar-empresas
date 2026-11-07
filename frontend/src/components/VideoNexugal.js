@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
+import { useAntesDePintar } from '../utils/antesDePintar';
 import { useLanguage } from '../i18n/LanguageContext';
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
@@ -85,14 +86,14 @@ const VISTA_CURVA = 'cubic-bezier(0.22, 1, 0.36, 1)';
 // Cantos da caixa, nos dois tamanhos (rounded-2xl)
 const RAIO = 16;
 
-// true enquanto a janela corresponder à consulta (uma largura mínima)
+// true enquanto a janela corresponder à consulta (uma largura mínima).
+// Começa em false e acerta antes de o browser pintar: a página inicial já vem
+// desenhada no HTML (scripts/pre-renderizar.js), sem saber a largura do ecrã,
+// e o primeiro desenho do React tem de ser igual a esse HTML.
 function useCorresponde(consulta) {
-  const [corresponde, setCorresponde] = useState(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return false;
-    return window.matchMedia(consulta).matches;
-  });
+  const [corresponde, setCorresponde] = useState(false);
 
-  useEffect(() => {
+  useAntesDePintar(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return undefined;
     const mql = window.matchMedia(consulta);
     const aoMudar = (evento) => setCorresponde(evento.matches);
@@ -287,12 +288,12 @@ export default function VideoNexugal({ tamanho = null, className = '', aoEscolhe
 
   // A versão troca com a largura só na capa. A tocar ou em pausa fica a que
   // está; ao voltar à capa, passa à que a largura pede.
-  useLayoutEffect(() => {
+  useAntesDePintar(() => {
     if (!aTocar && tipoEscolhido !== tipoDoEcra) setTipoEscolhido(tipoDoEcra);
   }, [aTocar, tipoDoEcra, tipoEscolhido]);
 
   // O Exemplos.js arruma a secção conforme a versão
-  useLayoutEffect(() => {
+  useAntesDePintar(() => {
     if (aoEscolherTipo) aoEscolherTipo(tipo);
   }, [tipo, aoEscolherTipo]);
 
@@ -596,7 +597,7 @@ export default function VideoNexugal({ tamanho = null, className = '', aoEscolhe
 
   // A página por trás não desliza. O scrollbar-gutter guarda o lugar da barra
   // de deslocamento, para a página não alargar e o vídeo não saltar de lado.
-  useLayoutEffect(() => {
+  useAntesDePintar(() => {
     if (!grande) return undefined;
     const html = document.documentElement;
     const antes = {
@@ -616,7 +617,7 @@ export default function VideoNexugal({ tamanho = null, className = '', aoEscolhe
 
   // Abrir: a caixa já está no centro do ecrã; começa desenhada no sítio e com
   // o tamanho que tinha na secção e anima até ao lugar novo.
-  useLayoutEffect(() => {
+  useAntesDePintar(() => {
     if (fase !== 'abrindo') return undefined;
     const caixa = caixaRef.current;
     const de = antesDeAbrirRef.current;
@@ -670,7 +671,7 @@ export default function VideoNexugal({ tamanho = null, className = '', aoEscolhe
 
   // Fechar: o caminho inverso, até ao lugar na secção. Só no fim a caixa
   // volta para lá de verdade e aparece a capa, tudo no mesmo frame.
-  useLayoutEffect(() => {
+  useAntesDePintar(() => {
     if (fase !== 'fechando') return undefined;
     const caixa = caixaRef.current;
     const lugar = lugarRef.current;

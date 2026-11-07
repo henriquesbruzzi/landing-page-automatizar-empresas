@@ -204,7 +204,9 @@ function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-texto text-xs tracking-[0.1em]">
+          {/* O ano do HTML já desenhado é o do build; se o visitante vier
+              noutro ano, o React troca-o sem se queixar (suppressHydrationWarning) */}
+          <p className="text-texto text-xs tracking-[0.1em]" suppressHydrationWarning>
             {f.copyright.replace('{year}', new Date().getFullYear())}
           </p>
           <div className="flex items-center gap-6">

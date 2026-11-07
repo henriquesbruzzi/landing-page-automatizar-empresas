@@ -169,7 +169,8 @@ function FAQPage() {
 
         {/* Footer */}
         <footer className="pb-8">
-          <p className="text-center text-texto text-xs tracking-[0.15em]">
+          {/* O ano do HTML já desenhado é o do build (ver o Footer.js) */}
+          <p className="text-center text-texto text-xs tracking-[0.15em]" suppressHydrationWarning>
             © {new Date().getFullYear()} Nexugal
           </p>
         </footer>
