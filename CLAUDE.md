@@ -1525,7 +1525,9 @@ por iniciativa própria; se incomodarem, é decisão do Rui.
   partilha, no lugar de "Codificando o Amanhã". (A descrição mudou a 05/10:
   "Automação de processos para empresas. Tempo para o negócio crescer.
   Contabilidade, apoio ao cliente, stock, faturação e mais, sem trabalho
-  manual.", 7.27. O título e o texto alternativo ficaram.)
+  manual.", 7.27. O título e o texto alternativo ficaram. O texto alternativo
+  mudou a 07/11, com a imagem nova: "Nexugal. A sua empresa em piloto
+  automático.", EN "Nexugal. Your business on autopilot.", 7.32.)
 - **Os seis serviços do JSON-LD ficam** (16/09), mesmo sem cartões na página, e
   o "24/7" também.
 - **Rótulos do stock (16/09):** NO PROGRAMA 19, NA LOJA/ARMAZÉM 12 (EN IN THE
@@ -4206,9 +4208,10 @@ JavaScript, viam a página vazia, e o `/us` com as etiquetas em português.
 - **Imagens de partilha novas**, `images/nexugal-partilha-3-pt.png` e
   `-3-en.png`, 1200 × 630: a anterior (`nexugal-partilha-2.png`, que saiu) com
   o logótipo mais pequeno e o slogan por baixo, em duas linhas, dentro do
-  quadrado central que o WhatsApp corta. O texto alternativo ficou o de
-  sempre ("Menos tarefas repetidas..."), decisão de 7.3: já não descreve a
-  imagem, fica para o Rui decidir.
+  quadrado central que o WhatsApp corta. O texto alternativo passou a dizer
+  o que a imagem mostra, a pedido do Rui: "Nexugal. A sua empresa em piloto
+  automático." (EN "Nexugal. Your business on autopilot."). Era "Menos
+  tarefas repetidas. Mais tempo para o que importa.", de 7.3.
 - **O primeiro desenho do React passou a ser igual ao HTML** (armadilha em
   7.4): o aviso de cookies, o botão flutuante, o vídeo (vertical ou 3:2) e o
   `usePrefersReducedMotion` começam no valor de "não sei" e acertam antes de

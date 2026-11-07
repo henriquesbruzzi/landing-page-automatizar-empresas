@@ -116,8 +116,10 @@ const seoData = {
 // Texto alternativo da imagem de partilha. A versão portuguesa está também
 // escrita à mão no public/index.html (og:image:alt e twitter:image:alt).
 const ALT_IMAGEM = {
-  pt: 'Menos tarefas repetidas. Mais tempo para o que importa.',
-  en: 'Fewer repetitive tasks. More time for what matters.',
+  // Diz o que a imagem mostra: o nome e o slogan (Rui, 07/11/2026). Até aí era
+  // "Menos tarefas repetidas. Mais tempo para o que importa.", de outra imagem.
+  pt: 'Nexugal. A sua empresa em piloto automático.',
+  en: 'Nexugal. Your business on autopilot.',
 };
 
 // Imagem de partilha (og:image, twitter:image): o logótipo e o slogan, uma por
