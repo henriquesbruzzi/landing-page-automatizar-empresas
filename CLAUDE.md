@@ -366,6 +366,22 @@ comandos vão um por linha. Ver 7.5.
     `https://nexusgal-laddingpage-lucc04aw2-nexugal.vercel.app`). Para voltar
     a ela, na pasta principal:
     `npx vercel rollback dpl_H25CkvAiKBas5ekkgkW1qcedgTK3 --yes`.
+  - **A 07/11/2026, cerca das 23h07 (Lisboa), o Claude publicou o `main` com o
+    PR #18** (o merge `6b5b28c`: o HTML já desenhado em `/`, `/us`, `/faq` e
+    `/us/faq`, 7.32), com `npx vercel --prod --yes`, autorizado pelo Rui:
+    deployment `dpl_AZXiTgdqu3rfgK4i1KuwuyZPU68K`, em
+    `https://nexusgal-laddingpage-9brsutxbk-nexugal.vercel.app`. O site serve o
+    `main.30e3441c.js`. **Passou à primeira**, sem o "Error: Not authorized"
+    (confirmado com `npx vercel inspect`: `target production` e o
+    www.nexugal.com e o nexugal.com nos `Aliases`). **Nos registos do build da
+    Vercel aparecem as quatro linhas `pre-renderizar:`**: o script corre no
+    Linux deles. O `npm` de lá avisa que não correu o `postinstall` do esbuild
+    (e de dois pacotes do `core-js`); não faz falta, o esbuild encontra o
+    binário do Linux sem ele. Verificado no site em 7.32. A publicação
+    anterior era a `dpl_8NY2noNxGAQgXPaWcF1AsBoiCDLh` (a de 18/10, em
+    `https://nexusgal-laddingpage-1vp2bzi59-nexugal.vercel.app`). Para voltar
+    a ela, na pasta principal:
+    `npx vercel rollback dpl_8NY2noNxGAQgXPaWcF1AsBoiCDLh --yes`.
   - **Voltar atrás (rollback): o que é preciso saber**, segundo a documentação da
     Vercel, lida a 06/10:
     - no plano Hobby só se pode voltar à publicação de produção imediatamente
@@ -4174,7 +4190,8 @@ falhas, sem scroll para o lado.
 
 ### 7.32 O HTML já desenhado em /, /us, /faq e /us/faq (07/11/2026)
 
-Ramo `rui/html-pre-renderizado`, PR em rascunho. **Não publicado.**
+Ramo `rui/html-pre-renderizado`, PR #18, junto ao `main` no `6b5b28c` e
+**publicado a 07/11/2026** pelo Claude, a pedido do Rui (secção 6).
 
 **O problema:** o HTML que o servidor entregava tinha o `#root` vazio e só a
 palavra "Nexugal". As pré-visualizações de ligações (WhatsApp, LinkedIn,
@@ -4249,7 +4266,15 @@ e começa vazio; acima dos 640px o browser pede primeiro a capa vertical do
 vídeo, antes de passar à 3:2; e um `.env` na pasta `frontend` passaria a valer
 para o site e não para o script.
 
-**Depois de publicar:** `curl -s https://www.nexugal.com/us | grep og:locale`
-tem de dar `en_US`; o `/contacto` tem de vir com o `#root` vazio. Para as
-pré-visualizações: o Post Inspector do LinkedIn e o Sharing Debugger do
-Facebook mandam ler outra vez.
+**Depois de publicar (07/11), verificado no site:** `/`, `/us`, `/faq` e
+`/us/faq` (e `/us/`, `/faq/`) chegam com o `#root` preenchido, o `lang`, o
+`og:locale`, a imagem de partilha e o canonical de cada uma; o `/contacto`, o
+`/us/contact`, a `/privacidade` e o admin chegam com o `#root` vazio, como
+antes; o `/sobre` e o `/us/about` continuam a dar 308; as duas imagens novas
+respondem `image/png`; o `priceRange` sai "$$". No browser, a 1280 e a 375px:
+a página ganha vida sem nada na consola, o vídeo com a capa e o tamanho de
+cada largura (474 × 316 e 240 × 427), o "Ler mais", a FAQ e o formulário.
+
+**Por fazer, do lado do Rui:** pedir ao LinkedIn (Post Inspector) e ao
+Facebook (Sharing Debugger) que leiam outra vez `/` e `/us`, e ao Google
+(Search Console, Inspeção de URL) que indexe outra vez a página inicial.
