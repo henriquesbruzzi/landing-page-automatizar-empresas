@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useAntesDePintar } from '../utils/antesDePintar';
 
 // Gestos com que o visitante mexe na página. Depois do primeiro, a posição é
 // dele, e o acerto do fim do carregamento já não lhe toca.
@@ -17,7 +17,7 @@ const GESTOS = ['wheel', 'touchstart', 'pointerdown', 'keydown'];
  * aí, cortava-lhes a animação a meio.
  */
 export function useAncoraAoChegar() {
-  useLayoutEffect(() => {
+  useAntesDePintar(() => {
     // O split protege de um endereço como /#sobre?fbclid=..., que pode
     // aparecer se o redirecionamento da Vercel juntar a query depois do #
     // (a documentação não diz onde a põe).

@@ -6,10 +6,10 @@
     { "source": "/us/about", "destination": "/us#sobre", "permanent": true }
   ],
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/us", "destination": "/us/index.html" },
+    { "source": "/faq", "destination": "/faq/index.html" },
+    { "source": "/us/faq", "destination": "/us/faq/index.html" },
+    { "source": "/(.*)", "destination": "/app.html" }
   ],
   "headers": [
     {

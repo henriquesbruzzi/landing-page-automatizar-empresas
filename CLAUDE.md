@@ -81,6 +81,10 @@ Rotas: `/`, `/contacto`, `/faq`, `/privacidade`; em inglês `/us`,
 O `/sobre` e o `/us/about` já não são páginas: desde 02/10 levam à secção
 `#sobre` da página inicial (7.18).
 
+**Desde 07/11 (7.32), `/`, `/us`, `/faq` e `/us/faq` chegam já desenhadas no
+HTML**, geradas no fim do `npm run build` por `frontend/scripts/pre-renderizar.js`.
+As outras rotas recebem o `build/app.html`, com o `#root` vazio, como antes.
+
 ### Backend (`backend/`)
 
 FastAPI + Postgres (SQLite em local). Endpoints:
@@ -1219,6 +1223,9 @@ Publicar a partir do `main` faria o site voltar ao fundo preto.
 #### 11. As pré-visualizações por página (WhatsApp, redes sociais, e quem abre sem JavaScript)
 
 **Registado a pedido do Rui a 16/09. Não é para resolver sem ele decidir.**
+**Feito em parte a 07/11, a pedido do Rui (7.32):** `/`, `/us`, `/faq` e
+`/us/faq` já vêm desenhadas e com o cabeçalho certo. Faltam o contacto e a
+política de privacidade.
 
 **O problema:** o servidor devolve o mesmo `index.html` para todos os endereços,
 e só o JavaScript sabe em que página se está. O WhatsApp, o LinkedIn, o Facebook
@@ -1832,6 +1839,21 @@ Não apagar sem o Rui decidir.
   decorativo do topo do cartão saltar para fora e atravessar o ecrã todo;
   resolveu-se com `relative` no cartão (7.11). Depois de tirar um destes, comparar
   capturas antes e depois.
+- **O primeiro desenho do React tem de ser igual ao HTML já desenhado** (7.32).
+  Em `/`, `/us`, `/faq` e `/us/faq` o React aproveita o HTML (`hydrateRoot`), e
+  esse HTML foi feito em Node, sem ecrã, sem `localStorage` e sem preferências.
+  Um `useState` que comece a ler `window`, `localStorage` ou `matchMedia` dá
+  uma página diferente da do HTML, e o React 18 não corrige atributos
+  diferentes: fica a classe ou a imagem errada, sem erro à vista no site
+  publicado. A regra: começar no valor de "não sei" e acertar no
+  `useAntesDePintar` (`utils/antesDePintar.js`), como fazem o aviso de
+  cookies, o vídeo e o `usePrefersReducedMotion`. O mesmo para datas: o ano do
+  rodapé leva `suppressHydrationWarning`. Usar o `useAntesDePintar` em vez do
+  `useLayoutEffect`, que em Node faz aviso. Para testar, o teste de
+  hidratação de 7.32.
+- **Mudar textos obriga a novo build para as páginas desenhadas.** O HTML de
+  `/`, `/us`, `/faq` e `/us/faq` é feito no build, com o `translations.js` desse
+  momento. Publicar com `vercel --prod` faz o build, por isso basta publicar.
 - **Imagens no tamanho em que aparecem.** Até 21/09 o site mandava um ícone de
   623 KB e um N de 464 KB para espaços de 16 a 44 píxeis (7.11). Uma imagem nova
   entra já reduzida: o dobro ou o triplo do tamanho em que aparece chega.
@@ -4147,3 +4169,74 @@ página dão as mesmas posições e medidas, ao centésimo de píxel. (Comparar
 medidas tiradas em cargas diferentes dava diferenças de 1px, que são da escala
 do painel, 7.4.) Auditoria de contraste de 7.5 a 786 e 964px, PT e EN: zero
 falhas, sem scroll para o lado.
+
+### 7.32 O HTML já desenhado em /, /us, /faq e /us/faq (07/11/2026)
+
+Ramo `rui/html-pre-renderizado`, PR em rascunho. **Não publicado.**
+
+**O problema:** o HTML que o servidor entregava tinha o `#root` vazio e só a
+palavra "Nexugal". As pré-visualizações de ligações (WhatsApp, LinkedIn,
+email), alguns motores de pesquisa e as ferramentas de IA, que não correm
+JavaScript, viam a página vazia, e o `/us` com as etiquetas em português.
+
+**Como ficou:**
+
+- **`frontend/scripts/pre-renderizar.js`**, no fim do `npm run build`: o
+  próprio React desenha as páginas em Node (`renderToString`, em
+  `scripts/entrada-servidor.js`, juntado com o `esbuild`) e grava
+  `build/index.html`, `build/us/index.html`, `build/faq/index.html` e
+  `build/us/faq/index.html`. O `index.html` original fica como
+  `build/app.html`, para as outras páginas. Se o modelo mudar e uma etiqueta
+  que o script troca deixar de existir, o build para.
+- **Porquê Node e não um browser (Puppeteer ou Playwright):** um browser no
+  build precisava de um Chrome no build da Vercel, que é Amazon Linux e não
+  traz as bibliotecas dele, e só se provava publicando. Decisão do Rui.
+- **`src/index.js`**: `hydrateRoot` quando o `#root` traz HTML, `createRoot`
+  quando vem vazio. A árvore é a mesma do `entrada-servidor.js`; mudar uma
+  obriga a mudar a outra.
+- **Cabeçalho de cada página**: `lang` do `<html>`, título, descrição, `og:`
+  (título, descrição, url, tipo, locale, imagem), `twitter:card`
+  `summary_large_image`, canonical, `hreflang` e JSON-LD. Saem do
+  `cabecalhoDaPagina` do `SEO.js` e da biblioteca, os mesmos que o browser usa.
+  O aviso `<noscript>` sai destas quatro páginas (deixou de ser verdade).
+- **`vercel.json`**: `/us`, `/faq` e `/us/faq` vão para o seu `index.html`; o
+  resto para o `/app.html`. Visto com o `@vercel/routing-utils`: a Vercel
+  procura primeiro o ficheiro (por isso o `/` serve o `index.html`) e só depois
+  as reescritas. Os redirecionamentos do `/sobre` não mudaram.
+- **Imagens de partilha novas**, `images/nexugal-partilha-3-pt.png` e
+  `-3-en.png`, 1200 × 630: a anterior (`nexugal-partilha-2.png`, que saiu) com
+  o logótipo mais pequeno e o slogan por baixo, em duas linhas, dentro do
+  quadrado central que o WhatsApp corta. O texto alternativo ficou o de
+  sempre ("Menos tarefas repetidas..."), decisão de 7.3: já não descreve a
+  imagem, fica para o Rui decidir.
+- **O primeiro desenho do React passou a ser igual ao HTML** (armadilha em
+  7.4): o aviso de cookies, o botão flutuante, o vídeo (vertical ou 3:2) e o
+  `usePrefersReducedMotion` começam no valor de "não sei" e acertam antes de
+  pintar. Antes de o JavaScript chegar, o aviso de cookies não aparece, e
+  abaixo dos 640px nada muda; acima, a secção dos exemplos mostra a capa
+  vertical durante esse instante (está abaixo da primeira dobra).
+
+**Verificado:**
+
+- `CI=true npm run build` com `Compiled successfully.` e as quatro páginas
+  gravadas; teste de contraste 18 de 18.
+- HTML lido sem correr JavaScript: os 30 textos da página inicial (hero,
+  exemplos, "O nosso percurso" e os passos) e os 14 da FAQ, em PT e EN, e as
+  etiquetas certas em cada uma, sem repetições.
+- **Teste de hidratação**: o HTML gerado, aproveitado no jsdom com o React de
+  desenvolvimento (o que mostra os avisos), nas quatro páginas, a 375, 768 e
+  1280px, com e sem cookies aceites, com e sem menos movimento: 48 casos, zero
+  avisos. Com o HTML estragado de propósito, dá 48 falhas. O script ficou fora
+  do repositório; refaz-se com o esbuild e o jsdom que já estão no
+  `node_modules`.
+- No browser, com um servidor local que segue as regras do `vercel.json`, a
+  versão nova contra o `main`, no mesmo separador: todas as peças da página com
+  a mesma posição, tamanho, cor e imagem, em `/` a 375, 768 e 1280px (também
+  com os cookies aceites), em `/us` a 375 e 768px e nas duas FAQ a 375px. O
+  aviso, o vídeo (3:2, volume a 25%), o "Ler mais", a FAQ e o formulário
+  respondem, e a consola fica vazia. O `npm start` continua igual.
+
+**Depois de publicar:** `curl -s https://www.nexugal.com/us | grep og:locale`
+tem de dar `en_US`; o `/contacto` tem de vir com o `#root` vazio. Para as
+pré-visualizações: o Post Inspector do LinkedIn e o Sharing Debugger do
+Facebook mandam ler outra vez.

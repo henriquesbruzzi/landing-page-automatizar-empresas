@@ -20,6 +20,9 @@ import { semDestaques } from '../utils/destaques';
  *   da página inicial em português. Ficam lá porque o WhatsApp e as redes sociais
  *   não correm JavaScript e só leem esse ficheiro. Não tem canonical nem hreflang:
  *   o ficheiro é o mesmo para todas as páginas, e lá só podiam estar errados.
+ *   Exceção: / e /us. No fim do build, o scripts/pre-renderizar.js grava-as já
+ *   desenhadas, com estas etiquetas preenchidas com os valores de cada uma
+ *   (cabecalhoDaPagina, mais abaixo), o canonical e o que a biblioteca escreve.
  * - O efeito, mais abaixo: reescreve essas mesmas etiquetas com os valores da
  *   página em que se está, e cria o canonical.
  * - A biblioteca (Helmet): só os hreflang e o JSON-LD, que não existem no
@@ -116,6 +119,36 @@ const ALT_IMAGEM = {
   pt: 'Menos tarefas repetidas. Mais tempo para o que importa.',
   en: 'Fewer repetitive tasks. More time for what matters.',
 };
+
+// Imagem de partilha (og:image, twitter:image): o logótipo e o slogan, uma por
+// língua, PNG de 1200 por 630. Uma imagem nova entra com nome novo, porque o
+// WhatsApp e as redes guardam a antiga pelo endereço. A portuguesa está também
+// escrita à mão no public/index.html.
+const IMAGEM = {
+  pt: `${BASE_URL}/images/nexugal-partilha-3-pt.png`,
+  en: `${BASE_URL}/images/nexugal-partilha-3-en.png`,
+};
+
+/**
+ * O que o cabeçalho de uma página diz: título, descrição, endereços, língua e
+ * imagem de partilha. Usado pelo efeito do SEO, no browser, e pelo
+ * scripts/pre-renderizar.js, que grava / e /us já preenchidas.
+ */
+export function cabecalhoDaPagina(lang = 'pt', page = 'home') {
+  const l = seoData[lang] ? lang : 'pt';
+  const data = seoData[l][page] || seoData[l].home;
+  return {
+    titulo: data.title,
+    descricao: data.description,
+    canonical: data.canonical,
+    alternate: data.alternate,
+    htmlLang: l === 'pt' ? 'pt-PT' : 'en-US',
+    ogLocale: data.ogLocale,
+    ogLocaleAlternativo: l === 'pt' ? 'en_US' : 'pt_PT',
+    imagem: IMAGEM[l],
+    altImagem: ALT_IMAGEM[l],
+  };
+}
 
 // Schema.org JSON-LD — Organization
 const organizationSchema = {
@@ -346,7 +379,6 @@ function getFaqSchema(lang) {
 
 function SEO({ lang = 'pt', page = 'home' }) {
   const data = seoData[lang]?.[page] || seoData.pt.home;
-  const htmlLang = lang === 'pt' ? 'pt-PT' : 'en-US';
   const altLang = lang === 'pt' ? 'en' : 'pt';
 
   // Compor todos os schemas JSON-LD
@@ -368,8 +400,9 @@ function SEO({ lang = 'pt', page = 'home' }) {
   // browser desenha o ecrã seguinte (num separador escondido, nunca). Reescreve
   // as etiquetas que já vêm no public/index.html e cria o canonical.
   React.useEffect(() => {
-    document.title = data.title;
-    document.documentElement.lang = htmlLang;
+    const cabecalho = cabecalhoDaPagina(lang, page);
+    document.title = cabecalho.titulo;
+    document.documentElement.lang = cabecalho.htmlLang;
 
     const setMeta = (attr, attrValue, content) => {
       let el = document.querySelector(`meta[${attr}="${attrValue}"]`);
@@ -391,18 +424,21 @@ function SEO({ lang = 'pt', page = 'home' }) {
       el.setAttribute('href', href);
     };
 
-    setMeta('name', 'description', data.description);
-    setLink('canonical', data.canonical);
-    setMeta('property', 'og:title', data.title);
-    setMeta('property', 'og:description', data.description);
-    setMeta('property', 'og:url', data.canonical);
-    setMeta('property', 'og:locale', data.ogLocale);
-    setMeta('property', 'og:locale:alternate', lang === 'pt' ? 'en_US' : 'pt_PT');
-    setMeta('property', 'og:image:alt', ALT_IMAGEM[lang] || ALT_IMAGEM.pt);
-    setMeta('name', 'twitter:title', data.title);
-    setMeta('name', 'twitter:description', data.description);
-    setMeta('name', 'twitter:image:alt', ALT_IMAGEM[lang] || ALT_IMAGEM.pt);
-  }, [data, htmlLang, lang]);
+    setMeta('name', 'description', cabecalho.descricao);
+    setLink('canonical', cabecalho.canonical);
+    setMeta('property', 'og:title', cabecalho.titulo);
+    setMeta('property', 'og:description', cabecalho.descricao);
+    setMeta('property', 'og:url', cabecalho.canonical);
+    setMeta('property', 'og:locale', cabecalho.ogLocale);
+    setMeta('property', 'og:locale:alternate', cabecalho.ogLocaleAlternativo);
+    setMeta('property', 'og:image', cabecalho.imagem);
+    setMeta('property', 'og:image:secure_url', cabecalho.imagem);
+    setMeta('property', 'og:image:alt', cabecalho.altImagem);
+    setMeta('name', 'twitter:title', cabecalho.titulo);
+    setMeta('name', 'twitter:description', cabecalho.descricao);
+    setMeta('name', 'twitter:image', cabecalho.imagem);
+    setMeta('name', 'twitter:image:alt', cabecalho.altImagem);
+  }, [lang, page]);
 
   // A biblioteca fica só com o que não existe no public/index.html. Tudo o que
   // lá existe (título, descrição, og:, twitter:, robots) é do efeito acima: se
