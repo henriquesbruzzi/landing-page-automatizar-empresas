@@ -391,6 +391,16 @@ comandos vão um por linha. Ver 7.5.
     nexugal.com nos `Aliases`). A publicação anterior era a
     `dpl_AZXiTgdqu3rfgK4i1KuwuyZPU68K` (a de 07/11). Para voltar a ela, na
     pasta principal: `npx vercel rollback dpl_AZXiTgdqu3rfgK4i1KuwuyZPU68K --yes`.
+  - **A 09/11/2026 o Claude publicou o `main` com o PR #22** (o merge
+    `d4b1dcd`: a imagem de partilha só com o logótipo, 7.34), com `npx vercel
+    --prod --yes`, autorizado pelo Rui: deployment
+    `dpl_Feh2QbGHfNszWmMifC4c5cwCaJRH`, em
+    `https://nexusgal-laddingpage-iyps6sra1-nexugal.vercel.app`. O site serve o
+    `main.407ff890.js`. O "Not authorized" voltou à primeira e passou à segunda
+    (confirmado com `npx vercel inspect`: `target production` e o
+    www.nexugal.com e o nexugal.com nos `Aliases`). A publicação anterior era a
+    `dpl_7mAF5LCJkcDXcCuyAGjSwPEPKm6S` (a de 08/11). Para voltar a ela, na
+    pasta principal: `npx vercel rollback dpl_7mAF5LCJkcDXcCuyAGjSwPEPKm6S --yes`.
   - **Voltar atrás (rollback): o que é preciso saber**, segundo a documentação da
     Vercel, lida a 06/10:
     - no plano Hobby só se pode voltar à publicação de produção imediatamente
@@ -4365,5 +4375,10 @@ Nexugal." e "Nexugal logo.". Saíram as `-4-pt` e `-4-en`.
 ficheiro próprio, o `/us` incluído. Em `/us` e `/us/faq` o React queixa-se então
 de erros 418, 423 e 425, e não é avaria do site: o site publicado segue o
 `vercel.json`. Abrir `/` num separador novo não dá erro nenhum.
+
+**Publicado a 09/11** (secção 6). Verificado no site: `/`, `/us`, `/faq` e `/us/faq`
+apontam para a imagem nova, com o texto alternativo de cada língua; ela responde
+`image/jpeg`, igual byte a byte à do repositório; o `/us` abre sem erros na
+consola; o `/contacto` continua com o `#root` vazio; o `/sobre` continua a dar 308.
 
 **O que isto torna velho:** o texto alternativo de 7.3 e 7.32 e a imagem de 7.33.
