@@ -4334,3 +4334,36 @@ registo `google-site-verification`: a propriedade no Search Console, se existe,
 não está verificada pelo domínio. Para a verificar é preciso o código que o
 Google dá: ou um registo TXT (com `npx vercel dns add`, na conta deste
 computador) ou uma etiqueta no `public/index.html`.
+
+### 7.34 A imagem de partilha só com o logótipo (09/11/2026)
+
+Ramo `rui/imagem-partilha-logotipo`.
+
+**O WhatsApp sem cartão, de 7.33, não era do site.** O Rui colou no WhatsApp do
+computador, sem enviar, o `publico.pt`, o `/contacto?v=5` e o `/?v=5`: os três
+deram cartão, e os dois da Nexugal levaram mais 2 ou 3 segundos a aparecer.
+Enviado depois de o cartão aparecer, o `/?v=5` ficou com imagem e título. O mais
+provável é os `?v=4` terem sido enviados antes de o cartão chegar (não se
+provou). **Uma mensagem enviada sem cartão fica assim para sempre: esperar por
+ele antes de enviar.**
+
+**O desfocado.** No cartão a imagem saía desfocada e o slogan não se lia. Não é
+do ficheiro: o WhatsApp corta-a ao quadrado central, reduz a uma miniatura muito
+pequena e amplia-a. Aumentar a resolução não ajuda; o que ajuda é haver menos
+coisas e maiores no quadrado central.
+
+**O que mudou:** `images/nexugal-partilha-5.jpg`, 2400 × 1260, JPEG de 125 KB, com
+o N (640 px de altura) e o nome maiores e sem slogan, escolhida pelo Rui numa
+comparação simulada (Opção B). O slogan já aparece escrito ao lado da imagem, na
+descrição do cartão. Custo aceite: no LinkedIn a imagem deixa de o mostrar. Sem
+texto, serve às duas línguas, por isso `IMAGEM` no `SEO.js` passou a uma só. O
+texto alternativo diz o que a imagem mostra (regra de 7.32): "Logótipo da
+Nexugal." e "Nexugal logo.". Saíram as `-4-pt` e `-4-en`.
+
+**Armadilha de teste:** o `nexugal-build` do `.claude/launch.json` serve com
+`serve -s`, que entrega o `index.html` português em qualquer endereço sem
+ficheiro próprio, o `/us` incluído. Em `/us` e `/us/faq` o React queixa-se então
+de erros 418, 423 e 425, e não é avaria do site: o site publicado segue o
+`vercel.json`. Abrir `/` num separador novo não dá erro nenhum.
+
+**O que isto torna velho:** o texto alternativo de 7.3 e 7.32 e a imagem de 7.33.

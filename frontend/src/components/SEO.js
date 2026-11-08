@@ -116,20 +116,19 @@ const seoData = {
 // Texto alternativo da imagem de partilha. A versão portuguesa está também
 // escrita à mão no public/index.html (og:image:alt e twitter:image:alt).
 const ALT_IMAGEM = {
-  // Diz o que a imagem mostra: o nome e o slogan (Rui, 07/11/2026). Até aí era
-  // "Menos tarefas repetidas. Mais tempo para o que importa.", de outra imagem.
-  pt: 'Nexugal. A sua empresa em piloto automático.',
-  en: 'Nexugal. Your business on autopilot.',
+  // Diz o que a imagem mostra (regra do Rui, 07/11/2026): desde 09/11, só o
+  // logótipo.
+  pt: 'Logótipo da Nexugal.',
+  en: 'Nexugal logo.',
 };
 
-// Imagem de partilha (og:image, twitter:image): o logótipo e o slogan, uma por
-// língua, PNG de 1200 por 630. Uma imagem nova entra com nome novo, porque o
-// WhatsApp e as redes guardam a antiga pelo endereço. A portuguesa está também
-// escrita à mão no public/index.html.
-const IMAGEM = {
-  pt: `${BASE_URL}/images/nexugal-partilha-4-pt.jpg`,
-  en: `${BASE_URL}/images/nexugal-partilha-4-en.jpg`,
-};
+// Imagem de partilha (og:image, twitter:image): só o logótipo, grande, porque
+// o WhatsApp a reduz a uma miniatura em que o slogan não se lê (e o slogan já
+// aparece escrito ao lado dela, na descrição). Sem texto, serve às duas línguas.
+// JPEG de 2400 por 1260. Uma imagem nova entra com nome novo, porque o WhatsApp
+// e as redes guardam a antiga pelo endereço. Está também escrita à mão no
+// public/index.html.
+const IMAGEM = `${BASE_URL}/images/nexugal-partilha-5.jpg`;
 
 /**
  * O que o cabeçalho de uma página diz: título, descrição, endereços, língua e
@@ -147,7 +146,7 @@ export function cabecalhoDaPagina(lang = 'pt', page = 'home') {
     htmlLang: l === 'pt' ? 'pt-PT' : 'en-US',
     ogLocale: data.ogLocale,
     ogLocaleAlternativo: l === 'pt' ? 'en_US' : 'pt_PT',
-    imagem: IMAGEM[l],
+    imagem: IMAGEM,
     altImagem: ALT_IMAGEM[l],
   };
 }
