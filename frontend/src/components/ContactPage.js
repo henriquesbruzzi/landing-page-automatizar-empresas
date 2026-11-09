@@ -8,7 +8,7 @@ import Dropdown from './Dropdown';
 // O código da folha está em scripts/google-sheets-contactos.gs. Quando o backend
 // voltar, repor o envio para `${REACT_APP_API_URL}/api/leads`: está no histórico
 // do git, e o erroLegivel, mais abaixo, ainda serve para ele.
-const FOLHA_CONTACTOS_URL = 'https://script.google.com/macros/s/PREENCHER/exec';
+const FOLHA_CONTACTOS_URL = 'https://script.google.com/macros/s/AKfycbw5kGZvVElJ3wbp947wL6UTHufLQDqen7FxssEYFFceVkUhPwx4V_Y6SjS1sdtv8zr2/exec';
 
 // O backend recusa um pedido inválido com um campo `detail`, que tanto pode ser
 // uma frase como a lista de erros do FastAPI: cada item traz o campo recusado
