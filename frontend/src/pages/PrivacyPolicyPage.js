@@ -112,14 +112,14 @@ function PrivacyPolicyPage() {
                     : 'We process your data to respond to your contact request and prepare commercial proposals. Legal basis: Legitimate interest (Art. 6(1)(f) GDPR) / Pre-contractual measures (Art. 6(1)(b) GDPR).'}
                 </p>
               </div>
-              {/* Tem de acompanhar o FORMSPREE_URL do ContactPage: se o envio
+              {/* Tem de acompanhar o FOLHA_CONTACTOS_URL do ContactPage: se o envio
                   voltar ao backend, este bloco sai. */}
               <div className="bg-neve rounded-xl p-4 border border-linha">
                 <p className="text-azul-profundo font-medium mb-1">{pt ? 'Envio do Formulário' : 'Form Delivery'}</p>
                 <p className="text-texto text-xs">
                   {pt
-                    ? 'As mensagens do formulário de contacto são-nos entregues por e-mail através de um prestador de serviços com infraestrutura nos Estados Unidos.'
-                    : 'Messages from the contact form are delivered to us by email through a service provider with infrastructure in the United States.'}
+                    ? 'As mensagens do formulário de contacto são guardadas e entregues através de um prestador de serviços com infraestrutura nos Estados Unidos.'
+                    : 'Messages from the contact form are stored and delivered through a service provider with infrastructure in the United States.'}
                 </p>
               </div>
             </div>
