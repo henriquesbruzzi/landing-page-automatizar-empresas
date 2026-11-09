@@ -115,6 +115,11 @@ por omissão `http://localhost:8000` — o formulário parece funcionar no site 
 não grava lead nenhum. É a primeira coisa a verificar se os contactos deixarem
 de chegar.
 
+**Desde 09/11/2026 o formulário não passa por aqui** (7.36): grava numa folha do
+Google Sheets. O `REACT_APP_API_URL` só serve o admin, enquanto o backend estiver
+em baixo. O diagrama de cima é o caminho antigo, guardado no ramo
+`rui/formulario-railway`.
+
 ---
 
 ## 4. Como se trabalha aqui (fluxo acordado)
@@ -492,9 +497,19 @@ comandos vão um por linha. Ver 7.5.
   grava nada. A conta do Rui no Railway não tem nenhum projeto, e o projeto ligado
   à pasta `backend`, `talented-youth`, responde "You do not have access": está
   noutra conta ou foi apagado. É preciso o Henrique.
+  **Quando o backend voltar, o scraper e os emails de prospeção ficam desligados**
+  (pedido do Rui, 09/11/2026). A prospeção por email passou para outra ferramenta
+  (Sellbird), e não pode haver dois sistemas a escrever às mesmas empresas. Por
+  isso, o PR #6 (textos dos emails de prospeção, 7.21) deixou de fazer sentido.
 - **GitHub:** repo público, na conta pessoal do Henrique. O Rui é collaborator.
   Ramos a 14/09/2026: `main` e `rui/site-branco`. A 21/09 entrou o
   `rui/velocidade`, feito a partir do `rui/site-branco` (7.11).
+  **Desde 09/11/2026 há dois ramos de referência para o formulário:** o `main`, o
+  atual, com os contactos no Google Sheets, e o `rui/formulario-railway`, parado no
+  `2c75695`, o último `main` em que o formulário enviava para o Railway. Serve para
+  consulta: não publicar a partir dele nem o juntar ao `main` sem rever, porque
+  fica para trás de tudo o que entrar depois. Para voltar ao Railway, copiar só o
+  envio do `ContactPage.js`.
 
 ---
 
@@ -4493,3 +4508,57 @@ contraste 18 de 18; no `npm start`, um envio real pelo formulário chegou ao
 script (200, com a resposta `ok`) e mostrou a mensagem de sucesso; com o envio
 simulado, a falha de rede, a recusa e uma resposta em HTML mostram cada uma o seu
 aviso, em PT e EN; a folha sem sessão dá 401; o campo-armadilha não grava nada.
+
+### 7.37 Revisão final e de segurança (09/11/2026)
+
+A pedido do Rui, depois de publicado o 7.36. Só leitura: não se mudou nada no site.
+
+**Confirmado pelo Rui:** o formulário no site publicado grava na folha e o aviso
+chega ao `geral@nexugal.com`; a folha está partilhada só com ele e com o sócio.
+
+**Sem problemas encontrados:**
+
+- Nenhuma chave real no repositório nem no histórico (procurados os formatos do
+  Resend, GitHub, AWS, Google, JWT, ligações Postgres e chaves privadas). Nenhum
+  ficheiro `.env` no git. Só aparece o `admin123`, o valor por omissão já conhecido.
+- O site publicado traz HSTS, CSP, `X-Frame-Options: DENY`, `nosniff`,
+  `Referrer-Policy` e `Permissions-Policy`. O `.map` do JavaScript dá 403, e o
+  JavaScript servido não traz segredos (o único "SECRET" é interno do React).
+- `.env`, `.git/config`, `CLAUDE.md` e `backend/main.py` não são servidos: esses
+  endereços devolvem a página do site.
+- Nenhum `dangerouslySetInnerHTML` nem `eval` no frontend.
+- A folha sem sessão dá 401. O aviso por email tem o destinatário fixo, por isso o
+  script não serve para enviar spam a terceiros; o que o visitante escreve fica em
+  texto simples e não corre como fórmula.
+
+**Riscos que ficam, por ordem:**
+
+1. **O script aceita envios de qualquer pessoa, e a armadilha só trava robôs
+   simples.** O endereço está no JavaScript público. Alguém podia encher a folha
+   ou gastar os 100 emails por dia. Sem limite por hora no script. Não se
+   acrescentou nada: obriga o Rui a colar e implantar outra vez.
+2. **`backend/main.py` tem valores por omissão no repositório público**
+   (`ADMIN_PASSWORD="admin123"`, `JWT_SECRET="change-this-in-production"`). Quando
+   o backend voltar, o Henrique tem de confirmar que as duas variáveis estão
+   definidas no Railway.
+3. **O script tem autorização sobre todas as folhas da conta.** Dá para limitar a
+   esta com `/** @OnlyCurrentDoc */` no topo, e nova implantação.
+4. **`npm audit`: 64 avisos, 3 críticos.** Quase todos são de ferramentas de build
+   (o `react-scripts` está em `dependencies`), que não chegam ao visitante. No que
+   chega ao browser só há o `react-router-dom` 7.13.1: os avisos graves são dos
+   modos de servidor e RSC, que o site não usa (`BrowserRouter` em alojamento
+   estático), e os de redirecionamento dependem de ligações vindas do visitante,
+   que o site não tem. Sem exposição hoje; atualizar quando se mexer no site.
+5. **CSP com `'unsafe-inline'`** em `script-src`, e ainda autoriza a Google Fonts,
+   sem uso (7.11). Sem `form-action` nem `base-uri`. Baixo risco, sem texto de
+   visitantes a ir para o HTML.
+6. **RGPD:** os dados ficam na conta Google, com infraestrutura nos Estados
+   Unidos. O topo da política diz "Em conformidade com o RGPD"; o Rui ficou de
+   confirmar. O prazo de 3 anos da política aplica-se à folha, e apagar é manual.
+
+**A sessão do Railway neste computador ficou iniciada**, por decisão do Rui, com
+permissões totais sobre a conta dele. Para terminar: `railway logout`.
+
+**Ramos:** há cerca de 30 ramos no GitHub, quase todos já juntos ao `main`. Não se apagou
+nenhum: este ficheiro refere vários, e o `rui/emails-avaliacao-gratuita` é o do
+PR #6, ainda aberto.
