@@ -426,6 +426,17 @@ comandos vão um por linha. Ver 7.5.
     `Aliases`). A publicação anterior era a `dpl_JKe239J7sbKxasjXMdsvjj9uhs8a` (a
     do PR #24). Para voltar a ela, na pasta principal:
     `npx vercel rollback dpl_JKe239J7sbKxasjXMdsvjj9uhs8a --yes`.
+  - **A 09/11/2026, ao fim do dia, o Claude publicou o `main` com o PR #29** (o
+    merge `1e00af5`: as bibliotecas atualizadas, 7.37), com `npx vercel --prod
+    --yes`, autorizado pelo Rui: deployment
+    `dpl_GFe7AX6Mhp8YyqYaTpQZCr8NxzVM`, em
+    `https://nexusgal-laddingpage-kbqgzlatt-nexugal.vercel.app`. O site serve o
+    `main.dfb0d45a.js`. **Passou à primeira** (confirmado com `npx vercel
+    inspect`: `target production` e o www.nexugal.com e o nexugal.com nos
+    `Aliases`). Antes de publicar, `npm ci` e build com `CI=true`. A publicação
+    anterior era a `dpl_4CRuscgz1pWW84DV4mfu2ihpE4c2` (a do PR #26). Para voltar
+    a ela, na pasta principal:
+    `npx vercel rollback dpl_4CRuscgz1pWW84DV4mfu2ihpE4c2 --yes`.
   - **Voltar atrás (rollback): o que é preciso saber**, segundo a documentação da
     Vercel, lida a 06/10:
     - no plano Hobby só se pode voltar à publicação de produção imediatamente
