@@ -401,6 +401,16 @@ comandos vão um por linha. Ver 7.5.
     www.nexugal.com e o nexugal.com nos `Aliases`). A publicação anterior era a
     `dpl_7mAF5LCJkcDXcCuyAGjSwPEPKm6S` (a de 08/11). Para voltar a ela, na
     pasta principal: `npx vercel rollback dpl_7mAF5LCJkcDXcCuyAGjSwPEPKm6S --yes`.
+  - **A 09/11/2026, mais tarde, o Claude publicou o `main` com o PR #24** (o
+    merge `c30d520`: o aviso do formulário com o email, 7.35), com `npx vercel
+    --prod --yes`, autorizado pelo Rui: deployment
+    `dpl_JKe239J7sbKxasjXMdsvjj9uhs8a`, em
+    `https://nexusgal-laddingpage-49sidhmxe-nexugal.vercel.app`. O site serve o
+    `main.2b674184.js`. O "Not authorized" voltou à primeira e passou à segunda
+    (confirmado com `npx vercel inspect`: `target production` e o
+    www.nexugal.com e o nexugal.com nos `Aliases`). A publicação anterior era a
+    `dpl_Feh2QbGHfNszWmMifC4c5cwCaJRH` (a do PR #22, no mesmo dia). Para voltar
+    a ela, na pasta principal: `npx vercel rollback dpl_Feh2QbGHfNszWmMifC4c5cwCaJRH --yes`.
   - **Voltar atrás (rollback): o que é preciso saber**, segundo a documentação da
     Vercel, lida a 06/10:
     - no plano Hobby só se pode voltar à publicação de produção imediatamente
@@ -467,6 +477,11 @@ comandos vão um por linha. Ver 7.5.
   site, e um pedido vindo de `http://localhost:3000` leva 400 no pedido de
   verificação. Quer dizer que **o formulário não se testa contra o backend real a
   partir do computador**: ou se publica, ou se testa com o envio simulado (7.12).
+  **Voltou a cair, visto a 09/11/2026 (7.35):** o endereço de sempre responde 404
+  "Application not found", com `x-railway-fallback: true`, e o formulário não
+  grava nada. A conta do Rui no Railway não tem nenhum projeto, e o projeto ligado
+  à pasta `backend`, `talented-youth`, responde "You do not have access": está
+  noutra conta ou foi apagado. É preciso o Henrique.
 - **GitHub:** repo público, na conta pessoal do Henrique. O Rui é collaborator.
   Ramos a 14/09/2026: `main` e `rui/site-branco`. A 21/09 entrou o
   `rui/velocidade`, feito a partir do `rui/site-branco` (7.11).
@@ -4382,3 +4397,38 @@ apontam para a imagem nova, com o texto alternativo de cada língua; ela respond
 consola; o `/contacto` continua com o `#root` vazio; o `/sobre` continua a dar 308.
 
 **O que isto torna velho:** o texto alternativo de 7.3 e 7.32 e a imagem de 7.33.
+
+### 7.35 O aviso do formulário com o email, enquanto o servidor não volta (09/11/2026)
+
+Ramo `rui/aviso-erro-formulario-email`, PR #24, **publicado a 09/11** (secção 6).
+
+**O que o Rui viu:** no telemóvel, com internet, o formulário dizia "Não foi
+possível falar com o servidor. Verifique a ligação à internet e tente outra
+vez." A causa é o backend em baixo (secção 6), e a frase mandava o visitante à
+procura de um problema que não era dele.
+
+**O que mudou:** só o `networkError` do `translations.js`: "Não foi possível
+enviar a mensagem neste momento. Escreva-nos para geral@nexugal.com." (EN "We
+could not send your message right now. Please write to us at
+geral@nexugal.com."). O endereço é o do rodapé. O `nexugal.com` tem o email na
+Hostinger (MX `mx1` e `mx2.hostinger.com`); o Claude não enviou nenhuma mensagem
+de teste, por isso falta confirmar que a caixa recebe. **Quando o servidor
+voltar, a frase pode ficar:** continua certa para quem tiver um problema de rede.
+
+**O Claude não consegue repor o servidor:** a sessão do Railway guardada neste
+computador é a do Rui, e essa conta não vê o projeto. Criar um servidor novo na
+conta dele é possível, mas tem custo, deixa os contactos antigos para trás e
+precisa de uma chave do Resend. Ficou como alternativa, se o Henrique não
+resolver.
+
+**Armadilha:** com a VPN Happ ligada neste computador, tudo sai por Singapura
+(`x-vercel-id` a começar por `sin1`), e o DNS é o da VPN, que não mostra o MX:
+para ver registos, usar `https://dns.google/resolve`. O que se mede de velocidade
+com ela ligada não representa Portugal. A demora do cartão do WhatsApp no
+computador (7.34) pode vir daí; no telemóvel o cartão sai grande e nítido.
+
+**Verificado:** `CI=true npm run build` com `Compiled successfully.`; teste de
+contraste 18 de 18; no `npm start`, em `/contacto` e `/us/contact`, com o envio
+simulado a falhar, o aviso novo aparece, o botão destrava, sem scroll para o lado
+nem erros na consola. No site publicado: as duas frases novas no JavaScript
+servido, as antigas fora, e o formulário a apontar ao Railway, como antes.
