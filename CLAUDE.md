@@ -411,6 +411,16 @@ comandos vão um por linha. Ver 7.5.
     www.nexugal.com e o nexugal.com nos `Aliases`). A publicação anterior era a
     `dpl_Feh2QbGHfNszWmMifC4c5cwCaJRH` (a do PR #22, no mesmo dia). Para voltar
     a ela, na pasta principal: `npx vercel rollback dpl_Feh2QbGHfNszWmMifC4c5cwCaJRH --yes`.
+  - **A 09/11/2026, à tarde, o Claude publicou o `main` com o PR #26** (o merge
+    `3a500cd`: os contactos numa folha do Google Sheets, 7.36), com `npx vercel
+    --prod --yes`, autorizado pelo Rui: deployment
+    `dpl_4CRuscgz1pWW84DV4mfu2ihpE4c2`, em
+    `https://nexusgal-laddingpage-9riua6sk2-nexugal.vercel.app`. O site serve o
+    `main.b778eb53.js`. **Passou à primeira** (confirmado com `npx vercel
+    inspect`: `target production` e o www.nexugal.com e o nexugal.com nos
+    `Aliases`). A publicação anterior era a `dpl_JKe239J7sbKxasjXMdsvjj9uhs8a` (a
+    do PR #24). Para voltar a ela, na pasta principal:
+    `npx vercel rollback dpl_JKe239J7sbKxasjXMdsvjj9uhs8a --yes`.
   - **Voltar atrás (rollback): o que é preciso saber**, segundo a documentação da
     Vercel, lida a 06/10:
     - no plano Hobby só se pode voltar à publicação de produção imediatamente
@@ -4435,12 +4445,14 @@ servido, as antigas fora, e o formulário a apontar ao Railway, como antes.
 
 ### 7.36 Os contactos numa folha do Google Sheets (09/11/2026)
 
-Ramo `rui/formulario-google-sheets`. Solução enquanto o backend está em baixo
-(7.35), pedida pelo Rui: grátis, e com os contactos guardados.
+Ramo `rui/formulario-google-sheets`, PR #26, **publicado a 09/11** (secção 6).
+Solução enquanto o backend está em baixo (7.35), pedida pelo Rui: grátis, e com
+os contactos guardados.
 
 **Como funciona:** o `ContactPage.js` envia para um script do Google (Apps
 Script, em `FOLHA_CONTACTOS_URL`) que grava uma linha na folha "Contactos
-Nexugal" e manda um aviso por email à conta dona da folha, com o email do cliente
+Nexugal" e manda um aviso para `geral@nexugal.com` (a caixa da Hostinger, pedido
+do Rui; o primeiro teste foi para a conta dona da folha), com o email do cliente
 como resposta. O código do script está em `frontend/scripts/google-sheets-contactos.gs`.
 A folha tem uma só página: o limite na linha 1 (pedido do Rui), os títulos na 2 e
 os contactos da 3 para baixo. Enquanto não houver contactos, está vazia.
