@@ -118,8 +118,8 @@ function PrivacyPolicyPage() {
                 <p className="text-azul-profundo font-medium mb-1">{pt ? 'Envio do Formulário' : 'Form Delivery'}</p>
                 <p className="text-texto text-xs">
                   {pt
-                    ? 'As mensagens do formulário de contacto são-nos entregues por e-mail através da Formspree, Inc., um prestador de serviços com infraestrutura nos Estados Unidos. Isto implica a transferência dos dados que preencher no formulário para fora da União Europeia.'
-                    : 'Messages from the contact form are delivered to us by email through Formspree, Inc., a service provider with infrastructure in the United States. This means the data you enter in the form is transferred outside the European Union.'}
+                    ? 'As mensagens do formulário de contacto são-nos entregues por e-mail através de um prestador de serviços com infraestrutura nos Estados Unidos.'
+                    : 'Messages from the contact form are delivered to us by email through a service provider with infrastructure in the United States.'}
                 </p>
               </div>
             </div>
