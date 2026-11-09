@@ -4432,3 +4432,52 @@ contraste 18 de 18; no `npm start`, em `/contacto` e `/us/contact`, com o envio
 simulado a falhar, o aviso novo aparece, o botão destrava, sem scroll para o lado
 nem erros na consola. No site publicado: as duas frases novas no JavaScript
 servido, as antigas fora, e o formulário a apontar ao Railway, como antes.
+
+### 7.36 Os contactos numa folha do Google Sheets (09/11/2026)
+
+Ramo `rui/formulario-google-sheets`. Solução enquanto o backend está em baixo
+(7.35), pedida pelo Rui: grátis, e com os contactos guardados.
+
+**Como funciona:** o `ContactPage.js` envia para um script do Google (Apps
+Script, em `FOLHA_CONTACTOS_URL`) que grava uma linha na folha "Contactos
+Nexugal" e manda um aviso por email à conta dona da folha, com o email do cliente
+como resposta. O código do script está em `frontend/scripts/google-sheets-contactos.gs`.
+A folha tem uma só página: o limite na linha 1 (pedido do Rui), os títulos na 2 e
+os contactos da 3 para baixo. Enquanto não houver contactos, está vazia.
+
+**Porque não a Formspree:** no plano gratuito só dá 50 contactos por mês,
+guarda-os 30 dias e não liga a nenhuma folha. Chegou a ser preparada e saiu.
+
+**O endereço da folha não vai para o repositório**, que é público. O do script
+vai, porque está no JavaScript do site de qualquer forma.
+
+**Quem vê o quê:** a folha está em "Restrito", só para o dono (o Rui quer no
+máximo ele e o sócio). O script está em "Qualquer pessoa" e tem de ficar: os
+visitantes não têm sessão Google. Isso só deixa acrescentar linhas; a resposta
+diz apenas `{"ok":true}`.
+
+**Armadilhas:**
+
+- **"Qualquer pessoa, editor" é a partilha da folha, não a do script.** Aconteceu
+  a 09/11: a folha ficou aberta a quem tivesse o link, e voltou a Restrito antes
+  de ter dados. Para confirmar sem ler nada: o `export?format=csv` da folha, sem
+  sessão, tem de dar 401.
+- **O script responde 401 enquanto a autorização não estiver concluída**, ou se
+  o acesso não for "Qualquer pessoa". O Google avisa que a app não está verificada;
+  é normal num script próprio.
+- **O corpo vai em `URLSearchParams`**, porque o Google não atende o pedido de
+  verificação prévio do browser (CORS) nem lê os campos em `multipart`.
+- **O CSP** do `vercel.json` autoriza `script.google.com` e
+  `script.googleusercontent.com` (o Google responde por um redirecionamento).
+- **Mudar o código do script não muda o que está no ar:** é preciso Implantar,
+  Gerenciar implantações, lápis, Nova versão. O endereço mantém-se.
+
+**Quando o backend voltar:** repor o envio para `${REACT_APP_API_URL}/api/leads`
+(histórico do git), e tirar o bloco "Envio do Formulário" da política de
+privacidade, ou decidir manter os dois.
+
+**Verificado:** `CI=true npm run build` com `Compiled successfully.`; teste de
+contraste 18 de 18; no `npm start`, um envio real pelo formulário chegou ao
+script (200, com a resposta `ok`) e mostrou a mensagem de sucesso; com o envio
+simulado, a falha de rede, a recusa e uma resposta em HTML mostram cada uma o seu
+aviso, em PT e EN; a folha sem sessão dá 401; o campo-armadilha não grava nada.

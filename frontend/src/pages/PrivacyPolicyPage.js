@@ -40,8 +40,8 @@ function PrivacyPolicyPage() {
           </h1>
           <p className="text-texto text-sm leading-relaxed">
             {pt
-              ? 'Última atualização: setembro de 2026 · Em conformidade com o RGPD (Regulamento Geral sobre a Proteção de Dados) e a Lei n.º 41/2004 (Lei do ePrivacy).'
-              : 'Last updated: September 2026 · In compliance with the GDPR (General Data Protection Regulation) and Directive 2002/58/EC (ePrivacy Directive).'}
+              ? 'Última atualização: novembro de 2026 · Em conformidade com o RGPD (Regulamento Geral sobre a Proteção de Dados) e a Lei n.º 41/2004 (Lei do ePrivacy).'
+              : 'Last updated: November 2026 · In compliance with the GDPR (General Data Protection Regulation) and Directive 2002/58/EC (ePrivacy Directive).'}
           </p>
         </div>
 
@@ -110,6 +110,16 @@ function PrivacyPolicyPage() {
                   {pt
                     ? 'Tratamos os seus dados para responder ao seu pedido de contacto e elaborar propostas comerciais. Base legal: Interesse legítimo (Art. 6.º, n.º 1, al. f) do RGPD) / Execução de pré-contrato (Art. 6.º, n.º 1, al. b)).'
                     : 'We process your data to respond to your contact request and prepare commercial proposals. Legal basis: Legitimate interest (Art. 6(1)(f) GDPR) / Pre-contractual measures (Art. 6(1)(b) GDPR).'}
+                </p>
+              </div>
+              {/* Tem de acompanhar o FOLHA_CONTACTOS_URL do ContactPage: se o envio
+                  voltar ao backend, este bloco sai. */}
+              <div className="bg-neve rounded-xl p-4 border border-linha">
+                <p className="text-azul-profundo font-medium mb-1">{pt ? 'Envio do Formulário' : 'Form Delivery'}</p>
+                <p className="text-texto text-xs">
+                  {pt
+                    ? 'As mensagens do formulário de contacto são guardadas e entregues através de um prestador de serviços com infraestrutura nos Estados Unidos.'
+                    : 'Messages from the contact form are stored and delivered through a service provider with infrastructure in the United States.'}
                 </p>
               </div>
             </div>

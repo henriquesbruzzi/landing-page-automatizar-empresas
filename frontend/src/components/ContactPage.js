@@ -3,7 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import Dropdown from './Dropdown';
 
-const API_BASE_URL = (process.env.REACT_APP_API_URL || 'http://localhost:8000').replace(/\/$/, '');
+// Desde 09/11/2026 o formulário grava numa folha do Google Sheets, que também
+// avisa por email, porque o backend no Railway está em baixo (CLAUDE.md, 7.36).
+// O código da folha está em scripts/google-sheets-contactos.gs. Quando o backend
+// voltar, repor o envio para `${REACT_APP_API_URL}/api/leads`: está no histórico
+// do git, e o erroLegivel, mais abaixo, ainda serve para ele.
+const FOLHA_CONTACTOS_URL = 'https://script.google.com/macros/s/AKfycbw5kGZvVElJ3wbp947wL6UTHufLQDqen7FxssEYFFceVkUhPwx4V_Y6SjS1sdtv8zr2/exec';
 
 // O backend recusa um pedido inválido com um campo `detail`, que tanto pode ser
 // uma frase como a lista de erros do FastAPI: cada item traz o campo recusado
@@ -224,35 +229,20 @@ function ContactPage() {
     setIsSending(true);
     setErroOrigem('');
 
-    // O backend exige uma mensagem com pelo menos 5 caracteres, mas no site ela
-    // é facultativa. Em vez de travar quem escreve pouco ("ola", "sim"), a
-    // linha automática vai à frente e o que a pessoa escreveu segue atrás:
-    // assim nenhum contacto se perde por causa do tamanho da mensagem.
-    // (Solução do Henrique, 23/09/2026. Decisão do Rui a 24/09.)
-    let mensagemFinal = mensagem;
-    if (!mensagemFinal) {
-      mensagemFinal = `${f.messageAutoPrefix}${origem}.`;
-    } else if (mensagemFinal.length < 5) {
-      mensagemFinal = `${f.messageAutoPrefix}${origem}. ${mensagemFinal}`;
-    }
-
     try {
-      const response = await fetch(`${API_BASE_URL}/api/leads`, {
+      // Em URLSearchParams porque é o único formato que o Google lê nos campos
+      // sem o browser ter de pedir autorização antes (que o Google não atende).
+      const response = await fetch(FOLHA_CONTACTOS_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: nome,
+        body: new URLSearchParams({
+          _gotcha: e.target.elements._gotcha.value,
+          nome,
           email,
-          phone: formData.phone,
-          company: formData.company,
-          // O backend guarda isto na coluna `service` (é dele, não se mexe).
-          // Desde que o campo passou a ser "Como soube de nós?", é a origem
-          // do contacto que vai nessa coluna.
-          service: origem,
-          message: mensagemFinal,
-          language: lang,
+          telefone: formData.phone,
+          empresa: formData.company,
+          origem,
+          mensagem,
+          idioma: lang,
         }),
       });
 
@@ -265,7 +255,7 @@ function ContactPage() {
         data = null;
       }
 
-      if (!response.ok || !data || !data.success) {
+      if (!response.ok || !data || !data.ok) {
         setIsSending(false);
         setSubmitError(erroLegivel(data, f));
         return;
@@ -348,6 +338,8 @@ function ContactPage() {
             {/* Form */}
             {!isSent && (
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Armadilha para robôs: invisível para as pessoas. Se vier preenchido, a folha não grava o envio. */}
+                <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
                 {/* Nome e Email */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
