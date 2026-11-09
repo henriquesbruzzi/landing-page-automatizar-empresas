@@ -437,6 +437,16 @@ comandos vão um por linha. Ver 7.5.
     anterior era a `dpl_4CRuscgz1pWW84DV4mfu2ihpE4c2` (a do PR #26). Para voltar
     a ela, na pasta principal:
     `npx vercel rollback dpl_4CRuscgz1pWW84DV4mfu2ihpE4c2 --yes`.
+  - **A 09/11/2026, depois do PR #29, o Claude publicou o `main` com o PR #31** (o
+    merge `e82995b`: o limite de espera do formulário, 7.38), com `npx vercel
+    --prod --yes`, autorizado pelo Rui: deployment
+    `dpl_wHdkHDtHd7BbN5sSSGZMhvEwkgGD`, em
+    `https://nexusgal-laddingpage-kn0f8bt7g-nexugal.vercel.app`. O site serve o
+    `main.595608bc.js`. **Passou à primeira** (confirmado com `npx vercel
+    inspect`: `target production` e o www.nexugal.com e o nexugal.com nos
+    `Aliases`). A publicação anterior era a `dpl_GFe7AX6Mhp8YyqYaTpQZCr8NxzVM` (a
+    do PR #29). Para voltar a ela, na pasta principal:
+    `npx vercel rollback dpl_GFe7AX6Mhp8YyqYaTpQZCr8NxzVM --yes`.
   - **Voltar atrás (rollback): o que é preciso saber**, segundo a documentação da
     Vercel, lida a 06/10:
     - no plano Hobby só se pode voltar à publicação de produção imediatamente
@@ -4598,3 +4608,43 @@ juntos ao `main`, foram apagados: os nomes que este ficheiro refere ficam como
 histórico, e os commits continuam no `main`. O único que não estava junto, o
 `rui/emails-avaliacao-gratuita` (PR #6, fechado), ficou guardado na etiqueta
 `arquivo/emails-avaliacao-gratuita`.
+
+### 7.38 O formulário preso em "A enviar..." (09/11/2026)
+
+Ramo `rui/formulario-mais-rapido`, PR #31, **publicado a 09/11** (secção 6).
+
+**O que o Rui viu:** no computador, com a VPN, um envio demorou 15 s. No
+telemóvel, em Wi-Fi fraco e sem VPN, duas tentativas ficaram mais de 1 minuto em
+"A enviar...", no site ainda sem esta alteração.
+
+**O que mudou** (só o `ContactPage.js`):
+
+- **`LIMITE_ESPERA_MS`, 40 s:** o `fetch` leva um `AbortController`. Se o tempo
+  acabar, o visitante vê o `networkError`, com o email, e o botão destrava. O
+  contacto pode ter ficado gravado na mesma, e nesse caso chega repetido.
+- **`acordarScript`:** ao primeiro foco no formulário sai um pedido só com
+  `_gotcha=acordar`. O script responde sem gravar, sem email e sem contar para o
+  limite. **O ganho não ficou provado:** medido com `curl`, 3,7 a 4,1 s parado
+  contra 2,9 a 4,0 s logo a seguir a outro pedido. Se não fizer diferença, sai.
+
+**O que se aprendeu com as Execuções do Apps Script:**
+
+- Dentro do script, o campo-armadilha demora 0,4 a 1,0 s, e o único envio
+  verdadeiro que lá aparece demorou 4,9 s (folha e email). Por fora, um pedido
+  soma cerca de 2,5 a 4 s do próprio Google, antes de o script correr.
+- **As duas tentativas do telemóvel não aparecem nas Execuções:** todas as linhas
+  desse período têm correspondência com testes do Claude. O pedido não chegou ao
+  script, por isso a causa está entre o telemóvel e o Google, e não no código da
+  folha. Ficou por apurar se foi só o Wi-Fi. Se voltar a acontecer, abrir o
+  endereço do script no browser do telemóvel: se o Google responder com uma página
+  de erro a dizer que falta o `doGet`, o telemóvel chega lá.
+- **As horas das Execuções vinham 8 horas à frente de Lisboa** (GMT+8, o mesmo
+  que o relógio deste computador mostrava). Para bater certo com o que o script
+  grava, somar ou tirar essa diferença: `Utilities.formatDate` usa sempre
+  `Europe/Lisbon`.
+
+**Verificado:** build com `CI=true` e teste de contraste 18 de 18. No `npm start`,
+com o envio simulado: o pedido de arranque sai uma só vez, e espera esgotada,
+resposta presa a meio, recusa e sucesso mostram o que devem. No site publicado, o
+pedido de arranque foi até ao Google e voltou `{"ok":true}`, sem erros na consola.
+**Falta um envio verdadeiro no telemóvel com esta versão.**
