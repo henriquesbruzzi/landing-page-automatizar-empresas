@@ -51,7 +51,7 @@ function preparar(folha) {
 
 function avisar(nome, email, campo) {
   const aviso = {
-    to: Session.getEffectiveUser().getEmail(),
+    to: 'geral@nexugal.com',
     subject: 'Novo contacto Nexugal: ' + nome.replace(/[\r\n]+/g, ' ').slice(0, 100),
     body: [
       'Nome: ' + nome,
