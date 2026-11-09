@@ -509,7 +509,9 @@ comandos vão um por linha. Ver 7.5.
   `2c75695`, o último `main` em que o formulário enviava para o Railway. Serve para
   consulta: não publicar a partir dele nem o juntar ao `main` sem rever, porque
   fica para trás de tudo o que entrar depois. Para voltar ao Railway, copiar só o
-  envio do `ContactPage.js`.
+  envio do `ContactPage.js`. **Os outros ramos saíram a 09/11, a pedido do Rui**
+  (7.37). Um ramo de trabalho novo sai do `main`, como sempre, e apaga-se depois
+  de junto, para ficarem estes dois.
 
 ---
 
@@ -4559,6 +4561,29 @@ chega ao `geral@nexugal.com`; a folha está partilhada só com ele e com o sóci
 **A sessão do Railway neste computador ficou iniciada**, por decisão do Rui, com
 permissões totais sobre a conta dele. Para terminar: `railway logout`.
 
-**Ramos:** há cerca de 30 ramos no GitHub, quase todos já juntos ao `main`. Não se apagou
-nenhum: este ficheiro refere vários, e o `rui/emails-avaliacao-gratuita` é o do
-PR #6, ainda aberto.
+**Feito a seguir, a pedido do Rui (pontos 1 a 4 de cima):**
+
+- **Limite no script:** 20 envios por hora e 80 por dia, contados por
+  `dentroDoLimite`. Acima disso responde `{"ok":false}` e o visitante vê o aviso
+  de tentar outra vez. **E `@OnlyCurrentDoc`:** só acede a esta folha. O código está
+  em `frontend/scripts/google-sheets-contactos.gs`; só vale depois de colado no
+  Apps Script e implantado numa nova versão.
+- **`backend/main.py`:** em produção, com o `JWT_SECRET` ou a `ADMIN_PASSWORD` nos
+  valores por omissão, o servidor recusa arrancar e diz porquê. Em local continua
+  igual. Só o `ast` o leu: o backend não correu. Se o Railway não arrancar quando
+  o Henrique o repuser, é a primeira coisa a ver.
+- **Bibliotecas:** `react-router-dom` passou de 7.13.1 a 7.18.5, e o
+  `npm audit fix` sem `--force` atualizou o resto: de 64 avisos e 3 críticos para
+  36 e 0, e nenhum no `react-router`. Os que sobram são de ferramentas de build
+  presas ao `react-scripts`; resolvê-los obrigava a sair do Create React App.
+  **Não correr `npm audit fix --omit=dev`:** tira o `esbuild` do `node_modules`
+  e o build falha no `pre-renderizar`; repõe-se com `npm install`. Verificado com
+  um servidor local que segue as regras do `vercel.json`, em `/`, `/us`, `/faq`,
+  `/us/faq`, `/sobre`, `/contacto`, `/privacidade` e `/admin/login`, sem erros na
+  consola.
+
+**Ramos:** a pedido do Rui, ficaram só dois no GitHub (secção 6). Os outros, já
+juntos ao `main`, foram apagados: os nomes que este ficheiro refere ficam como
+histórico, e os commits continuam no `main`. O único que não estava junto, o
+`rui/emails-avaliacao-gratuita` (PR #6, fechado), ficou guardado na etiqueta
+`arquivo/emails-avaliacao-gratuita`.

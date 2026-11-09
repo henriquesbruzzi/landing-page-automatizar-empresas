@@ -155,6 +155,15 @@ IS_PRODUCTION = bool(
 	or os.getenv("IS_PRODUCTION")
 )
 
+# Estes valores por omissão estão escritos neste repositório, que é público.
+# Em produção, sem os verdadeiros definidos, é melhor não arrancar.
+if IS_PRODUCTION and (
+	JWT_SECRET == "change-this-in-production" or ADMIN_PASSWORD == "admin123"
+):
+	raise RuntimeError(
+		"Definir JWT_SECRET e ADMIN_PASSWORD nas variáveis do Railway antes de arrancar."
+	)
+
 
 def get_db_connection():
 	if IS_POSTGRES:
