@@ -3,7 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import Dropdown from './Dropdown';
 
-const API_BASE_URL = (process.env.REACT_APP_API_URL || 'http://localhost:8000').replace(/\/$/, '');
+// Desde 09/11/2026 o formulário envia pela Formspree, que entrega cada contacto
+// por email, porque o backend no Railway está em baixo (CLAUDE.md, 7.36). Quando
+// o backend voltar, repor o envio para `${REACT_APP_API_URL}/api/leads`: está no
+// histórico do git, e o erroLegivel, mais abaixo, ainda serve para ele.
+const FORMSPREE_URL = 'https://formspree.io/f/PREENCHER';
 
 // O backend recusa um pedido inválido com um campo `detail`, que tanto pode ser
 // uma frase como a lista de erros do FastAPI: cada item traz o campo recusado
@@ -237,23 +241,24 @@ function ContactPage() {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/leads`, {
+      // Os nomes dos campos são o que aparece no email. `email` tem de ficar
+      // assim: é por ele que a Formspree sabe a quem responder. Os começados
+      // por _ são instruções para a Formspree, não aparecem como campos.
+      const corpo = new FormData();
+      corpo.append('_subject', `Novo contacto Nexugal: ${nome}`);
+      corpo.append('_gotcha', e.target.elements._gotcha.value);
+      corpo.append('Nome', nome);
+      corpo.append('email', email);
+      corpo.append('Telefone', formData.phone);
+      corpo.append('Empresa', formData.company);
+      corpo.append('Como soube de nós', origem);
+      corpo.append('Mensagem', mensagemFinal);
+      corpo.append('Idioma', lang);
+
+      const response = await fetch(FORMSPREE_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: nome,
-          email,
-          phone: formData.phone,
-          company: formData.company,
-          // O backend guarda isto na coluna `service` (é dele, não se mexe).
-          // Desde que o campo passou a ser "Como soube de nós?", é a origem
-          // do contacto que vai nessa coluna.
-          service: origem,
-          message: mensagemFinal,
-          language: lang,
-        }),
+        headers: { Accept: 'application/json' },
+        body: corpo,
       });
 
       // Uma resposta que não seja JSON (o servidor em baixo devolve uma página
@@ -265,7 +270,7 @@ function ContactPage() {
         data = null;
       }
 
-      if (!response.ok || !data || !data.success) {
+      if (!response.ok) {
         setIsSending(false);
         setSubmitError(erroLegivel(data, f));
         return;
@@ -348,6 +353,8 @@ function ContactPage() {
             {/* Form */}
             {!isSent && (
               <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Armadilha para robôs: invisível para as pessoas. Se vier preenchido, a Formspree descarta o envio. */}
+                <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
                 {/* Nome e Email */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div>
