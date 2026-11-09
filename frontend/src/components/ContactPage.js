@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../i18n/LanguageContext';
 import Dropdown from './Dropdown';
@@ -9,6 +9,11 @@ import Dropdown from './Dropdown';
 // voltar, repor o envio para `${REACT_APP_API_URL}/api/leads`: está no histórico
 // do git, e o erroLegivel, mais abaixo, ainda serve para ele.
 const FOLHA_CONTACTOS_URL = 'https://script.google.com/macros/s/AKfycbw5kGZvVElJ3wbp947wL6UTHufLQDqen7FxssEYFFceVkUhPwx4V_Y6SjS1sdtv8zr2/exec';
+
+// Sem limite, o botão podia ficar em "A enviar" para sempre. Ao fim deste tempo
+// desiste e mostra o aviso com o email. O contacto pode ter ficado gravado na
+// mesma, e nesse caso chega repetido, o que é melhor do que perdê-lo.
+const LIMITE_ESPERA_MS = 40000;
 
 // O backend recusa um pedido inválido com um campo `detail`, que tanto pode ser
 // uma frase como a lista de erros do FastAPI: cada item traz o campo recusado
@@ -139,6 +144,22 @@ function ContactPage() {
   const [submitError, setSubmitError] = useState('');
   const [erroOrigem, setErroOrigem] = useState('');
   const [sugestaoEmail, setSugestaoEmail] = useState('');
+  const scriptAcordado = useRef(false);
+
+  // O script do Google demora alguns segundos a arrancar. Quando a pessoa entra
+  // no formulário, faz-se um pedido só com o campo-armadilha: o script responde
+  // logo, sem gravar nada e sem contar para o limite, e a ligação fica aberta
+  // para o envio a sério. Se falhar, ninguém precisa de saber.
+  const acordarScript = () => {
+    if (scriptAcordado.current) {
+      return;
+    }
+    scriptAcordado.current = true;
+    fetch(FOLHA_CONTACTOS_URL, {
+      method: 'POST',
+      body: new URLSearchParams({ _gotcha: 'acordar' }),
+    }).catch(() => {});
+  };
 
   // A última opção da lista é sempre o "Outro". Quando é essa, abre-se um
   // campo de texto para o visitante escrever a origem pelas próprias palavras.
@@ -229,11 +250,15 @@ function ContactPage() {
     setIsSending(true);
     setErroOrigem('');
 
+    const controlador = new AbortController();
+    const limite = setTimeout(() => controlador.abort(), LIMITE_ESPERA_MS);
+
     try {
       // Em URLSearchParams porque é o único formato que o Google lê nos campos
       // sem o browser ter de pedir autorização antes (que o Google não atende).
       const response = await fetch(FOLHA_CONTACTOS_URL, {
         method: 'POST',
+        signal: controlador.signal,
         body: new URLSearchParams({
           _gotcha: e.target.elements._gotcha.value,
           nome,
@@ -248,10 +273,15 @@ function ContactPage() {
 
       // Uma resposta que não seja JSON (o servidor em baixo devolve uma página
       // de erro) não pode rebentar aqui: trata-se como recusa sem detalhe.
+      // O limite de espera cai aqui se expirar a meio da resposta, e conta como
+      // falha de rede: sem o `throw`, seria tratado como uma recusa do servidor.
       let data = null;
       try {
         data = await response.json();
       } catch (semJson) {
+        if (controlador.signal.aborted) {
+          throw semJson;
+        }
         data = null;
       }
 
@@ -266,11 +296,14 @@ function ContactPage() {
       setSugestaoEmail('');
       setFormData({ name: '', email: '', phone: '', company: '', source: '', sourceOther: '', message: '' });
     } catch (error) {
-      // Aqui só chegam as falhas de rede: sem internet, servidor inalcançável ou
-      // pedido barrado antes de sair. A mensagem do browser ("Failed to fetch")
-      // vem sempre em inglês e não diz nada a ninguém, por isso não se mostra.
+      // Aqui só chegam as falhas de rede: sem internet, servidor inalcançável,
+      // pedido barrado antes de sair ou limite de espera ultrapassado. A mensagem
+      // do browser ("Failed to fetch") vem sempre em inglês e não diz nada a
+      // ninguém, por isso não se mostra.
       setIsSending(false);
       setSubmitError(f.networkError);
+    } finally {
+      clearTimeout(limite);
     }
   };
 
@@ -337,7 +370,7 @@ function ContactPage() {
 
             {/* Form */}
             {!isSent && (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} onFocus={acordarScript} className="space-y-6">
                 {/* Armadilha para robôs: invisível para as pessoas. Se vier preenchido, a folha não grava o envio. */}
                 <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
                 {/* Nome e Email */}
