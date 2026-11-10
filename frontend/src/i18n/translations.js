@@ -314,7 +314,7 @@ const translations = {
         // o primeiro, e os outros abrem com o "Ler mais". Uma entrada que seja
         // uma lista de frases é um parágrafo só, com cada frase na sua linha.
         paragrafos: [
-          'Desde 2025, a Nexugal já trabalhou com [mais de 20 clientes], de clínicas e escritórios de advogados a empresas de transporte, serviços e lojas online. Cada negócio tem os seus desafios, mas o padrão repete-se: processos que consomem tempo e atenção que deviam estar no crescimento.',
+          'Desde 2025, a Nexugal já trabalhou com [mais de 20 clientes], de clínicas e escritórios de advogados a empresas de transporte, serviços e lojas online. Cada negócio tem os seus desafios, mas o padrão repete-se: processos que consomem tempo e atenção que deviam estar no crescimento. Estamos na zona Norte de Portugal e trabalhamos com empresas de todo o país e também do estrangeiro.',
           'Em todos os setores fazemos o mesmo: identificar o [trabalho repetitivo], eliminar tarefas desnecessárias e tornar as operações mais eficientes através da tecnologia.',
           'Da contabilidade aos relatórios, passando pelo apoio ao cliente, pelo stock, pelas encomendas, pela faturação e pelas cobranças, já automatizámos grande parte do dia a dia de uma empresa, e há sempre mais para automatizar.',
           [
@@ -354,6 +354,10 @@ const translations = {
         {
           question: 'A Nexugal trabalha com empresas de que dimensão?',
           answer: 'Trabalhamos com empresas de [todas as dimensões], das mais pequenas às grandes, em qualquer setor. As nossas soluções são [personalizadas] para se adaptarem às necessidades e ao orçamento de cada cliente.',
+        },
+        {
+          question: 'Onde trabalham?',
+          answer: 'Estamos na zona Norte de Portugal e trabalhamos com empresas de [todo o país] e também do [estrangeiro].',
         },
         {
           question: 'Oferecem suporte após a entrega do projeto?',
@@ -685,7 +689,7 @@ const translations = {
       historia: {
         titulo: 'Our journey',
         paragrafos: [
-          'Since 2025, Nexugal has worked with [more than 20 clients], from clinics and law firms to transport companies, service businesses and online stores. Every business has its own challenges, but the pattern repeats itself: processes that eat up time and attention that should be going into growth.',
+          'Since 2025, Nexugal has worked with [more than 20 clients], from clinics and law firms to transport companies, service businesses and online stores. Every business has its own challenges, but the pattern repeats itself: processes that eat up time and attention that should be going into growth. We are based in the north of Portugal and work with businesses across the country and abroad.',
           'In every sector we do the same: identify the [repetitive work], eliminate unnecessary tasks and make operations more efficient through technology.',
           'From accounting to reporting, through customer support, stock, orders, invoicing and collections, we have already automated a large part of a company\'s day-to-day, and there is always more to automate.',
           [
@@ -722,6 +726,10 @@ const translations = {
         {
           question: 'What size companies does Nexugal work with?',
           answer: 'We work with companies of [all sizes], from the smallest to the largest, in any sector. Our solutions are [customized] to adapt to each client\'s needs and budget.',
+        },
+        {
+          question: 'Where do you work?',
+          answer: 'We are based in the north of Portugal and work with businesses [across the country] and [abroad].',
         },
         {
           question: 'Do you offer support after project delivery?',

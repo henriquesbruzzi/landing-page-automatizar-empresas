@@ -151,6 +151,11 @@ export function cabecalhoDaPagina(lang = 'pt', page = 'home') {
   };
 }
 
+// Onde a Nexugal trabalha: Portugal inteiro, e também empresas de fora do país.
+// Para o Google e as ferramentas de IA, que leem estes dados; na página diz-o o
+// "O nosso percurso" e a FAQ.
+const AREA_SERVIDA = [{ '@type': 'Country', name: 'Portugal' }, 'Worldwide'];
+
 // Schema.org JSON-LD — Organization
 const organizationSchema = {
   '@context': 'https://schema.org',
@@ -164,6 +169,7 @@ const organizationSchema = {
     addressLocality: 'Braga',
     addressCountry: 'PT',
   },
+  areaServed: AREA_SERVIDA,
   contactPoint: {
     '@type': 'ContactPoint',
     telephone: '+351912423912',
@@ -222,8 +228,10 @@ const localBusinessSchema = {
     opens: '09:00',
     closes: '18:00',
   },
-  // Sem areaServed, de propósito: a Nexugal não declara limite geográfico
-  // nenhum. Não voltar a pôr países nem regiões.
+  // Desde 10/11/2026 o site diz onde a Nexugal trabalha, por decisão do Rui:
+  // é da zona Norte e trabalha com empresas de todo o país e do estrangeiro
+  // (CLAUDE.md, 7.40).
+  areaServed: AREA_SERVIDA,
   serviceType: [
     'Desenvolvimento Web',
     'Cibersegurança',
