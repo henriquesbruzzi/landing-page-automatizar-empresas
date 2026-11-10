@@ -447,6 +447,15 @@ comandos vão um por linha. Ver 7.5.
     `Aliases`). A publicação anterior era a `dpl_GFe7AX6Mhp8YyqYaTpQZCr8NxzVM` (a
     do PR #29). Para voltar a ela, na pasta principal:
     `npx vercel rollback dpl_GFe7AX6Mhp8YyqYaTpQZCr8NxzVM --yes`.
+  - **A 11/11/2026 o Claude publicou o `main` com o PR #35** (o merge `2fdc818`:
+    o site diz onde a Nexugal trabalha, 7.40), com `npx vercel --prod --yes`,
+    autorizado pelo Rui: deployment `dpl_6FS8dYwKf7x77236Mnzargo9awg6`, em
+    `https://nexusgal-laddingpage-l8v335x6z-nexugal.vercel.app`. O site serve o
+    `main.d6f73f63.js`. O "Not authorized" voltou à primeira e passou à segunda
+    (confirmado com `npx vercel inspect`: `target production` e o
+    www.nexugal.com e o nexugal.com nos `Aliases`). A publicação anterior era a
+    `dpl_wHdkHDtHd7BbN5sSSGZMhvEwkgGD` (a do PR #31). Para voltar a ela, na
+    pasta principal: `npx vercel rollback dpl_wHdkHDtHd7BbN5sSSGZMhvEwkgGD --yes`.
   - **Voltar atrás (rollback): o que é preciso saber**, segundo a documentação da
     Vercel, lida a 06/10:
     - no plano Hobby só se pode voltar à publicação de produção imediatamente
@@ -4675,7 +4684,10 @@ verificado. Os outros registos (MX e SPF da Hostinger, DMARC, o `resend` e o
 
 ### 7.40 O site diz onde a Nexugal trabalha (10/11/2026)
 
-Ramo `rui/onde-trabalhamos`. **Muda a decisão de 16/09** (7.3), por pedido do Rui:
+Ramo `rui/onde-trabalhamos`, PR #35, **publicado a 11/11** (secção 6). Verificado
+no site: a frase na língua certa no HTML de `/`, `/us`, `/faq` e `/us/faq`, a
+pergunta "Onde trabalham?" em quinto lugar entre oito, o `areaServed` com
+Portugal e `Worldwide`, sem erros na consola. **Muda a decisão de 16/09** (7.3), por pedido do Rui:
 para o Google e as ferramentas de IA (ChatGPT, Gemini, Claude) ligarem a Nexugal a
 pesquisas como "consultoria no Norte" ou "em Portugal", o site tem de o dizer.
 
@@ -4711,4 +4723,21 @@ mesmo com a página descida (7.4). As capturas que se mandaram ao Rui saíram do
 Playwright (`mcp__plugin_playwright_playwright__*`), que só grava ficheiros dentro
 da pasta do projeto, em `.playwright-mcp/`: apagar essa pasta no fim, que não vai
 para o git.
+
+### 7.41 O Perfil da Empresa no Google (10 e 11/11/2026)
+
+Criado pelo Rui na conta Google `geral@nexugal.com` (7.39), em
+business.google.com, como **empresa que vai ao cliente**, sem morada pública:
+categoria "Business management consultant", áreas Portugal, Braga e mais cinco,
+segunda a sexta das 9h às 18h (o mesmo dos dados estruturados do site), o
+telefone e o site do JSON-LD, a descrição, o N como logótipo e a imagem de
+partilha como capa. A morada de verificação é a do Rui e não aparece.
+**Verificação pedida a 10/11, até 5 dias.** O crédito de 400 € do Google Ads e
+o Google Workspace ficaram de fora: o Workspace mudava o email do domínio, que
+está na Hostinger.
+
+**Ficou um perfil a mais**, de quando o Rui voltou atrás a meio: dois "Nexugal"
+no Gerenciador, um "Processando" (fica) e um "Verificação obrigatória" (para
+apagar). Ao mudar alguma coisa no perfil, mudar também no site, e o contrário:
+horário, telefone e o que a empresa faz têm de bater certo nos dois.
 
