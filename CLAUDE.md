@@ -4649,3 +4649,23 @@ resposta presa a meio, recusa e sucesso mostram o que devem. No site publicado, 
 pedido de arranque foi até ao Google e voltou `{"ok":true}`, sem erros na consola.
 **Confirmado pelo Rui a 10/11:** um envio verdadeiro no telemóvel, com esta
 versão, chegou e foi rápido.
+
+### 7.39 O Search Console verificado pelo domínio (10/11/2026)
+
+**A conta:** o Rui criou uma conta Google com o `geral@nexugal.com` (sem Gmail,
+com o email da Hostinger), para o Search Console ficar com a empresa e não com
+uma conta pessoal. O sócio pode ser acrescentado lá dentro como utilizador.
+
+**A barreira que o Rui encontrou antes:** o domínio foi comprado na Hostinger, e o
+Google manda pôr o código lá. Mas os servidores de nomes são os da Vercel
+(`ns1.vercel-dns.com`), e um registo posto na Hostinger não vale nada. **Os
+registos do nexugal.com mudam-se na Vercel**, com a conta deste computador.
+
+**O que se fez:** um registo TXT na raiz do domínio,
+`google-site-verification=AnEeNDrPrtypvw16Au-TbzSiICRH86zvJMoyQFCmOVQ`, com
+`npx vercel dns add nexugal.com @ TXT "<código>"` (registo
+`rec_0310b638a4ebcaf08be33bad`). Passou à primeira, e o DNS público mostrou-o no
+mesmo minuto. **Não apagar:** se sair, o Google deixa de dar o domínio como
+verificado. Os outros registos (MX e SPF da Hostinger, DMARC, o `resend` e o
+`send` do Resend, e o TXT `a7c594...`, de antes) não se tocaram.
+
