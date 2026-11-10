@@ -4647,4 +4647,5 @@ telemóvel, em Wi-Fi fraco e sem VPN, duas tentativas ficaram mais de 1 minuto e
 com o envio simulado: o pedido de arranque sai uma só vez, e espera esgotada,
 resposta presa a meio, recusa e sucesso mostram o que devem. No site publicado, o
 pedido de arranque foi até ao Google e voltou `{"ok":true}`, sem erros na consola.
-**Falta um envio verdadeiro no telemóvel com esta versão.**
+**Confirmado pelo Rui a 10/11:** um envio verdadeiro no telemóvel, com esta
+versão, chegou e foi rápido.
