@@ -1611,6 +1611,10 @@ por iniciativa própria; se incomodarem, é decisão do Rui.
   se aceitar avançar. A "primeira consulta" de que a FAQ falava é a própria
   Avaliação: não há uma conversa à parte antes dela. Texto novo sobre preços ou
   sobre o primeiro contacto segue isto (7.20).
+- **Mudou a 10/11/2026 (7.40): o site diz onde a Nexugal trabalha**, "Somos da
+  zona Norte do país e trabalhamos com empresas de todo o país.", no "O nosso
+  percurso", numa pergunta da FAQ e no `areaServed` (Portugal) dos dados para o
+  Google. O resto deste ponto é o que valia antes.
 - **A FAQ não declara limite geográfico nenhum.** A 16/09 a decisão alargou-se
   ao site todo: nenhuma afirmação de onde a Nexugal trabalha, "nem Braga, nem
   Portugal", e nada no lugar do que sai. **A morada da empresa fica** (18/09): nos
@@ -4668,4 +4672,39 @@ registos do nexugal.com mudam-se na Vercel**, com a conta deste computador.
 mesmo minuto. **Não apagar:** se sair, o Google deixa de dar o domínio como
 verificado. Os outros registos (MX e SPF da Hostinger, DMARC, o `resend` e o
 `send` do Resend, e o TXT `a7c594...`, de antes) não se tocaram.
+
+### 7.40 O site diz onde a Nexugal trabalha (10/11/2026)
+
+Ramo `rui/onde-trabalhamos`. **Muda a decisão de 16/09** (7.3), por pedido do Rui:
+para o Google e as ferramentas de IA (ChatGPT, Gemini, Claude) ligarem a Nexugal a
+pesquisas como "consultoria no Norte" ou "em Portugal", o site tem de o dizer.
+
+**A frase**, do Rui: "Somos da zona Norte do país e trabalhamos com empresas de
+todo o país." (EN "We are based in the north of Portugal and work with businesses
+all over the country.", do Claude). Está em três sítios:
+
+- **"O nosso percurso"**, no fim do primeiro parágrafo (`about.historia`), que é o
+  único que se vê no telemóvel sem o "Ler mais";
+- **FAQ**, pergunta nova "Onde trabalham?" (EN "Where do you work?"), a quinta, com
+  a frase como resposta e "todo o país" em destaque. O JSON-LD da FAQ apanha-a
+  sozinho, sem as marcas;
+- **dados para o Google**, `areaServed` com Portugal (`AREA_SERVIDA`, no `SEO.js`),
+  na `Organization` e no `ProfessionalService`.
+
+**Fica como estava, por decisão do Rui:** o rodapé com "Braga, Portugal" e a
+morada de Braga nos dados estruturados.
+
+**Verificado:** `CI=true npm run build` com `Compiled successfully.`; teste de
+contraste 18 de 18; zero travessões no `translations.js`; no HTML já desenhado
+das quatro páginas, a frase na língua certa e o `areaServed`; os dados da FAQ com
+a pergunta nova, sem `[ ]`. Num browser sem janela (Playwright), a 390px: o
+parágrafo com a frase, a pergunta nova a abrir com "todo o país" a 600 e
+azul-médio, oito perguntas, auditoria de contraste de 7.5 sem falhas em `/faq` e
+`/us/faq`, sem scroll para o lado e sem erros na consola.
+
+**Armadilha de teste:** o browser do painel do Claude devolveu capturas antigas
+mesmo com a página descida (7.4). As capturas que se mandaram ao Rui saíram do
+Playwright (`mcp__plugin_playwright_playwright__*`), que só grava ficheiros dentro
+da pasta do projeto, em `.playwright-mcp/`: apagar essa pasta no fim, que não vai
+para o git.
 
