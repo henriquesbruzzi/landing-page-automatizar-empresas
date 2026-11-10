@@ -1611,10 +1611,10 @@ por iniciativa própria; se incomodarem, é decisão do Rui.
   se aceitar avançar. A "primeira consulta" de que a FAQ falava é a própria
   Avaliação: não há uma conversa à parte antes dela. Texto novo sobre preços ou
   sobre o primeiro contacto segue isto (7.20).
-- **Mudou a 10/11/2026 (7.40): o site diz onde a Nexugal trabalha**, "Somos da
-  zona Norte do país e trabalhamos com empresas de todo o país.", no "O nosso
-  percurso", numa pergunta da FAQ e no `areaServed` (Portugal) dos dados para o
-  Google. O resto deste ponto é o que valia antes.
+- **Mudou a 10/11/2026 (7.40): o site diz onde a Nexugal trabalha**, "Estamos na
+  zona Norte de Portugal e trabalhamos com empresas de todo o país e também do
+  estrangeiro.", no "O nosso percurso", numa pergunta da FAQ e no `areaServed`
+  (Portugal e `Worldwide`) dos dados para o Google. O resto deste ponto é o que valia antes.
 - **A FAQ não declara limite geográfico nenhum.** A 16/09 a decisão alargou-se
   ao site todo: nenhuma afirmação de onde a Nexugal trabalha, "nem Braga, nem
   Portugal", e nada no lugar do que sai. **A morada da empresa fica** (18/09): nos
@@ -4679,17 +4679,21 @@ Ramo `rui/onde-trabalhamos`. **Muda a decisão de 16/09** (7.3), por pedido do R
 para o Google e as ferramentas de IA (ChatGPT, Gemini, Claude) ligarem a Nexugal a
 pesquisas como "consultoria no Norte" ou "em Portugal", o site tem de o dizer.
 
-**A frase**, do Rui: "Somos da zona Norte do país e trabalhamos com empresas de
-todo o país." (EN "We are based in the north of Portugal and work with businesses
-all over the country.", do Claude). Está em três sítios:
+**A frase**, a partir do pedido do Rui ("Zona Norte de Portugal a trabalhar para
+todo o país como também para empresas de fora do país"): "Estamos na zona Norte
+de Portugal e trabalhamos com empresas de todo o país e também do estrangeiro."
+(EN "We are based in the north of Portugal and work with businesses across the
+country and abroad."). A primeira versão, "Somos da zona Norte do país e
+trabalhamos com empresas de todo o país.", não chegou a ser publicada. Está em
+três sítios:
 
 - **"O nosso percurso"**, no fim do primeiro parágrafo (`about.historia`), que é o
   único que se vê no telemóvel sem o "Ler mais";
 - **FAQ**, pergunta nova "Onde trabalham?" (EN "Where do you work?"), a quinta, com
-  a frase como resposta e "todo o país" em destaque. O JSON-LD da FAQ apanha-a
-  sozinho, sem as marcas;
-- **dados para o Google**, `areaServed` com Portugal (`AREA_SERVIDA`, no `SEO.js`),
-  na `Organization` e no `ProfessionalService`.
+  a frase como resposta e "todo o país" e "estrangeiro" em destaque. O JSON-LD da
+  FAQ apanha-a sozinho, sem as marcas;
+- **dados para o Google**, `areaServed` com Portugal e `Worldwide`
+  (`AREA_SERVIDA`, no `SEO.js`), na `Organization` e no `ProfessionalService`.
 
 **Fica como estava, por decisão do Rui:** o rodapé com "Braga, Portugal" e a
 morada de Braga nos dados estruturados.

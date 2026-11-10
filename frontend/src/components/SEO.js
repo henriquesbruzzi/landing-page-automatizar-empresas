@@ -151,9 +151,10 @@ export function cabecalhoDaPagina(lang = 'pt', page = 'home') {
   };
 }
 
-// Onde a Nexugal trabalha: Portugal inteiro. Para o Google e as ferramentas de
-// IA, que leem estes dados; na página diz-o o "O nosso percurso" e a FAQ.
-const AREA_SERVIDA = { '@type': 'Country', name: 'Portugal' };
+// Onde a Nexugal trabalha: Portugal inteiro, e também empresas de fora do país.
+// Para o Google e as ferramentas de IA, que leem estes dados; na página diz-o o
+// "O nosso percurso" e a FAQ.
+const AREA_SERVIDA = [{ '@type': 'Country', name: 'Portugal' }, 'Worldwide'];
 
 // Schema.org JSON-LD — Organization
 const organizationSchema = {
@@ -228,7 +229,8 @@ const localBusinessSchema = {
     closes: '18:00',
   },
   // Desde 10/11/2026 o site diz onde a Nexugal trabalha, por decisão do Rui:
-  // é da zona Norte e trabalha com empresas de todo o país (CLAUDE.md, 7.40).
+  // é da zona Norte e trabalha com empresas de todo o país e do estrangeiro
+  // (CLAUDE.md, 7.40).
   areaServed: AREA_SERVIDA,
   serviceType: [
     'Desenvolvimento Web',
